@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "string",
+      "x-mcp-header": "Value"
+    }
+  },
+  "required": [
+    "value"
+  ],
+  "additionalProperties": false
+}

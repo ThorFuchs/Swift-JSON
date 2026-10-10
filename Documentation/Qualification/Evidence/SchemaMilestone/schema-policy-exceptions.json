@@ -1,0 +1,265 @@
+{
+  "suite_commit": "5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8",
+  "policy_cases": 37,
+  "cases": [
+    {
+      "file": "tests/draft2020-12/optional/cross-draft.json",
+      "group": 0,
+      "test": 0,
+      "description": "first item not a string is valid",
+      "reason": "Draft 2019-09 is outside the sole Draft 2020-12 dialect"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 0,
+      "description": "neither",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 1,
+      "description": "nondependant",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 2,
+      "description": "with dependency",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 3,
+      "description": "missing dependency",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 4,
+      "description": "ignores arrays",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 5,
+      "description": "ignores strings",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 0,
+      "test": 6,
+      "description": "ignores other non-objects",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 1,
+      "test": 0,
+      "description": "empty object",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 1,
+      "test": 1,
+      "description": "object with one property",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 1,
+      "test": 2,
+      "description": "non-object is valid",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 2,
+      "test": 0,
+      "description": "neither",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 2,
+      "test": 1,
+      "description": "nondependants",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 2,
+      "test": 2,
+      "description": "with dependencies",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 2,
+      "test": 3,
+      "description": "missing dependency",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 2,
+      "test": 4,
+      "description": "missing other dependency",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 2,
+      "test": 5,
+      "description": "missing both dependencies",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 3,
+      "test": 0,
+      "description": "CRLF",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 3,
+      "test": 1,
+      "description": "quoted quotes",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 3,
+      "test": 2,
+      "description": "CRLF missing dependent",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 3,
+      "test": 3,
+      "description": "quoted quotes missing dependent",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 0,
+      "description": "valid",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 1,
+      "description": "no dependency",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 2,
+      "description": "wrong type",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 3,
+      "description": "wrong type other",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 4,
+      "description": "wrong type both",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 5,
+      "description": "ignores arrays",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 6,
+      "description": "ignores strings",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 4,
+      "test": 7,
+      "description": "ignores other non-objects",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 5,
+      "test": 0,
+      "description": "object with property having schema true is valid",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 5,
+      "test": 1,
+      "description": "object with property having schema false is invalid",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 5,
+      "test": 2,
+      "description": "object with both properties is invalid",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 5,
+      "test": 3,
+      "description": "empty object is valid",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 6,
+      "test": 0,
+      "description": "quoted tab",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 6,
+      "test": 1,
+      "description": "quoted quote",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 6,
+      "test": 2,
+      "description": "quoted tab invalid under dependent schema",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    },
+    {
+      "file": "tests/draft2020-12/optional/dependencies-compatibility.json",
+      "group": 6,
+      "test": 3,
+      "description": "quoted quote invalid under dependent schema",
+      "reason": "Legacy dependencies applicability is an optional extension outside the declared Draft 2020-12 vocabulary"
+    }
+  ]
+}

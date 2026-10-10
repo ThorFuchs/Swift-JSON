@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "protocol": "2026-07-28",
+  "scope": "public JSON/JSONSchema qualification only, not MCP server conformance",
+  "cases": [
+    {
+      "id": "mcp-discover-large-exact-integer",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9007199254740993,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": true,
+      "additional_checks": [
+        "ID is exactly 9007199254740993, never rounded to Double."
+      ]
+    },
+    {
+      "id": "mcp-discover-integer-exponent",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9.007199254740993e15,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": true,
+      "additional_checks": [
+        "ID is an exact mathematical integer equal to the previous case; source lexeme policy is explicit."
+      ]
+    },
+    {
+      "id": "mcp-discover-beyond-machine-integer",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":90071992547409931234567890123456789,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": true,
+      "additional_checks": [
+        "Bounded exact decimal/integer representation preserves the full ID."
+      ]
+    },
+    {
+      "id": "mcp-discover-string-id",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":\"é\",\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": true,
+      "additional_checks": [
+        "String scalars remain distinct from composed U+00E9."
+      ]
+    },
+    {
+      "id": "mcp-discover-null-id",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":null,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-fractional-id",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":1.5,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-boolean-id",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":true,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-wrong-method",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9007199254740993,\"method\":\"tools/list\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-wrong-jsonrpc",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"1.0\",\"id\":9007199254740993,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-missing-params",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9007199254740993,\"method\":\"server/discover\"}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-missing-version",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9007199254740993,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/clientCapabilities\":{}}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-null-capabilities",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9007199254740993,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":null}}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-discover-scalar-distinct-unknown-metadata",
+      "definition": "DiscoverRequest",
+      "instance_json": "{\"jsonrpc\":\"2.0\",\"id\":9007199254740993,\"method\":\"server/discover\",\"params\":{\"_meta\":{\"io.modelcontextprotocol/protocolVersion\":\"2026-07-28\",\"io.modelcontextprotocol/clientCapabilities\":{},\"org.example/annotation\":{\"é\":\"composed\",\"é\":\"decomposed\"}}}}",
+      "expected_schema_valid": true,
+      "additional_checks": [
+        "Both scalar-distinct object keys survive parse/inspect/write/read with their respective values."
+      ]
+    },
+    {
+      "id": "mcp-tool-schema-and-annotation",
+      "definition": "Tool",
+      "instance_json": "{\"name\":\"mirror\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"value\":{\"type\":\"string\",\"x-mcp-header\":\"Value\"}},\"required\":[\"value\"],\"additionalProperties\":false},\"_meta\":{\"org.example/privateAnnotation\":null}}",
+      "expected_schema_valid": true,
+      "additional_checks": [
+        "Preserve inputSchema and unknown annotation values without inferring effective schema.",
+        "Inspect the declared immediate property x-mcp-header annotation through the public schema declaration API."
+      ]
+    },
+    {
+      "id": "mcp-tool-missing-input-schema",
+      "definition": "Tool",
+      "instance_json": "{\"name\":\"mirror\"}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-tool-schema-wrong-type",
+      "definition": "Tool",
+      "instance_json": "{\"name\":\"mirror\",\"inputSchema\":null,\"_meta\":{\"org.example/privateAnnotation\":null}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-listen-result-correlation",
+      "definition": "SubscriptionsListenResult",
+      "instance_json": "{\"resultType\":\"complete\",\"_meta\":{\"io.modelcontextprotocol/subscriptionId\":7}}",
+      "expected_schema_valid": true,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-listen-result-missing-correlation",
+      "definition": "SubscriptionsListenResult",
+      "instance_json": "{\"resultType\":\"complete\",\"_meta\":{}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-completion-limit-100",
+      "definition": "CompleteResult",
+      "instance_json": "{\"resultType\":\"complete\",\"completion\":{\"values\":[\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\"]}}",
+      "expected_schema_valid": true,
+      "additional_checks": []
+    },
+    {
+      "id": "mcp-completion-limit-101",
+      "definition": "CompleteResult",
+      "instance_json": "{\"resultType\":\"complete\",\"completion\":{\"values\":[\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\",\"x\"]}}",
+      "expected_schema_valid": false,
+      "additional_checks": []
+    }
+  ],
+  "expected_runtime_validation": "not_run during briefing preparation; verify through the implemented native engine",
+  "root_selection_required": true
+}

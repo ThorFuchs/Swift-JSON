@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+
+/// Immutable indexed compilation output. Mutable evaluation state is created per invocation.
+public struct CompiledJSONSchema: Sendable {
+    public let document: JSONSchemaDocument
+    package let plan: JSONSchemaPlan
+    package init(document: JSONSchemaDocument, plan: JSONSchemaPlan) { self.document = document; self.plan = plan }
+    public func node(at pointer: JSONPointer? = nil, limits: JSONLimits = .balanced) throws -> JSONSchemaNodeView {
+        try nodeWithReport(at: pointer, limits: limits).result
+    }
+    public func nodeWithReport(at pointer: JSONPointer? = nil, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSONSchemaNodeView> {
+        var meter = try JSONWorkMeter(limits: limits,domain: .core)
+        let admitted = try JSONPointer.decodedTokens(pointer?.tokens ?? [],meter: &meter)
+        let raw = try admitted.resolve(in: document.raw,meter: &meter)
+        let view = try JSONSchemaNodeView.inspect(raw,pointer: admitted,retrievalURI: document.retrievalURI,meter: &meter)
+        var selected: Int?
+        for i in plan.nodes.indices {
+            try meter.work(); let node = plan.nodes[i]
+            guard node.document == plan.nodes[plan.root].document, node.pointer.tokens.count == admitted.tokens.count else { continue }
+            var same = true
+            for j in admitted.tokens.indices { if try !JSONComparison.textEquals(node.pointer.tokens[j].string,admitted.tokens[j].string,meter: &meter) { same = false; break } }
+            if same { selected = i; break }
+        }
+        guard let selected else { return .init(result: view,statistics: meter.statistics()) }
+        let node = plan.nodes[selected], resource = plan.resources[node.resource]
+        let location = try JSONPointer.decodedTokens(node.pointer.tokens.dropFirst(plan.nodes[resource.root].pointer.tokens.count),meter: &meter)
+        var targets: [JSONSchemaReferenceTarget] = []
+        for reference in node.references {
+            try meter.work(); try meter.retain(64)
+            let target = plan.nodes[reference.target], resource = plan.resources[target.resource]
+            let pointer = try JSONPointer.decodedTokens(target.pointer.tokens.dropFirst(plan.nodes[resource.root].pointer.tokens.count),meter: &meter)
+            targets.append(.init(keyword: try JSONKey(reference.keyword.rawValue,meter: &meter),resourceURI: resource.uri,pointer: pointer,requiresDynamicScope: reference.dynamicAnchor != nil))
+        }
+        let result = JSONSchemaNodeView(raw: view.raw,documentPointer: view.documentPointer,retrievalURI: view.retrievalURI,
+            declaredKeywords: view.declaredKeywords,declaredAnnotations: view.declaredAnnotations,declaredConstraints: view.declaredConstraints,
+            resourceURI: resource.uri,resourcePointer: location,referenceTargets: targets)
+        return .init(result: result,statistics: meter.statistics())
+    }
+}

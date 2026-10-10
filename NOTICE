@@ -1,0 +1,9 @@
+Swift-JSON
+Copyright 2026 Swift-JSON contributors
+
+Licensed under the Apache License, Version 2.0.
+
+Selected RhoeJSON concepts and APIs were adapted:
+Copyright 2024-2026 Thor Fuchs.
+Its original NOTICE and LICENSE are retained in Licenses/RhoeJSON.
+Applicable original copyright notices remain in adapted source.

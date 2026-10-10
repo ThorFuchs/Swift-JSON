@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "suites": [
+    {
+      "repository": "nst/JSONTestSuite",
+      "commit": "1ef36fa01286573e846ac449e8683f8833c5b26a",
+      "purpose": "strict_JSON_syntax_policy_qualification",
+      "execution": "native_public_qualified",
+      "status": "imported",
+      "fixture_path": "Tests/Fixtures/External/syntax",
+      "expected_cases": 318,
+      "observed_cases": 318,
+      "manifest": "Tests/Fixtures/External/syntax/manifest.json",
+      "license_paths": [
+        "Tests/Fixtures/External/syntax/LICENSE"
+      ],
+      "accepted_cases": 101,
+      "rejected_cases": 186,
+      "policy_rejections": 31,
+      "unexpected": 0,
+      "evidence": "Scripts/ci.py --lane native: qualification.json (per-run GitHub Actions artifact)"
+    },
+    {
+      "repository": "json-schema-org/JSON-Schema-Test-Suite",
+      "commit": "5b0ee1613e45fcc2bddac00e07c19cd49b00d8a8",
+      "purpose": "Draft_2020_12_schema_qualification",
+      "execution": "native_public_qualified",
+      "status": "imported",
+      "fixture_path": "Tests/Fixtures/External/schema",
+      "expected_cases": 2337,
+      "observed_cases": 2337,
+      "manifest": "Tests/Fixtures/External/schema/manifest.json",
+      "license_paths": [
+        "Tests/Fixtures/External/schema/LICENSE"
+      ],
+      "evaluated_cases": 2300,
+      "required_cases": 1301,
+      "optional_semantic_cases": 125,
+      "optional_format_cases": 874,
+      "policy_exclusions": 37,
+      "unexpected": 0,
+      "evidence": "Scripts/ci.py --lane native: qualification.json (per-run GitHub Actions artifact)"
+    }
+  ],
+  "authored_regressions": "Tests/Fixtures/core-regressions.json",
+  "native_execution": "passed"
+}

@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "unicode_version": "13.0.0",
+  "ecmascript_edition": 11,
+  "source_url": "https://www.unicode.org/Public/zipped/13.0.0/UCD.zip",
+  "archive_sha256": "2f76973b4d36ae45584f5a45ec65b47138932d777dd23a5669c89535ef3da951",
+  "inputs": [
+    {
+      "path": "ReadMe.txt",
+      "bytes": 655,
+      "sha256": "953c06b1383b4d33453cd235dc1127d9109f7eca3996dfd847f261819b4d6c3d"
+    },
+    {
+      "path": "PropertyAliases.txt",
+      "bytes": 8825,
+      "sha256": "2bd5777847e3d6add3c7e5c0d1393ddcab89e5a0ac3ff498cb0c53041f0b86e4"
+    },
+    {
+      "path": "PropertyValueAliases.txt",
+      "bytes": 75677,
+      "sha256": "6b3902e9268cd843fe65cbdea992108c9528343ec0679f800b96f356bb553e5a"
+    },
+    {
+      "path": "extracted/DerivedGeneralCategory.txt",
+      "bytes": 259503,
+      "sha256": "4502f0969e4e6558c4b4c6ca4c23dad70b863d61dd3d5eed1a62a6c3c99fd570"
+    },
+    {
+      "path": "DerivedCoreProperties.txt",
+      "bytes": 1010458,
+      "sha256": "a5d45f59b39deaab3c72ce8c1a2e212a5e086dff11b1f9d5bb0e352642e82248"
+    },
+    {
+      "path": "PropList.txt",
+      "bytes": 126063,
+      "sha256": "485b5a3ed25dbf1f94dfa5a9b69d8b4550ffd0c33045ccc55ccfd7c80b2a40cf"
+    },
+    {
+      "path": "emoji/emoji-data.txt",
+      "bytes": 105959,
+      "sha256": "d2686f400a638c80775d7c662556fb8fa8dd3bbe4aa548d9d31624264c6e1bb1"
+    },
+    {
+      "path": "extracted/DerivedBinaryProperties.txt",
+      "bytes": 16873,
+      "sha256": "6fdc5b5ef40444a8f0c772e6b67c00498d4216fe0c0fdf76744ce338f2ad3810"
+    },
+    {
+      "path": "DerivedNormalizationProps.txt",
+      "bytes": 820928,
+      "sha256": "3ac44e11c84bdaf6b207d2c2c20eed857ae17052393fc7f71b0fe951186ba906"
+    },
+    {
+      "path": "Scripts.txt",
+      "bytes": 175811,
+      "sha256": "9a5ed1ec9b5f0d7147e9371ad792ab39203611af7637cff2aa4a5c663b172cde"
+    },
+    {
+      "path": "ScriptExtensions.txt",
+      "bytes": 21036,
+      "sha256": "03a61dc89422e44cc2b73e8e893321007880ab69e2a4d281c0f1bc29c602b9d0"
+    }
+  ],
+  "generator": "Scripts/generate_regex_unicode.py",
+  "generator_sha256": "0db777cef6fcd7906eff7b1a25ae1952759058e275059c736fcf65757e58693e",
+  "license": "Unicode-3.0",
+  "license_path": "Licenses/Unicode-3.0.txt",
+  "license_sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+  "output": "Sources/JSONRegexRuntime/RegexUnicodeTables.swift",
+  "output_sha256": "7b3c4ebb5cdbc1823f8c3f33e3a9d47321282053b76f84460480ab75503d40d5",
+  "output_bytes": 354636,
+  "tables": 407,
+  "aliases": 1587,
+  "ranges": 21229,
+  "policy": "Exact case-sensitive ECMA property aliases. Script_Extensions overrides Script defaults; host Unicode APIs unused."
+}

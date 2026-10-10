@@ -1,0 +1,69 @@
+{
+  "unicode_version": "13.0.0",
+  "algorithm": [
+    "RFC5892",
+    "RFC5893",
+    "RFC3492",
+    "Unicode13-NFC"
+  ],
+  "normalization_cases": 18853,
+  "normalization_comparisons": 188530,
+  "property_ranges": 3244,
+  "canonical_decompositions": 2061,
+  "composition_pairs": 941,
+  "uts46_mapping_ranges": 8713,
+  "idn_processing": "UTS46 nontransitional STD3 followed by RFC5892/5893",
+  "inputs": [
+    {
+      "path": "ReadMe.txt",
+      "sha256": "953c06b1383b4d33453cd235dc1127d9109f7eca3996dfd847f261819b4d6c3d"
+    },
+    {
+      "path": "UnicodeData.txt",
+      "sha256": "bdbffbbfc8ad4d3a6d01b5891510458f3d36f7170422af4ea2bed3211a73e8bb"
+    },
+    {
+      "path": "CaseFolding.txt",
+      "sha256": "99d231d7c91688bbe8ca8ccebcc2f46b5b222f844babe4827295bae11e2abe5f"
+    },
+    {
+      "path": "DerivedNormalizationProps.txt",
+      "sha256": "3ac44e11c84bdaf6b207d2c2c20eed857ae17052393fc7f71b0fe951186ba906"
+    },
+    {
+      "path": "DerivedCoreProperties.txt",
+      "sha256": "a5d45f59b39deaab3c72ce8c1a2e212a5e086dff11b1f9d5bb0e352642e82248"
+    },
+    {
+      "path": "PropList.txt",
+      "sha256": "485b5a3ed25dbf1f94dfa5a9b69d8b4550ffd0c33045ccc55ccfd7c80b2a40cf"
+    },
+    {
+      "path": "Blocks.txt",
+      "sha256": "81a82b6a9fcf1a9c12f588d7a1decd73a9afdc4cac95b0eb7e576e7942d6c19f"
+    },
+    {
+      "path": "HangulSyllableType.txt",
+      "sha256": "b9c5158ce944d2fec57e0e4ecb716bdabfc3bdde73525f1772fe03f61a30d473"
+    },
+    {
+      "path": "Scripts.txt",
+      "sha256": "9a5ed1ec9b5f0d7147e9371ad792ab39203611af7637cff2aa4a5c663b172cde"
+    },
+    {
+      "path": "extracted/DerivedJoiningType.txt",
+      "sha256": "ac835b6e11a60c9820d3cf2d1cb0558dd68efb8f53f404a51632e4726690a6d7"
+    },
+    {
+      "path": "NormalizationTest.txt",
+      "sha256": "d60ee55dd9169444652e48d337109cc814ecc59a9d3122eedddf7de388f2e01d"
+    },
+    {
+      "path": "IdnaMappingTable.txt",
+      "sha256": "87d6553a4b86bc49dcade38bf26b745cd81800eb8af295dc3fb99b4729eaea38"
+    }
+  ],
+  "generator_sha256": "c761684c148b65ea11f967f251c8666908dd8929004cae478d7e06b9a1dc555b",
+  "output_sha256": "d913095e3077f7d26e822e651605a65c25b4f4caf2c461b2cf75ce634447380e",
+  "license_sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96"
+}

@@ -1,0 +1,15 @@
+.build/
+.swiftpm/
+.DS_Store
+__pycache__/
+*.pyc
+*.xcuserstate
+DerivedData/
+Artifacts/
+Tools/*/.build/
+Examples/*/.build/
+
+# Local extraction inputs and private implementation history
+Reference/
+Tools/SchemaComparison/
+Tools/ScaffoldTests/

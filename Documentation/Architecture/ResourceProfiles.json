@@ -1,0 +1,403 @@
+{
+  "default": "balanced",
+  "status": "finite_initial_policy_native_boundary_and_calibration_observations_recorded",
+  "core": [
+    {
+      "metric": "inputBytes",
+      "unit": "bytes",
+      "conservative": 4194304,
+      "balanced": 33554432,
+      "offline": 268435456,
+      "check": "Before each admitted byte; includes whitespace and source retention."
+    },
+    {
+      "metric": "maxDepth",
+      "unit": "open containers",
+      "conservative": 64,
+      "balanced": 128,
+      "offline": 256,
+      "check": "Before stack push; scalar root depth 0, root container depth 1."
+    },
+    {
+      "metric": "nodes",
+      "unit": "values",
+      "conservative": 100000,
+      "balanced": 1000000,
+      "offline": 4000000,
+      "check": "Before each value; keys are charged separately."
+    },
+    {
+      "metric": "objectMembers",
+      "unit": "members per object",
+      "conservative": 20000,
+      "balanced": 100000,
+      "offline": 500000,
+      "check": "Before member insertion; total members also charge nodes/work."
+    },
+    {
+      "metric": "arrayItems",
+      "unit": "items per array",
+      "conservative": 100000,
+      "balanced": 1000000,
+      "offline": 4000000,
+      "check": "Before item insertion."
+    },
+    {
+      "metric": "stringBytes",
+      "unit": "decoded UTF-8 bytes per string",
+      "conservative": 1048576,
+      "balanced": 8388608,
+      "offline": 67108864,
+      "check": "Before scalar append; excludes object keys."
+    },
+    {
+      "metric": "aggregateTextBytes",
+      "unit": "decoded UTF-8 bytes",
+      "conservative": 4194304,
+      "balanced": 16777216,
+      "offline": 134217728,
+      "check": "Sum keys and string values, including retained number lexemes separately in retainedBytes."
+    },
+    {
+      "metric": "keyBytes",
+      "unit": "decoded UTF-8 bytes per key",
+      "conservative": 16384,
+      "balanced": 65536,
+      "offline": 262144,
+      "check": "Before key scalar append."
+    },
+    {
+      "metric": "numberDigits",
+      "unit": "coefficient digits per token",
+      "conservative": 1024,
+      "balanced": 4096,
+      "offline": 16384,
+      "check": "Before digit append, including zeros before normalization."
+    },
+    {
+      "metric": "numberTokenBytes",
+      "unit": "ASCII bytes per number",
+      "conservative": 2048,
+      "balanced": 8192,
+      "offline": 32768,
+      "check": "Before token append; includes exponent spelling."
+    },
+    {
+      "metric": "absoluteExponent",
+      "unit": "absolute mathematical exponent",
+      "conservative": 100000,
+      "balanced": 1000000,
+      "offline": 10000000,
+      "check": "Checked magnitude while parsing and after normalization; no dense zero expansion."
+    },
+    {
+      "metric": "retainedBytes",
+      "unit": "logical live bytes",
+      "conservative": 16777216,
+      "balanced": 67108864,
+      "offline": 536870912,
+      "check": "Before allocations/reservations in owned state; accounting weights are versioned."
+    },
+    {
+      "metric": "workUnits",
+      "unit": "primitive operations",
+      "conservative": 8000000,
+      "balanced": 64000000,
+      "offline": 512000000,
+      "check": "Charge inner loops, traversals, comparisons and copying."
+    },
+    {
+      "metric": "numericWorkUnits",
+      "unit": "decimal limb operations",
+      "conservative": 250000,
+      "balanced": 1000000,
+      "offline": 8000000,
+      "check": "Nested within total work, no reset in helpers."
+    },
+    {
+      "metric": "outputBytes",
+      "unit": "emitted UTF-8 bytes",
+      "conservative": 4194304,
+      "balanced": 33554432,
+      "offline": 268435456,
+      "check": "Before append or sink handoff; writer also applies value/depth/text limits."
+    },
+    {
+      "metric": "sourceMapEntries",
+      "unit": "entries",
+      "conservative": 100000,
+      "balanced": 1000000,
+      "offline": 4000000,
+      "check": "Opt-in only; charge entry and retained source bytes."
+    },
+    {
+      "metric": "issues",
+      "unit": "records",
+      "conservative": 32,
+      "balanced": 128,
+      "offline": 512,
+      "check": "Before append; complete output throws on limit rather than silently truncating."
+    },
+    {
+      "metric": "diagnosticBytes",
+      "unit": "UTF-8 bytes",
+      "conservative": 65536,
+      "balanced": 262144,
+      "offline": 1048576,
+      "check": "Before message/path/preview growth; no raw instance retained."
+    },
+    {
+      "metric": "cancellationQuantum",
+      "unit": "charged work units",
+      "conservative": 1024,
+      "balanced": 1024,
+      "offline": 1024,
+      "check": "At entry, before allocation/suspension, and at most this many charged units between checks."
+    }
+  ],
+  "schema": [
+    {
+      "metric": "schemaDocuments",
+      "unit": "documents including root",
+      "conservative": 16,
+      "balanced": 128,
+      "offline": 512
+    },
+    {
+      "metric": "schemaBytes",
+      "unit": "total admitted resource bytes",
+      "conservative": 4194304,
+      "balanced": 33554432,
+      "offline": 268435456
+    },
+    {
+      "metric": "schemaNodes",
+      "unit": "nodes across resources",
+      "conservative": 20000,
+      "balanced": 100000,
+      "offline": 1000000
+    },
+    {
+      "metric": "referenceEdges",
+      "unit": "edges",
+      "conservative": 20000,
+      "balanced": 200000,
+      "offline": 2000000
+    },
+    {
+      "metric": "compileWorkUnits",
+      "unit": "primitive operations",
+      "conservative": 4000000,
+      "balanced": 32000000,
+      "offline": 256000000
+    },
+    {
+      "metric": "compiledPlanBytes",
+      "unit": "logical retained bytes",
+      "conservative": 8388608,
+      "balanced": 33554432,
+      "offline": 268435456
+    },
+    {
+      "metric": "evaluationWorkUnits",
+      "unit": "primitive operations",
+      "conservative": 2000000,
+      "balanced": 16000000,
+      "offline": 128000000
+    },
+    {
+      "metric": "evaluationFrames",
+      "unit": "active frames including reference/dynamic scopes",
+      "conservative": 256,
+      "balanced": 1024,
+      "offline": 4096
+    },
+    {
+      "metric": "annotationEntries",
+      "unit": "internal evaluated-location and output entries",
+      "conservative": 20000,
+      "balanced": 100000,
+      "offline": 1000000
+    },
+    {
+      "metric": "annotationBytes",
+      "unit": "logical retained bytes",
+      "conservative": 2097152,
+      "balanced": 8388608,
+      "offline": 67108864
+    },
+    {
+      "metric": "regexPatternBytes",
+      "unit": "UTF-8 bytes per pattern",
+      "conservative": 4096,
+      "balanced": 16384,
+      "offline": 65536
+    },
+    {
+      "metric": "aggregateRegexPatternBytes",
+      "unit": "UTF-8 bytes",
+      "conservative": 65536,
+      "balanced": 262144,
+      "offline": 2097152
+    },
+    {
+      "metric": "regexProgramInstructions",
+      "unit": "instructions across plan",
+      "conservative": 20000,
+      "balanced": 100000,
+      "offline": 1000000
+    },
+    {
+      "metric": "regexCompileWorkUnits",
+      "unit": "primitive operations",
+      "conservative": 250000,
+      "balanced": 2000000,
+      "offline": 16000000
+    },
+    {
+      "metric": "regexSearchWorkUnits",
+      "unit": "primitive operations per search",
+      "conservative": 100000,
+      "balanced": 500000,
+      "offline": 4000000
+    },
+    {
+      "metric": "aggregateRegexWorkUnits",
+      "unit": "primitive operations per evaluation",
+      "conservative": 250000,
+      "balanced": 2000000,
+      "offline": 16000000
+    },
+    {
+      "metric": "regexRetainedBytes",
+      "unit": "logical live match state bytes",
+      "conservative": 2097152,
+      "balanced": 8388608,
+      "offline": 67108864
+    },
+    {
+      "metric": "regexCaptureGroups",
+      "unit": "groups per pattern",
+      "conservative": 128,
+      "balanced": 512,
+      "offline": 2048
+    }
+  ],
+  "streaming": [
+    {
+      "metric": "chunkBytes",
+      "unit": "accepted source bytes per chunk",
+      "conservative": 65536,
+      "balanced": 262144,
+      "offline": 1048576
+    },
+    {
+      "metric": "pendingEvents",
+      "unit": "unconsumed complete events",
+      "conservative": 1,
+      "balanced": 1,
+      "offline": 1
+    },
+    {
+      "metric": "pendingValues",
+      "unit": "unconsumed complete records",
+      "conservative": 1,
+      "balanced": 1,
+      "offline": 1
+    },
+    {
+      "metric": "totalInputBytes",
+      "unit": "bytes per iterator lifetime",
+      "conservative": 268435456,
+      "balanced": 1073741824,
+      "offline": 68719476736
+    },
+    {
+      "metric": "totalRecords",
+      "unit": "records per iterator lifetime",
+      "conservative": 100000,
+      "balanced": 1000000,
+      "offline": 16000000
+    },
+    {
+      "metric": "totalWorkUnits",
+      "unit": "primitive operations per iterator lifetime",
+      "conservative": 512000000,
+      "balanced": 2147483648,
+      "offline": 137438953472
+    }
+  ],
+  "patch": [
+    {
+      "metric": "operations",
+      "unit": "operations",
+      "conservative": 128,
+      "balanced": 1024,
+      "offline": 10000
+    },
+    {
+      "metric": "pointerBytes",
+      "unit": "UTF-8 bytes per encoded Pointer",
+      "conservative": 4096,
+      "balanced": 16384,
+      "offline": 65536
+    },
+    {
+      "metric": "pointerTokens",
+      "unit": "tokens per Pointer",
+      "conservative": 64,
+      "balanced": 128,
+      "offline": 256
+    },
+    {
+      "metric": "patchWorkUnits",
+      "unit": "primitive operations",
+      "conservative": 2000000,
+      "balanced": 16000000,
+      "offline": 128000000
+    }
+  ],
+  "units": {
+    "MiB": 1048576,
+    "GiB": 1073741824
+  },
+  "bound_semantics": "Inclusive; checked addition before growth; overflow is a resource failure; work buckets never reset in helpers.",
+  "enhancement_limits": [
+    {
+      "id": "totalScannedNodes",
+      "applies_to": "E06 enclosing array document",
+      "unit": "nodes",
+      "conservative": 2000000,
+      "balanced": 16000000,
+      "offline": 128000000
+    },
+    {
+      "id": "maxReusableBufferBytes",
+      "applies_to": "E09 iterator scratch remaining at a record boundary",
+      "unit": "bytes",
+      "conservative": 524288,
+      "balanced": 2097152,
+      "offline": 8388608
+    }
+  ],
+  "logical_retained_weights": {
+    "version": 1,
+    "unit": "bytes",
+    "node": 32,
+    "member": 24,
+    "array_slot": 16,
+    "frame": 16,
+    "source_map_entry": 32,
+    "index_slot": 32,
+    "annotation_entry": 32,
+    "regex_instruction": 16,
+    "regex_state_record": 32,
+    "payload": "owned live bytes plus reserved buffer capacity; do not count shared payload twice within one logical graph"
+  },
+  "combined_metric_count": 49,
+  "calibration_evidence": {
+    "policy": "49 finite initial metrics, logical accounting version 1; no hard RSS/throughput claim",
+    "verification": "Scripts/ci.py --lane native, public cap probes and inclusive boundary tests",
+    "ownership_table": "Documentation/Qualification/LimitsMatrix.json"
+  }
+}

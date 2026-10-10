@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/ThorFuchs/Swift-JSON/security
+    about: Use private vulnerability reporting for security-sensitive defects.
+  - name: Support and maintenance policy
+    url: https://github.com/ThorFuchs/Swift-JSON/blob/main/SUPPORT.md
+    about: Supported releases, native baseline and maintainer scope.

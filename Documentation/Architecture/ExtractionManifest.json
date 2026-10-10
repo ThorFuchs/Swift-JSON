@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "source_baseline": {
+    "sha": "51d37acc137422065b07ebeb7e4ecdb2d02b99ee",
+    "tree": "bd88624eb3128f89ccf163b4cf27eef866ce90ac",
+    "date": "2026-06-08T15:45:48Z",
+    "message": "Import FoundationXML for Linux",
+    "repository": "RhoePlatform/RhoeJSON",
+    "tag": "v0.1.0",
+    "verified_snapshot_files": 85
+  },
+  "adaptation_records": [
+    {
+      "repository": "RhoePlatform/RhoeJSON",
+      "commit": "51d37acc137422065b07ebeb7e4ecdb2d02b99ee",
+      "original_path": "Sources/RhoeJSONKit/Core/JSONValue.swift",
+      "blob_sha": "25cb8eab982ed0fc41e5f1dde5abeab18113f55e",
+      "destination": "Sources/JSON/Value/JSON.swift",
+      "disposition": "Six enum case concepts selectively adapted; equality/hash traversal and exact object/key storage rewritten.",
+      "attribution": "Original Thor Fuchs 2024\u20132026 header retained; Reference LICENSE and NOTICE preserved.",
+      "validation": [
+        "Tests/JSONTests/ValueTests.swift",
+        "Tests/JSONTests/PresenceTests.swift"
+      ],
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "ridiculousfish/regress",
+      "commit": "771e6c8fa1e472ef86c45b5206b37fa4e4494e25",
+      "original_path": "src/insn.rs",
+      "blob_sha": "003e1eed9afb732563fde31982c269741c986355",
+      "destination": "Sources/JSONRegexRuntime/RegexProgram.swift",
+      "disposition": "Char, start/end assertion and goal instruction concepts selected for the scalar native prototype; implementation rewritten with shared Swift meters.",
+      "attribution": "Copyright (c) 2020 ridiculous_fish; both upstream licenses retained under Licenses, Apache-2.0 selected for adaptation.",
+      "validation": "10 scalar regex vectors plus compile/forward/aggregate boundary tests",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "schema.json",
+      "blob_sha": "d5e2d31c3c88e61f4c204cb6616887bba7e105dd",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/schema.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/applicator.json",
+      "blob_sha": "ca69923096f3a2e4fe5eb8152a92d87d146cf021",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/applicator.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/content.json",
+      "blob_sha": "2f6e056a9ac2399582eaf05985a26acf9161f213",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/content.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/core.json",
+      "blob_sha": "dfc092d9646e1ea89e4d771bfcf2a4ca87eeac75",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/core.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/format-annotation.json",
+      "blob_sha": "51ef7ea118c34e8ac3da66c973bae02b9e8325d8",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/format-annotation.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/format-assertion.json",
+      "blob_sha": "5e73fd7571e504990f7a055da960056f07dcdb19",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/format-assertion.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/meta-data.json",
+      "blob_sha": "05cbc22afde5ebe6ba84957ca412277bde1e4b08",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/meta-data.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/unevaluated.json",
+      "blob_sha": "5f62a3ffa20be07dc813d6b8a154fa8451d0dc61",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/unevaluated.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "meta/validation.json",
+      "blob_sha": "606b87ba2ec213d63b9e2035a6acc4edcb4b8357",
+      "destination": "Sources/JSONSchema/Resources/Draft2020-12/meta/validation.json",
+      "disposition": "Official meta-schema resource copied byte-for-byte; staged native bootstrap and pinned suite qualification completed.",
+      "attribution": "BSD-3-Clause alternative; full upstream dual BSD/AFL text retained",
+      "validation": "Tests/JSONSchemaTests/DocumentTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "ridiculousfish/regress",
+      "commit": "771e6c8fa1e472ef86c45b5206b37fa4e4494e25",
+      "original_path": "src/emit.rs",
+      "blob_sha": "04577e5f026221ac43b9a4d2009de35b4476d461",
+      "destination": "Sources/JSONRegexRuntime/RegexCompiler.swift",
+      "disposition": "Explicit emitter-task stack, alternation backpatches, loop bodies, capture and lookaround instruction layout selectively adapted; Swift indexed-AST implementation and meters rewritten.",
+      "attribution": "Copyright (c) 2020 ridiculous_fish; Apache-2.0 selected, both upstream licenses retained under Licenses/.",
+      "validation": "31824 independent differential cases plus semantic/malformed/resource/cancellation/concurrent vectors",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "ridiculousfish/regress",
+      "commit": "771e6c8fa1e472ef86c45b5206b37fa4e4494e25",
+      "original_path": "src/classicalbacktrack.rs",
+      "blob_sha": "0e185d4365e30563e81f4beefadb751f403f5167",
+      "destination": "Sources/JSONRegexRuntime/RegexVM.swift",
+      "disposition": "Loop/capture reset and atomic directional assertion concepts selected; scalar Swift matcher uses explicit assertion contexts and charges forward/state/capture/cancellation work beyond upstream backtrack counter.",
+      "attribution": "Copyright (c) 2020 ridiculous_fish; Apache-2.0 selected, both upstream licenses retained under Licenses/.",
+      "validation": "31824 independent differential cases plus semantic/malformed/resource/cancellation/concurrent vectors",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "Unicode Character Database",
+      "commit": "Unicode 13.0.0 fixed archive and SHA256 in UnicodeProvenance.json",
+      "original_path": "See all eleven data inputs in UnicodeProvenance.json",
+      "blob_sha": null,
+      "destination": "Sources/JSONRegexRuntime/RegexUnicodeTables.swift",
+      "disposition": "407 immutable tables generated by original deterministic Python generator from fixed Unicode data; no generated Regress table copied. Regeneration compares bytes and provenance.",
+      "attribution": "\u00a9 2020 Unicode, Inc.; Unicode-3.0 copyright/permission notice retained in Licenses/Unicode-3.0.txt.",
+      "validation": "Byte-equal regeneration and native exact-alias/GC/binary/Script/Script_Extensions/IdentifierName vectors",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "Unicode Character Database and Unicode IDNA mapping data",
+      "commit": "Unicode 13.0.0; every input/output/generator hash in IDNAProvenance.json",
+      "original_path": "Twelve fixed data files listed in IDNAProvenance.json",
+      "blob_sha": null,
+      "destination": "Sources/JSONSchema/Formats/JSONIDNAData.swift and Tests/Fixtures/Unicode/NormalizationTest-13.0.0.txt",
+      "disposition": "Original generator derives RFC5892/5893, NFC and UTS46 nontransitional STD3 tables; normalization fixture copied byte-for-byte. No external engine or system Unicode authority.",
+      "attribution": "\u00a9 2019\u20132020 Unicode, Inc.; Unicode-3.0 notice preserved in Licenses/Unicode-3.0.txt.",
+      "validation": "18853 normalization cases (94265 native comparisons); 874 independent optional format cases; byte-equal regeneration",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "json-schema-org/json-schema-spec",
+      "commit": "add836e705c9a07434c467b6b90946ba45258a73",
+      "original_path": "output/schema.json",
+      "blob_sha": "1eef288ae8d1de84f150669ef245b88a7f8dd707",
+      "destination": "Tests/Fixtures/Schema/OutputSchema-2020-12.json",
+      "disposition": "Byte-for-byte official output schema fixture; explicit flag/basic validation entry points.",
+      "attribution": "BSD-3-Clause alternative; Licenses/json-schema-spec-BSD-AFL.txt",
+      "validation": "Tests/JSONSchemaTests/EvaluationOutputTests.swift",
+      "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    }
+  ],
+  "original_implementation_notes": [
+    "JSONNumber.swift reference reviewed; new bounded decimal storage and conversions written without copying upstream numeric implementation.",
+    "Native codec, Codable, Pointer, Patch and streaming are original implementations from the integrated contract, not automatically attributed to candidates.",
+    "Schema graph, explicit evaluator, exact sets/assertions and scalar format recognizers are original implementations from Draft 2020-12, RFC3986/3987/3339/3492/5321/5891/5892/5893/6531/6570/6901 and fixed Unicode13 data."
+  ],
+  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies."
+}

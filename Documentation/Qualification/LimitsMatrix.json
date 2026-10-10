@@ -1,0 +1,2229 @@
+{
+  "schema_version": 1,
+  "metrics": [
+    {
+      "metric": "inputBytes",
+      "profiles": {
+        "conservative": 4194304,
+        "balanced": 33554432,
+        "offline": 268435456
+      },
+      "unit": "bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONParser.swift",
+          "line": 12,
+          "code": "try meter.work(); try meter.require(.inputBytes, UInt64(bytes.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Codec/JSONParser.swift",
+          "line": 24,
+          "code": "try meter.require(.inputBytes, UInt64(bytes.count))"
+        },
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 120,
+          "code": "if !topLevelArrayStreaming { try meter.require(.inputBytes, try meter.adding(.inputBytes, meter.used(.inputBytes), 1)) }"
+        },
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 122,
+          "code": "if consumed { if !topLevelArrayStreaming { try meter.charge(.inputBytes) }; index += 1; offset += 1 }"
+        },
+        {
+          "path": "Sources/JSON/Coding/JSONCodableBridge.swift",
+          "line": 89,
+          "code": "for byte in data { try state.meter.work(); try state.meter.require(.inputBytes, UInt64(bytes.count) + 1); try state.meter.retain(1); bytes.append(byte) }"
+        },
+        {
+          "path": "Sources/JSON/Document/JSONDocument.swift",
+          "line": 21,
+          "code": "for byte in data { try meter.work(); try meter.require(.inputBytes, UInt64(bytes.count) + 1); try meter.retain(1); bytes.append(byte) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 113,
+          "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "line": 322,
+          "code": "while try cursor.next(meter: &meter) != nil { try meter.work(); bytes += 1; try meter.require(.inputBytes, bytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+          "line": 29,
+          "code": "try meter.require(.inputBytes, size); try meter.charge(.schemaBytes, size); try meter.retain(size)"
+        },
+        {
+          "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+          "line": 41,
+          "code": "try input.meter.require(.inputBytes, UInt64(line.count) + 1); try input.meter.retain(1); line.append(byte)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "maxDepth",
+      "profiles": {
+        "conservative": 64,
+        "balanced": 128,
+        "offline": 256
+      },
+      "unit": "open containers",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 93,
+          "code": "try meter.require(.maxDepth, UInt64(frames.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Coding/JSONCodingStrategies.swift",
+          "line": 38,
+          "code": "try check(); try meter.require(.maxDepth, UInt64(path.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Construction/JSONArrayAccumulator.swift",
+          "line": 7,
+          "code": "try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSON/Construction/JSONObjectAccumulator.swift",
+          "line": 7,
+          "code": "try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 10,
+          "code": "self.limits = limits; self.maxDepth = maxDepth; self.maxNodes = maxNodes; self.maxBytes = maxBytes; self.redaction = redaction"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 22,
+          "code": "guard options.maxDepth >= 0, options.maxBytes >= 7 else { throw JSONFailure(.configuration, code: .invalidLimits) }"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 23,
+          "code": "try meter.require(.maxDepth, UInt64(options.maxDepth)); try meter.require(.nodes, options.maxNodes)"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 70,
+          "code": "if depth == options.maxDepth { complete = false; try quote(\"[...]\", meter: &meter) }"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 73,
+          "code": "if depth == options.maxDepth { complete = false; try quote(\"[...]\", meter: &meter) }"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 36,
+          "code": "let containerDepth = try meter.adding(.maxDepth, parentDepth, 1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 44,
+          "code": "let containerDepth = try meter.adding(.maxDepth, parentDepth, 1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONObject.swift",
+          "line": 29,
+          "code": "try meter.require(.maxDepth, 1)"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONMergePatch.swift",
+          "line": 57,
+          "code": "try meter.require(.maxDepth, UInt64(stack.count) + 1); try meter.retain(JSONLogicalWeights.frame)"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+          "line": 252,
+          "code": "try meter.require(.maxDepth, 1); try allocate(16, meter: &meter); frames.append(.init(group: .root, firstCapture: 0))"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+          "line": 276,
+          "code": "try meter.require(.regexCaptureGroups, UInt64(captureCount)); try meter.require(.maxDepth, UInt64(frames.count+1))"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 37,
+          "code": "try meter.require(.maxDepth,depth); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 41,
+          "code": "try meter.require(.maxDepth,2); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node); return .array(values)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "nodes",
+      "profiles": {
+        "conservative": 100000,
+        "balanced": 1000000,
+        "offline": 4000000
+      },
+      "unit": "values",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 51,
+          "code": "if !topLevelArrayStreaming || !frames.isEmpty { try meter.charge(.nodes) }"
+        },
+        {
+          "path": "Sources/JSON/Construction/JSONArrayAccumulator.swift",
+          "line": 7,
+          "code": "try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSON/Construction/JSONObjectAccumulator.swift",
+          "line": 7,
+          "code": "try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 23,
+          "code": "try meter.require(.maxDepth, UInt64(options.maxDepth)); try meter.require(.nodes, options.maxNodes)"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 59,
+          "code": "visited += 1; try meter.charge(.nodes)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 46,
+          "code": "if metric == .nodes && domain == .schemaCompilation {"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 113,
+          "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 17,
+          "code": "try meter.work(); try meter.charge(.nodes)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONObject.swift",
+          "line": 28,
+          "code": "try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexCompiler.swift",
+          "line": 32,
+          "code": "let node = parser.nodes[id]"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 18,
+          "code": "for i in plan.nodes.indices {"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 19,
+          "code": "try meter.work(); let node = plan.nodes[i]"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 20,
+          "code": "guard node.document == plan.nodes[plan.root].document, node.pointer.tokens.count == admitted.tokens.count else { continue }"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 26,
+          "code": "let node = plan.nodes[selected], resource = plan.resources[node.resource]"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 27,
+          "code": "let location = try JSONPointer.decodedTokens(node.pointer.tokens.dropFirst(plan.nodes[resource.root].pointer.tokens.count),meter: &meter)"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 31,
+          "code": "let target = plan.nodes[reference.target], resource = plan.resources[target.resource]"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/CompiledJSONSchema.swift",
+          "line": 32,
+          "code": "let pointer = try JSONPointer.decodedTokens(target.pointer.tokens.dropFirst(plan.nodes[resource.root].pointer.tokens.count),meter: &meter)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 29,
+          "code": "if resource == plan.nodes[node].resource { found = true }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 31,
+          "code": "if !found { try meter.retain(8); bytes += 8; nextScope.append(plan.nodes[node].resource) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 76,
+          "code": "let node = plan.nodes[frame.node], root = plan.resources[node.resource].root"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 78,
+          "code": "for key in node.pointer.tokens.dropFirst(plan.nodes[root].pointer.tokens.count) {"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 89,
+          "code": "let node = plan.nodes[frame.node], root = plan.resources[node.resource].root"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 94,
+          "code": "let resourceTokens = [AnySequence(node.pointer.tokens.dropFirst(plan.nodes[root].pointer.tokens.count)),AnySequence(key.map { CollectionOfOne($0) } ?? CollectionOfOne(JSONKey(\"\")))].lazy.flatMap { $0 }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 95,
+          "code": "var remaining = node.pointer.tokens.count - plan.nodes[root].pointer.tokens.count + (key == nil ? 0 : 1)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 136,
+          "code": "guard frame.outcome.valid, options.collectAnnotations, let object = plan.nodes[frame.node].raw.objectValue else { return }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 137,
+          "code": "let node = plan.nodes[frame.node]"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 240,
+          "code": "let node = plan.nodes[frame.node]"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 275,
+          "code": "let values = plan.nodes[node].children"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 282,
+          "code": "for child in plan.nodes[node].children { try meter.work(); if child.keyword == keyword { if found == ordinal { return child }; found += 1 } }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 379,
+          "code": "let node = plan.nodes[frame.node]"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 22,
+          "code": "try meter.work(); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node); return .boolean(value)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 27,
+          "code": "try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node); return .string(value)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 37,
+          "code": "try meter.require(.maxDepth,depth); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 41,
+          "code": "try meter.require(.maxDepth,2); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node); return .array(values)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "objectMembers",
+      "profiles": {
+        "conservative": 20000,
+        "balanced": 100000,
+        "offline": 500000
+      },
+      "unit": "members per object",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 87,
+          "code": "frames[index].count = try meter.adding(.objectMembers, frames[index].count, 1)"
+        },
+        {
+          "path": "Sources/JSON/Coding/JSONCodingStrategies.swift",
+          "line": 27,
+          "code": "try meter.require(.objectMembers, UInt64(options.userInfo.count))"
+        },
+        {
+          "path": "Sources/JSON/Coding/JSONEncodingContainers.swift",
+          "line": 18,
+          "code": "try encoder.state.meter.require(.objectMembers, UInt64(members.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Construction/JSONObjectAccumulator.swift",
+          "line": 11,
+          "code": "try meter.require(.objectMembers, UInt64(members.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 24,
+          "code": "try meter.require(.diagnosticBytes, options.maxBytes); try meter.require(.objectMembers, UInt64(options.redaction.keys.count))"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONEditing.swift",
+          "line": 46,
+          "code": "try meter.require(.objectMembers, UInt64(members.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 45,
+          "code": "try meter.require(.objectMembers, UInt64(object.count))"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONObject.swift",
+          "line": 15,
+          "code": "try meter.require(.objectMembers, UInt64(members.count))"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 30,
+          "code": "try meter.work(); try meter.require(.objectMembers,UInt64(members.count)+1)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "arrayItems",
+      "profiles": {
+        "conservative": 100000,
+        "balanced": 1000000,
+        "offline": 4000000
+      },
+      "unit": "items per array",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 46,
+          "code": "} else { count = try meter.adding(.arrayItems, frames[index].count, 1) }"
+        },
+        {
+          "path": "Sources/JSON/Coding/JSONEncodingContainers.swift",
+          "line": 55,
+          "code": "try encoder.state.meter.require(.arrayItems, UInt64(boxes.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Construction/JSONArrayAccumulator.swift",
+          "line": 11,
+          "code": "try meter.require(.arrayItems, UInt64(values.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONEditing.swift",
+          "line": 54,
+          "code": "if add { try meter.require(.arrayItems, UInt64(array.count) + 1) }"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 37,
+          "code": "try meter.require(.arrayItems, UInt64(values.count))"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 63,
+          "code": "try meter.work(); try meter.require(.arrayItems,UInt64(values.count)+1); try meter.retain(JSONLogicalWeights.arraySlot)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 76,
+          "code": "try meter.work(); try meter.require(.arrayItems,UInt64(values.count)+1); try meter.retain(JSONLogicalWeights.arraySlot)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "stringBytes",
+      "profiles": {
+        "conservative": 1048576,
+        "balanced": 8388608,
+        "offline": 67108864
+      },
+      "unit": "decoded UTF-8 bytes per string",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONLexer.swift",
+          "line": 31,
+          "code": "try meter.require(key ? .keyBytes : .stringBytes, UInt64(bytes.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Coding/JSONBase64.swift",
+          "line": 15,
+          "code": "try meter.work(); try meter.require(.stringBytes,UInt64(bytes.count)+1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 92,
+          "code": "try meter.work(); try meter.require(.pointerBytes,UInt64(bytes.count)+1); try meter.require(.stringBytes,UInt64(bytes.count)+1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 7,
+          "code": "try meter.require(key ? .keyBytes : .stringBytes, count)"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexVM.swift",
+          "line": 53,
+          "code": "for _ in subject.utf8 { try RegexBudget.searchStep(meter: &meter); bytes += 1; try meter.require(.stringBytes, bytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaURI.swift",
+          "line": 16,
+          "code": "try meter.work(); count += 1; try meter.require(.stringBytes, count); try meter.retain(1)"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaURI.swift",
+          "line": 35,
+          "code": "for _ in absolute.utf8 { try meter.work(); absoluteBytes += 1; try meter.require(.stringBytes, absoluteBytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 91,
+          "code": "func append(_ byte: UInt8, meter: inout JSONWorkMeter) throws { try meter.work(); try meter.require(.stringBytes,UInt64(bytes.count)+1); try meter.retain(1); bytes.append(byte) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNAMapping.swift",
+          "line": 10,
+          "code": "try meter.work(); payload = try meter.adding(.stringBytes,payload,cp < 0x80 ? 1 : (cp < 0x800 ? 2 : (cp < 0x10000 ? 3 : 4)))"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNAMapping.swift",
+          "line": 35,
+          "code": "try meter.work(); try meter.require(.stringBytes,UInt64(output.count)+1); try meter.retain(1); output.append(b)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "aggregateTextBytes",
+      "profiles": {
+        "conservative": 4194304,
+        "balanced": 16777216,
+        "offline": 134217728
+      },
+      "unit": "decoded UTF-8 bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONLexer.swift",
+          "line": 32,
+          "code": "try meter.charge(.aggregateTextBytes); try meter.retain(1); bytes.append(byte)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 113,
+          "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 8,
+          "code": "try meter.charge(.aggregateTextBytes)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "keyBytes",
+      "profiles": {
+        "conservative": 16384,
+        "balanced": 65536,
+        "offline": 262144
+      },
+      "unit": "decoded UTF-8 bytes per key",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONLexer.swift",
+          "line": 31,
+          "code": "try meter.require(key ? .keyBytes : .stringBytes, UInt64(bytes.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 7,
+          "code": "try meter.require(key ? .keyBytes : .stringBytes, count)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "numberDigits",
+      "profiles": {
+        "conservative": 1024,
+        "balanced": 4096,
+        "offline": 16384
+      },
+      "unit": "coefficient digits per token",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 41,
+          "code": "try meter.require(.numberDigits, UInt64(digits.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 24,
+          "code": "try meter.require(.numberDigits, UInt64(c.digits.count))"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "numberTokenBytes",
+      "profiles": {
+        "conservative": 2048,
+        "balanced": 8192,
+        "offline": 32768
+      },
+      "unit": "ASCII bytes per number",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONLexer.swift",
+          "line": 65,
+          "code": "mode = .number; try meter.require(.numberTokenBytes, 1); try meter.retain(1); bytes = [byte]; return (nil, true)"
+        },
+        {
+          "path": "Sources/JSON/Codec/JSONLexer.swift",
+          "line": 80,
+          "code": "try meter.require(.numberTokenBytes, UInt64(bytes.count) + 1); try meter.retain(1); bytes.append(byte); return (nil, true)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 29,
+          "code": "try meter.require(.numberTokenBytes, UInt64(input.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 31,
+          "code": "try meter.require(.numberTokenBytes, bytes)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "absoluteExponent",
+      "profiles": {
+        "conservative": 100000,
+        "balanced": 1000000,
+        "offline": 10000000
+      },
+      "unit": "absolute mathematical exponent",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 74,
+          "code": "resource: .init(domain: meter.domain, metric: .absoluteExponent,"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 75,
+          "code": "limit: meter.limits[.absoluteExponent], attemptedUsage: nil, overflow: true)) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 76,
+          "code": "magnitude = try meter.adding(.absoluteExponent, scaled, UInt64(input[index] - 48))"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 85,
+          "code": "resource: .init(domain: meter.domain, metric: .absoluteExponent, limit: meter.limits[.absoluteExponent], attemptedUsage: nil, overflow: true)) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 87,
+          "code": "try meter.require(.absoluteExponent, exponent.magnitude)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 99,
+          "code": "try meter.require(.absoluteExponent, exponent.magnitude)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 25,
+          "code": "try meter.require(.absoluteExponent, c.exponent.magnitude)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "retainedBytes",
+      "profiles": {
+        "conservative": 16777216,
+        "balanced": 67108864,
+        "offline": 536870912
+      },
+      "unit": "logical live bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 53,
+          "code": "if metric == .retainedBytes { peak = max(peak, next) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 80,
+          "code": "let retained = try adding(.retainedBytes,used(.retainedBytes),bytes)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 84,
+          "code": "counters[JSONResourceMetric.retainedBytes.index] = retained; peak = max(peak,retained)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 88,
+          "code": "guard bytes <= used(.retainedBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 93,
+          "code": "counters[JSONResourceMetric.retainedBytes.index] -= bytes"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 98,
+          "code": "try checkpoint(); try require(.retainedBytes, liveBytes)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 101,
+          "code": "counters[JSONResourceMetric.retainedBytes.index] = liveBytes"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 105,
+          "code": "if metric != .retainedBytes && metric != .regexRetainedBytes {"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONMergePatch.swift",
+          "line": 29,
+          "code": "try meter.release(meter.used(.retainedBytes))"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONMergePatch.swift",
+          "line": 44,
+          "code": "try meter.release(meter.used(.retainedBytes)); try meter.resetValueBounds()"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 93,
+          "code": "try meter.release(meter.used(.retainedBytes))"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 107,
+          "code": "try meter.release(meter.used(.retainedBytes))"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaURI.swift",
+          "line": 24,
+          "code": "let sum = try meter.adding(.retainedBytes, count, baseBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaURI.swift",
+          "line": 27,
+          "code": "throw JSONFailure(.resource, code: .counterOverflow, resource: .init(domain: meter.domain, metric: .retainedBytes, limit: meter.limits[.retainedBytes], attemptedUsage: nil, overflow: true))"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 128,
+          "code": "let before = meter.used(.retainedBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 132,
+          "code": "frame.outcome.ownedIssueBytes += meter.used(.retainedBytes)-before"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 163,
+          "code": "let before = meter.used(.retainedBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 167,
+          "code": "frame.outcome.ownedAnnotationOutputBytes += meter.used(.retainedBytes)-before"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNA.swift",
+          "line": 55,
+          "code": "let before = meter.used(.retainedBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNA.swift",
+          "line": 61,
+          "code": "try meter.release(meter.used(.retainedBytes)-before); return valid"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNA.swift",
+          "line": 65,
+          "code": "let before = meter.used(.retainedBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNA.swift",
+          "line": 103,
+          "code": "try meter.release(meter.used(.retainedBytes)-before); return valid"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNAMapping.swift",
+          "line": 6,
+          "code": "let before = meter.used(.retainedBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONIDNAMapping.swift",
+          "line": 44,
+          "code": "try meter.release(meter.used(.retainedBytes)-before-UInt64(output.count)); return output"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONSchemaFormats.swift",
+          "line": 19,
+          "code": "let before = meter.used(.retainedBytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONSchemaFormats.swift",
+          "line": 21,
+          "code": "catch is RegexFailure { try meter.release(meter.used(.retainedBytes)-before); return false }"
+        },
+        {
+          "path": "Sources/JSONSchema/Formats/JSONSchemaFormats.swift",
+          "line": 22,
+          "code": "try meter.release(meter.used(.retainedBytes)-before); return true"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "workUnits",
+      "profiles": {
+        "conservative": 8000000,
+        "balanced": 64000000,
+        "offline": 512000000
+      },
+      "unit": "primitive operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 24,
+          "code": "checkpointObserver?(used(.workUnits))"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 58,
+          "code": "let total = try adding(.workUnits, used(.workUnits), amount)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 73,
+          "code": "counters[JSONResourceMetric.workUnits.index] = total"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "numericWorkUnits",
+      "profiles": {
+        "conservative": 250000,
+        "balanced": 1000000,
+        "offline": 8000000
+      },
+      "unit": "decimal limb operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Number/DecimalComponents.swift",
+          "line": 33,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/DecimalComponents.swift",
+          "line": 38,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/DecimalComponents.swift",
+          "line": 46,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/DecimalComponents.swift",
+          "line": 55,
+          "code": "for _ in remainder { try meter.work(subsystem: .numericWorkUnits) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 28,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 40,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 71,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 89,
+          "code": "while first < digits.count && digits[first] == 0 { try meter.work(subsystem: .numericWorkUnits); first += 1 }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 95,
+          "code": "try meter.work(subsystem: .numericWorkUnits); end -= 1"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 101,
+          "code": "for digit in digits[first..<end] { try meter.work(subsystem: .numericWorkUnits); try meter.retain(1); normalized.append(digit) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumber.swift",
+          "line": 104,
+          "code": "for _ in input { try meter.work(subsystem: .numericWorkUnits); try meter.retain(1) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 16,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 30,
+          "code": "for _ in output { try meter.work(subsystem: .numericWorkUnits) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 45,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 75,
+          "code": "try meter.work(subsystem: .numericWorkUnits); try meter.charge(.outputBytes)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 80,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 90,
+          "code": "for _ in output { try meter.work(subsystem: .numericWorkUnits) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 152,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 161,
+          "code": "try meter.work(subsystem: .numericWorkUnits); first += 1; exponent += 1"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 165,
+          "code": "try meter.work(subsystem: .numericWorkUnits); try meter.retain(1); coefficient.append(digit)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 171,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 184,
+          "code": "try meter.work(subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 26,
+          "code": "for _ in c.digits { try meter.work(subsystem: .numericWorkUnits); if owned { try meter.retain(1) } }"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONComparison.swift",
+          "line": 30,
+          "code": "try meter.work(subsystem: .numericWorkUnits); bytes += 1"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONFingerprint.swift",
+          "line": 22,
+          "code": "for digit in c.digits { try meter.work(subsystem: .numericWorkUnits); result = mix(result, UInt64(digit)) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaAssertions.swift",
+          "line": 22,
+          "code": "try meter.work(20, subsystem: .numericWorkUnits)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 193,
+          "code": "try meter.work(20,subsystem: .numericWorkUnits); try meter.charge(.annotationBytes,68); try meter.retain(68)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 206,
+          "code": "try meter.work(20,subsystem: .numericWorkUnits); try meter.charge(.annotationBytes,52); try meter.retain(52)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 502,
+          "code": "try meter.work(20,subsystem: .numericWorkUnits)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "outputBytes",
+      "profiles": {
+        "conservative": 4194304,
+        "balanced": 33554432,
+        "offline": 268435456
+      },
+      "unit": "emitted UTF-8 bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONWriter.swift",
+          "line": 26,
+          "code": "try meter.charge(.outputBytes); try meter.retain(1); bytes.append(byte)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 113,
+          "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 17,
+          "code": "try meter.charge(.outputBytes); try meter.retain(1); output.append(byte)"
+        },
+        {
+          "path": "Sources/JSON/Number/JSONNumberConversions.swift",
+          "line": 75,
+          "code": "try meter.work(subsystem: .numericWorkUnits); try meter.charge(.outputBytes)"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 45,
+          "code": "while try cursor.next(meter: &meter) != nil { try meter.charge(.outputBytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 15,
+          "code": "while try cursor.next(meter: &meter) != nil { try meter.work(); size = try meter.adding(.outputBytes,size,1) }"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONAsyncWriter.swift",
+          "line": 17,
+          "code": "try meter.charge(.outputBytes); try meter.retain(1); bytes.append(byte)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "sourceMapEntries",
+      "profiles": {
+        "conservative": 100000,
+        "balanced": 1000000,
+        "offline": 4000000
+      },
+      "unit": "entries",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Document/JSONSourceMap.swift",
+          "line": 54,
+          "code": "try meter.charge(.sourceMapEntries); try meter.retain(JSONLogicalWeights.sourceMapEntry)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "issues",
+      "profiles": {
+        "conservative": 32,
+        "balanced": 128,
+        "offline": 512
+      },
+      "unit": "records",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 125,
+          "code": "let fits = meter.used(.issues) < meter.limits[.issues] && size <= meter.limits[.diagnosticBytes] - min(meter.used(.diagnosticBytes),meter.limits[.diagnosticBytes])"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 127,
+          "code": "try meter.charge(.issues); try meter.charge(.diagnosticBytes,size)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 133,
+          "code": "frame.outcome.issues.append(.init(instanceLocation: instance,keywordLocation: relative,absoluteKeywordLocation: absolute,keyword: key))"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 230,
+          "code": "for issue in child.issues { try meter.work(); try meter.retain(64); parent.issues.append(issue) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 232,
+          "code": "try meter.release(UInt64(child.issues.count + child.annotations.count)*64)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 237,
+          "code": "child.issues = []; child.annotations = []"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 359,
+          "code": "return .init(isValid: frame.outcome.valid,outputStyle: options.output,issues: frame.outcome.issues,annotations: frame.outcome.annotations,diagnosticsComplete: frame.outcome.diagnosticsComplete)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 73,
+          "code": "try meter.require(.issues,UInt64(result.issues.count))"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 74,
+          "code": "for issue in result.issues {"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 75,
+          "code": "try meter.charge(.issues)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationResult.swift",
+          "line": 24,
+          "code": "self.isValid = isValid; self.outputStyle = outputStyle; self.issues = issues; self.annotations = annotations; self.diagnosticsComplete = diagnosticsComplete"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "diagnosticBytes",
+      "profiles": {
+        "conservative": 65536,
+        "balanced": 262144,
+        "offline": 1048576
+      },
+      "unit": "UTF-8 bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 24,
+          "code": "try meter.require(.diagnosticBytes, options.maxBytes); try meter.require(.objectMembers, UInt64(options.redaction.keys.count))"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 37,
+          "code": "try meter.work(); try meter.charge(.diagnosticBytes); try meter.retain(1); bytes.append(byte); return true"
+        },
+        {
+          "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+          "line": 98,
+          "code": "for byte in \"[...]\".utf8 { try meter.work(); try meter.charge(.diagnosticBytes); try meter.retain(1); bytes.append(byte) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 61,
+          "code": "private func outputSize(_ keyword: Keyword?, frame: Frame, metric: JSONResourceMetric = .diagnosticBytes, meter: inout JSONWorkMeter) throws -> UInt64 {"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 122,
+          "code": "catch let error as JSONFailure where error.resource?.metric == .diagnosticBytes && options.diagnosticPolicy == .bestEffort {"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 125,
+          "code": "let fits = meter.used(.issues) < meter.limits[.issues] && size <= meter.limits[.diagnosticBytes] - min(meter.used(.diagnosticBytes),meter.limits[.diagnosticBytes])"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 127,
+          "code": "try meter.charge(.issues); try meter.charge(.diagnosticBytes,size)"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 25,
+          "code": "for _ in value.utf8 { try meter.work(); try meter.charge(.diagnosticBytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 31,
+          "code": "for _ in key.utf8 { try meter.work(); try meter.charge(.diagnosticBytes) }"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "cancellationQuantum",
+      "profiles": {
+        "conservative": 1024,
+        "balanced": 1024,
+        "offline": 1024
+      },
+      "unit": "charged work units",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 70,
+          "code": "if amount >= limits[.cancellationQuantum] || sinceCancellationCheck >= limits[.cancellationQuantum] - amount {"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+          "line": 55,
+          "code": "let end = min(offset + Int(meter.limits[.cancellationQuantum]),data.count)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONLimits.swift",
+          "line": 138,
+          "code": "Validate quantum in 1...1024 before invocation."
+        }
+      ],
+      "public_probe_outcome": "invalidLimits",
+      "error": "configuration:invalidLimits",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "schemaDocuments",
+      "profiles": {
+        "conservative": 16,
+        "balanced": 128,
+        "offline": 512
+      },
+      "unit": "documents including root",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "line": 318,
+          "code": "try meter.charge(.schemaDocuments); try meter.resetValueBounds()"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+          "line": 24,
+          "code": "_ = try meter.adding(.schemaDocuments, meter.used(.schemaDocuments), UInt64(files.count))"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+          "line": 28,
+          "code": "try meter.checkpoint(); try meter.charge(.schemaDocuments); try meter.resetValueBounds()"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
+          "line": 9,
+          "code": "try meter.require(.schemaDocuments, UInt64(documents.count))"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
+          "line": 25,
+          "code": "try meter.require(.schemaDocuments, UInt64(documents.count) + 1)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "schemaBytes",
+      "profiles": {
+        "conservative": 4194304,
+        "balanced": 33554432,
+        "offline": 268435456
+      },
+      "unit": "total admitted resource bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "line": 323,
+          "code": "try meter.charge(.schemaBytes, bytes); try reserve(16, meter: &meter); documents.append(document)"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+          "line": 29,
+          "code": "try meter.require(.inputBytes, size); try meter.charge(.schemaBytes, size); try meter.retain(size)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "schemaNodes",
+      "profiles": {
+        "conservative": 20000,
+        "balanced": 100000,
+        "offline": 1000000
+      },
+      "unit": "nodes across resources",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 47,
+          "code": "let schemaNext = try adding(.schemaNodes, used(.schemaNodes), amount)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 48,
+          "code": "let (_, overflow) = retired[JSONResourceMetric.schemaNodes.index].addingReportingOverflow(schemaNext)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 49,
+          "code": "guard !overflow else { throw violation(.schemaNodes, nil, overflow: true) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 50,
+          "code": "counters[JSONResourceMetric.schemaNodes.index] = schemaNext"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "referenceEdges",
+      "profiles": {
+        "conservative": 20000,
+        "balanced": 200000,
+        "offline": 2000000
+      },
+      "unit": "edges",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "line": 222,
+          "code": "try meter.charge(.referenceEdges); try reserve(24, meter: &meter)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "compileWorkUnits",
+      "profiles": {
+        "conservative": 4000000,
+        "balanced": 32000000,
+        "offline": 256000000
+      },
+      "unit": "primitive operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 61,
+          "code": "case .schemaCompilation: domainMetric = .compileWorkUnits"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "compiledPlanBytes",
+      "profiles": {
+        "conservative": 8388608,
+        "balanced": 33554432,
+        "offline": 268435456
+      },
+      "unit": "logical retained bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 81,
+          "code": "let plan = try domain == .schemaCompilation ? adding(.compiledPlanBytes,used(.compiledPlanBytes),bytes) : nil"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 83,
+          "code": "if let plan { counters[JSONResourceMetric.compiledPlanBytes.index] = plan }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 90,
+          "code": "guard bytes <= used(.compiledPlanBytes) else { throw JSONFailure(.configuration,code: .invalidLimits) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 91,
+          "code": "counters[JSONResourceMetric.compiledPlanBytes.index] -= bytes"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "evaluationWorkUnits",
+      "profiles": {
+        "conservative": 2000000,
+        "balanced": 16000000,
+        "offline": 128000000
+      },
+      "unit": "primitive operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 62,
+          "code": "case .schemaEvaluation: domainMetric = .evaluationWorkUnits"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 69,
+          "code": "let stagedEvaluation = try compilingEvaluation && domain == .schemaCompilation ? adding(.evaluationWorkUnits, used(.evaluationWorkUnits), amount) : nil"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 76,
+          "code": "if let next = stagedEvaluation { counters[JSONResourceMetric.evaluationWorkUnits.index] = next }"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "evaluationFrames",
+      "profiles": {
+        "conservative": 256,
+        "balanced": 1024,
+        "offline": 4096
+      },
+      "unit": "active frames including reference/dynamic scopes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 25,
+          "code": "try meter.require(.evaluationFrames, UInt64(ancestors.count)+1)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "annotationEntries",
+      "profiles": {
+        "conservative": 20000,
+        "balanced": 100000,
+        "offline": 1000000
+      },
+      "unit": "internal evaluated-location and output entries",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONAnnotationState.swift",
+          "line": 21,
+          "code": "try meter.charge(.annotationEntries); try meter.charge(.annotationBytes, size); try meter.retain(size)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONAnnotationState.swift",
+          "line": 26,
+          "code": "try meter.charge(.annotationEntries); try meter.charge(.annotationBytes, JSONLogicalWeights.annotationEntry)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 154,
+          "code": "try meter.charge(.annotationEntries)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 172,
+          "code": "try meter.charge(.annotationEntries); try meter.charge(.annotationBytes,32); try meter.retain(32); frame.ownedBytes += 32"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 60,
+          "code": "try meter.require(.annotationEntries,UInt64(result.annotations.count))"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 62,
+          "code": "try meter.charge(.annotationEntries)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "annotationBytes",
+      "profiles": {
+        "conservative": 2097152,
+        "balanced": 8388608,
+        "offline": 67108864
+      },
+      "unit": "logical retained bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 121,
+          "code": "guard bytes <= used(.annotationBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 122,
+          "code": "counters[JSONResourceMetric.annotationBytes.index] -= bytes"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONAnnotationState.swift",
+          "line": 21,
+          "code": "try meter.charge(.annotationEntries); try meter.charge(.annotationBytes, size); try meter.retain(size)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONAnnotationState.swift",
+          "line": 26,
+          "code": "try meter.charge(.annotationEntries); try meter.charge(.annotationBytes, JSONLogicalWeights.annotationEntry)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 156,
+          "code": "try meter.charge(.annotationBytes,bytes)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 158,
+          "code": "while try cursor.next(meter: &meter) != nil { try meter.work(); try meter.charge(.annotationBytes); bytes += 1 }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 159,
+          "code": "var locationBytes = try outputSize(keyword,frame: frame,metric: .annotationBytes,meter: &meter)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 161,
+          "code": "if keyword == nil { for _ in key.string.utf8 { try meter.work(); locationBytes = try meter.adding(.annotationBytes,locationBytes,4) } }"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 162,
+          "code": "try meter.charge(.annotationBytes,locationBytes); bytes += locationBytes"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 172,
+          "code": "try meter.charge(.annotationEntries); try meter.charge(.annotationBytes,32); try meter.retain(32); frame.ownedBytes += 32"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 184,
+          "code": "try meter.work(); try meter.charge(.annotationBytes,48); try meter.retain(48)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 188,
+          "code": "try meter.charge(.annotationBytes,32); try meter.retain(32); frame.outcome.ownedAnnotationBytes += 32; frame.outcome.ownedAnnotationOutputBytes += 32"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 193,
+          "code": "try meter.work(20,subsystem: .numericWorkUnits); try meter.charge(.annotationBytes,68); try meter.retain(68)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 197,
+          "code": "try meter.charge(.annotationBytes,32); try meter.retain(32); frame.outcome.ownedAnnotationBytes += 32; frame.outcome.ownedAnnotationOutputBytes += 32"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 201,
+          "code": "try meter.charge(.annotationBytes,32); try meter.retain(32); frame.outcome.ownedAnnotationBytes += 32; frame.outcome.ownedAnnotationOutputBytes += 32"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 206,
+          "code": "try meter.work(20,subsystem: .numericWorkUnits); try meter.charge(.annotationBytes,52); try meter.retain(52)"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+          "line": 211,
+          "code": "try meter.charge(.annotationBytes,32); try meter.retain(32); frame.outcome.ownedAnnotationBytes += 32; frame.outcome.ownedAnnotationOutputBytes += 32"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationOutputAdapter.swift",
+          "line": 66,
+          "code": "while try annotationCursor.next(meter: &meter) != nil { try meter.work(); try meter.charge(.annotationBytes) }"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "regexPatternBytes",
+      "profiles": {
+        "conservative": 4096,
+        "balanced": 16384,
+        "offline": 65536
+      },
+      "unit": "UTF-8 bytes per pattern",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+          "line": 250,
+          "code": "for _ in pattern.utf8 { try RegexBudget.compileStep(meter: &meter); bytes += 1; try meter.require(.regexPatternBytes, bytes); try meter.charge(.aggregateRegexPatternBytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "line": 125,
+          "code": "try meter.require(.regexPatternBytes,bytes); try meter.charge(.aggregateRegexPatternBytes)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "aggregateRegexPatternBytes",
+      "profiles": {
+        "conservative": 65536,
+        "balanced": 262144,
+        "offline": 2097152
+      },
+      "unit": "UTF-8 bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+          "line": 250,
+          "code": "for _ in pattern.utf8 { try RegexBudget.compileStep(meter: &meter); bytes += 1; try meter.require(.regexPatternBytes, bytes); try meter.charge(.aggregateRegexPatternBytes) }"
+        },
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "line": 125,
+          "code": "try meter.require(.regexPatternBytes,bytes); try meter.charge(.aggregateRegexPatternBytes)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "regexProgramInstructions",
+      "profiles": {
+        "conservative": 20000,
+        "balanced": 100000,
+        "offline": 1000000
+      },
+      "unit": "instructions across plan",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONRegexRuntime/RegexCompiler.swift",
+          "line": 19,
+          "code": "try RegexBudget.compileStep(meter: &meter); try meter.charge(.regexProgramInstructions)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "regexCompileWorkUnits",
+      "profiles": {
+        "conservative": 250000,
+        "balanced": 2000000,
+        "offline": 16000000
+      },
+      "unit": "primitive operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONRegexRuntime/RegexBudget.swift",
+          "line": 5,
+          "code": "package static func compileStep(meter: inout JSONWorkMeter) throws { try meter.work(subsystem: .regexCompileWorkUnits) }"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+          "line": 94,
+          "code": "return try JSONKey(String(result), meter: &meter, subsystem: .regexCompileWorkUnits)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "regexSearchWorkUnits",
+      "profiles": {
+        "conservative": 100000,
+        "balanced": 500000,
+        "offline": 4000000
+      },
+      "unit": "primitive operations per search",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 115,
+          "code": "package mutating func beginRegexSearch() throws { try retire(.regexSearchWorkUnits) }"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexBudget.swift",
+          "line": 7,
+          "code": "try meter.work(amount, subsystem: .regexSearchWorkUnits); try meter.charge(.aggregateRegexWorkUnits, amount)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "aggregateRegexWorkUnits",
+      "profiles": {
+        "conservative": 250000,
+        "balanced": 2000000,
+        "offline": 16000000
+      },
+      "unit": "primitive operations per evaluation",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONRegexRuntime/RegexBudget.swift",
+          "line": 7,
+          "code": "try meter.work(amount, subsystem: .regexSearchWorkUnits); try meter.charge(.aggregateRegexWorkUnits, amount)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "regexRetainedBytes",
+      "profiles": {
+        "conservative": 2097152,
+        "balanced": 8388608,
+        "offline": 67108864
+      },
+      "unit": "logical live match state bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 105,
+          "code": "if metric != .retainedBytes && metric != .regexRetainedBytes {"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 117,
+          "code": "guard bytes <= used(.regexRetainedBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 118,
+          "code": "counters[JSONResourceMetric.regexRetainedBytes.index] -= bytes"
+        },
+        {
+          "path": "Sources/JSONRegexRuntime/RegexVM.swift",
+          "line": 48,
+          "code": "try meter.charge(.regexRetainedBytes, amount); try meter.retain(amount)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "regexCaptureGroups",
+      "profiles": {
+        "conservative": 128,
+        "balanced": 512,
+        "offline": 2048
+      },
+      "unit": "groups per pattern",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+          "line": 276,
+          "code": "try meter.require(.regexCaptureGroups, UInt64(captureCount)); try meter.require(.maxDepth, UInt64(frames.count+1))"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "chunkBytes",
+      "profiles": {
+        "conservative": 65536,
+        "balanced": 262144,
+        "offline": 1048576
+      },
+      "unit": "accepted source bytes per chunk",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONStreaming/Internal/JSONReusableScratch.swift",
+          "line": 21,
+          "code": "try meter.checkpoint(); try meter.require(.chunkBytes, UInt64(chunk.count))"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONAsyncWriter.swift",
+          "line": 13,
+          "code": "guard chunkSize > 0, UInt64(chunkSize) <= options.limits[.chunkBytes], options.indentation.map({ (0...8).contains($0) }) ?? true else { throw JSONFailure(.configuration, code: .invalidLimits) }"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "pendingEvents",
+      "profiles": {
+        "conservative": 1,
+        "balanced": 1,
+        "offline": 1
+      },
+      "unit": "unconsumed complete events",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONStreaming/JSONEventSequence.swift",
+          "line": 35,
+          "code": "try input.meter.checkpoint(); try input.meter.require(.pendingEvents, 1)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "pendingValues",
+      "profiles": {
+        "conservative": 1,
+        "balanced": 1,
+        "offline": 1
+      },
+      "unit": "unconsumed complete records",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+          "line": 30,
+          "code": "try input.meter.checkpoint(); try input.meter.require(.pendingValues, 1)"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONValueSequence.swift",
+          "line": 20,
+          "code": "try driver.input.meter.require(.pendingValues, 1)"
+        },
+        {
+          "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+          "line": 31,
+          "code": "try input.meter.checkpoint(); try input.meter.require(.pendingValues, 1)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "totalInputBytes",
+      "profiles": {
+        "conservative": 268435456,
+        "balanced": 1073741824,
+        "offline": 68719476736
+      },
+      "unit": "bytes per iterator lifetime",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 99,
+          "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
+        },
+        {
+          "path": "Sources/JSONStreaming/Internal/JSONReusableScratch.swift",
+          "line": 22,
+          "code": "try meter.charge(.totalInputBytes, UInt64(chunk.count))"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "totalRecords",
+      "profiles": {
+        "conservative": 100000,
+        "balanced": 1000000,
+        "offline": 16000000
+      },
+      "unit": "records per iterator lifetime",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 45,
+          "code": "count = try meter.adding(.totalRecords, frames[index].count, 1)"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 99,
+          "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONEventSequence.swift",
+          "line": 31,
+          "code": "func summary() -> JSONStreamSummary { .init(records: input.meter.used(.totalRecords), statistics: input.meter.statistics()) }"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONEventSequence.swift",
+          "line": 47,
+          "code": "try input.meter.charge(.totalRecords); resetOnNext = true"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONEventSequence.swift",
+          "line": 51,
+          "code": "try input.meter.charge(.totalRecords); terminal = true"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONEventSequence.swift",
+          "line": 59,
+          "code": "try input.meter.charge(.totalRecords); terminal = true"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+          "line": 40,
+          "code": "return .documentCompleted(.init(records: input.meter.used(.totalRecords), statistics: input.meter.statistics()))"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+          "line": 54,
+          "code": "let index = input.meter.used(.totalRecords)"
+        },
+        {
+          "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+          "line": 55,
+          "code": "try input.meter.charge(.totalRecords); assembler = JSONValueAssembler(); resetOnNext = true"
+        },
+        {
+          "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+          "line": 44,
+          "code": "try input.meter.charge(.totalRecords)"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "totalWorkUnits",
+      "profiles": {
+        "conservative": 512000000,
+        "balanced": 2147483648,
+        "offline": 137438953472
+      },
+      "unit": "primitive operations per iterator lifetime",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 64,
+          "code": "case .streaming: domainMetric = .totalWorkUnits"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 99,
+          "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "operations",
+      "profiles": {
+        "conservative": 128,
+        "balanced": 1024,
+        "offline": 10000
+      },
+      "unit": "operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 7,
+          "code": "try meter.require(.operations, UInt64(operations.count))"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 9,
+          "code": "self.operations = operations"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 16,
+          "code": "try meter.require(.operations, UInt64(values.count))"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 40,
+          "code": "self.operations = operations"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "line": 55,
+          "code": "try meter.charge(.operations); try meter.work()"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "pointerBytes",
+      "profiles": {
+        "conservative": 4096,
+        "balanced": 16384,
+        "offline": 65536
+      },
+      "unit": "UTF-8 bytes per encoded Pointer",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 15,
+          "code": "encodedBytes = try meter.adding(.pointerBytes, encodedBytes, 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 16,
+          "code": "for byte in token.utf8 { try meter.work(); encodedBytes = try meter.adding(.pointerBytes, encodedBytes, byte == 47 || byte == 126 ? 2 : 1) }"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 25,
+          "code": "bytes = try meter.adding(.pointerBytes, bytes, 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 27,
+          "code": "try meter.work(); bytes = try meter.adding(.pointerBytes, bytes, byte == 47 || byte == 126 ? 2 : 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 38,
+          "code": "try meter.work(); try meter.require(.pointerBytes, UInt64(bytes.count) + 1); try meter.retain(1); bytes.append(byte)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 71,
+          "code": "for byte in fragment.utf8 { try meter.work(); try meter.require(.pointerBytes, UInt64(raw.count) + 1); try meter.retain(1); raw.append(byte) }"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 92,
+          "code": "try meter.work(); try meter.require(.pointerBytes,UInt64(bytes.count)+1); try meter.require(.stringBytes,UInt64(bytes.count)+1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 122,
+          "code": "for byte in key.utf8 { try meter.work(); encoded = try meter.adding(.pointerBytes, encoded, byte == 47 || byte == 126 ? 2 : 1) }"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "pointerTokens",
+      "profiles": {
+        "conservative": 64,
+        "balanced": 128,
+        "offline": 256
+      },
+      "unit": "tokens per Pointer",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 14,
+          "code": "try meter.require(.pointerTokens, UInt64(keys.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 24,
+          "code": "try meter.require(.pointerTokens, UInt64(keys.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 46,
+          "code": "try meter.require(.pointerTokens, UInt64(tokens.count) + 1); try meter.retain(16)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 120,
+          "code": "try meter.require(.pointerTokens, UInt64(tokens.count) + 1)"
+        },
+        {
+          "path": "Sources/JSON/Pointer/JSONPointer.swift",
+          "line": 141,
+          "code": "try meter.require(.pointerTokens, UInt64(tokens.count))"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "patchWorkUnits",
+      "profiles": {
+        "conservative": 2000000,
+        "balanced": 16000000,
+        "offline": 128000000
+      },
+      "unit": "primitive operations",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 63,
+          "code": "case .patch: domainMetric = .patchWorkUnits"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "totalScannedNodes",
+      "profiles": {
+        "conservative": 2000000,
+        "balanced": 16000000,
+        "offline": 128000000
+      },
+      "unit": "nodes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+          "line": 52,
+          "code": "if meter.domain == .streaming { try meter.charge(.totalScannedNodes) }"
+        },
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 99,
+          "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
+        }
+      ],
+      "public_probe_outcome": "limitExceeded",
+      "error": "resource:limitExceeded with same metric; checked overflow uses counterOverflow",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    },
+    {
+      "metric": "maxReusableBufferBytes",
+      "profiles": {
+        "conservative": 524288,
+        "balanced": 2097152,
+        "offline": 8388608
+      },
+      "unit": "bytes",
+      "accounting_sites": [
+        {
+          "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+          "line": 97,
+          "code": "resetRecord retires per-record state; selected scalar E09 retains no reusable scratch pool (zero bytes)."
+        }
+      ],
+      "public_probe_outcome": "zero-scratch-success",
+      "error": "capacity invariant: zero owned reusable scratch",
+      "boundary_test": "Tests/JSONTests/ResourceLimitTests.swift: everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries; 49 metrics x 3 profiles, inclusive limit and limit+1 and UInt64 overflow. Public zero-cap probes separately reach actual operations.",
+      "verification": "Scripts/ci.py --lane native; Tools/Qualification/Tests; Tests/JSONTests/ResourceLimitTests.swift"
+    }
+  ],
+  "public_resource_rejections": 47,
+  "configuration_rejections": 1,
+  "zero_ownership_probes": 1,
+  "scope": "49 finite initial policy metrics. Public probes distinguish 47 resource failures, one invalid zero cancellation quantum, and successful zero owned reusable scratch. Logical retained bytes are not RSS."
+}

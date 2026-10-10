@@ -1,0 +1,11 @@
+{
+  "repository": "modelcontextprotocol/modelcontextprotocol",
+  "commit": "c518f7a927cff918bce35d3522fcdb046d264d7c",
+  "upstream_path": "schema/2026-07-28/schema.json",
+  "protocol": "2026-07-28",
+  "sha256": "ef70b61f99b6d2e5e3b46863822eab08dff6a45bedc7a08914e0e5b133f40203",
+  "git_blob": "213c58f6d9a1c2ce6ad055afe90bbdb095a29ee8",
+  "definition_count": 155,
+  "instance_root": "none; select a specific definition explicitly",
+  "license": "full upstream licensing transition notice retained in LICENSE"
+}

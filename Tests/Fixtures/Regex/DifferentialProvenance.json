@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "engine": "Node.js RegExp",
+  "node": "v26.5.0",
+  "v8": "14.6.202.34-node.24",
+  "unicode": "17.0",
+  "flags": "u",
+  "policy": "Deterministic scalar grammar combinations; property-version differences excluded from this differential oracle.",
+  "pattern_count": 442,
+  "case_count": 31824,
+  "generator_sha256": "451c461d3c8d8f44b07d6a9d52a303744aac165b92c6dae11e20b889b55b149a",
+  "fixture": "Tests/Fixtures/Regex/differential.json",
+  "fixture_sha256": "60ab5b996ac33ccf43f2f64cc95b2105475bc5e39f287a328bdf58f625f2539a"
+}

@@ -1,0 +1,28 @@
+name: Reproducible defect
+description: Report incorrect behavior with a minimal input and native environment.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "For security-sensitive reports use the private route in SECURITY.md. Redact credentials and application data."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version and native environment
+      description: Resolved commit/version, macOS, Swift compiler and SDK versions, product, and resource profile.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the smallest input, code and command that reproduce the defect.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+      description: Include the exact thrown error or validation verdict when relevant.
+    validations:
+      required: true
