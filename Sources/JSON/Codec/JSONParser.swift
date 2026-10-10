@@ -1,9 +1,33 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+/// An immutable strict UTF-8 parser with invocation-owned state.
+///
+/// Each call accepts exactly one root, trailing JSON whitespace and EOF. Duplicate
+/// decoded keys, BOMs, malformed UTF-8 and unpaired surrogate escapes fail. Calls may
+/// run concurrently; limits and cancellation apply to the work owned by each call.
 public struct JSONParser: Sendable {
+    /// The immutable configuration used to create each invocation.
     public let options: JSONParsingOptions
+    /// Creates an immutable parser facade. Limits are checked when parsing begins.
+    ///
+    /// - Parameters:
+    ///   - options: The value configuration used by this facade or operation.
     public init(options: JSONParsingOptions = .init()) { self.options = options }
+    /// Parses exactly one strict UTF-8 JSON document.
+    ///
+    /// - Returns: The admitted root after trailing whitespace and EOF.
+    /// - Throws: `JSONFailure` for syntax, admission or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - text: The encoded input text to admit.
     public func parse(_ text: String) throws -> JSON { try copyAndParse(text.utf8) }
+    /// Parses exactly one strict UTF-8 JSON document.
+    ///
+    /// - Returns: The admitted root after trailing whitespace and EOF.
+    /// - Throws: `JSONFailure` for syntax, admission or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - data: The owned input bytes supplied by the caller.
     public func parse(_ data: Data) throws -> JSON { try copyAndParse(data) }
     private func copyAndParse<C: Collection>(_ input: C) throws -> JSON where C.Element == UInt8 {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .parsing)
@@ -14,7 +38,21 @@ public struct JSONParser: Sendable {
         }
         return try parse(bytes, meter: &meter)
     }
+    /// Parses exactly one strict UTF-8 JSON document.
+    ///
+    /// - Returns: The admitted root after trailing whitespace and EOF.
+    /// - Throws: `JSONFailure` for syntax, admission or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - bytes: The UTF-8 bytes supplied by the caller.
     public func parse(_ bytes: [UInt8]) throws -> JSON { try parseWithReport(bytes).result }
+    /// Parses owned UTF-8 bytes and returns successful parsing accounting.
+    ///
+    /// - Returns: A certified root and versioned charged counts.
+    /// - Throws: Syntax, resource or configuration failure, or cancellation; no report exists on failure.
+    ///
+    /// - Parameters:
+    ///   - bytes: The UTF-8 bytes supplied by the caller.
     public func parseWithReport(_ bytes: [UInt8]) throws -> JSONOperationReport<JSON> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .parsing)
         let value = try parse(bytes, meter: &meter)

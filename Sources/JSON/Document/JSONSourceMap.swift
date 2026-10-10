@@ -1,18 +1,42 @@
 // SPDX-License-Identifier: Apache-2.0
+/// A half-open range of zero-based byte offsets in owned source bytes.
 public struct JSONSourceSpan: Sendable, Equatable {
+    /// The included zero-based starting byte offset.
     public let start: UInt64
+    /// The excluded zero-based ending byte offset.
     public let end: UInt64
     package init(start: UInt64, end: UInt64) { self.start = start; self.end = end }
 }
+/// Bounded source spans for values and member keys, addressed by typed paths.
 public struct JSONSourceMap: Sendable {
+    /// A source range associated with one value or decoded member key.
     public struct Entry: Sendable {
-        public enum Kind: Sendable { case value, memberKey }
+        /// The source token associated with a mapping entry.
+        public enum Kind: Sendable {
+            /// The byte span of a complete JSON value.
+            case value
+            /// The byte span of the original encoded object-key token.
+            case memberKey
+        }
+        /// The typed value path for this entry.
         public let path: [JSONLocationComponent]
+        /// Whether this entry describes a value or a member-key token.
         public let kind: Kind
+        /// The half-open source byte range for this entry.
         public let span: JSONSourceSpan
     }
+    /// Owned mapping entries in parser traversal order.
     public let entries: [Entry]
     package init(entries: [Entry]) { self.entries = entries }
+    /// Looks up a bounded source span by typed path and entry kind.
+    ///
+    /// - Returns: The matching half-open byte range, or nil.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - path: The typed source path.
+    ///   - kind: Whether to select a value or member-key token.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func span(at path: [JSONLocationComponent], kind: Entry.Kind = .value, limits: JSONLimits = .balanced) throws -> JSONSourceSpan? {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         for entry in entries {

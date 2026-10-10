@@ -1,9 +1,20 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
-/// Immutable explicitly supplied resources. No network fetch or process-global cache.
+/// Immutable explicitly supplied schema resources without network resolution.
+///
+/// Each document requires an unambiguous retrieval URI. There is no global cache.
 public struct JSONSchemaRegistry: Sendable {
+    /// The immutable externally supplied resource documents.
     public let documents: [JSONSchemaDocument]
+    /// An immutable registry with no external resources.
     public static let empty = Self(admitted: [])
+    /// Admits explicit offline documents with unambiguous retrieval URIs.
+    ///
+    /// - Throws: Missing/duplicate resource identity, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - documents: Explicit offline resources, each with an unambiguous retrieval URI.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(documents: [JSONSchemaDocument] = [], limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .schemaCompilation)
         try meter.require(.schemaDocuments, UInt64(documents.count))
@@ -20,6 +31,13 @@ public struct JSONSchemaRegistry: Sendable {
         }
         self.documents = admitted
     }
+    /// Returns a registry admitting one additional unambiguous offline resource.
+    ///
+    /// - Throws: Missing/duplicate retrieval identity, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - document: An admitted schema or source document.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func adding(_ document: JSONSchemaDocument, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .schemaCompilation)
         try meter.require(.schemaDocuments, UInt64(documents.count) + 1)

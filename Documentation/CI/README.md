@@ -12,7 +12,7 @@ Pushes to main, pull requests and manual dispatch run three lanes:
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
-- Documentation: public symbol graphs and four DocC catalogs with warnings as errors.
+- Documentation: public symbol graphs, complete authored API/parameter comments, executed README examples, four DocC catalogs and a verified Doxygen HTML/XML catalog, with warnings as errors. Doxygen 1.18.0 is development tooling outside the root dependency graph.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
 checkout persists no credentials. Every lane uploads its receipts and logs even

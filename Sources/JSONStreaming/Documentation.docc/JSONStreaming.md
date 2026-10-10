@@ -34,6 +34,10 @@ publication must stage bytes in its own sink.
 
 ## Topics
 
+### Guides
+
+- <doc:CompletionAndBackpressure>
+
 ### Pull sequences
 - ``JSONByteChunk``
 - ``JSONEvent``

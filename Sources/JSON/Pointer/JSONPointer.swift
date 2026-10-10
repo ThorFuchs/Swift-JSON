@@ -1,11 +1,30 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+/// An RFC 6901 Pointer with exact decoded-scalar tokens.
+///
+/// Object tokens remain keys even when numeric. Array evaluation requires strict
+/// indices; `-` is a Patch append token and is not a resolvable array index.
 public struct JSONPointer: Sendable, Hashable {
+    /// Decoded Pointer tokens in traversal order, preserving scalar spelling.
     public let tokens: [JSONKey]
+    /// Admits RFC 6901 text or supplied decoded tokens under finite Pointer limits.
+    ///
+    /// - Throws: Invalid Pointer syntax, capacity/work failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - text: Encoded input text admitted without repair.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(parsing text: String, limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
         self = try Self.parse(text, meter: &meter)
     }
+    /// Admits RFC 6901 text or supplied decoded tokens under finite Pointer limits.
+    ///
+    /// - Throws: Invalid Pointer syntax, capacity/work failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - tokens: Decoded scalar tokens, without RFC 6901 escaping.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(tokens: [String], limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
         var keys: [JSONKey] = []
@@ -59,6 +78,14 @@ public struct JSONPointer: Sendable, Hashable {
         try meter.release(UInt64(bytes.count))
         return Self(admitted: tokens)
     }
+    /// Parses a # URI fragment by percent-decoding UTF-8 and then RFC 6901 escapes.
+    ///
+    /// - Returns: Exact decoded Pointer tokens.
+    /// - Throws: Invalid fragment/UTF-8/Pointer syntax, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - fragment: An encoded # URI fragment.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public static func uriFragment(_ fragment: String, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
         return try uriFragment(fragment, meter: &meter)
@@ -103,6 +130,7 @@ public struct JSONPointer: Sendable, Hashable {
         try meter.retain(UInt64(bytes.count)); let text = String(decoding: bytes,as: UTF8.self)
         try meter.release(UInt64(bytes.count)); return text
     }
+    /// The RFC 6901 encoded Pointer text; empty text selects the root. Rendering is unmetered.
     public var string: String {
         var result = ""
         for token in tokens {
@@ -115,6 +143,13 @@ public struct JSONPointer: Sendable, Hashable {
         }
         return result
     }
+    /// Returns a new Pointer with the supplied key, index or decoded tokens appended.
+    ///
+    /// - Throws: Invalid indices or Pointer capacity failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - key: The exact decoded-scalar key or caller CodingKey.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func appending(key: String, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
         try meter.require(.pointerTokens, UInt64(tokens.count) + 1)
@@ -123,14 +158,36 @@ public struct JSONPointer: Sendable, Hashable {
         let suffix = CollectionOfOne(try JSONKey(key, meter: &meter))
         return try Self.decodedTokens([AnySequence(tokens), AnySequence(suffix)].lazy.flatMap { $0 }, meter: &meter)
     }
+    /// Returns a new Pointer with the supplied key, index or decoded tokens appended.
+    ///
+    /// - Throws: Invalid indices or Pointer capacity failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - index: A nonnegative runtime array index.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func appending(index: Int, limits: JSONLimits = .balanced) throws -> Self {
         guard index >= 0 else { throw JSONFailure(.pointer, code: .invalidIndex) }
         return try appending(key: String(index), limits: limits)
     }
+    /// Returns a new Pointer with the supplied key, index or decoded tokens appended.
+    ///
+    /// - Throws: Invalid indices or Pointer capacity failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - other: The decoded Pointer tokens to append.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func appending(_ other: Self, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
         return try Self.decodedTokens([tokens, other.tokens].lazy.flatMap { $0 }, meter: &meter)
     }
+    /// Resolves exact object keys and strict runtime array indices.
+    ///
+    /// - Returns: The selected value; the empty Pointer selects the root.
+    /// - Throws: Invalid index, wrong kind or missing target, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value supplied by the caller.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func resolve(in value: JSON, limits: JSONLimits = .balanced) throws -> JSON {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
         try JSONAdmission.value(value, meter: &meter)

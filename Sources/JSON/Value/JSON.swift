@@ -1,9 +1,30 @@
 // SPDX-License-Identifier: Apache-2.0
 // Value cases selectively adapted from RhoeJSON Core/JSONValue.swift.
 // Copyright 2024-2026 Thor Fuchs. Licensed under Apache-2.0.
+/// An exact JSON value with scalar text identity and mathematical decimal equality.
+///
+/// Object equality ignores insertion order. Direct cases admit trusted caller values;
+/// bounded operations charge and validate them on entry. Ordinary equality and hashing
+/// are unmetered; use `JSONComparison` for bounded comparison of untrusted values.
 public indirect enum JSON: Sendable, Hashable {
-    case object(JSONObject), array([JSON]), string(String), number(JSONNumber), boolean(Bool), null
+    /// An ordered exact-key object.
+    case object(JSONObject)
+    /// An ordered array of JSON values.
+    case array([JSON])
+    /// Text whose equality uses decoded Unicode scalar spelling.
+    case string(String)
+    /// An exact bounded decimal value.
+    case number(JSONNumber)
+    /// A Boolean value.
+    case boolean(Bool)
+    /// The JSON null value.
+    case null
 
+    /// Compares semantic identity without a throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left value.
+    ///   - rhs: The right value.
     public static func == (lhs: JSON, rhs: JSON) -> Bool {
         var pending = [(lhs, rhs)]
         while let (a, b) = pending.popLast() {
@@ -26,6 +47,12 @@ public indirect enum JSON: Sendable, Hashable {
         }
         return true
     }
+    /// Hashes semantic identity; the randomized result is not a persistent digest.
+    ///
+    /// This protocol operation has no throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - hasher: The caller's randomized Swift hasher.
     public func hash(into hasher: inout Hasher) {
         enum Step { case value(JSON), key(JSONKey) }
         var pending: [Step] = [.value(self)]

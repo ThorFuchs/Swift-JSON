@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Numeric storage is new code; reference JSONNumber.swift was reviewed, not copied.
+/// An exact bounded decimal value with optional original JSON spelling.
+///
+/// Equality and hashing use the mathematical value. Zero has one identity, including
+/// negative zero. Large exponents do not require exponent-sized zero storage.
 public struct JSONNumber: Sendable, Hashable {
     private enum Storage: Sendable { case integer(Int64), decimal(DecimalComponents) }
     private let storage: Storage
+    /// The original admitted JSON token spelling, or nil for constructed numbers.
     public let originalLexeme: String?
     package var components: DecimalComponents {
         switch storage {
@@ -10,6 +15,10 @@ public struct JSONNumber: Sendable, Hashable {
         case .decimal(let value): return value
         }
     }
+    /// Constructs an exact decimal from a trusted Swift integer without a resource budget.
+    ///
+    /// - Parameters:
+    ///   - integer: The exact integer value to represent.
     public init<T: BinaryInteger>(integer: T) {
         if let small = Int64(exactly: integer) { storage = .integer(small) }
         else { storage = .decimal(.integer(integer)) }
@@ -18,6 +27,14 @@ public struct JSONNumber: Sendable, Hashable {
     package init(components: DecimalComponents, lexeme: String? = nil) {
         storage = .decimal(components); originalLexeme = lexeme
     }
+    /// Parses one exact JSON decimal token under finite digit, exponent and work limits.
+    /// Equivalent spellings normalize to mathematical identity while retaining the lexeme.
+    ///
+    /// - Throws: Invalid-number, resource/configuration errors or cancellation.
+    ///
+    /// - Parameters:
+    ///   - text: Encoded input text admitted without repair.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(parsing text: String, limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         self = try Self.parse(text.utf8, meter: &meter)
@@ -106,13 +123,31 @@ public struct JSONNumber: Sendable, Hashable {
         try meter.release(UInt64(input.count) + UInt64(digits.count))
         return Self(components: components, lexeme: lexeme)
     }
+    /// Whether the mathematical value is zero, regardless of its original sign or spelling.
     public var isZero: Bool { components.isZero }
+    /// Whether the normalized mathematical value is strictly negative.
     public var isNegative: Bool { components.negative }
+    /// Whether the exact decimal has no fractional mathematical part.
     public var isInteger: Bool { isZero || components.exponent >= 0 }
+    /// Compares semantic identity without a throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left value.
+    ///   - rhs: The right value.
     public static func == (lhs: Self, rhs: Self) -> Bool { lhs.components == rhs.components }
+    /// Hashes semantic identity; the randomized result is not a persistent digest.
+    ///
+    /// This protocol operation has no throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - hasher: The caller's randomized Swift hasher.
     public func hash(into hasher: inout Hasher) { hasher.combine(components) }
 }
 
 extension JSONNumber: ExpressibleByIntegerLiteral {
+    /// Constructs a trusted literal value without a resource budget; bounded operations admit it later.
+    ///
+    /// - Parameters:
+    ///   - value: The value supplied by the caller.
     public init(integerLiteral value: Int64) { self.init(integer: value) }
 }

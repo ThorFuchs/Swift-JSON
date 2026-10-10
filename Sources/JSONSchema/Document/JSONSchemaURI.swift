@@ -1,10 +1,22 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 import JSON
-/// URI resolution occurs during compilation. Runtime plans retain indexed targets.
+/// A normalized absolute RFC 3986 schema identity resolved during compilation.
+///
+/// Pointer and anchor fragments identify schema locations. Constructing a URI
+/// never fetches it; plans retain indexed reference targets.
 public struct JSONSchemaURI: Sendable, Hashable {
+    /// The normalized absolute URI spelling used for exact resource identity.
     public let string: String
     private let identity: JSONKey
+    /// Resolves and normalizes an absolute URI, optionally relative to a supplied base.
+    ///
+    /// - Throws: Invalid identifier, resource or configuration failure, or cancellation. No fetch occurs.
+    ///
+    /// - Parameters:
+    ///   - text: The encoded input text to admit.
+    ///   - base: The optional absolute base for relative URI resolution.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(_ text: String, relativeTo base: Self? = nil, limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .schemaCompilation)
         self = try Self.parse(text, relativeTo: base, meter: &meter)
@@ -38,7 +50,14 @@ public struct JSONSchemaURI: Sendable, Hashable {
         return try Self(admitted: normalized, meter: &meter)
     }
     private init(admitted text: String, meter: inout JSONWorkMeter) throws { string = text; identity = try JSONKey(text, meter: &meter) }
+    /// The encoded fragment text after #, or nil when absent.
     public var fragment: String? { string.firstIndex(of: "#").map { String(string[string.index(after: $0)...]) } }
+    /// Returns the normalized resource URI without its fragment.
+    ///
+    /// - Throws: URI admission or resource failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func removingFragment(limits: JSONLimits = .balanced) throws -> Self {
         try Self(string.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: false).first.map(String.init) ?? string, limits: limits)
     }
@@ -53,6 +72,17 @@ public struct JSONSchemaURI: Sendable, Hashable {
         try meter.release(UInt64(bytes.count))
         return result
     }
+    /// Compares semantic identity without a throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - a: The left identity.
+    ///   - b: The right identity.
     public static func == (a: Self, b: Self) -> Bool { a.identity == b.identity }
+    /// Hashes semantic identity; the randomized result is not a persistent digest.
+    ///
+    /// This protocol operation has no throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - hasher: The caller's randomized Swift hasher.
     public func hash(into hasher: inout Hasher) { hasher.combine(identity) }
 }

@@ -26,6 +26,10 @@ earlier oversized stage. Reports expose logical accounting, not process RSS.
 
 ## Topics
 
+### Guides
+
+- <doc:ApplyingPatches>
+
 - ``JSONPatch``
 - ``JSONPatchOperation``
 - ``JSONPatchResult``

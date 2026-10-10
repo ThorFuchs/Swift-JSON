@@ -1,7 +1,7 @@
 # Concurrency and ownership
 
 Immutable values, number components, object storage, Pointer tokens, documents,
-settings, diagnostics and compiled schema snapshots should have checked Sendable
+settings, diagnostics and compiled schema snapshots have checked Sendable
 conformances. Mutable evaluation/coding/parser/regex state belongs to one owned
 invocation. A configuration facade must not hide a shared mutable coder or cache.
 
@@ -18,8 +18,8 @@ invocation. A configuration facade must not hide a shared mutable coder or cache
 Caller-decoded non-Sendable models are valid in synchronous APIs. UserInfo needs
 a bounded checked-Sendable representation; do not erase arbitrary Any into an
 unchecked box. Operation reports are Sendable only when their result qualifies.
-Do not mark the library MainActor. Any @concurrent convenience must be tested
-with the real Swift 6.4 compiler and a safe transferred/Sendable result contract.
+Library work has no default MainActor isolation or CPU-offloading convenience.
+Synchronous calls use the caller executor.
 
 Cancellation checks occur at operation entry, before growth/suspension, on await
 return and at most 1024 owned charged units apart. Native tests must exercise

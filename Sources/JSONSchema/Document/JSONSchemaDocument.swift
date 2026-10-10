@@ -1,10 +1,25 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
-/// Preserves all declarations, including unknown annotation keywords.
+/// An admitted object or boolean schema preserving every raw declaration.
+///
+/// Unknown annotation keywords remain inspectable. Admission alone does not prove
+/// that a schema is compilable; the compiler is the dialect authority.
 public struct JSONSchemaDocument: Sendable {
+    /// The exact raw declaration, including unknown keywords and metadata.
     public let raw: JSON
+    /// The optional retrieval identity supplied by the caller.
     public let retrievalURI: JSONSchemaURI?
+    /// Optional bounded mapping from typed value paths to original source byte spans.
     public let sourceMap: JSONSourceMap?
+    /// Admits an object or Boolean schema while preserving raw declarations and optional source mapping.
+    ///
+    /// - Throws: Root-kind, resource or configuration failure, or cancellation. Compilation is a separate step.
+    ///
+    /// - Parameters:
+    ///   - raw: The exact raw object or Boolean schema.
+    ///   - retrievalURI: An optional absolute retrieval identity; this does not fetch resources.
+    ///   - sourceMap: Optional coherent source spans.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(_ raw: JSON, retrievalURI: JSONSchemaURI? = nil, sourceMap: JSONSourceMap? = nil, limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .schemaCompilation)
         try self.init(raw, retrievalURI: retrievalURI, sourceMap: sourceMap, meter: &meter)
@@ -17,6 +32,14 @@ public struct JSONSchemaDocument: Sendable {
     package init(admitted raw: JSON, retrievalURI: JSONSchemaURI) {
         self.raw = raw; self.retrievalURI = retrievalURI; sourceMap = nil
     }
+    /// Admits an object or Boolean schema while preserving raw declarations and optional source mapping.
+    ///
+    /// - Throws: Root-kind, resource or configuration failure, or cancellation. Compilation is a separate step.
+    ///
+    /// - Parameters:
+    ///   - document: An admitted schema or source document.
+    ///   - retrievalURI: An optional absolute retrieval identity; this does not fetch resources.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(_ document: JSONDocument, retrievalURI: JSONSchemaURI? = nil, limits: JSONLimits = .balanced) throws {
         try self.init(document.root, retrievalURI: retrievalURI, sourceMap: document.sourceMap, limits: limits)
     }

@@ -1,16 +1,37 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
+/// A strict pull reader for LF or CRLF delimited JSON records.
+///
+/// Blank and malformed records fail without recovery. A valid final record may omit
+/// the final LF. Errors report absolute bytes and one-based physical record positions.
 public struct NDJSONValueSequence<Source: AsyncSequence>: AsyncSequence where Source.Element == JSONByteChunk {
+    /// The element yielded by this collection or sequence.
     public typealias Element = JSON
     let source: Source
     let options: NDJSONOptions
+    /// Wraps a caller-owned source for strict physical records; no malformed-record recovery occurs.
+    ///
+    /// - Parameters:
+    ///   - source: The caller-owned chunk source or optional document label.
+    ///   - options: The value configuration used by this facade or operation.
     public init(_ source: Source, options: NDJSONOptions = .init()) { self.source = source; self.options = options }
+    /// Creates an independent iterator with exclusive mutable state and no prefetch task.
     public func makeAsyncIterator() -> Iterator { .init(source: source.makeAsyncIterator(), limits: options.limits) }
+    /// Exclusive pull iterator; never call next concurrently.
+    ///
+    /// Each iterator owns its budget and parsing state. Conditional Sendable of the
+    /// sequence does not make this mutable iterator safe for concurrent access.
     public struct Iterator: AsyncIteratorProtocol {
         private var source: Source.AsyncIterator?
         private let limits: JSONLimits
         private var driver: NDJSONDriver<Source.AsyncIterator>?
         fileprivate init(source: Source.AsyncIterator, limits: JSONLimits) { self.source = source; self.limits = limits }
+        /// Pulls at most one result through exclusively owned iterator state.
+        ///
+        /// Continue until the certified boundary or nil required by the sequence contract.
+        /// An error or cancellation makes an initialized iterator terminal and prevents later pulls.
+        /// - Returns: The next event/value, or nil after termination.
+        /// - Throws: Source, syntax or resource errors, or cancellation.
         public mutating func next() async throws -> JSON? {
             if driver == nil { driver = try NDJSONDriver(upstream: source!, limits: limits); source = nil }
             return try await driver!.next()

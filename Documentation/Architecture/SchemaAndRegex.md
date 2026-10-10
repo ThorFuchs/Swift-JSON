@@ -1,6 +1,4 @@
-# Schema and regex implementation
-
-
+# Schema and regex contract
 
 These contracts describe the public behavior and its resource boundaries.
 
@@ -24,34 +22,36 @@ Reference recursion can be legitimate as instance traversal progresses. A global
 
 Exact integer count/length assertions compare mathematical bounds without narrowing them just to render an error. Strings count Unicode scalars, not Swift grapheme clusters or UTF-8 bytes. const, enum and uniqueItems use budgeted exact equality. Evaluated property sets use JSONKey rather than String identity. All of these requirements must survive dependency adaptation.
 
-## Backend comparison and regex experiment
+## Native backend and regex dialect
 
-The pinned native candidate is ajevans99/swift-json-schema v0.14.1 at 1514dd27fd55dbd36eec40c60e40ac8bfe0a22f4. Its source has reusable keyword, resource, reference and annotation algorithms. Its JSONValue implements scalar equality for string values, but object storage remains OrderedDictionary<String, JSONValue>. Keyword property sets also use String. A String-key adapter would therefore collapse distinct scalar spellings. The inspected evaluator uses shared context/cache facilities and synchronous Swift Regex matching without our complete invocation meter [R01–R03].
+The shipped evaluator uses the exact JSON model, private indexed plans and
+invocation-owned frames. Its reference/adaptation inputs and licenses are recorded
+in [ExtractionManifest.json](ExtractionManifest.json) and [UpstreamPins.json](UpstreamPins.json).
+There is no production upstream schema package, Rust binary or external engine
+dependency. Independent suites and policy exceptions are documented in
+[qualification](../Qualification/README.md).
 
-| Approach | Benefit | Architecture consequence | Recommendation |
-| --- | --- | --- | --- |
-| Direct package dependency with facade | Least initial copying | Key/annotation identity, actual budgets, immutable plan and module-name boundary still require invasive changes; full manifest resolves development dependencies | Do not choose as the release path |
-| Selective native adaptation | Reuses established algorithms and fixtures, with one exact JSON model and controlled graph | Requires semantic review, explicit frames/meters, regression tests and MIT notices for copied portions | Preferred implementation path, subject to W05–W07 qualification |
-| New evaluator written solely from specifications | Full control | Recreates all vocabulary/reference/annotation behavior and needs the same independent qualification | Use for components where adaptation is less clear |
-| Corvus C/Rust backend | Useful comparison behavior | Additional binary/ABI/provenance/precision/bounded-execution decision | Comparison only; not the default |
+The package-private regex VM targets ECMA-262 11th edition (2020), fixed Unicode
+13.0.0, case-sensitive u-equivalent processing and unanchored scalar searches.
+Supported behavior includes Unicode literals and classes/properties, grouping,
+alternation, anchors, empty matches, counted/greedy/lazy repetition, captures,
+backreferences and directional lookarounds. Malformed or unsupported patterns fail
+compilation; a valid pattern's no-match outcome is ordinary assertion invalidity.
+There is no Foundation or Swift Regex fallback.
 
-The source review establishes architectural incompatibilities, not a measured Swift port effort or executed conformance result. An adapter spike must exercise failing key, annotation and work-gate vectors. W05 records that experiment and a small selective adaptation prototype before expanding the port; ordinary ASCII samples are insufficient qualification.
+Compilation charges grammar/token work, instructions and storage. Evaluation
+charges candidate scans, dispatch, retries, captures/backreference comparisons,
+state and table work. Grammar depth, groups, program size and live match state
+have finite ceilings. Counters persist across candidate positions and repeated
+patternProperties searches. Exhaustion/cancellation propagates as an operational
+error and cannot become a false assertion or a passing alternative branch.
 
-The new regex candidate is ridiculousfish/regress at **771e6c8fa1e472ef86c45b5206b37fa4e4494e25**. Its manifest offers MIT OR Apache-2.0; an approved selective port may choose Apache-2.0 while retaining upstream copyright and attribution. Its source exposes BudgetedMatch with match, no-match and exhausted outcomes, and find_from_budgeted. The inspected engine charges backtracks, with ordinary find/iterators remaining unbudgeted. It does not provide our total compilation/search/state/cancellation contract [R04–R06].
+Identical exact-spelling programs share immutable storage within one plan. Match
+state belongs to each search. Literal/predicate prefilters and alternate backends
+were not selected. The public contract does not claim all newer ECMAScript
+extensions, configurable flags or a standalone regex product.
 
-Use this as reference material for a private Swift JSONRegexRuntime, not as a new production Rust binary dependency. A full source copy includes a large generated Unicode table and multiple execution backends; a selective port must identify what is necessary rather than mechanically importing all of it. Check generated-table provenance and licensing separately before copying.
-
-The regex semantic target is the ECMA-262 **11th edition (2020)** referenced by Draft 2020-12, with Unicode u-equivalent processing and unanchored search. JSON Schema recommends ECMA syntax and Unicode support and explicitly forbids implicit anchoring; it does not itself require every newer ECMAScript extension [R07]. Do not accidentally turn this into a requirement for a JavaScript runtime or all future regex standards. Publish a precise feature/version ledger and test differences from the referenced edition.
-
-The native spike must demonstrate parser-to-program-to-search behavior for Unicode literals/classes, quantifiers, grouping, alternation, anchors, empty matches, astral scalars, escaped surrogates, backreferences and lookarounds required by the claimed engine dialect. Cases such as dot, dollar before a final line terminator, character classes and Unicode property data need explicit vectors. Invalid and unsupported patterns are distinct from a non-matching instance. No Foundation or Swift Regex fallback is allowed for a feature the bounded VM cannot execute.
-
-Charge VM dispatch, input candidate scans, retries, captured/backreferenced comparisons and table/state operations. Bound compilation grammar depth, token scans, instructions, capture groups, backtracking frames, program/table memory and search state. Expansion of large repetitions should use bounded program structure rather than allocating one instruction per repetition without a cap. The same meter persists across all start positions and all patternProperties searches in one evaluation.
-
-**Experiment completion gate:** a native report with exact source/file pins, semantics vectors, catastrophic-backtracking and long-forward-scan inputs, finite counter boundary failures, cancellation work interval and retained-state measurements. Porting only the backtrack counter does not pass. Timebox the initial prototype to three to five focused engineering days, then report observed code size, gaps and an evidence-based estimate; that timebox is a discovery allocation, not an estimate for a complete engine.
-
-If the spike cannot qualify the required engine, W07 remains open and full schema release remains blocked. A restricted preview must state its regex limitations explicitly. Changing to a foreign engine, subprocess isolation or a broader dependency requires a concrete architecture revision with its semantic and operational tradeoffs; this plan does not pre-approve one.
-
-## E07 Schema declaration inspection
+## Schema declaration inspection
 
 Expose a bounded read-only view of a schema node, its raw JSON, declared keywords and declared annotations. It may expose static reference target information from a qualified compiled resource snapshot. The public facade should keep resource identity and Pointer location, with no upstream engine types.
 
@@ -63,14 +63,10 @@ Inspection consumes limits for navigation, copies and optional reference travers
 
 This supports documentation, debugging and downstream schema-driven applications without building forms, code generation, inference, repair or schema algebra here. Tests cover raw metadata, exact constraints, boolean resources, multi-type declarations, static resource locations, dynamic-ref ambiguity, unknown annotations and bounded navigation.
 
-## E10 Private regex reuse and optimization
+## Qualified regex sharing
 
-Within a bounded compiled schema plan, deduplicate identical immutable regex programs by exact pattern scalar spelling, semantic flags, claimed dialect and Unicode data version. Do not use Swift String canonical equality for that cache key. Each distinct entry and retained program is charged to compilation and plan capacity. Per-evaluation matching/capture/backtracking state remains exclusive.
-
-Literal patterns and sound start predicates may avoid running the full VM at every candidate position. Regress supplies concrete IR and predicate examples. The optimizer must conservatively choose no prefilter when it cannot prove safety; a mistaken necessary-prefix assumption can silently invalidate correct instances. Never use canonically normalizing String matching for exact literal semantics.
-
-Count input scans, retries and comparisons, including the prefilter itself. Keep cancellation and aggregate meters through every fallback. “Fast path” cannot mean calling an unbudgeted Foundation matcher. Differential vectors include alternation, empty matches, anchors, Unicode classes, backreferences, lookarounds and capture semantics.
-
-Do not port every optimizer or a second PikeVM backend as a first-release requirement. One qualified engine plus small proved optimizations is a manageable scope. Additional engines require independent semantics/budget evidence and workload measurements; the existence of another execution source file is not an obligation to adopt it.
-
-The Unicode generator belongs in development tooling if used. Pin actual source versions, bytes/hashes, generator revision and selected license/provenance. Check generated tables into reviewed runtime source or resources with a regeneration comparison; no runtime fetch from “latest.” The regex feature ledger identifies the ECMAScript and Unicode behaviors actually qualified. Benchmarks compare the same semantic profile and limits, without importing upstream speed claims.
+Compilation shares identical admitted patterns by exact spelling within one
+immutable plan. Each match owns capture, retry and search state; work remains
+cumulative. No process-global regex cache, start-predicate prefilter or hidden
+fallback engine is selected. Performance observations and their limitations are
+in [the performance notes](../Performance/README.md).

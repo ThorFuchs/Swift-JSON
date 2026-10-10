@@ -1,54 +1,106 @@
 // SPDX-License-Identifier: Apache-2.0
-/// Stable resource identifiers. Units and initial policy are in ResourceLimits.md.
+/// Stable identifiers for 49 finite resource capacities and work quotas.
+///
+/// Units and ownership are documented in the resource contract. A capacity check
+/// does not necessarily add a cumulative statistic.
 public enum JSONResourceMetric: String, CaseIterable, Sendable, Codable {
+    /// Inclusive limit in bytes. Before each admitted byte; includes whitespace and source retention.
     case inputBytes
+    /// Inclusive limit in open containers. Before stack push; scalar root depth 0, root container depth 1.
     case maxDepth
+    /// Inclusive limit in values. Before each value; keys are charged separately.
     case nodes
+    /// Inclusive limit in members per object. Before member insertion; total members also charge nodes/work.
     case objectMembers
+    /// Inclusive limit in items per array. Before item insertion.
     case arrayItems
+    /// Inclusive limit in decoded UTF-8 bytes per string. Before scalar append; excludes object keys.
     case stringBytes
+    /// Inclusive limit in decoded UTF-8 bytes. Sum keys and string values, including retained number lexemes separately in retainedBytes.
     case aggregateTextBytes
+    /// Inclusive limit in decoded UTF-8 bytes per key. Before key scalar append.
     case keyBytes
+    /// Inclusive limit in coefficient digits per token. Before digit append, including zeros before normalization.
     case numberDigits
+    /// Inclusive limit in ASCII bytes per number. Before token append; includes exponent spelling.
     case numberTokenBytes
+    /// Inclusive limit in absolute mathematical exponent. Checked magnitude while parsing and after normalization; no dense zero expansion.
     case absoluteExponent
+    /// Inclusive limit in logical live bytes. Before allocations/reservations in owned state; accounting weights are versioned.
     case retainedBytes
+    /// Inclusive limit in primitive operations. Charge inner loops, traversals, comparisons and copying.
     case workUnits
+    /// Inclusive limit in decimal limb operations. Nested within total work, no reset in helpers.
     case numericWorkUnits
+    /// Inclusive limit in emitted UTF-8 bytes. Before append or sink handoff; writer also applies value/depth/text limits.
     case outputBytes
+    /// Inclusive limit in entries. Opt-in only; charge entry and retained source bytes.
     case sourceMapEntries
+    /// Inclusive limit in records. Before append; complete output throws on limit rather than silently truncating.
     case issues
+    /// Inclusive limit in UTF-8 bytes. Before message/path/preview growth; no raw instance retained.
     case diagnosticBytes
+    /// Inclusive limit in charged work units. At entry, before allocation/suspension, and at most this many charged units between checks.
     case cancellationQuantum
+    /// Inclusive limit in documents including root.
     case schemaDocuments
+    /// Inclusive limit in total admitted resource bytes.
     case schemaBytes
+    /// Inclusive limit in nodes across resources.
     case schemaNodes
+    /// Inclusive limit in edges.
     case referenceEdges
+    /// Inclusive limit in primitive operations.
     case compileWorkUnits
+    /// Inclusive limit in logical retained bytes.
     case compiledPlanBytes
+    /// Inclusive limit in primitive operations.
     case evaluationWorkUnits
+    /// Inclusive limit in active frames including reference/dynamic scopes.
     case evaluationFrames
+    /// Inclusive limit in internal evaluated-location and output entries.
     case annotationEntries
+    /// Inclusive limit in logical retained bytes.
     case annotationBytes
+    /// Inclusive limit in UTF-8 bytes per pattern.
     case regexPatternBytes
+    /// Inclusive limit in UTF-8 bytes.
     case aggregateRegexPatternBytes
+    /// Inclusive limit in instructions across plan.
     case regexProgramInstructions
+    /// Inclusive limit in primitive operations.
     case regexCompileWorkUnits
+    /// Inclusive limit in primitive operations per search.
     case regexSearchWorkUnits
+    /// Inclusive limit in primitive operations per evaluation.
     case aggregateRegexWorkUnits
+    /// Inclusive limit in logical live match state bytes.
     case regexRetainedBytes
+    /// Inclusive limit in groups per pattern.
     case regexCaptureGroups
+    /// Inclusive limit in accepted source bytes per chunk.
     case chunkBytes
+    /// Inclusive limit in unconsumed complete events.
     case pendingEvents
+    /// Inclusive limit in unconsumed complete records.
     case pendingValues
+    /// Inclusive limit in bytes per iterator lifetime.
     case totalInputBytes
+    /// Inclusive limit in records per iterator lifetime.
     case totalRecords
+    /// Inclusive limit in primitive operations per iterator lifetime.
     case totalWorkUnits
+    /// Inclusive limit in operations.
     case operations
+    /// Inclusive limit in UTF-8 bytes per encoded Pointer.
     case pointerBytes
+    /// Inclusive limit in tokens per Pointer.
     case pointerTokens
+    /// Inclusive limit in primitive operations.
     case patchWorkUnits
+    /// Cumulative scanned nodes across an enclosing root-array document, including its outer container.
     case totalScannedNodes
+    /// Maximum logical scratch bytes retained across a record boundary; the selected scalar reader retains no reuse pool.
     case maxReusableBufferBytes
 
     package var index: Int {
@@ -106,12 +158,28 @@ public enum JSONResourceMetric: String, CaseIterable, Sendable, Codable {
     }
 }
 
-public enum JSONResourceProfile: Sendable { case conservative, balanced, offline }
+/// Named finite policy profiles; none represents an unlimited mode.
+public enum JSONResourceProfile: Sendable {
+    /// The smaller finite profile for constrained input.
+    case conservative
+    /// The default finite profile for general use.
+    case balanced
+    /// The larger finite profile for offline work; it remains bounded.
+    case offline
+}
 
-/// Finite inclusive limits. Policy values are initial and require native calibration.
+/// Finite inclusive capacities and cumulative work quotas.
+///
+/// Balanced is the default. These initial policy values are not hard RSS or
+/// throughput guarantees. Validate configurations at operation entry. Composed
+/// owned helpers share a meter; separate public calls need caller composition.
 public struct JSONLimits: Sendable, Equatable {
     private var maxima: [UInt64]
 
+    /// Loads the finite maxima for the selected policy; balanced is the default.
+    ///
+    /// - Parameters:
+    ///   - profile: The finite resource profile to load.
     public init(profile: JSONResourceProfile = .balanced) {
         switch profile {
         case .conservative: maxima = [4194304, 64, 100000, 20000, 100000, 1048576, 4194304, 16384, 1024, 2048, 100000, 16777216, 8000000, 250000, 4194304, 100000, 32, 65536, 1024, 16, 4194304, 20000, 20000, 4000000, 8388608, 2000000, 256, 20000, 2097152, 4096, 65536, 20000, 250000, 100000, 250000, 2097152, 128, 65536, 1, 1, 268435456, 100000, 512000000, 128, 4096, 64, 2000000, 2000000, 524288]
@@ -119,16 +187,30 @@ public struct JSONLimits: Sendable, Equatable {
         case .offline: maxima = [268435456, 256, 4000000, 500000, 4000000, 67108864, 134217728, 262144, 16384, 32768, 10000000, 536870912, 512000000, 8000000, 268435456, 4000000, 512, 1048576, 1024, 512, 268435456, 1000000, 2000000, 256000000, 268435456, 128000000, 4096, 1000000, 67108864, 65536, 2097152, 1000000, 16000000, 4000000, 16000000, 67108864, 2048, 1048576, 1, 1, 68719476736, 16000000, 137438953472, 10000, 65536, 256, 128000000, 128000000, 8388608]
         }
     }
+    /// The smaller finite profile for constrained input.
     public static let conservative = Self(profile: .conservative)
+    /// The default finite profile for general use.
     public static let balanced = Self(profile: .balanced)
+    /// The larger finite profile for offline work; it remains bounded.
     public static let offline = Self(profile: .offline)
 
+    /// Reads or changes the inclusive ceiling for a metric.
+    ///
+    /// Call validate() or enter an operation to check supported configurations. Zero
+    /// forbids quota usage; cancellation and pending capacities have additional rules.
+    ///
+    /// - Parameters:
+    ///   - metric: The stable resource metric to read or configure.
     public subscript(metric: JSONResourceMetric) -> UInt64 {
         get { maxima[metric.index] }
         set { maxima[metric.index] = newValue }
     }
 
-    /// Rejects unsupported capacity and cancellation configurations at operation entry.
+    /// Checks supported finite capacities and cancellation configuration.
+    ///
+    /// All maxima must fit supported Int capacity; cancellation quantum must be 1...1024
+    /// and pending event/value capacities must be at most one. Zero forbids quota usage.
+    /// - Throws: `JSONFailure` with invalidLimits for unsupported configurations.
     public func validate() throws {
         for metric in JSONResourceMetric.allCases {
             guard self[metric] < UInt64(Int.max) else {
@@ -142,17 +224,27 @@ public struct JSONLimits: Sendable, Equatable {
     }
 }
 
-/// Version 1 logical weights; these are not measurements of heap size or RSS.
+/// Versioned logical retention weights, independent of allocator sizes and process RSS.
 public enum JSONLogicalWeights {
+    /// The logical weight version, currently 1.
     public static let version: UInt32 = 1
+    /// Logical bytes reserved per value node.
     public static let node: UInt64 = 32
+    /// Logical bytes reserved per object member slot.
     public static let member: UInt64 = 24
+    /// Logical bytes reserved per array element slot.
     public static let arraySlot: UInt64 = 16
+    /// Logical bytes reserved per traversal or evaluation frame.
     public static let frame: UInt64 = 16
+    /// Logical bytes reserved per source-map entry.
     public static let sourceMapEntry: UInt64 = 32
+    /// Logical bytes reserved per index slot.
     public static let indexSlot: UInt64 = 32
+    /// Logical bytes reserved per annotation entry.
     public static let annotationEntry: UInt64 = 32
+    /// Logical bytes reserved per regex instruction.
     public static let regexInstruction: UInt64 = 16
+    /// Logical bytes reserved per regex state record.
     public static let regexStateRecord: UInt64 = 32
 }
 

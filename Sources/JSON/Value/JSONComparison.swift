@@ -54,7 +54,18 @@ package enum JSONAdmission {
     }
 }
 
+/// Explicitly budgeted deep equality for untrusted exact JSON values.
 public enum JSONComparison {
+    /// Compares admitted values with cumulative traversal, text and numeric budgets.
+    ///
+    /// Object order is ignored; string/key scalars and decimal mathematics are exact.
+    /// - Returns: Semantic equality.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left value.
+    ///   - rhs: The right value.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public static func equals(_ lhs: JSON, _ rhs: JSON, limits: JSONLimits = .balanced) throws -> Bool {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         try JSONAdmission.value(lhs, meter: &meter)
