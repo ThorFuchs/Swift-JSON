@@ -39,6 +39,7 @@ jobs:
             .build/handoff/docc/receipt.json
             .build/handoff/docc/coverage.json
             .build/handoff/docc/symbols/
-            .build/handoff/docc/*.doccarchive/
+            .build/handoff/docc/compiled-catalogs.tar.gz
+            .build/handoff/docc/compiled-catalogs.MANIFEST.sha256
             .build/handoff/docc/*-diagnostics.json
             .build/handoff/docc/*.log

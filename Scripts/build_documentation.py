@@ -2,11 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 """Build and qualify native DocC catalogs, authored API comments and executable README examples."""
 import hashlib
+import gzip
+import io
 import json
 import pathlib
 import shutil
 import subprocess
 import sys
+import tarfile
 
 import documentation_catalog
 from preflight import collect
@@ -20,6 +23,44 @@ def run(command, log, timeout):
     return {'command': [arg.replace(str(ROOT), '.') for arg in command],
             'exit_code': result.returncode, 'log': str(log.relative_to(ROOT)),
             'log_sha256': hashlib.sha256(log.read_bytes()).hexdigest()}
+
+
+def package_catalogs(output):
+    """Preserve native DocC filenames inside an artifact with a portable outer name."""
+    records = []
+    for product in documentation_catalog.PRODUCTS:
+        catalog = output / (product + '.doccarchive')
+        paths = sorted(catalog.rglob('*'))
+        if not any(p.is_file() for p in paths):
+            raise ValueError('Empty compiled DocC catalog: ' + product)
+        for path in paths:
+            if path.is_symlink():
+                raise ValueError('Unexpected symlink in DocC catalog')
+            if path.is_file():
+                records.append((path.relative_to(output).as_posix(), path.read_bytes()))
+    archive = output / 'compiled-catalogs.tar.gz'
+    manifest = output / 'compiled-catalogs.MANIFEST.sha256'
+    manifest.write_text(''.join(hashlib.sha256(data).hexdigest() + '  ' + name + '\n' for name, data in records))
+    with archive.open('wb') as stream:
+        with gzip.GzipFile(fileobj=stream, mode='wb', filename='', mtime=0, compresslevel=9) as compressed:
+            with tarfile.open(fileobj=compressed, mode='w', format=tarfile.GNU_FORMAT) as tar:
+                for name, data in records:
+                    info = tarfile.TarInfo(name)
+                    info.size = len(data)
+                    info.mode = 0o644
+                    tar.addfile(info, io.BytesIO(data))
+    with tarfile.open(archive) as tar:
+        entries = tar.getmembers()
+        if len(entries) != len(records) or len({p.name for p in entries}) != len(records):
+            raise ValueError('Compiled catalog archive inventory differs')
+        for member, (name, data) in zip(entries, records):
+            if not member.isfile() or member.name != name or tar.extractfile(member).read() != data:
+                raise ValueError('Compiled catalog archive bytes differ: ' + name)
+    return {'archive': str(archive.relative_to(ROOT)), 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
+            'bytes': archive.stat().st_size, 'verified_files': len(records),
+            'manifest': str(manifest.relative_to(ROOT)),
+            'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(),
+            'policy': 'Four native DocC archives; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
 
 
 def main():
@@ -74,6 +115,7 @@ def main():
             receipt['products'].append(entry)
             if entry['exit_code']:
                 raise ValueError('DocC failed: ' + product)
+        receipt['catalog_bundle'] = package_catalogs(output)
         receipt['status'] = 'passed'
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)

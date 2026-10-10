@@ -31,6 +31,8 @@ symbols, missing comments, stale examples or a failed catalog fail the lane.
 | `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |
+| `.build/handoff/docc/compiled-catalogs.tar.gz` | All four compiled catalogs with their exact native filenames |
+| `.build/handoff/docc/compiled-catalogs.MANIFEST.sha256` | Independently verifiable hashes for every archived catalog file |
 
 Open a `.doccarchive` in Xcode for the compiled reference. To preview a source
 catalog in a local browser after the lane has produced its symbol graphs:
@@ -46,6 +48,12 @@ Use the URL printed by DocC. Substitute another product's catalog, graph directo
 and bundle identifier to preview it. Generated output is ignored and uploaded as
 Native CI artifacts, with 30-day hosted retention. Source catalogs and build scripts
 are versioned. A public documentation website has not been activated.
+
+CI transports the compiled catalogs in a tar archive because native DocC filenames
+can contain colons, which GitHub's artifact uploader rejects as individual files.
+On the supported Mac, extract `compiled-catalogs.tar.gz` into an empty directory
+with `tar -xzf compiled-catalogs.tar.gz`, then open the desired `.doccarchive` in Xcode.
+The manifest and receipt preserve file-level and archive-level digests.
 
 ## Write useful API comments
 
