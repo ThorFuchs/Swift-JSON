@@ -1,59 +1,51 @@
-# Building and maintaining the documentation
+# Building and maintaining the DocC catalogs
 
-Swift source comments are the API documentation authority. DocC compiles native
-Swift declarations and links into four product references. The Doxygen catalog
-uses those same compiler symbol graphs to provide a searchable HTML/XML inventory
-with Swift signatures, inline prose and source links. The catalog emits escaped
-Doxygen documentation pages so its parser preserves Swift syntax as text.
-Doxygen does not parse Swift natively; the catalog does not invent C++ bindings or
-duplicate a hand-written API.
-See the [official Doxygen language list](https://www.doxygen.nl/manual/starting.html)
-and [Swift DocC documentation](https://www.swift.org/documentation/docc/).
+Swift source comments are the API documentation authority. Native compiler symbol
+graphs supply the declarations and links for four Swift DocC catalogs. Each catalog
+combines the product reference with curated Topics and a focused usage guide.
+See the [Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
 ## Build locally
 
 Use macOS/SDK 27+, Swift compiler/tools 6.4+ and Swift language mode 6. Select the
-supported Xcode through DEVELOPER_DIR if it is not the system default. Python 3
-uses only its standard library. The preparation script fetches the official
-**Doxygen 1.17.0 macOS ARM64** release into the ignored build directory and verifies
-its published archive digest, extracted binary digest and exact version. No
-Graphviz or root-package dependency is required. Subsequent builds use the verified
-local binary without network access or a PATH fallback.
+supported Xcode through `DEVELOPER_DIR` if it is not the system default. DocC comes
+with that toolchain; the Python scripts use only their standard library. No extra
+documentation engine or root-package dependency is required.
 
 ```sh
-python3 Scripts/prepare_documentation_tool.py
 python3 Scripts/ci.py --lane docs
 ```
-
-For offline preparation, pass `--archive /absolute/path/doxygen-1.17.0-mac-arm.zip`
-to the preparation script. The same digest checks apply.
 
 The lane records native preflight, extracts fresh public symbol graphs, requires
 summaries and named-parameter documentation on every authored public declaration,
 checks README Swift fences against their executable consumer source, runs that
-consumer, compiles all four DocC catalogs with warnings as errors, and builds
-Doxygen with warnings as errors. It verifies the emitted XML page inventory against
-every extracted declaration, so an empty or partial catalog fails.
-
-Outputs:
+consumer, and compiles all four DocC catalogs with warnings as errors. Zero public
+symbols, missing comments, stale examples or a failed catalog fail the lane.
 
 | Output | Purpose |
 | --- | --- |
-| `.build/handoff/docc/JSON.doccarchive` | JSON API and guides |
-| `.build/handoff/docc/JSONSchema.doccarchive` | Schema API and guides |
-| `.build/handoff/docc/JSONStreaming.doccarchive` | Streaming API and guides |
-| `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and guides |
+| `.build/handoff/docc/JSON.doccarchive` | JSON API and exact values/native coding guide |
+| `.build/handoff/docc/JSONSchema.doccarchive` | Schema API and offline validation guide |
+| `.build/handoff/docc/JSONStreaming.doccarchive` | Streaming API and completion/backpressure guide |
+| `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |
+| `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |
-| `.build/handoff/doxygen/site/html/index.html` | Searchable local public API catalog |
-| `.build/handoff/doxygen/site/xml/index.xml` | Verified machine-readable page inventory |
-| `.build/handoff/doxygen/symbols.json` | Relative source paths, actual signatures and comment hashes |
 
-Open a DocC archive in Xcode, or serve its generated web content with your chosen
-local static server. Open the Doxygen index in a browser. Generated output is
-ignored and uploaded as a Native CI artifact; source catalogs and build scripts
-are versioned. Hosted artifact retention is 30 days. The repository does not yet
-publish a documentation website; no hosted URL is implied.
+Open a `.doccarchive` in Xcode for the compiled reference. To preview a source
+catalog in a local browser after the lane has produced its symbol graphs:
+
+```sh
+xcrun docc preview Sources/JSON/Documentation.docc \
+  --additional-symbol-graph-dir .build/handoff/docc/symbols/JSON \
+  --fallback-bundle-identifier org.swift-json.JSON \
+  --port 8770
+```
+
+Use the URL printed by DocC. Substitute another product's catalog, graph directory
+and bundle identifier to preview it. Generated output is ignored and uploaded as
+Native CI artifacts, with 30-day hosted retention. Source catalogs and build scripts
+are versioned. A public documentation website has not been activated.
 
 ## Write useful API comments
 
@@ -70,23 +62,13 @@ excluded: they have no independent authored declaration to document. Complete
 coverage establishes presence and parameter coverage; semantic review and native
 examples are still required for accuracy. The private regex target is excluded.
 
-## Keep examples and tooling reproducible
+## Keep examples and evidence reproducible
 
 README installation snippets are manifest fragments. The following Swift fences
 are compiled in `Examples/Consumer/Sources/Consumer/READMEExamples.swift`, in order.
 The array helper is also exercised with the consumer's one-byte chunk source. After
 editing a fence, regenerate that source with `documentation_catalog.readme_examples`
 and review the change; the docs lane rejects drift.
-
-The Doxygen config and exact tool pin live in `Documentation/Doxygen/Doxyfile` and
-[`Toolchain.json`](Doxygen/Toolchain.json). CI uses the same preparation script as
-local builds. Both Homebrew and official 1.18.0 binaries crashed in the comment scanner during
-local catalog builds on macOS 27 ARM64. The pin selects the preceding release; see
-the related
-[upstream report](https://github.com/doxygen/doxygen/issues/12326). A tool upgrade
-requires explicit pin changes, inspection of new warnings and a native catalog
-rebuild. Doxygen is GPL-2.0-only build tooling, not linked or bundled into the
-Apache-2.0 library. No Doxygen executable is shipped in source archives.
 
 Run native and safety lanes when code changes; required branch checks also run on
 public documentation PRs. Preserve published source/evidence identities and create

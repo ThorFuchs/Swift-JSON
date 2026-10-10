@@ -9,8 +9,7 @@ separate from the dependency-free library. Native lanes fail on unsupported host
 | `python3 Scripts/preflight.py` | Actual native OS/compiler/SDK receipt |
 | `python3 Scripts/ci.py --lane native` | Manifests, builds, Swift Testing, consumers and suites |
 | `python3 Scripts/ci.py --lane safety` | Address/Thread Sanitizer and strict memory safety |
-| `python3 Scripts/ci.py --lane docs` | Four DocC catalogs, 100% authored API comment coverage, executed README examples and Doxygen catalog |
-| `python3 Scripts/prepare_documentation_tool.py` | Fetch and verify the pinned development-only Doxygen ARM64 release |
+| `python3 Scripts/ci.py --lane docs` | Four DocC catalogs, 100% authored API comment coverage and executed README examples |
 | `python3 Scripts/qualification_watchdog.py --timeout 900 --output PATH -- COMMAND` | Process-group timeout and native receipt |
 | `python3 Scripts/archive_candidate.py --output PATH` | Public source archive with exact hashes and byte-equal rebuild |
 

@@ -1,7 +1,7 @@
 # Public API contract
 
 This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in DocC and the Doxygen catalog. Examples
+graphs supply the complete declarations in the four DocC catalogs. Examples
 in the [README](../../README.md) are compiled and executed by the public consumer.
 
 ## Products and ownership

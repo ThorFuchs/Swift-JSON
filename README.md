@@ -291,13 +291,11 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 
 Start with the [documentation index](Documentation/README.md). The four DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
-contracts. A searchable Doxygen catalog is generated from the same native Swift
-symbol graphs; it preserves Swift signatures without treating them as C++ APIs.
+contracts, compiled from the native Swift public symbol graphs.
 
-Build both references on a supported native host using the pinned documentation tool:
+Build all four catalogs on a supported native host:
 
 ```sh
-python3 Scripts/prepare_documentation_tool.py
 python3 Scripts/ci.py --lane docs
 ```
 

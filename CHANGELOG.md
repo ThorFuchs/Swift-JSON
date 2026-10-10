@@ -3,7 +3,7 @@
 ## Unreleased
 
 - Public README with eight executed Swift examples; complete authored API/parameter
-  documentation, focused DocC guides and a verified native-symbol Doxygen catalog.
+  documentation, focused DocC guides and verified native-symbol DocC catalogs.
 
 - Four SwiftPM library products on Swift 6.4, Swift 6 and macOS 27: JSON,
   JSONSchema, JSONStreaming and JSONPatch. No root package dependencies.

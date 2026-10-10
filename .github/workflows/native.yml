@@ -26,9 +26,6 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Verify pinned catalog documentation tool
-        if: matrix.lane == 'docs'
-        run: python3 -B Scripts/prepare_documentation_tool.py
       - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
       - name: Preserve native receipts
         if: always()
@@ -41,8 +38,7 @@ jobs:
             .build/ci/
             .build/handoff/docc/receipt.json
             .build/handoff/docc/coverage.json
+            .build/handoff/docc/symbols/
             .build/handoff/docc/*.doccarchive/
-            .build/handoff/doxygen/
-            .build/documentation-tools/receipt.json
             .build/handoff/docc/*-diagnostics.json
             .build/handoff/docc/*.log

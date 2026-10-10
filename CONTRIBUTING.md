@@ -31,5 +31,5 @@ application fixtures. See [SUPPORT.md](SUPPORT.md) for the maintenance policy.
 
 Public API changes need useful Swift documentation comments and a focused guide when
 semantics span multiple calls. README Swift examples must match their compiled consumer.
-See [documentation tooling](Documentation/DocumentationTooling.md) for Doxygen 1.17.0,
-coverage checks and native DocC builds.
+See [documentation tooling](Documentation/DocumentationTooling.md) for coverage checks,
+compiled examples and native DocC builds.

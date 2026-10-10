@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Build and qualify native DocC, authored API comments and the Doxygen catalog."""
+"""Build and qualify native DocC catalogs, authored API comments and executable README examples."""
 import hashlib
 import json
 import pathlib
@@ -74,7 +74,6 @@ def main():
             receipt['products'].append(entry)
             if entry['exit_code']:
                 raise ValueError('DocC failed: ' + product)
-        receipt['doxygen'] = documentation_catalog.build_catalog(symbols, ROOT / '.build/handoff/doxygen')
         receipt['status'] = 'passed'
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)

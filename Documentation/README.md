@@ -15,10 +15,9 @@ The four native DocC catalogs combine inline API documentation with focused guid
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
 
-[Build and view DocC and Doxygen](DocumentationTooling.md). The Doxygen catalog is
-generated from the same native public symbol graphs and comments, with searchable
-Swift declarations and verified HTML/XML coverage. Generated references are available
-in CI artifacts; a hosted documentation website has not been activated.
+[Build and view the DocC catalogs](DocumentationTooling.md). Generated references
+and public symbol graphs are available in CI artifacts; a hosted documentation
+website has not been activated.
 
 ## Behavioral contracts
 
