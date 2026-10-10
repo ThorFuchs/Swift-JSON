@@ -12,6 +12,8 @@ def snapshot():
     return [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
 
 def commands(lane, output):
+    # The qualification executable resolves output paths from its repository root.
+    output = output.relative_to(ROOT)
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -32,6 +34,27 @@ def commands(lane, output):
             ['swift', 'build', '--scratch-path', '.build/ci-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
         ]
     return [['python3', '-B', 'Scripts/build_documentation.py']]
+
+def materialized_outcomes(output):
+    qualification = json.loads((output / 'qualification.json').read_text())
+    consumer = json.loads((output / 'consumer.json').read_text())
+    watchdog = json.loads((output / 'watchdog.json').read_text())
+    if qualification['status'] != 'passed' or qualification['errors'] or watchdog['status'] != 'passed' or watchdog['exit_code'] != 0:
+        raise ValueError('Independent qualification receipt failed')
+    expected = {'nst/JSONTestSuite': (318, 287, 31), 'json-schema-org/JSON-Schema-Test-Suite': (2337, 2300, 37)}
+    suites = qualification['suites']
+    if {s['repository'] for s in suites} != set(expected) or len(suites) != 2:
+        raise ValueError('Missing independent suite receipt')
+    for suite in suites:
+        if (suite['observed_cases'], suite['passed_cases'], suite['policy_cases']) != expected[suite['repository']] or suite['failed_cases'] or suite['unexpected_skips'] or len(suite['cases']) != suite['observed_cases']:
+            raise ValueError('Missing, changed or failing independent case outcomes')
+    authored = {a['name']: a for a in qualification['authored']}
+    for name, count in [('authored_public_semantics', 82), ('public_budget_and_counter_boundaries', 9), ('deterministic_malformed_utf8_replay', 4396)]:
+        if authored[name]['observed'] != count or authored[name]['failed']:
+            raise ValueError('Missing or failing authored qualification')
+    if consumer['status'] != 'passed' or (consumer['positiveCases'], consumer['negativeCases'], consumer['operationalErrors']) != (8, 12, 2) or len(consumer['outcomes']) != 20 or any(c['actual'] != c['expected'] for c in consumer['outcomes']):
+        raise ValueError('Missing or failing rooted consumer outcomes')
+    return {name: {'sha256': hashlib.sha256((output / name).read_bytes()).hexdigest()} for name in ['qualification.json', 'consumer.json', 'watchdog.json']}
 
 def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
@@ -93,6 +116,13 @@ def main():
         save()
     else:
         receipt['status'] = 'passed'
+    if receipt['status'] == 'passed' and args.lane == 'native':
+        try:
+            receipt['materialized_outcomes'] = materialized_outcomes(output)
+        except (OSError, KeyError, ValueError, TypeError) as error:
+            receipt['status'] = 'failed'
+            receipt['evidence_error'] = str(error)
+            print('Native evidence failed: ' + str(error), flush=True)
     receipt['source_inputs_unchanged'] = snapshot() == inputs
     if not receipt['source_inputs_unchanged']:
         receipt['status'] = 'failed'
