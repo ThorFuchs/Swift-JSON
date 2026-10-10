@@ -19,6 +19,10 @@ checkout persists no credentials. Every lane uploads its receipts and logs even
 on failure, with 30-day retention. No secrets, private records, local archives,
 tagging, release publication or self-hosted workstation access is configured.
 
+Checkout reads the full branch history. The public inventory check rejects known
+internal input paths in reachable history and tracked files outside the reviewed
+source distribution, preventing an old-history merge from passing unnoticed.
+
 Receipts include source content hashes and Git identity. Nonzero expected root
 and consumer test counts are required. Corpus policy exclusions remain explicit.
 A hosted preview-image change can fail preflight; repair the toolchain selection

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Check the distributed public source inventory, contracts and links."""
-import hashlib, json, pathlib, re, sys
+import hashlib, json, pathlib, re, subprocess, sys
 from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -11,6 +11,20 @@ def main():
     errors = []
     selected = files()
     names = {p.relative_to(ROOT).as_posix() for p in selected}
+    git = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
+    history_commits = None
+    if git.returncode == 0 and pathlib.Path(git.stdout.strip()).resolve() == ROOT:
+        tracked = set(subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')[:-1])
+        for name in sorted(tracked - names):
+            errors.append('Tracked file outside reviewed public distribution: ' + name)
+        shallow = subprocess.check_output(['git', 'rev-parse', '--is-shallow-repository'], cwd=ROOT).decode().strip()
+        if shallow != 'false':
+            errors.append('Full Git history required for public privacy check')
+        paths = subprocess.check_output(['git', 'log', 'HEAD', '--format=', '--name-only'], cwd=ROOT).decode().splitlines()
+        for name in sorted(set(paths)):
+            if name.startswith(PRIVATE) or name in {'CODEX_KICKOFF.md', 'START_HERE.md', 'ScaffoldInventory.json'}:
+                errors.append('Private implementation input in reachable Git history: ' + name)
+        history_commits = int(subprocess.check_output(['git', 'rev-list', '--count', 'HEAD'], cwd=ROOT))
     for name in names:
         if name.startswith(PRIVATE) or name in {'CODEX_KICKOFF.md', 'START_HERE.md', 'ScaffoldInventory.json'}:
             errors.append('Private implementation input in source distribution: ' + name)
@@ -53,7 +67,7 @@ def main():
                     continue
                 if rel not in names and not any(n.startswith(rel.rstrip('/') + '/') for n in names):
                     errors.append('Missing public link: ' + name + ' -> ' + link)
-    print(json.dumps({'schema_version': 1, 'status': 'failed' if errors else 'passed', 'public_files': len(names), 'finite_metrics': len(metrics), 'profiles': 3, 'source_manifest_sha256': hashlib.sha256(''.join(hashlib.sha256(p.read_bytes()).hexdigest() + '  ' + p.relative_to(ROOT).as_posix() + '\n' for p in selected).encode()).hexdigest(), 'errors': errors}, indent=2))
+    print(json.dumps({'schema_version': 1, 'status': 'failed' if errors else 'passed', 'public_files': len(names), 'reachable_history_commits_checked': history_commits, 'finite_metrics': len(metrics), 'profiles': 3, 'source_manifest_sha256': hashlib.sha256(''.join(hashlib.sha256(p.read_bytes()).hexdigest() + '  ' + p.relative_to(ROOT).as_posix() + '\n' for p in selected).encode()).hexdigest(), 'errors': errors}, indent=2))
     return 1 if errors else 0
 
 if __name__ == '__main__':
