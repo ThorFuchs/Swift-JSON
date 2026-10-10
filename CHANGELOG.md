@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — local release candidate
+## Unreleased
 
 - Four SwiftPM library products on Swift 6.4, Swift 6 and macOS 27: JSON,
   JSONSchema, JSONStreaming and JSONPatch. No root package dependencies.
@@ -22,11 +22,10 @@
   deterministic malformed replay, native concurrency/safety lanes, public
   qualification and benchmark tools, compiled examples and four DocC catalogs.
 
-Qualification details and actual counts live in CoverageLedger.json. Resource
+Qualification details and counts are in Documentation/Qualification/README.md. Resource
 policy bounds logical work/ownership; it is not an operating-system RSS ceiling.
 E09 keeps scalar scanning and no retained scratch pool. SIMD and regex prefilters
-remain unselected; projection and RFC 7464 framing remain deferred. No release
-has been published, pushed or tagged.
+remain unselected; projection and RFC 7464 framing remain deferred. No version tag or release has been created.
 
 ### Candidate verification refinements
 

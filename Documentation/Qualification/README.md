@@ -6,8 +6,9 @@ artifacts contain raw logs, consumer outcomes and per-case corpus results.
 Safety and DocC lanes run separately. Unsupported hosts fail preflight.
 
 The unchanged library has 122 Swift Testing functions across five bundles and
-173 parameterized invocations. Public development packages add nine cap tests
-and three JSON/JSONSchema consumer tests. All discoveries must be nonzero.
+173 parameterized invocations. One public cap test exercises all 49 metrics;
+the independent runner adds nine budget/report vectors. There are three separate
+JSON/JSONSchema consumer tests. All discoveries must be nonzero.
 
 | Independent input | Observed policy |
 | --- | --- |

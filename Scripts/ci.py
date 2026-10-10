@@ -37,8 +37,13 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [3] if 'Tools/MCPReadiness' in command else [9] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 54]
+        expected = [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 54]
         passed = passed and sorted(counts) == expected
+        if 'Tools/Qualification' in command:
+            probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
+            matrix = json.loads((ROOT / 'Documentation/Qualification/LimitsMatrix.json').read_text())
+            expected_probes = {m['metric']: m['public_probe_outcome'] for m in matrix['metrics']}
+            passed = passed and len(probes) == 49 and dict(probes) == expected_probes
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
         passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONPatch', 'JSONSchema', 'JSONStreaming'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}]
