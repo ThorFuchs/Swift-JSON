@@ -38,7 +38,7 @@ public struct JSONPreview: Sendable, Equatable {
     /// - Throws: Resource or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The value to preview with redaction before visiting selected payloads.
     ///   - options: The value configuration used by this facade or operation.
     public static func render(_ value: JSON, options: JSONPreviewOptions = .init()) throws -> Self {
         try renderWithReport(value, options: options).result
@@ -49,7 +49,7 @@ public struct JSONPreview: Sendable, Equatable {
     /// - Throws: Resource or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The value to preview with redaction before visiting selected payloads.
     ///   - options: The value configuration used by this facade or operation.
     public static func renderWithReport(_ value: JSON, options: JSONPreviewOptions = .init()) throws -> JSONOperationReport<Self> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .core)

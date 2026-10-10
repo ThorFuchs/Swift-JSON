@@ -14,7 +14,7 @@ public struct JSONOperationStatistics: Sendable, Equatable {
     /// Returns the charged count for a metric; capacity-only predicates report zero.
     ///
     /// - Parameters:
-    ///   - metric: The stable resource metric to read or configure.
+    ///   - metric: The resource metric whose charged count to read.
     public subscript(metric: JSONResourceMetric) -> UInt64 { counters[metric.index] }
     package init(domain: JSONOperationDomain, counters: [UInt64], peak: UInt64) {
         accountingVersion = JSONLogicalWeights.version

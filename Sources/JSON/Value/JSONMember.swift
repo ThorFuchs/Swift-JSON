@@ -8,13 +8,13 @@ public struct JSONMember: Sendable, Equatable, Hashable {
     /// Pairs an exact key with a value; bounded object construction performs admission.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - key: The exact decoded-scalar member key, without normalization.
+    ///   - value: The associated value; this initializer performs no admission.
     public init(_ key: JSONKey, value: JSON) { self.key = key; self.value = value }
     /// Pairs an exact key with a value; bounded object construction performs admission.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - key: The exact decoded-scalar member key, without normalization.
+    ///   - value: The associated value; this initializer performs no admission.
     public init(_ key: String, value: JSON) { self.init(JSONKey(key), value: value) }
 }

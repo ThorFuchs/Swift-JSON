@@ -18,7 +18,7 @@ extension JSON {
     /// - Throws: Wrong-kind or missing-member failure, resource failure or cancellation.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
+    ///   - key: The exact decoded-scalar member key, without normalization.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func requiredMember(_ key: String, limits: JSONLimits = .balanced) throws -> JSON {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)

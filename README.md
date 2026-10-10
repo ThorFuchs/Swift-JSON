@@ -294,9 +294,10 @@ provide public API references, focused guides, parameter descriptions and failur
 contracts. A searchable Doxygen catalog is generated from the same native Swift
 symbol graphs; it preserves Swift signatures without treating them as C++ APIs.
 
-Build both references on a supported native host with Doxygen 1.18.0 installed:
+Build both references on a supported native host using the pinned documentation tool:
 
 ```sh
+python3 Scripts/prepare_documentation_tool.py
 python3 Scripts/ci.py --lane docs
 ```
 

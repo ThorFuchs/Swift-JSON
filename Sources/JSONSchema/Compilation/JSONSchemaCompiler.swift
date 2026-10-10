@@ -20,7 +20,7 @@ public struct JSONSchemaCompiler: Sendable {
     /// - Throws: Compilation/meta-schema/reference errors, resource failure or cancellation.
     ///
     /// - Parameters:
-    ///   - document: An admitted schema or source document.
+    ///   - document: The admitted schema document; its construction accounting precedes this call.
     ///   - registry: The immutable explicitly supplied offline resources.
     public func compile(_ document: JSONSchemaDocument, registry: JSONSchemaRegistry = .empty) throws -> CompiledJSONSchema {
         try compileWithReport(document, registry: registry).result
@@ -33,7 +33,7 @@ public struct JSONSchemaCompiler: Sendable {
     /// - Throws: Compilation errors, resource failure or cancellation.
     ///
     /// - Parameters:
-    ///   - document: An admitted schema or source document.
+    ///   - document: The admitted schema document; its construction accounting precedes this call.
     ///   - registry: The immutable explicitly supplied offline resources.
     public func compileWithReport(_ document: JSONSchemaDocument, registry: JSONSchemaRegistry = .empty) throws -> JSONOperationReport<CompiledJSONSchema> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .schemaCompilation)

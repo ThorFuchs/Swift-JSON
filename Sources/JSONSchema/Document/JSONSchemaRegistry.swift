@@ -36,7 +36,7 @@ public struct JSONSchemaRegistry: Sendable {
     /// - Throws: Missing/duplicate retrieval identity, resource failure or cancellation.
     ///
     /// - Parameters:
-    ///   - document: An admitted schema or source document.
+    ///   - document: The admitted schema document with an absolute retrieval URI.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func adding(_ document: JSONSchemaDocument, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .schemaCompilation)

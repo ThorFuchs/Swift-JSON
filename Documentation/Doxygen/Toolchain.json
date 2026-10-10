@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "version": "1.17.0 (65a43c0aba45cc23b3ca11b6b5334d4eea931726)",
+  "release": "https://github.com/doxygen/doxygen/releases/tag/Release_1_17_0",
+  "url": "https://github.com/doxygen/doxygen/releases/download/Release_1_17_0/doxygen-1.17.0-mac-arm.zip",
+  "archive_sha256": "e05a7f647f894d2d82ef26a1d231cda079d2d1d85cf1e1c6fd8072430d80d614",
+  "archive_bytes": 46357829,
+  "binary_member": "doxygen-1.17.0/doxygen",
+  "binary_sha256": "1ccc13d7cebaeb6965e6616fe82d313646f3ab32be1273163b31623c6947cda8",
+  "binary_bytes": 153548544,
+  "license": "GPL-2.0-only; development tool, not distributed with or linked into the library",
+  "provenance": "Archive digest published by GitHub's upstream release asset API; binary digest computed after verifying that archive.",
+  "selection": "Official macOS ARM64 1.17.0 release qualified for this catalog. Both Homebrew and official 1.18.0 binaries crashed in the comment scanner on macOS 27; see related upstream issue https://github.com/doxygen/doxygen/issues/12326."
+}

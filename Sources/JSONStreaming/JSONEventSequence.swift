@@ -6,14 +6,14 @@ import JSON
 /// boundary. Each iterator pulls serially and stops after failure or cancellation.
 /// The sequence is Sendable when its source is; iterators require exclusive access.
 public struct JSONEventSequence<Source: AsyncSequence>: AsyncSequence where Source.Element == JSONByteChunk {
-    /// The element yielded by this collection or sequence.
+    /// The event or complete value yielded by this sequence, as declared below.
     public typealias Element = JSONEvent
     let source: Source
     let options: JSONStreamingOptions
     /// Wraps a caller-owned chunk source; validation and pulls begin on iteration.
     ///
     /// - Parameters:
-    ///   - source: The caller-owned chunk source or optional document label.
+    ///   - source: The caller-owned asynchronous source of owned UTF-8 chunks.
     ///   - options: The value configuration used by this facade or operation.
     public init(_ source: Source, options: JSONStreamingOptions = .init()) { self.source = source; self.options = options }
     /// Creates an independent iterator with exclusive mutable state and no prefetch task.

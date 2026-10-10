@@ -31,6 +31,6 @@ extension JSON: ExpressibleByArrayLiteral {
     /// Constructs a trusted literal value without a resource budget; bounded operations admit it later.
     ///
     /// - Parameters:
-    ///   - values: The values to append explicitly, with charged traversal.
+    ///   - values: Trusted array-literal elements; this initializer does not charge a work budget.
     public init(arrayLiteral values: JSON...) { self = .array(values) }
 }

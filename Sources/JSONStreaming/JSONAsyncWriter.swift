@@ -23,7 +23,7 @@ public struct JSONAsyncWriter: Sendable {
     /// - Throws: Sink errors, resource/configuration failure or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     ///   - sink: The awaited callback; successful return accepts the entire owned chunk.
     public func write(_ value: JSON, to sink: @Sendable (JSONByteChunk) async throws -> Void) async throws {
         _ = try await writeWithReport(value, to: sink)
@@ -34,7 +34,7 @@ public struct JSONAsyncWriter: Sendable {
     /// - Throws: Sink errors, resource/configuration failure or cancellation; accepted bytes cannot be recalled.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     ///   - sink: The awaited callback; successful return accepts the entire owned chunk.
     public func writeWithReport(_ value: JSON, to sink: @Sendable (JSONByteChunk) async throws -> Void) async throws -> JSONOperationStatistics {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .writing)

@@ -3,8 +3,10 @@
 Swift source comments are the API documentation authority. DocC compiles native
 Swift declarations and links into four product references. The Doxygen catalog
 uses those same compiler symbol graphs to provide a searchable HTML/XML inventory
-with Swift signatures, inline prose and source links. The catalog emits escaped Doxygen documentation pages to avoid its Swift-unaware
-Markdown lexer. Doxygen does not parse Swift natively; the catalog does not invent C++ bindings or duplicate a hand-written API.
+with Swift signatures, inline prose and source links. The catalog emits escaped
+Doxygen documentation pages so its parser preserves Swift syntax as text.
+Doxygen does not parse Swift natively; the catalog does not invent C++ bindings or
+duplicate a hand-written API.
 See the [official Doxygen language list](https://www.doxygen.nl/manual/starting.html)
 and [Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
@@ -12,13 +14,19 @@ and [Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
 Use macOS/SDK 27+, Swift compiler/tools 6.4+ and Swift language mode 6. Select the
 supported Xcode through DEVELOPER_DIR if it is not the system default. Python 3
-uses only its standard library. Install **Doxygen 1.18.0** as a development tool
-outside the package; the docs lane verifies that exact version. No Graphviz or
-root-package dependency is required.
+uses only its standard library. The preparation script fetches the official
+**Doxygen 1.17.0 macOS ARM64** release into the ignored build directory and verifies
+its published archive digest, extracted binary digest and exact version. No
+Graphviz or root-package dependency is required. Subsequent builds use the verified
+local binary without network access or a PATH fallback.
 
 ```sh
+python3 Scripts/prepare_documentation_tool.py
 python3 Scripts/ci.py --lane docs
 ```
+
+For offline preparation, pass `--archive /absolute/path/doxygen-1.17.0-mac-arm.zip`
+to the preparation script. The same digest checks apply.
 
 The lane records native preflight, extracts fresh public symbol graphs, requires
 summaries and named-parameter documentation on every authored public declaration,
@@ -70,12 +78,15 @@ The array helper is also exercised with the consumer's one-byte chunk source. Af
 editing a fence, regenerate that source with `documentation_catalog.readme_examples`
 and review the change; the docs lane rejects drift.
 
-The Doxygen config lives in `Documentation/Doxygen/Doxyfile`. A tool upgrade needs
-an explicit version change, inspection of new warnings and a native catalog rebuild.
-CI installs the available Homebrew formula and the build rejects a different version;
-if the formula advances, update or provide the reviewed version rather than accepting
-a silent tool change. Doxygen is GPL-2.0-only build tooling, not linked or bundled
-into the Apache-2.0 library. No Doxygen executable is shipped in source archives.
+The Doxygen config and exact tool pin live in `Documentation/Doxygen/Doxyfile` and
+[`Toolchain.json`](Doxygen/Toolchain.json). CI uses the same preparation script as
+local builds. Both Homebrew and official 1.18.0 binaries crashed in the comment scanner during
+local catalog builds on macOS 27 ARM64. The pin selects the preceding release; see
+the related
+[upstream report](https://github.com/doxygen/doxygen/issues/12326). A tool upgrade
+requires explicit pin changes, inspection of new warnings and a native catalog
+rebuild. Doxygen is GPL-2.0-only build tooling, not linked or bundled into the
+Apache-2.0 library. No Doxygen executable is shipped in source archives.
 
 Run native and safety lanes when code changes; required branch checks also run on
 public documentation PRs. Preserve published source/evidence identities and create

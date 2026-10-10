@@ -6,14 +6,14 @@ import JSON
 /// remain charged. Only `documentCompleted` certifies the enclosing document.
 /// The framing option is ignored: this reader always requires one root array.
 public struct JSONTopLevelArraySequence<Source: AsyncSequence>: AsyncSequence where Source.Element == JSONByteChunk {
-    /// The element yielded by this collection or sequence.
+    /// The event or complete value yielded by this sequence, as declared below.
     public typealias Element = JSONTopLevelArrayEvent
     let source: Source
     let options: JSONStreamingOptions
     /// Wraps a caller-owned source for one root array; framing is always single-document.
     ///
     /// - Parameters:
-    ///   - source: The caller-owned chunk source or optional document label.
+    ///   - source: The caller-owned asynchronous source of owned UTF-8 chunks.
     ///   - options: The value configuration used by this facade or operation.
     public init(_ source: Source, options: JSONStreamingOptions = .init()) { self.source = source; self.options = options }
     /// Creates an independent iterator with exclusive mutable state and no prefetch task.

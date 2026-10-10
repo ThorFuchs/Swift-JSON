@@ -124,12 +124,13 @@ extension JSONNumber {
     }
     /// Constructs the exact decimal meaning of Swift's round-trip rendering of a finite Double.
     ///
-    /// This cannot recover an earlier JSON token or an infinite binary-to-decimal expansion.
+    /// This does not recover an earlier JSON token or the exact mathematical value of
+    /// the binary floating-point representation; it adopts Swift's round-trip text.
     /// - Returns: An admitted exact decimal.
     /// - Throws: Inexact conversion for NaN/infinity, resource failure or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The finite binary64 value whose Swift round-trip text to parse.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public static func fromFiniteDouble(_ value: Double, limits: JSONLimits = .balanced) throws -> Self {
         guard value.isFinite else { throw JSONFailure(.conversion, code: .inexactConversion) }

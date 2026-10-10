@@ -18,11 +18,11 @@ public struct JSONArrayAccumulator: ~Copyable {
     }
     /// Appends admitted payloads while retaining cumulative builder work.
     ///
-    /// Object builders reject exact duplicate keys before insertion.
-    /// - Throws: Duplicate keys where applicable, resource failure or cancellation.
+    /// Each append admits the payload at array-element depth under the same budget.
+    /// - Throws: Growth, depth, retention or work failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The payload to admit before appending at element depth.
     public mutating func append(_ value: JSON) throws {
         try meter.require(.arrayItems, UInt64(values.count) + 1)
         try JSONAdmission.value(value, meter: &meter, owned: true, depth: 1)
@@ -30,8 +30,8 @@ public struct JSONArrayAccumulator: ~Copyable {
     }
     /// Appends admitted payloads while retaining cumulative builder work.
     ///
-    /// Object builders reject exact duplicate keys before insertion.
-    /// - Throws: Duplicate keys where applicable, resource failure or cancellation.
+    /// Each append admits the payload at array-element depth under the same budget.
+    /// - Throws: Growth, depth, retention or work failure, or cancellation.
     ///
     /// - Parameters:
     ///   - values: The values to append explicitly, with charged traversal.

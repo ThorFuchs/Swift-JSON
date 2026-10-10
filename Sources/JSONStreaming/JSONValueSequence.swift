@@ -5,14 +5,14 @@ import JSON
 /// A single document is yielded only after trailing whitespace and EOF. Multiple
 /// roots require real whitespace separation. Iterator-lifetime budgets are cumulative.
 public struct JSONValueSequence<Source: AsyncSequence>: AsyncSequence where Source.Element == JSONByteChunk {
-    /// The element yielded by this collection or sequence.
+    /// The event or complete value yielded by this sequence, as declared below.
     public typealias Element = JSON
     let source: Source
     let options: JSONStreamingOptions
     /// Wraps a caller-owned chunk source with strict value framing; no prefetch starts.
     ///
     /// - Parameters:
-    ///   - source: The caller-owned chunk source or optional document label.
+    ///   - source: The caller-owned asynchronous source of owned UTF-8 chunks.
     ///   - options: The value configuration used by this facade or operation.
     public init(_ source: Source, options: JSONStreamingOptions = .init()) { self.source = source; self.options = options }
     /// Creates an independent iterator with exclusive mutable state and no prefetch task.

@@ -19,11 +19,11 @@ public struct JSONObjectAccumulator: ~Copyable {
     /// Appends admitted payloads while retaining cumulative builder work.
     ///
     /// Object builders reject exact duplicate keys before insertion.
-    /// - Throws: Duplicate keys where applicable, resource failure or cancellation.
+    /// - Throws: An exact duplicate key, growth, depth, retention or work failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - key: The exact decoded-scalar member key, without normalization.
+    ///   - value: The payload to admit before appending at element depth.
     public mutating func append(_ key: String, value: JSON) throws {
         try meter.require(.objectMembers, UInt64(members.count) + 1)
         try JSONAdmission.text(key, key: true, meter: &meter, owned: true)

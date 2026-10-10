@@ -6,7 +6,7 @@
 public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// The integer position of a member in insertion order.
     public typealias Index = Int
-    /// The element yielded by this collection or sequence.
+    /// An exact key/value member in insertion order.
     public typealias Element = JSONMember
     /// Members in deterministic insertion order.
     public let members: [JSONMember]
@@ -46,11 +46,9 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     public var startIndex: Int { members.startIndex }
     /// The collection boundary immediately after the final member.
     public var endIndex: Int { members.endIndex }
-    /// Looks up an exact decoded-scalar key with unmetered linear traversal.
+    /// Reads the member at its insertion-order collection index.
     ///
-    /// Returns nil for absence and JSON.null for a present null. Use bounded JSON
-    /// member access when untrusted traversal requires work accounting.
-    ///
+    /// The index must be in `startIndex..<endIndex`, as with other Swift collections.
     /// - Parameters:
     ///   - position: A valid insertion-order member index.
     public subscript(position: Int) -> JSONMember { members[position] }
@@ -60,7 +58,7 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// member access when untrusted traversal requires work accounting.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
+    ///   - key: The exact decoded-scalar member key, without normalization.
     public subscript(key: JSONKey) -> JSON? { members.first { $0.key == key }?.value }
     /// Looks up an exact decoded-scalar key with unmetered linear traversal.
     ///
@@ -68,7 +66,7 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// member access when untrusted traversal requires work accounting.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
+    ///   - key: The exact decoded-scalar member key, without normalization.
     public subscript(key: String) -> JSON? { self[JSONKey(key)] }
     /// Compares semantic identity without a throwing work budget.
     ///
@@ -96,7 +94,7 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// - Throws: Value, key, growth or work limit failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The replacement or new payload to admit under the same operation budget.
     ///   - key: The exact decoded-scalar key to select or insert.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func setting(_ value: JSON, for key: JSONKey, limits: JSONLimits = .balanced) throws -> Self {
@@ -113,7 +111,7 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// - Throws: Resource or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
+    ///   - key: The exact decoded-scalar member key, without normalization.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func removing(_ key: JSONKey, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)

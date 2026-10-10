@@ -10,13 +10,14 @@ import html
 import json
 import pathlib
 import re
+import shutil
 import subprocess
 import urllib.parse
 import xml.etree.ElementTree as ET
+from prepare_documentation_tool import verified_tool
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PRODUCTS = ('JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch')
-DOXYGEN_VERSION = '1.18.0'
 
 
 def public_symbols(graph_dir):
@@ -92,6 +93,8 @@ def readme_examples():
 
 
 def page_id(symbol):
+    if symbol['kind']['identifier'] in ('swift.struct', 'swift.enum'):
+        return '_'.join(symbol['pathComponents'])
     return 'swift_' + hashlib.sha256(symbol['identifier']['precise'].encode()).hexdigest()[:24]
 
 
@@ -123,6 +126,9 @@ def render_catalog(symbols, output):
     inputs.mkdir(exist_ok=True)
     for stale in inputs.glob('*'):
         stale.unlink()
+    identifiers = [page_id(s) for s in symbols]
+    if len(set(identifiers)) != len(identifiers):
+        raise ValueError('Catalog page identity collision')
     types = {(s['module'], tuple(s['pathComponents'])): s for s in symbols
              if s['kind']['identifier'] in ('swift.struct', 'swift.enum')}
     names = {}
@@ -151,7 +157,7 @@ def render_catalog(symbols, output):
         intro += ['- \\subpage module_' + module]
         lines = ['/**', '\\page module_' + module + ' ' + module, '']
         lines += child_links('module_' + module)
-        (inputs / (module + '.dox')).write_text('\n'.join(lines) + '\n*/\n')
+        (inputs / ('module_' + module + '.dox')).write_text('\n'.join(lines) + '\n*/\n')
     (inputs / 'index.dox').write_text('\n'.join(intro) + '\n*/\n')
     inventory = []
     for symbol in symbols:
@@ -184,26 +190,29 @@ def render_catalog(symbols, output):
 
 
 def build_catalog(symbols, output):
-    actual = subprocess.check_output(['doxygen', '--version'], text=True).strip()
-    if actual != DOXYGEN_VERSION:
-        raise ValueError('Expected Doxygen ' + DOXYGEN_VERSION + '; observed ' + actual)
+    binary, provenance = verified_tool()
     inputs, inventory = render_catalog(symbols, output)
     base = (ROOT / 'Documentation/Doxygen/Doxyfile').read_text()
     # Absolute paths are local build inputs only; distributable inventory paths stay relative.
     config = output / 'Doxyfile'
     config.write_text(base + '\nINPUT = "' + str(inputs) + '"\nOUTPUT_DIRECTORY = "' + str(output / 'site') + '"\n')
-    command = ['doxygen', str(config)]
+    site = output / 'site'
+    if site.exists():
+        shutil.rmtree(site)
+    command = [str(binary), str(config)]
     proc = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=300)
     log = output / 'doxygen.log'
     log.write_text(proc.stdout + proc.stderr)
+    (output / 'tool-receipt.json').write_text(json.dumps(dict(provenance, command=command,
+        exit_code=proc.returncode, log_sha256=hashlib.sha256(log.read_bytes()).hexdigest()), indent=2) + '\n')
     if proc.returncode:
-        raise ValueError('Doxygen failed; inspect ' + str(log))
+        raise ValueError('Doxygen exited ' + str(proc.returncode) + '; inspect ' + str(log))
     pages = {c.findtext('name') for c in ET.parse(output / 'site/xml/index.xml').getroot().findall('compound') if c.get('kind') == 'page'}
     expected = {s['id'] for s in inventory} | {'index'} | {'module_' + m for m in PRODUCTS}
     if pages != expected:
         raise ValueError('Doxygen page inventory differs: missing=' + str(sorted(expected - pages)) + ', extra=' + str(sorted(pages - expected)))
-    return {'version': actual, 'command': command, 'exit_code': proc.returncode,
-            'symbol_pages': len(inventory), 'pages': len(pages),
-            'html': str((output / 'site/html/index.html').relative_to(ROOT)),
-            'log_sha256': hashlib.sha256(log.read_bytes()).hexdigest(),
-            'inventory_sha256': hashlib.sha256((output / 'symbols.json').read_bytes()).hexdigest()}
+    return dict(provenance, command=command, exit_code=proc.returncode,
+            symbol_pages=len(inventory), pages=len(pages),
+            html=str((output / 'site/html/index.html').relative_to(ROOT)),
+            log_sha256=hashlib.sha256(log.read_bytes()).hexdigest(),
+            inventory_sha256=hashlib.sha256((output / 'symbols.json').read_bytes()).hexdigest())

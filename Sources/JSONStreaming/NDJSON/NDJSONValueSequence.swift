@@ -5,14 +5,14 @@ import JSON
 /// Blank and malformed records fail without recovery. A valid final record may omit
 /// the final LF. Errors report absolute bytes and one-based physical record positions.
 public struct NDJSONValueSequence<Source: AsyncSequence>: AsyncSequence where Source.Element == JSONByteChunk {
-    /// The element yielded by this collection or sequence.
+    /// The event or complete value yielded by this sequence, as declared below.
     public typealias Element = JSON
     let source: Source
     let options: NDJSONOptions
     /// Wraps a caller-owned source for strict physical records; no malformed-record recovery occurs.
     ///
     /// - Parameters:
-    ///   - source: The caller-owned chunk source or optional document label.
+    ///   - source: The caller-owned asynchronous source of owned UTF-8 chunks.
     ///   - options: The value configuration used by this facade or operation.
     public init(_ source: Source, options: NDJSONOptions = .init()) { self.source = source; self.options = options }
     /// Creates an independent iterator with exclusive mutable state and no prefetch task.

@@ -148,7 +148,7 @@ public struct JSONPointer: Sendable, Hashable {
     /// - Throws: Invalid indices or Pointer capacity failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - key: The exact decoded-scalar key or caller CodingKey.
+    ///   - key: The exact decoded-scalar member key, without normalization.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func appending(key: String, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)

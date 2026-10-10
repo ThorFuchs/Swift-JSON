@@ -37,7 +37,7 @@ public struct JSONSchemaDocument: Sendable {
     /// - Throws: Root-kind, resource or configuration failure, or cancellation. Compilation is a separate step.
     ///
     /// - Parameters:
-    ///   - document: An admitted schema or source document.
+    ///   - document: The parsed source document whose root and source map to retain.
     ///   - retrievalURI: An optional absolute retrieval identity; this does not fetch resources.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(_ document: JSONDocument, retrievalURI: JSONSchemaURI? = nil, limits: JSONLimits = .balanced) throws {

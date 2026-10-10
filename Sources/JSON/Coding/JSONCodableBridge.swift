@@ -22,10 +22,11 @@ extension JSONNumber: Codable {
         }
         throw DecodingError.typeMismatch(Self.self, .init(codingPath: decoder.codingPath, debugDescription: "Exact Int64, UInt64 or Decimal required"))
     }
-    /// Encodes a Codable value using native exact JSON coding.
+    /// Encodes through the supplied coder; native JSON coding preserves exact payloads.
     ///
-    /// Caller callback errors propagate; encoding and any composed writing share work.
-    /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
+    /// Foreign encoders determine their available numeric and key fidelity. Their
+    /// work is outside the native operation meter.
+    /// - Throws: The supplied coder's errors, or exact number conversion failure.
     ///
     /// - Parameters:
     ///   - encoder: The supplied encoder; external coders determine available numeric/key fidelity.
@@ -63,10 +64,11 @@ extension JSON: Codable {
         for key in object.allKeys { members.append(JSONMember(key.stringValue, value: try object.decode(JSON.self, forKey: key))) }
         self = .object(try JSONObject(members: members))
     }
-    /// Encodes a Codable value using native exact JSON coding.
+    /// Encodes through the supplied coder; native JSON coding preserves exact payloads.
     ///
-    /// Caller callback errors propagate; encoding and any composed writing share work.
-    /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
+    /// Foreign encoders determine their available numeric and key fidelity. Their
+    /// work is outside the native operation meter.
+    /// - Throws: The supplied coder's errors, or exact number conversion failure.
     ///
     /// - Parameters:
     ///   - encoder: The supplied encoder; external coders determine available numeric/key fidelity.
@@ -101,10 +103,11 @@ extension JSONObject: Codable {
         }
         self = object
     }
-    /// Encodes a Codable value using native exact JSON coding.
+    /// Encodes through the supplied coder; native JSON coding preserves exact payloads.
     ///
-    /// Caller callback errors propagate; encoding and any composed writing share work.
-    /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
+    /// Foreign encoders determine their available numeric and key fidelity. Their
+    /// work is outside the native operation meter.
+    /// - Throws: The supplied coder's errors, or exact number conversion failure.
     ///
     /// - Parameters:
     ///   - encoder: The supplied encoder; external coders determine available numeric/key fidelity.
@@ -163,11 +166,11 @@ extension JSONWriter {
     /// Encodes a Codable value using native exact JSON coding.
     ///
     /// Caller callback errors propagate; encoding and any composed writing share work.
-    /// - Returns: The encoded value or UTF-8 bytes, as declared by this overload.
+    /// - Returns: The complete strict UTF-8 JSON document.
     /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The Encodable model to encode before writing under one cumulative budget.
     ///   - coding: Native Codable strategies; composed byte coding intersects these limits with facade limits.
     public func encode<T: Encodable>(_ value: T, coding: JSONCodingOptions = .init()) throws -> Data {
         let meter = try JSONWorkMeter(limits: try options.limits.intersection(coding.limits), domain: .coding)

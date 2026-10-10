@@ -19,7 +19,7 @@ public struct JSONValueEncoder: Sendable {
     /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The Encodable model; caller encode callbacks propagate their own errors.
     public func encode<T: Encodable>(_ value: T) throws -> JSON { try encodeWithReport(value).result }
     /// Encodes a Codable value with successful native operation accounting.
     ///
@@ -27,7 +27,7 @@ public struct JSONValueEncoder: Sendable {
     /// - Throws: Coding or caller errors, resource failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The Encodable model; caller encode callbacks propagate their own errors.
     public func encodeWithReport<T: Encodable>(_ value: T) throws -> JSONOperationReport<JSON> {
         let meter = try JSONWorkMeter(limits: options.limits, domain: .coding)
         let state = JSONCodingState(options: options, meter: meter)

@@ -20,7 +20,7 @@ public struct JSONEvaluationAnnotation: Sendable {
     ///   - keywordLocation: The schema keyword Pointer.
     ///   - absoluteKeywordLocation: The optional absolute keyword URI.
     ///   - keyword: The exact keyword name.
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The exact annotation payload; this record initializer performs no admission.
     public init(instanceLocation: JSONPointer, keywordLocation: JSONPointer, absoluteKeywordLocation: JSONSchemaURI?, keyword: JSONKey, value: JSON) {
         self.instanceLocation = instanceLocation; self.keywordLocation = keywordLocation
         self.absoluteKeywordLocation = absoluteKeywordLocation; self.keyword = keyword; self.value = value

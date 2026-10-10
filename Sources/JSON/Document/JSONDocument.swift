@@ -35,7 +35,7 @@ extension JSONParser {
     ///
     /// - Parameters:
     ///   - data: The owned input bytes supplied by the caller.
-    ///   - source: The caller-owned chunk source or optional document label.
+    ///   - source: An optional diagnostic source label; no resource is fetched.
     public func parseDocument(_ data: Data, source: String? = nil) throws -> JSONDocument {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .parsing)
         if let source { try JSONAdmission.text(source, meter: &meter, owned: true) }

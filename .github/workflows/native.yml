@@ -26,9 +26,9 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Install catalog documentation tool
+      - name: Verify pinned catalog documentation tool
         if: matrix.lane == 'docs'
-        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install doxygen
+        run: python3 -B Scripts/prepare_documentation_tool.py
       - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
       - name: Preserve native receipts
         if: always()
@@ -43,5 +43,6 @@ jobs:
             .build/handoff/docc/coverage.json
             .build/handoff/docc/*.doccarchive/
             .build/handoff/doxygen/
+            .build/documentation-tools/receipt.json
             .build/handoff/docc/*-diagnostics.json
             .build/handoff/docc/*.log

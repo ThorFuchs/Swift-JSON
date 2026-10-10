@@ -20,7 +20,7 @@ public enum JSONSchemaBuilder {
     /// - Throws: Resource or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: Whether the Boolean schema accepts every instance or rejects every instance.
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public static func boolean(_ value: Bool, limits: JSONLimits = .balanced) throws -> JSONSchemaDocument {
         try JSONSchemaDocument(.boolean(value), limits: limits)

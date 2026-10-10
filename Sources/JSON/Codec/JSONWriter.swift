@@ -19,7 +19,7 @@ public struct JSONWriter: Sendable {
     /// - Throws: Admission, output or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     public func write(_ value: JSON) throws -> Data { try writeWithReport(value).result }
     /// Writes strict JSON and charges the additional owned String result.
     ///
@@ -27,7 +27,7 @@ public struct JSONWriter: Sendable {
     /// - Throws: Resource or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     public func writeString(_ value: JSON) throws -> String {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .writing)
         let bytes = try write(value, meter: &meter)
@@ -40,7 +40,7 @@ public struct JSONWriter: Sendable {
     /// - Throws: Resource or configuration failure, or cancellation.
     ///
     /// - Parameters:
-    ///   - value: The input value; admission occurs where the operation is bounded.
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     public func writeWithReport(_ value: JSON) throws -> JSONOperationReport<Data> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .writing)
         let bytes = try write(value, meter: &meter)
