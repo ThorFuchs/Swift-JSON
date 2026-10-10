@@ -64,6 +64,8 @@ func runProductExamples() async throws {
         switch event { case .element: count += 1; case .documentCompleted: complete = true }
     }
     precondition(count == 2 && complete)
+    let readmeCount = try await inspectArray(ConsumerChunks(bytes: Array("[1,2]".utf8)))
+    precondition(readmeCount == 2)
     let sink = ConsumerSink()
     try await JSONAsyncWriter(chunkSize: 3).write(expected) { await sink.accept($0) }
     let sinkBytes = await sink.bytes

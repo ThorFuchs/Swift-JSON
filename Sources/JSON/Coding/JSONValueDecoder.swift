@@ -1,9 +1,35 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+/// An immutable native Codable decoder over exact JSON values.
+///
+/// Integers require exact conversion. Float and Double decode by finite rounding.
+/// String dictionaries reject scalar-distinct keys that Swift equality would collapse.
 public struct JSONValueDecoder: Sendable {
+    /// The immutable configuration used to create each invocation.
     public let options: JSONCodingOptions
+    /// Creates an immutable native decoder facade with invocation-owned mutable state.
+    ///
+    /// - Parameters:
+    ///   - options: The value configuration used by this facade or operation.
     public init(options: JSONCodingOptions = .init()) { self.options = options }
+    /// Decodes a model with native value-based Codable.
+    ///
+    /// Integer conversions are exact; binary floating results require finite rounding.
+    /// - Returns: The caller model.
+    /// - Throws: Type/conversion errors, collapsed scalar keys, caller errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - type: The target Swift type.
+    ///   - value: The value supplied by the caller.
     public func decode<T: Decodable>(_ type: T.Type, from value: JSON) throws -> T { try decodeWithReport(type, from: value).result }
+    /// Decodes a model and reports successful library-owned work.
+    ///
+    /// - Returns: The decoded model and counts; Sendable follows the model type.
+    /// - Throws: Coding or caller errors, resource failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - type: The target Swift type.
+    ///   - value: The value supplied by the caller.
     public func decodeWithReport<T: Decodable>(_ type: T.Type, from value: JSON) throws -> JSONOperationReport<T> {
         let meter = try JSONWorkMeter(limits: options.limits, domain: .coding)
         let state = JSONCodingState(options: options, meter: meter)

@@ -1,10 +1,31 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 
-public enum JSONNumberConversionPolicy: Sendable { case exact, rounded }
-public enum JSONNumberTextStyle: Sendable { case normalized, preserved }
+/// The required numeric fidelity when projecting an exact decimal.
+public enum JSONNumberConversionPolicy: Sendable {
+    /// Require mathematical equality with the finite target representation.
+    case exact
+    /// Allow finite rounding within the target representation; overflow still fails.
+    case rounded
+}
+/// The decimal spelling used when writing an exact number.
+public enum JSONNumberTextStyle: Sendable {
+    /// Render normalized coefficient and exponent, with one zero identity.
+    case normalized
+    /// Use the original admitted lexeme when available, otherwise normalized text.
+    case preserved
+}
 
 extension JSONNumber {
+    /// Renders the exact number without exponent-sized zero expansion.
+    ///
+    /// Preserved style falls back to normalized spelling when there is no original lexeme.
+    /// - Returns: Admitted numeric text.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - style: The requested rendering or output format.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func numericText(style: JSONNumberTextStyle = .normalized, limits: JSONLimits = .balanced) throws -> String {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         return try numericText(style: style, meter: &meter)
@@ -33,6 +54,14 @@ extension JSONNumber {
         try meter.checkpoint(); try meter.release(UInt64(output.count))
         return result
     }
+    /// Converts the mathematical value exactly to a fixed-width integer.
+    ///
+    /// - Returns: An integral, in-range result.
+    /// - Throws: Inexact conversion for fractions, sign mismatch or overflow; resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - type: The target Swift type.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func integer<T: FixedWidthInteger>(as type: T.Type, limits: JSONLimits = .balanced) throws -> T {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         return try integer(as: type, meter: &meter)
@@ -93,11 +122,29 @@ extension JSONNumber {
         try meter.checkpoint(); try meter.release(UInt64(output.count))
         return text
     }
-    /// Preserves Swift's round-trip decimal rendering of the supplied finite binary value.
+    /// Constructs the exact decimal meaning of Swift's round-trip rendering of a finite Double.
+    ///
+    /// This does not recover an earlier JSON token or the exact mathematical value of
+    /// the binary floating-point representation; it adopts Swift's round-trip text.
+    /// - Returns: An admitted exact decimal.
+    /// - Throws: Inexact conversion for NaN/infinity, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The finite binary64 value whose Swift round-trip text to parse.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public static func fromFiniteDouble(_ value: Double, limits: JSONLimits = .balanced) throws -> Self {
         guard value.isFinite else { throw JSONFailure(.conversion, code: .inexactConversion) }
         return try Self(parsing: String(value), limits: limits)
     }
+    /// Projects the decimal to a finite Double under the selected fidelity policy.
+    ///
+    /// Exact mode proves mathematical equality; decimal 0.1 therefore fails in exact mode.
+    /// - Returns: A finite binary64 value.
+    /// - Throws: Inexact or overflowing conversion, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - policy: The required exact or finite-rounded conversion fidelity.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func doubleValue(policy: JSONNumberConversionPolicy = .exact, limits: JSONLimits = .balanced) throws -> Double {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         let text = try binaryConversionText(meter: &meter)
@@ -112,6 +159,15 @@ extension JSONNumber {
         }
         return value
     }
+    /// Projects the decimal to Foundation Decimal under the selected fidelity policy.
+    ///
+    /// The fixed precision and exponent range remain bounded in either policy.
+    /// - Returns: A finite Decimal; exact mode verifies equality by native decimal comparison.
+    /// - Throws: Range/precision failure, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - policy: The required exact or finite-rounded conversion fidelity.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func decimalValue(policy: JSONNumberConversionPolicy = .exact, limits: JSONLimits = .balanced) throws -> Decimal {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         let c = components

@@ -1,14 +1,34 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
 
-/// Immutable indexed compilation output. Mutable evaluation state is created per invocation.
+/// An immutable offline Draft 2020-12 compilation snapshot.
+///
+/// The plan and its regex programs can be shared across tasks. Each validation owns
+/// its mutable state; declaration inspection does not infer an effective schema.
 public struct CompiledJSONSchema: Sendable {
+    /// The admitted root schema document retained by this compiled snapshot.
     public let document: JSONSchemaDocument
     package let plan: JSONSchemaPlan
     package init(document: JSONSchemaDocument, plan: JSONSchemaPlan) { self.document = document; self.plan = plan }
+    /// Inspects one raw object or boolean declaration, optionally at a document Pointer.
+    ///
+    /// - Returns: Immediate declarations; compiled inspection may add initial reference targets.
+    /// - Throws: Missing/invalid location, wrong schema kind, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - pointer: The optional document Pointer; nil selects the root.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func node(at pointer: JSONPointer? = nil, limits: JSONLimits = .balanced) throws -> JSONSchemaNodeView {
         try nodeWithReport(at: pointer, limits: limits).result
     }
+    /// Inspects a declaration with bounded traversal and successful accounting.
+    ///
+    /// - Returns: Raw declarations and optional compiled resource/target information.
+    /// - Throws: Pointer/schema-kind errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - pointer: The optional document Pointer; nil selects the root.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func nodeWithReport(at pointer: JSONPointer? = nil, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSONSchemaNodeView> {
         var meter = try JSONWorkMeter(limits: limits,domain: .core)
         let admitted = try JSONPointer.decodedTokens(pointer?.tokens ?? [],meter: &meter)

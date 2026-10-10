@@ -1,9 +1,33 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+/// An immutable native Codable encoder that produces exact JSON values.
+///
+/// JSON, JSONObject and JSONNumber bypass lossy foreign serialization. Arbitrary
+/// `Encodable` callbacks execute synchronously and their errors propagate.
 public struct JSONValueEncoder: Sendable {
+    /// The immutable configuration used to create each invocation.
     public let options: JSONCodingOptions
+    /// Creates an immutable native encoder facade with invocation-owned mutable state.
+    ///
+    /// - Parameters:
+    ///   - options: The value configuration used by this facade or operation.
     public init(options: JSONCodingOptions = .init()) { self.options = options }
+    /// Encodes a Codable value using native exact JSON coding.
+    ///
+    /// Caller callback errors propagate; encoding and any composed writing share work.
+    /// - Returns: The encoded value or UTF-8 bytes, as declared by this overload.
+    /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The Encodable model; caller encode callbacks propagate their own errors.
     public func encode<T: Encodable>(_ value: T) throws -> JSON { try encodeWithReport(value).result }
+    /// Encodes a Codable value with successful native operation accounting.
+    ///
+    /// - Returns: An exact JSON value and charged library work. Caller callback work is outside the quota.
+    /// - Throws: Coding or caller errors, resource failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The Encodable model; caller encode callbacks propagate their own errors.
     public func encodeWithReport<T: Encodable>(_ value: T) throws -> JSONOperationReport<JSON> {
         let meter = try JSONWorkMeter(limits: options.limits, domain: .coding)
         let state = JSONCodingState(options: options, meter: meter)

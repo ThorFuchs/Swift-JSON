@@ -3,6 +3,13 @@ import Foundation
 /// External decoders may already have rounded numbers or collapsed scalar-distinct keys.
 /// Use JSONParser and JSONValueDecoder for complete source fidelity.
 extension JSONNumber: Codable {
+    /// Decodes through the supplied coder. Native coding preserves exact payloads;
+    /// foreign coders determine available number and key fidelity.
+    ///
+    /// - Throws: Type/conversion errors or the supplied coder's errors.
+    ///
+    /// - Parameters:
+    ///   - decoder: The supplied decoder; external coders determine their available source fidelity.
     public init(from decoder: any Decoder) throws {
         if let native = decoder as? JSONNativeDecoder {
             guard case .number(let number) = native.value else { throw native.mismatch(Self.self) }; self = number; return
@@ -15,6 +22,14 @@ extension JSONNumber: Codable {
         }
         throw DecodingError.typeMismatch(Self.self, .init(codingPath: decoder.codingPath, debugDescription: "Exact Int64, UInt64 or Decimal required"))
     }
+    /// Encodes through the supplied coder; native JSON coding preserves exact payloads.
+    ///
+    /// Foreign encoders determine their available numeric and key fidelity. Their
+    /// work is outside the native operation meter.
+    /// - Throws: The supplied coder's errors, or exact number conversion failure.
+    ///
+    /// - Parameters:
+    ///   - encoder: The supplied encoder; external coders determine available numeric/key fidelity.
     public func encode(to encoder: any Encoder) throws {
         if let native = encoder as? JSONNativeEncoder { try native.set(.number(self)); return }
         var container = encoder.singleValueContainer()
@@ -25,6 +40,13 @@ extension JSONNumber: Codable {
     }
 }
 extension JSON: Codable {
+    /// Decodes through the supplied coder. Native coding preserves exact payloads;
+    /// foreign coders determine available number and key fidelity.
+    ///
+    /// - Throws: Type/conversion errors or the supplied coder's errors.
+    ///
+    /// - Parameters:
+    ///   - decoder: The supplied decoder; external coders determine their available source fidelity.
     public init(from decoder: any Decoder) throws {
         if let native = decoder as? JSONNativeDecoder { self = native.value; return }
         let container = try decoder.singleValueContainer()
@@ -42,6 +64,14 @@ extension JSON: Codable {
         for key in object.allKeys { members.append(JSONMember(key.stringValue, value: try object.decode(JSON.self, forKey: key))) }
         self = .object(try JSONObject(members: members))
     }
+    /// Encodes through the supplied coder; native JSON coding preserves exact payloads.
+    ///
+    /// Foreign encoders determine their available numeric and key fidelity. Their
+    /// work is outside the native operation meter.
+    /// - Throws: The supplied coder's errors, or exact number conversion failure.
+    ///
+    /// - Parameters:
+    ///   - encoder: The supplied encoder; external coders determine available numeric/key fidelity.
     public func encode(to encoder: any Encoder) throws {
         if let native = encoder as? JSONNativeEncoder { try native.set(self); return }
         switch self {
@@ -58,6 +88,13 @@ extension JSON: Codable {
 }
 
 extension JSONObject: Codable {
+    /// Decodes through the supplied coder. Native coding preserves exact payloads;
+    /// foreign coders determine available number and key fidelity.
+    ///
+    /// - Throws: Type/conversion errors or the supplied coder's errors.
+    ///
+    /// - Parameters:
+    ///   - decoder: The supplied decoder; external coders determine their available source fidelity.
     public init(from decoder: any Decoder) throws {
         let value = try JSON(from: decoder)
         guard case .object(let object) = value else {
@@ -66,15 +103,38 @@ extension JSONObject: Codable {
         }
         self = object
     }
+    /// Encodes through the supplied coder; native JSON coding preserves exact payloads.
+    ///
+    /// Foreign encoders determine their available numeric and key fidelity. Their
+    /// work is outside the native operation meter.
+    /// - Throws: The supplied coder's errors, or exact number conversion failure.
+    ///
+    /// - Parameters:
+    ///   - encoder: The supplied encoder; external coders determine available numeric/key fidelity.
     public func encode(to encoder: any Encoder) throws { try JSON.object(self).encode(to: encoder) }
 }
 
 extension KeyedEncodingContainer {
+    /// Omits absent fields, encodes null explicitly, and encodes present values.
+    ///
+    /// - Throws: The underlying encoder or caller value error.
+    ///
+    /// - Parameters:
+    ///   - presence: Absent, explicit null or a present non-null value.
+    ///   - key: The destination key.
     public mutating func encodePresence<T: Encodable>(_ presence: JSONPresence<T>, forKey key: Key) throws {
         switch presence { case .absent: break; case .null: try encodeNil(forKey: key); case .value(let value): try encode(value, forKey: key) }
     }
 }
 extension KeyedDecodingContainer {
+    /// Distinguishes a missing key, explicit null and a decoded non-null value.
+    ///
+    /// - Returns: The field presence without manufacturing a default.
+    /// - Throws: The underlying decoder or caller type error.
+    ///
+    /// - Parameters:
+    ///   - type: The target Swift type.
+    ///   - key: The destination key.
     public func decodePresence<T: Decodable>(_ type: T.Type, forKey key: Key) throws -> JSONPresence<T> {
         if !contains(key) { return .absent }
         if try decodeNil(forKey: key) { return .null }
@@ -82,6 +142,16 @@ extension KeyedDecodingContainer {
     }
 }
 extension JSONParser {
+    /// Decodes a model with native value-based Codable.
+    ///
+    /// Integer conversions are exact; binary floating results require finite rounding.
+    /// - Returns: The caller model.
+    /// - Throws: Type/conversion errors, collapsed scalar keys, caller errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - type: The target Swift type.
+    ///   - data: The strict UTF-8 input bytes.
+    ///   - coding: Native Codable strategies; composed byte coding intersects these limits with facade limits.
     public func decode<T: Decodable>(_ type: T.Type, from data: Data, coding: JSONCodingOptions = .init()) throws -> T {
         let meter = try JSONWorkMeter(limits: try options.limits.intersection(coding.limits), domain: .coding)
         let state = JSONCodingState(options: coding, meter: meter)
@@ -93,6 +163,15 @@ extension JSONParser {
     }
 }
 extension JSONWriter {
+    /// Encodes a Codable value using native exact JSON coding.
+    ///
+    /// Caller callback errors propagate; encoding and any composed writing share work.
+    /// - Returns: The complete strict UTF-8 JSON document.
+    /// - Throws: Coding, conversion, resource or configuration errors, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The Encodable model to encode before writing under one cumulative budget.
+    ///   - coding: Native Codable strategies; composed byte coding intersects these limits with facade limits.
     public func encode<T: Encodable>(_ value: T, coding: JSONCodingOptions = .init()) throws -> Data {
         let meter = try JSONWorkMeter(limits: try options.limits.intersection(coding.limits), domain: .coding)
         let state = JSONCodingState(options: coding, meter: meter)

@@ -1,14 +1,32 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
+/// A staged RFC 6902 patch over exact values.
+///
+/// All operations apply to invocation-owned staging. A failure exposes no partial
+/// result. Input, payloads and each intermediate result must fit finite limits.
 public struct JSONPatch: Sendable {
+    /// The ordered admitted RFC 6902 operations.
     public let operations: [JSONPatchOperation]
+    /// Admits ordered operations or an RFC 6902 JSON array before application.
+    ///
+    /// - Throws: Malformed operations, missing fields, Pointer/resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - operations: The ordered RFC 6902 operations.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(operations: [JSONPatchOperation], limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .patch)
         try meter.require(.operations, UInt64(operations.count))
         for operation in operations { try meter.work(); _ = try JSONPointer.decodedTokens(operation.path.tokens, meter: &meter) }
         self.operations = operations
     }
-    /// Irrelevant extra members are ignored as RFC 6902 specifies.
+    /// Admits ordered operations or an RFC 6902 JSON array before application.
+    ///
+    /// - Throws: Malformed operations, missing fields, Pointer/resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - json: The RFC 6902 operation array.
+    ///   - options: The value configuration used by this facade or operation.
     public init(json: JSON, options: JSONPatchOptions = .init()) throws {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .patch)
         try JSONAdmission.value(json, meter: &meter)
@@ -44,8 +62,30 @@ public struct JSONPatch: Sendable {
         var cursor = JSONWritingCursor(value: value, options: .init(limits: meter.limits))
         while try cursor.next(meter: &meter) != nil { try meter.charge(.outputBytes) }
     }
+    /// Applies the patch to exclusively owned staging and returns only a complete result.
+    ///
+    /// - Throws: Patch/navigation/test errors, intermediate capacity failure, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value supplied by the caller.
+    ///   - options: The value configuration used by this facade or operation.
     public func applying(to value: JSON, options: JSONPatchOptions = .init()) throws -> JSONPatchResult { try applyingWithReport(to: .document(value), options: options).result }
+    /// Applies the patch to exclusively owned staging and returns only a complete result.
+    ///
+    /// - Throws: Patch/navigation/test errors, intermediate capacity failure, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value supplied by the caller.
+    ///   - options: The value configuration used by this facade or operation.
     public func applying(to value: JSONPatchResult, options: JSONPatchOptions = .init()) throws -> JSONPatchResult { try applyingWithReport(to: value, options: options).result }
+    /// Applies a patch with cumulative work and intermediate-stage admission.
+    ///
+    /// - Returns: The complete result and charged counts; no partial result escapes on failure.
+    /// - Throws: Patch/navigation/test errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - initial: The initial present or removed document state.
+    ///   - options: The value configuration used by this facade or operation.
     public func applyingWithReport(to initial: JSONPatchResult, options: JSONPatchOptions = .init()) throws -> JSONOperationReport<JSONPatchResult> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .patch)
         var staged: JSON?

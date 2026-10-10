@@ -3,8 +3,13 @@ import Foundation
 import CryptoKit
 import JSON
 extension JSONSchemaRegistry {
-    /// Pinned official resources, loaded without network I/O or a mutable cache.
-    /// Loading and hash integrity are separate from compiler/evaluator bootstrap qualification.
+    /// Loads the integrity-checked packaged Draft 2020-12 meta-schema registry.
+    ///
+    /// - Returns: Explicit immutable official resources with retained provenance.
+    /// - Throws: Missing/corrupt packaged resource, parsing, resource or configuration errors, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public static func draft2020_12(limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .schemaCompilation)
         return try Self(admitted: loadBuiltins(meter: &meter))

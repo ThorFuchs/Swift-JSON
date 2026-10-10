@@ -2,10 +2,26 @@
 import JSON
 
 extension JSONValidationResult {
-    /// Draft 2020-12 flag/basic output. Truncation is preserved in the diagnosticsComplete extension.
+    /// Builds flag or basic Draft 2020-12 output from the diagnostics actually collected.
+    ///
+    /// Flag-only results cannot be upgraded to invent basic errors. Basic output preserves
+    /// `diagnosticsComplete`; output construction is separately bounded.
+    /// - Throws: Output-unavailable, resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - style: The requested rendering or output format.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func output(_ style: JSONValidationOutput? = nil, limits: JSONLimits = .balanced) throws -> JSON {
         try outputWithReport(style,limits: limits).result
     }
+    /// Builds bounded validation output with successful output-construction accounting.
+    ///
+    /// - Returns: Flag/basic JSON and counts. It does not re-evaluate the instance.
+    /// - Throws: Output-unavailable, resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - style: The requested rendering or output format.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func outputWithReport(_ style: JSONValidationOutput? = nil, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
         var meter = try JSONWorkMeter(limits: limits,domain: .core)
         let selected = style ?? outputStyle

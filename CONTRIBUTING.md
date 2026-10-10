@@ -28,3 +28,8 @@ code. Original contributions use Apache-2.0.
 Use [Issues](https://github.com/ThorFuchs/Swift-JSON/issues) for defects and support,
 and [SECURITY.md](SECURITY.md) for private reports. Do not submit secrets or private
 application fixtures. See [SUPPORT.md](SUPPORT.md) for the maintenance policy.
+
+Public API changes need useful Swift documentation comments and a focused guide when
+semantics span multiple calls. README Swift examples must match their compiled consumer.
+See [documentation tooling](Documentation/DocumentationTooling.md) for coverage checks,
+compiled examples and native DocC builds.

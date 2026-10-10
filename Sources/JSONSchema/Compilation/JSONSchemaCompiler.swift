@@ -2,20 +2,56 @@
 import JSON
 import JSONRegexRuntime
 
+/// An immutable compiler for offline Draft 2020-12 schemas.
+///
+/// Supply external resources through an immutable registry. Compilation validates
+/// meta-schemas, required vocabularies and references, and creates a shareable plan.
 public struct JSONSchemaCompiler: Sendable {
+    /// The immutable configuration used to create each invocation.
     public let options: JSONSchemaOptions
+    /// Creates an immutable compiler facade; resources and limits are checked during compilation.
+    ///
+    /// - Parameters:
+    ///   - options: The value configuration used by this facade or operation.
     public init(options: JSONSchemaOptions = .init()) { self.options = options }
+    /// Compiles an admitted document and explicit offline registry into an immutable plan.
+    ///
+    /// - Returns: A shareable Draft 2020-12 snapshot.
+    /// - Throws: Compilation/meta-schema/reference errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - document: The admitted schema document; its construction accounting precedes this call.
+    ///   - registry: The immutable explicitly supplied offline resources.
     public func compile(_ document: JSONSchemaDocument, registry: JSONSchemaRegistry = .empty) throws -> CompiledJSONSchema {
         try compileWithReport(document, registry: registry).result
     }
+    /// Compiles an offline immutable plan with successful compilation accounting.
+    ///
+    /// The raw JSON overload includes document admission in the same meter. The document
+    /// overload starts after document construction; registry and helpers share compilation work.
+    /// - Returns: The plan and charged counts.
+    /// - Throws: Compilation errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - document: The admitted schema document; its construction accounting precedes this call.
+    ///   - registry: The immutable explicitly supplied offline resources.
     public func compileWithReport(_ document: JSONSchemaDocument, registry: JSONSchemaRegistry = .empty) throws -> JSONOperationReport<CompiledJSONSchema> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .schemaCompilation)
         var state = JSONSchemaCompilation(options: options)
         let result = try state.compile(document, registry: registry, meter: &meter)
         return .init(result: result, statistics: meter.statistics())
     }
-    /// Admits raw declarations and compiles with one meter. The report includes
-    /// document construction, enabling a caller's cumulative remaining-work account.
+    /// Compiles an offline immutable plan with successful compilation accounting.
+    ///
+    /// The raw JSON overload includes document admission in the same meter. The document
+    /// overload starts after document construction; registry and helpers share compilation work.
+    /// - Returns: The plan and charged counts.
+    /// - Throws: Compilation errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - raw: The exact raw object or Boolean schema.
+    ///   - retrievalURI: An optional absolute retrieval identity; this does not fetch resources.
+    ///   - registry: The immutable explicitly supplied offline resources.
     public func compileWithReport(_ raw: JSON, retrievalURI: JSONSchemaURI? = nil, registry: JSONSchemaRegistry = .empty) throws -> JSONOperationReport<CompiledJSONSchema> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .schemaCompilation)
         let document = try JSONSchemaDocument(raw, retrievalURI: retrievalURI, meter: &meter)

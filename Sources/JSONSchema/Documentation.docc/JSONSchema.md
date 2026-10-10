@@ -61,6 +61,10 @@ Internal mutable meters remain private.
 
 ## Topics
 
+### Guides
+
+- <doc:OfflineValidation>
+
 ### Documents and plans
 - ``JSONSchemaDocument``
 - ``JSONSchemaRegistry``

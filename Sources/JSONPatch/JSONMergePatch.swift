@@ -1,12 +1,35 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
-/// RFC 7396: null object members remove; root null replaces the document with JSON null.
+/// An RFC 7396 merge patch over exact values.
+///
+/// Object null members remove properties; a root null replaces the root with JSON
+/// null. Arrays and other non-object patches replace the selected value whole.
 public struct JSONMergePatch: Sendable {
+    /// The exact RFC 7396 patch value.
     public let patch: JSON
+    /// Stores an RFC 7396 patch value; admission and cumulative work begin during application.
+    ///
+    /// - Parameters:
+    ///   - patch: The exact RFC 7396 patch value, admitted on application.
     public init(_ patch: JSON) { self.patch = patch }
+    /// Applies the patch to exclusively owned staging and returns only a complete result.
+    ///
+    /// - Throws: Patch/navigation/test errors, intermediate capacity failure, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value supplied by the caller.
+    ///   - options: The value configuration used by this facade or operation.
     public func applying(to value: JSON, options: JSONPatchOptions = .init()) throws -> JSON {
         try applyingWithReport(to: value, options: options).result
     }
+    /// Applies a patch with cumulative work and intermediate-stage admission.
+    ///
+    /// - Returns: The complete result and charged counts; no partial result escapes on failure.
+    /// - Throws: Patch/navigation/test errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value supplied by the caller.
+    ///   - options: The value configuration used by this facade or operation.
     public func applyingWithReport(to value: JSON, options: JSONPatchOptions = .init()) throws -> JSONOperationReport<JSON> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .patch)
         try JSONAdmission.value(value, meter: &meter,owned: true)

@@ -8,7 +8,7 @@ These contracts describe the public behavior and its resource boundaries.
 
 ## Resource profiles and counter semantics
 
-The three profiles below are proposed initial policy values. Balanced is the default. Conservative is suitable for smaller untrusted documents; offline permits larger trusted research jobs while remaining finite. They are generic policies, not MCP wire limits. Native adversarial and representative fixtures must calibrate them before release, and changes to published defaults require changelog documentation.
+The three profiles below are finite initial policy values. Balanced is the default. Conservative is suitable for smaller untrusted documents; offline permits larger trusted research jobs while remaining finite. They are generic policies, not MCP wire limits. Native boundary tests and representative calibration observations qualify their current behavior; they do not prove hard RSS or throughput guarantees, and changes to published defaults require changelog documentation.
 
 MiB means 1,048,576 bytes; GiB means 1,073,741,824 bytes. All maxima are inclusive. Admission of N succeeds at a limit of N; the next charged unit fails before growth. Checked UInt64 counters avoid wrapping. Configuration conversion/reservation into Int uses checked arithmetic. A configuration is rejected if inconsistent or beyond representable supported capacity. Zero is meaningful for quotas that forbid an operation; cancellation quantum must be positive and at most 1,024. There is no Int.max, UInt64.max, or implicit unlimited default.
 
@@ -113,14 +113,11 @@ Logical retained accounting is not process RSS or exact allocation count. Clock 
 
 This makes resource tuning, reproducible failures and benchmark interpretation easier without adding a telemetry system. Verify counters at exact boundary values, their behavior on growth/refund, aggregate composition, disabled-report overhead and agreement between scalar and optimized paths.
 
-## E09 Private buffer and scanning optimization
+## Selected scalar retention policy
 
-Reuse scratch within an exclusively owned streaming iterator or another explicit invocation context. Reset semantic state and counters at their documented boundaries, release caller results normally and keep only a bounded amount of scratch. An unusually large record must not leave a permanent unbounded high-water allocation.
-
-Propose a maxReusableBufferBytes ceiling of 512 KiB conservative, 2 MiB balanced and 8 MiB offline at record boundaries. Live capacity remains part of retainedBytes. Temporary admitted work may require more capacity; after the record it is released or trimmed to the reuse ceiling. These values are initial calibration policy, not measured optimal sizes.
-
-Do not change immutable Sendable parser/coder facades into hidden mutable caches. Across independent calls, buffer pooling or a public reusable workspace is deferred until measurement justifies its ownership/API cost. A process-wide coder pool would conflict with A1.
-
-After a correct scalar baseline, qualify byte-specialized whitespace, structural and string scans. IkigaJSON's word-scanning code and historical Swift Extras string-reader split provide concrete reference patterns. No unsafe source is copied wholesale. Swift Span borrows stay synchronous and an explicit scalar tail handles short/alignment/boundary cases.
-
-Every block scan charges bytes and observes the cancellation quantum. Do not invoke an opaque whole-input search that can exceed the work-check interval. Padding or unsafe reads must not depend on callers supplying inaccessible bytes past a buffer. UTF-8, escaped quotes, backslashes, raw controls and surrogate boundaries still use the strict validation path. Fuzz scalar-versus-fast equivalence, including every tail size and malformed split; promote a fast path only after native performance and safety checks.
+maxReusableBufferBytes is 512 KiB conservative, 2 MiB balanced and 8 MiB offline
+at record boundaries. The selected scalar reader has no reusable scratch pool,
+so retained reusable scratch is zero. Live owned capacities still charge
+retainedBytes. Scalar scanning and immutable plan-local regex sharing remain the
+qualified choices; no SIMD or prefilter optimization is claimed. Native performance
+observations are separate from the logical policy in [performance notes](../Performance/README.md).

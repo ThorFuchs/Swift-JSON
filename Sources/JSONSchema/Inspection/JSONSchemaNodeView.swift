@@ -1,17 +1,36 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
-/// A bounded raw declaration view. Inspection does not infer an effective schema or resolve dynamic scope.
+/// A bounded raw declaration view with optional compiled reference information.
+///
+/// Inspection does not infer an effective schema, insert defaults or determine
+/// final dynamic targets outside an evaluation scope.
 public struct JSONSchemaNodeView: Sendable {
+    /// The exact raw declaration, including unknown keywords and metadata.
     public let raw: JSON
+    /// The location in the original document, independent of nested resource boundaries.
     public let documentPointer: JSONPointer
+    /// The optional retrieval identity supplied by the caller.
     public let retrievalURI: JSONSchemaURI?
+    /// All immediate declared keyword names in insertion order.
     public let declaredKeywords: [JSONKey]
+    /// Immediate metadata and unknown declarations; these are not evaluation annotations.
     public let declaredAnnotations: JSONDeclaredAnnotations
+    /// Immediate selected assertion declarations without inherited or inferred constraints.
     public let declaredConstraints: JSONObject
+    /// The compiled resource identity, or nil when the node has no compiled resource information.
     public let resourceURI: JSONSchemaURI?
+    /// The Pointer relative to the enclosing compiled resource, when available.
     public let resourcePointer: JSONPointer?
-    /// nil for document-only inspection or a node outside the compiled graph.
+    /// Initial compiled targets, or nil for document-only inspection or a node outside the compiled graph.
     public let referenceTargets: [JSONSchemaReferenceTarget]?
+    /// Looks up an immediate raw keyword without inferring an effective schema.
+    ///
+    /// - Returns: Absent, null or exact declared value.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - key: The exact decoded-scalar key to select or insert.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func declaration(of key: JSONKey, limits: JSONLimits = .balanced) throws -> JSONPresence<JSON> {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         try JSONAdmission.text(key.string, key: true, meter: &meter)
@@ -49,9 +68,25 @@ public struct JSONSchemaNodeView: Sendable {
     }
 }
 extension JSONSchemaDocument {
+    /// Inspects one raw object or boolean declaration, optionally at a document Pointer.
+    ///
+    /// - Returns: Immediate declarations; compiled inspection may add initial reference targets.
+    /// - Throws: Missing/invalid location, wrong schema kind, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - pointer: The optional document Pointer; nil selects the root.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func node(at pointer: JSONPointer? = nil, limits: JSONLimits = .balanced) throws -> JSONSchemaNodeView {
         try nodeWithReport(at: pointer, limits: limits).result
     }
+    /// Inspects a declaration with bounded traversal and successful accounting.
+    ///
+    /// - Returns: Raw declarations and optional compiled resource/target information.
+    /// - Throws: Pointer/schema-kind errors, resource failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - pointer: The optional document Pointer; nil selects the root.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func nodeWithReport(at pointer: JSONPointer? = nil, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSONSchemaNodeView> {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         let admitted = try JSONPointer.decodedTokens(pointer?.tokens ?? [], meter: &meter)

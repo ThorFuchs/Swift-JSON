@@ -1,12 +1,41 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+/// Strategies and finite limits for native value-based Codable.
+///
+/// Caller Codable callbacks remain caller work. User information must be Sendable;
+/// mutable encoding and decoding state is owned by each invocation.
 public struct JSONCodingOptions: Sendable {
-    public enum DateStrategy: Sendable { case deferredToDate, secondsSince1970, iso8601 }
-    public enum DataStrategy: Sendable { case base64, deferredToData }
+    /// Native Date representations; explicit ISO-8601 is bounded UTC text.
+    public enum DateStrategy: Sendable {
+        /// Use the Date type's Codable implementation.
+        case deferredToDate
+        /// Encode seconds since the Unix epoch using a finite numeric representation.
+        case secondsSince1970
+        /// Use bounded UTC ISO-8601 text with fractional seconds and four-digit years.
+        case iso8601
+    }
+    /// Native Data representations; Base64 uses strict metered loops.
+    public enum DataStrategy: Sendable {
+        /// Use strict, natively metered Base64 text.
+        case base64
+        /// Use the Data type's Codable implementation.
+        case deferredToData
+    }
+    /// Finite capacities and work quotas applied to library-owned operations.
     public var limits: JSONLimits
+    /// The representation used for native Date coding.
     public var dateStrategy: DateStrategy
+    /// The representation used for native Data coding.
     public var dataStrategy: DataStrategy
+    /// Caller context forwarded to Codable callbacks; stored values must be Sendable.
     public var userInfo: [CodingUserInfoKey: any Sendable]
+    /// Creates the value configuration; finite limits are checked at operation entry.
+    ///
+    /// - Parameters:
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
+    ///   - dateStrategy: The Date coding representation.
+    ///   - dataStrategy: The Data coding representation.
+    ///   - userInfo: Sendable caller context.
     public init(limits: JSONLimits = .balanced, dateStrategy: DateStrategy = .deferredToDate,
                 dataStrategy: DataStrategy = .base64, userInfo: [CodingUserInfoKey: any Sendable] = [:]) {
         self.limits = limits; self.dateStrategy = dateStrategy; self.dataStrategy = dataStrategy; self.userInfo = userInfo

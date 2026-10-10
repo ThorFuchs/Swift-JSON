@@ -1,22 +1,56 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+/// Finite traversal, output and exact-key redaction limits for diagnostic previews.
 public struct JSONPreviewOptions: Sendable {
+    /// Finite capacities and work quotas applied to library-owned operations.
     public var limits: JSONLimits
+    /// The maximum preview container depth before omission.
     public var maxDepth: Int
+    /// The maximum preview values visited before omission.
     public var maxNodes: UInt64
+    /// The maximum UTF-8 bytes emitted by the preview.
     public var maxBytes: UInt64
+    /// Exact keys whose payloads are replaced before traversal.
     public var redaction: JSONRedaction
+    /// Creates the value configuration; finite limits are checked at operation entry.
+    ///
+    /// - Parameters:
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
+    ///   - maxDepth: Maximum preview container depth.
+    ///   - maxNodes: Maximum preview values visited.
+    ///   - maxBytes: Maximum preview output UTF-8 bytes.
+    ///   - redaction: Exact-key redaction policy.
     public init(limits: JSONLimits = .conservative, maxDepth: Int = 4, maxNodes: UInt64 = 32, maxBytes: UInt64 = 4096, redaction: JSONRedaction = .init()) {
         self.limits = limits; self.maxDepth = maxDepth; self.maxNodes = maxNodes; self.maxBytes = maxBytes; self.redaction = redaction
     }
 }
-/// A diagnostic snippet, not a serialization. `[ ... ]` marks omitted content.
+/// A bounded redacted diagnostic snippet that may be incomplete JSON.
+///
+/// Use a writer for serialization. Redaction checks a member key before visiting its payload.
 public struct JSONPreview: Sendable, Equatable {
+    /// The bounded diagnostic snippet, possibly containing omission markers.
     public let text: String
+    /// Whether rendering omitted no content; a false value does not represent serialized JSON.
     public let complete: Bool
+    /// Renders a bounded diagnostic preview with redaction before payload access.
+    ///
+    /// - Returns: A snippet with explicit completeness; it may not be valid JSON.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value to preview with redaction before visiting selected payloads.
+    ///   - options: The value configuration used by this facade or operation.
     public static func render(_ value: JSON, options: JSONPreviewOptions = .init()) throws -> Self {
         try renderWithReport(value, options: options).result
     }
+    /// Renders a redacted preview and reports successful traversal and retention.
+    ///
+    /// - Returns: The snippet, completeness and accounting.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The value to preview with redaction before visiting selected payloads.
+    ///   - options: The value configuration used by this facade or operation.
     public static func renderWithReport(_ value: JSON, options: JSONPreviewOptions = .init()) throws -> JSONOperationReport<Self> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .core)
         guard options.maxDepth >= 0, options.maxBytes >= 7 else { throw JSONFailure(.configuration, code: .invalidLimits) }

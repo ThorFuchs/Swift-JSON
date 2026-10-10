@@ -1,9 +1,22 @@
 // SPDX-License-Identifier: Apache-2.0
-/// Ordered members with order-independent mathematical equality.
+/// An ordered collection of exact-key members with order-independent equality.
+///
+/// Replacing a member preserves its position; removing and re-inserting appends it.
+/// Lookup is linear in the scalar implementation. Use bounded operations for untrusted work.
 public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
+    /// The integer position of a member in insertion order.
     public typealias Index = Int
+    /// An exact key/value member in insertion order.
     public typealias Element = JSONMember
+    /// Members in deterministic insertion order.
     public let members: [JSONMember]
+    /// Admits ordered members and rejects identical decoded scalar keys.
+    ///
+    /// - Throws: Duplicate-key, value/growth/work failure or cancellation.
+    ///
+    /// - Parameters:
+    ///   - members: Members in insertion order; exact duplicates fail checked construction.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(members: [JSONMember] = [], limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         self = try Self.checked(members: members, meter: &meter)
@@ -29,12 +42,44 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
         try meter.require(.maxDepth, 1)
         return Self(admitted: output)
     }
+    /// The first member index; equal to endIndex for an empty object.
     public var startIndex: Int { members.startIndex }
+    /// The collection boundary immediately after the final member.
     public var endIndex: Int { members.endIndex }
+    /// Reads the member at its insertion-order collection index.
+    ///
+    /// The index must be in `startIndex..<endIndex`, as with other Swift collections.
+    /// - Parameters:
+    ///   - position: A valid insertion-order member index.
     public subscript(position: Int) -> JSONMember { members[position] }
+    /// Looks up an exact decoded-scalar key with unmetered linear traversal.
+    ///
+    /// Returns nil for absence and JSON.null for a present null. Use bounded JSON
+    /// member access when untrusted traversal requires work accounting.
+    ///
+    /// - Parameters:
+    ///   - key: The exact decoded-scalar member key, without normalization.
     public subscript(key: JSONKey) -> JSON? { members.first { $0.key == key }?.value }
+    /// Looks up an exact decoded-scalar key with unmetered linear traversal.
+    ///
+    /// Returns nil for absence and JSON.null for a present null. Use bounded JSON
+    /// member access when untrusted traversal requires work accounting.
+    ///
+    /// - Parameters:
+    ///   - key: The exact decoded-scalar member key, without normalization.
     public subscript(key: String) -> JSON? { self[JSONKey(key)] }
+    /// Compares semantic identity without a throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - lhs: The left value.
+    ///   - rhs: The right value.
     public static func == (lhs: Self, rhs: Self) -> Bool { JSON.object(lhs) == JSON.object(rhs) }
+    /// Hashes semantic identity; the randomized result is not a persistent digest.
+    ///
+    /// This protocol operation has no throwing work budget.
+    ///
+    /// - Parameters:
+    ///   - hasher: The caller's randomized Swift hasher.
     public func hash(into hasher: inout Hasher) { JSON.object(self).hash(into: &hasher) }
     package func lookup(_ key: String, meter: inout JSONWorkMeter) throws -> JSON? {
         for member in members {
@@ -43,6 +88,15 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
         }
         return nil
     }
+    /// Returns an admitted object with a member added or replaced in place.
+    ///
+    /// A new key appends; replacement preserves its insertion position.
+    /// - Throws: Value, key, growth or work limit failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The replacement or new payload to admit under the same operation budget.
+    ///   - key: The exact decoded-scalar key to select or insert.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func setting(_ value: JSON, for key: JSONKey, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         try JSONAdmission.value(.object(self), meter: &meter)
@@ -52,6 +106,13 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
         try meter.resetValueBounds(); try JSONAdmission.value(result, meter: &meter)
         return result.objectValue!
     }
+    /// Returns an admitted object without the selected exact key; absence leaves it unchanged.
+    ///
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - key: The exact decoded-scalar member key, without normalization.
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func removing(_ key: JSONKey, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         try JSONAdmission.value(.object(self), meter: &meter)

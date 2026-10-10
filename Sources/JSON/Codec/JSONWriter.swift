@@ -1,16 +1,46 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 
+/// An immutable writer for strict UTF-8 JSON and exact decimal values.
+///
+/// Each call admits the complete value under its configured limits. Key sorting is
+/// deterministic scalar order and makes no cryptographic canonicalization claim.
 public struct JSONWriter: Sendable {
+    /// The immutable configuration used to create each invocation.
     public let options: JSONWritingOptions
+    /// Creates an immutable writer facade. Limits and indentation are checked when writing begins.
+    ///
+    /// - Parameters:
+    ///   - options: The value configuration used by this facade or operation.
     public init(options: JSONWritingOptions = .init()) { self.options = options }
+    /// Writes a complete strict UTF-8 document.
+    ///
+    /// - Returns: Owned encoded bytes.
+    /// - Throws: Admission, output or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     public func write(_ value: JSON) throws -> Data { try writeWithReport(value).result }
+    /// Writes strict JSON and charges the additional owned String result.
+    ///
+    /// - Returns: Complete UTF-8 JSON text.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     public func writeString(_ value: JSON) throws -> String {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .writing)
         let bytes = try write(value, meter: &meter)
         for _ in bytes { try meter.work(); try meter.retain(1) }
         return String(decoding: bytes, as: UTF8.self)
     }
+    /// Writes strict JSON with successful operation accounting.
+    ///
+    /// - Returns: Owned bytes and counts; output bytes are charged before growth.
+    /// - Throws: Resource or configuration failure, or cancellation.
+    ///
+    /// - Parameters:
+    ///   - value: The exact root to admit and write as strict UTF-8 JSON.
     public func writeWithReport(_ value: JSON) throws -> JSONOperationReport<Data> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .writing)
         let bytes = try write(value, meter: &meter)

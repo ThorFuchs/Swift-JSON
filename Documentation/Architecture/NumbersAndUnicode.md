@@ -1,55 +1,54 @@
 # Exact numbers and Unicode
 
-Scalar identity is required for values, keys, annotation sets, caches and all semantic comparisons.
-No public arbitrary-precision arithmetic is introduced.
+JSONNumber represents bounded exact decimals. JSON strings, JSONKey and semantic
+annotation sets preserve decoded Unicode scalar identity without normalization.
+No arbitrary-precision public arithmetic surface is exposed.
 
-These contracts describe the public behavior and its resource boundaries.
+## Values, text and keys
 
-## Values and construction
+Equivalent decimal spellings compare mathematically: 1, 1.0 and 1e0 share one
+identity. Integers beyond binary64 precision remain distinct. Negative zero and
+positive zero share mathematical identity. Parsed numbers may retain original
+lexemes for preserved writing; normalized writing emits coefficient/exponent form.
+Large exponents do not allocate a dense run of zeros.
 
-Use an indirect enum JSON with object(JSONObject), array([JSON]), string(String), number(JSONNumber), boolean(Bool), and null cases. Prefer the complete name boolean to parallel the documented data model. JSON is Equatable, Hashable and checked Sendable. Equality and hashing are custom where needed: String cases compare scalar sequences; objects compare membership independently of insertion order; numbers compare mathematical values.
+JSONKey equality and hashing examine exact UTF-8 scalar spelling. Composed é and
+e followed by a combining acute accent are distinct keys and string values.
+JSONObject preserves insertion order, rejects exact duplicate keys and compares
+membership independently of order. Replacing a key preserves position; removal
+then re-insertion appends. Swift randomized hashes are not persistent digests.
 
-JSONKey owns a decoded String but implements equality and hashing over its exact UTF-8 scalar spelling. JSONObject owns ordered JSONMember records with exact JSONKey lookup. The current scalar implementation uses bounded linear lookup. It provides String and JSONKey lookup. Iteration is deterministic insertion order; replacing a member preserves its position, removal deletes it, and re-insertion appends it. Hash input must be independent of object order. Randomized Swift hash seeds are not a persistent digest.
+Ordinary equality, hashing and object subscripts are unmetered protocol conveniences.
+Use JSONComparison.equals(_:_:limits:), bounded member access or Pointer for work
+that needs an invocation quota. Direct cases and literals are trusted construction;
+bounded operations still admit them. Native String-dictionary decoding rejects a
+projection that would collapse scalar-distinct keys.
 
-| Construction or lookup | Contract |
-| --- | --- |
-| JSONObject(members:limits:) throws | Accept an ordered list of JSONMember; reject exact duplicate keys; check text, member, node and retained-state limits |
-| JSONObject subscript(String or JSONKey) -> JSON? | Absence is nil; a present JSON.null is a value |
-| JSON.objectValue, arrayValue, stringValue, numberValue, booleanValue | Optional type inspection with no coercion |
-| JSON.requiredMember(_:limits:) throws -> JSON | Structured missing-value or type error; bounded key/path work |
-| JSONPointer.resolve(in:limits:) throws -> JSON | Strict Pointer evaluation with typed runtime path components |
-| JSONComparison.equals(_:_:limits:) throws -> Bool | Explicitly budgeted deep equality for validation/Patch and user operations |
-| JSONObject.setting(_:for:limits:) throws -> JSONObject | A new value with checked replacement/growth; the original stays unchanged |
-
-Direct enum cases and Swift arrays are useful for trusted in-memory construction. They cannot prevent a caller from allocating an arbitrarily large value before entering the library. Every bounded operation therefore validates/charges caller-constructed values too. Existing caller memory is outside the allocation ownership claim, while traversal and copies performed by the operation are inside it.
-
-Ordinary Equatable and Hashable methods cannot throw a resource error or return cancellation. They have semantic guarantees, not an invocation budget guarantee. Untrusted bounded operations must use the package's charged traversal, comparison and fingerprint implementation; they must not hide an uncharged Set<JSON> or equality call inside uniqueItems, const, enum or Patch test. Cached metadata may accelerate work but does not excuse charging the admitted value size. Sorting keys similarly charges comparisons and examined bytes.
-
-Initially offer string, boolean, null, array and integer construction convenience where it has deterministic semantics. Throwing JSONObject construction is the authority for duplicate detection. Do not ship dictionary-literal behavior that traps on duplicates or silently selects a winner. Do not enable floating-point literals for JSONNumber or JSON; their rounded Swift Double value would obscure exact input. JSONBuilder is an optional thin construction layer over the same checked APIs, not an alternative value model.
-
-## Exact numbers and conversions
-
-JSONNumber stores normalized sign, decimal coefficient and exponent, with optimized common-integer storage and optional original lexeme. Its private representation may use decimal limbs. Normalization removes redundant leading/trailing zeros with checked exponent adjustment. Zero has one mathematical identity. It does not allocate zeros proportional to a large exponent.
-
-Recommended public contracts are:
+## Numeric conversion
 
 ```swift
-// API design sketch. Native declaration and consumer compilation are W01 gates.
-JSONNumber(parsing: "9007199254740993", limits: .balanced) throws
-JSONNumber(integer: someInt64)
-JSONNumber.fromFiniteDouble(someDouble, limits: .balanced) throws
-number.integer(as: Int64.self) throws
-number.doubleValue(policy: .exact) throws
-number.doubleValue(policy: .rounded) throws
-number.decimalValue(policy: .exact) throws
-number.numericText(style: .normalized, limits: .balanced) throws
+let number = try JSONNumber(parsing: "9007199254740993")
+let integer = try number.integer(as: Int64.self)
+let text = try number.numericText(style: .preserved)
 ```
 
-The finite-Double constructor uses a documented round-trip decimal rendering of the supplied binary value. It preserves that rendering's decimal meaning, not a vanished original input or the exact infinite binary-to-decimal expansion. NaN and infinities fail construction. Exact Double conversion succeeds only when the mathematical decimal equals a representable finite Double; shortest-text round-tripping alone is not that proof. For example, decimal 0.1 is not exactly representable as Double. An explicitly rounded conversion reports overflow instead of producing infinity. Exact Decimal conversion checks the supported decimal representation and reports range/precision failure.
+Integer conversion requires an integral in-range mathematical value and handles
+signed boundaries without negation traps. Exact Double conversion proves equality
+with a representable finite binary64 value; decimal 0.1 fails this proof. Rounded
+conversion permits finite rounding and still rejects overflow. Decimal conversion
+has the target's fixed precision/exponent bounds; exact policy verifies equality.
 
-Raw coefficient digits and token bytes have separate limits, so leading zeros or long exponent spelling cannot evade admission accounting. Exponent magnitude is checked while parsing before narrowing to Int64 and again after normalization. Int64.min/max conversion and sign handling avoid negation and boundary traps. Mathematical integer detection, order and multipleOf use exact components. Divisors must be positive schemas, and numeric work exhaustion is an operational error, never a floating epsilon judgment.
+JSONNumber.fromFiniteDouble preserves Swift's round-trip decimal rendering of the
+supplied finite binary value. It cannot recover an earlier source token or the full
+infinite binary-to-decimal expansion. NaN and infinities fail. Native Codable integer
+projections are exact; Float/Double projections round to their requested finite type.
+Foreign coders determine the fidelity of values they supply.
 
-No general public big-number arithmetic API enters this release. The private numeric subsystem implements only comparison, integrality, conversion and divisibility needed by the public contracts. Each limb scan and each operand-pair operation in multiplication/division is charged. Large divisibility problems may correctly return a numeric resource error within an explicit profile.
+Digit and token-byte caps apply before normalization, and exponent magnitude is
+checked during admission and normalization. Exact schema comparison, integrality
+and multipleOf use charged decimal work without epsilon judgments. Divisors must
+be positive in schemas. Quota exhaustion is operational failure. Each scan and
+operand-pair step is charged; large divisibility problems can reach a finite cap.
 
 ## Native conversion bridge qualification
 
