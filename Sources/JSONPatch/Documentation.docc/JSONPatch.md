@@ -30,8 +30,13 @@ earlier oversized stage. Reports expose logical accounting, not process RSS.
 
 - <doc:ApplyingPatches>
 
+### JSON Patch
+
 - ``JSONPatch``
 - ``JSONPatchOperation``
 - ``JSONPatchResult``
 - ``JSONPatchOptions``
+
+### Merge Patch
+
 - ``JSONMergePatch``

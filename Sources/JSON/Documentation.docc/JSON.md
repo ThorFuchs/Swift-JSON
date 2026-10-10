@@ -56,6 +56,7 @@ belongs exclusively to each invocation.
 - <doc:ExactValuesAndCoding>
 
 ### Exact model
+- ``JSON/JSON``
 - ``JSONNumber``
 - ``JSONKey``
 - ``JSONObject``
