@@ -18,11 +18,10 @@ no response-time or remediation SLA is promised.
 
 ## Supported versions
 
-Once the first stable release exists, security and defect fixes target the latest
+Security and defect fixes target the latest
 published **1.x** release. Older patch/minor versions should upgrade to that release.
 No backport or extended-support commitment is made for older release lines.
-Before 1.0.0 is released, the current `main` candidate receives best-effort fixes;
-there is no published stable version yet. See [SUPPORT.md](SUPPORT.md).
+See [SUPPORT.md](SUPPORT.md) for the maintenance policy.
 
 ## Boundaries
 
