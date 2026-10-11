@@ -7,6 +7,7 @@ from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState'
+R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
     return [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
@@ -21,6 +22,7 @@ def commands(lane, output):
             ['swift', 'package', 'show-dependencies', '--format', 'json'],
             ['swift', 'build', '-c', 'release'],
             ['swift', 'test'], ['swift', 'test', '-c', 'release'],
+            ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MCPReadiness', 'MCPReadiness', str(output / 'consumer.json')],
@@ -32,6 +34,12 @@ def commands(lane, output):
             ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/ci-address'],
             ['swift', 'test', '-c', 'release', '--sanitize', 'thread', '--scratch-path', '.build/ci-thread', '--filter', SHARED_TESTS],
             ['swift', 'build', '--scratch-path', '.build/ci-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+        ]
+    if lane == 'r0':
+        return [
+            ['swift', 'test', '--filter', R0_TESTS],
+            ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
+            ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'sdk', '--output', str(output / 'sdk.json')],
         ]
     return [['python3', '-B', 'Scripts/build_documentation.py']]
 
@@ -60,7 +68,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 54]
+        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 61]
         passed = passed and sorted(counts) == expected
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -76,7 +84,7 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
