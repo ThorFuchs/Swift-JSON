@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-import Synchronization
-import Dispatch
 import Testing
 @testable import JSON
 
@@ -29,16 +27,6 @@ import Testing
     #expect(try composed.matches("\u{e9}", fingerprint: composed.fingerprint, meter: &meter))
 }
 
-private final class LookupCancellationCheckpoint: Sendable {
-    let ready = Mutex(false)
-    let resume = DispatchSemaphore(value: 0)
-    func observe(_ work: UInt64) {
-        guard work >= 1400 else { return }
-        let stop = ready.withLock { flag in if flag { return false }; flag = true; return true }
-        if stop { resume.wait() }
-    }
-}
-
 @Test func wideLookupEnforcesInclusiveCumulativeWorkAndInnerCancellation() async throws {
     let prefix = String(repeating: "p", count: 128)
     let members = (0..<256).map { JSONMember(prefix + String($0), value: .boolean(true)) }
@@ -59,16 +47,15 @@ private final class LookupCancellationCheckpoint: Sendable {
     var shared = try JSONWorkMeter(limits: limits, domain: .core)
     #expect(try object.lookup(key, meter: &shared) == .boolean(true))
     #expect(throws: JSONFailure.self) { try object.lookup(key, meter: &shared) }
-    let progress = LookupCancellationCheckpoint()
     let task = Task.detached { () throws -> UInt64 in
         var meter = try JSONWorkMeter(limits: .offline, domain: .core)
-        meter.checkpointObserver = { progress.observe($0) }
+        meter.checkpointObserver = { work in
+            if work >= 1400 { withUnsafeCurrentTask { $0?.cancel() } }
+        }
         do {
             for _ in 0..<1000 { _ = try object.lookup(key, meter: &meter) }
             return 0
         } catch is CancellationError { return meter.statistics()[.workUnits] }
     }
-    while !progress.ready.withLock({ $0 }) { await Task.yield() }
-    task.cancel(); progress.resume.signal()
     #expect(try await task.value >= 1400)
 }
