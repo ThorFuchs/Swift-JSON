@@ -11,6 +11,8 @@ partially read document would change the meaning of your data.
 [![Native CI](https://github.com/ThorFuchs/Swift-JSON/actions/workflows/native.yml/badge.svg)](https://github.com/ThorFuchs/Swift-JSON/actions/workflows/native.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
+[Read the documentation →](https://thorfuchs.github.io/Swift-JSON/)
+
 Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). The repository is public;
 **version 1.0.0 has not yet been tagged or released**. Until a version is published,
 use `main` and retain the resolved commit for reproducible builds.
@@ -289,7 +291,14 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 
 ## Documentation and examples
 
-Start with the [documentation index](Documentation/README.md). The four DocC catalogs
+Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
+[JSON](https://thorfuchs.github.io/Swift-JSON/JSON/documentation/json/),
+[JSONSchema](https://thorfuchs.github.io/Swift-JSON/JSONSchema/documentation/jsonschema/),
+[JSONStreaming](https://thorfuchs.github.io/Swift-JSON/JSONStreaming/documentation/jsonstreaming/) and
+[JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
+The site tracks `main` and publishes only after all three native CI lanes pass.
+
+The [documentation index](Documentation/README.md) links the behavior contracts. The four DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
