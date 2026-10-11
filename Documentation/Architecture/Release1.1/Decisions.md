@@ -58,7 +58,7 @@ keyed encoder traversal/allocation, failure cleanup and immutable Sendable metad
 Existing 32-byte index-slot reservations include grammar-owned duplicate slots,
 materialized object/member slots and admitted graph slots; these are distinct
 ownerships. They do not automatically cover new simultaneous buffers. Version 1
-weights and all 49 profiles remain unchanged.
+weights and all 49 metric caps remain unchanged.
 
 ## Version 1 persistence and SDK boundary
 
@@ -86,7 +86,9 @@ The simulator default engine fails while signing the schema resource bundle; its
 `Resources` directory layout needs qualification. The documented deprecated native
 SwiftPM backend compiles the same simulator consumer without that signing step.
 This alternate build is compile evidence, not resolution of the default-engine
-failure. Installed CoreSimulator devices have no available runtime profile.
+failure. The saved inventory lists iOS 27.0 (24A5390f) and eight available
+simulator devices. Runtime behavior has not been executed in this milestone;
+availability is not runtime qualification.
 
 Keep the three protected check names and strict/no-bypass rules unchanged. The
 seven authored prototype cases extend JSONTests from 54 to 61 functions: all other
