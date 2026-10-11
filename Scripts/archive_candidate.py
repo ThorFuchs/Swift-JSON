@@ -5,7 +5,7 @@ import argparse,gzip,hashlib,io,json,pathlib,tarfile
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 TOP=('Sources','Tests','Examples','Tools','Scripts','Documentation','Licenses','.github')
 SKIP={'.build','.git','.swiftpm','__pycache__','DerivedData','Artifacts'}
-ROOT_FILES=('Package.swift','AGENTS.md','README.md','CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','SUPPORT.md','RELEASING.md','LICENSE','NOTICE','THIRD_PARTY_NOTICES.md','.gitignore','.editorconfig','.gitattributes')
+ROOT_FILES=('Package.swift','AGENTS.md','README.md','CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','SUPPORT.md','RELEASING.md','LICENSE','NOTICE','THIRD_PARTY_NOTICES.md','.gitignore','.editorconfig','.gitattributes','.spi.yml')
 def files(root=ROOT):
  selected=[]
  for top in TOP:
