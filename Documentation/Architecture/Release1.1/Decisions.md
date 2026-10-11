@@ -10,7 +10,7 @@ added to the libraries. See the compiler fixtures in Tools/Release1_1Probes.
 
 The actual compiling reference declarations are `ProbeReadCursor` with throwing
 String, JSONKey and Int subscripts, `requiredString()`, generic
-`requiredInteger(as:)`, and `decode(_:)`, plus generic
+`requiredInteger(as:)`, `presence(of: JSONKey)` and `decode(_:)`, plus generic
 `probeReadWithReport(_:limits:_:) -> JSONOperationReport<Result>`. These are compiled
 into a separate ReaderProbe module and Swift Testing target, not the JSON product.
 The consumer imports the public JSON model and ReaderProbe; it imports no meter.

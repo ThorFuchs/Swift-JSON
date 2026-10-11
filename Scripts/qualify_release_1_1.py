@@ -1,12 +1,43 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Executable R0 compiler/SDK probes; prototypes are not shipping JSON APIs."""
-import argparse, datetime, hashlib, json, os, pathlib, subprocess, sys
+import argparse, datetime, hashlib, json, math, os, pathlib, subprocess, sys
 from archive_candidate import files
 from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROBES = ROOT / 'Tools/Release1_1Probes'
+
+def verify_index_samples(samples):
+    """Require the complete measured matrix, or an explicit finite-resource refusal."""
+    algorithms = {'scalar', 'fingerprint-linear', 'array-AVL', 'controlled-hash'}
+    widths = {0,1,4,8,16,32,64,256,1024,10000}
+    shapes = {'ascii', 'prefix', 'unicode'}
+    expected = {(a,w,s) for a in algorithms for w in widths for s in shapes}
+    cells, digests = {}, {}
+    for sample in samples:
+        key = (sample['algorithm'], sample['width'], sample['shape'])
+        if key not in expected: raise ValueError('Unexpected index corpus cell')
+        if not math.isfinite(sample['seconds']) or sample['seconds'] < 0: raise ValueError('Invalid timing')
+        if sample['status'] not in {'passed', 'refused'}: raise ValueError('Invalid sample status')
+        digest_key = key[1:]
+        digest = sample['inputSHA256']
+        if digest_key in digests and digests[digest_key] != digest: raise ValueError('Unmatched algorithm inputs')
+        digests[digest_key] = digest
+        cells.setdefault(key, []).append(sample)
+    if set(cells) != expected: raise ValueError('Incomplete index corpus matrix')
+    for rows in cells.values():
+        identities = [(r['operation'],r['sample']) for r in rows]
+        if len(identities) != len(set(identities)): raise ValueError('Duplicate measured sample')
+        refusals = [r for r in rows if r['status'] == 'refused']
+        if refusals:
+            if len(refusals) != 1 or refusals[0]['operation'] != 'construction' or not refusals[0].get('failure'):
+                raise ValueError('Unidentified resource refusal')
+            if any(r['sample'] >= refusals[0]['sample'] for r in rows if r['status'] == 'passed'):
+                raise ValueError('Success after a refused construction')
+        elif set(identities) != {(op,n) for op in ['construction','12-lookups'] for n in range(9)}:
+            raise ValueError('Missing nine construction/lookup samples')
+    return len(cells), sum(r['status'] == 'refused' for r in samples)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -81,14 +112,13 @@ def main():
                 str(ROOT / 'Tests/JSONTests/Release1_1/IndexPrototype.swift'), str(PROBES / 'IndexBenchmark.swift'), '-o', str(binary)])
             run('measure', [str(binary), str(directory / 'samples.json')])
             samples = json.loads((directory / 'samples.json').read_text())
-            if {s['algorithm'] for s in samples} != {'scalar', 'fingerprint-linear', 'array-AVL', 'controlled-hash'}: raise RuntimeError('Incomplete algorithm matrix')
-            if {s['width'] for s in samples} != {0,1,4,8,16,32,64,256,1024,10000}: raise RuntimeError('Incomplete width matrix')
+            receipt['corpus_cells'], receipt['resource_refusals'] = verify_index_samples(samples)
             receipt['samples'] = len(samples)
             receipt['samples_sha256'] = hashlib.sha256((directory / 'samples.json').read_bytes()).hexdigest()
         receipt['status'] = 'passed'
     except FileNotFoundError as error:
         receipt['status'] = 'blocked'; receipt['error'] = str(error)
-    except (OSError, RuntimeError, subprocess.TimeoutExpired) as error:
+    except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as error:
         receipt['status'] = 'failed'; receipt['error'] = str(error)
     receipt['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     save(); print(json.dumps({k:v for k,v in receipt.items() if k not in ['source_inputs','environment']}, indent=2))

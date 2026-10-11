@@ -6,10 +6,16 @@ import Testing
 
 @Test func readerProbeSharesNavigationConversionAndProjectionMeter() throws {
     struct Model: Decodable { let count: UInt64 }
-    let value = try JSONParser().parse(#"{"users":[{"name":"Ada","model":{"count":9007199254740993}}]}"#)
+    let value = try JSONParser().parse(#"{"users":[{"name":"Ada","empty":null,"model":{"count":9007199254740993}}]}"#)
     let report = try probeReadWithReport(value) { root in
         let user = try root["users"][0]
         #expect(try user[JSONKey("name")].requiredString() == "Ada")
+        guard case .absent = try user.presence(of: "missing"),
+              case .null = try user.presence(of: "empty"),
+              case .value(let present) = try user.presence(of: "name") else {
+            Issue.record("Presence conflated missing, null or value"); return UInt64(0)
+        }
+        #expect(try present.requiredString() == "Ada")
         let number = try user["model"]["count"].requiredInteger(as: UInt64.self)
         let before = try #require(user.scope.state).meter.statistics()[.workUnits]
         let identity = ObjectIdentifier(try #require(user.scope.state))

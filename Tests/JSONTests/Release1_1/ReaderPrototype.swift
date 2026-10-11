@@ -120,6 +120,20 @@ public struct ProbeReadCursor {
     public subscript(_ index: Int) -> Self {
         get throws { try scope.run(path) { try child(.index(index), state: $0) } }
     }
+    public func presence(of key: JSONKey) throws -> JSONPresence<Self> {
+        try scope.run(path) { state in
+            try JSONAdmission.text(key.string, key: true, meter: &state.meter)
+            let attempted = try scope.append(.key(key), to: path, state: state)
+            return try scope.run(attempted) { state in
+                guard case .object(let object) = try scope.select(path, state: state) else {
+                    throw JSONFailure(.typeMismatch, code: .wrongKind)
+                }
+                guard let value = try object.lookup(key.string, meter: &state.meter) else { return .absent }
+                if case .null = value { return .null }
+                return .value(Self(scope: scope, path: attempted))
+            }
+        }
+    }
     private func child(_ part: JSONLocationComponent, state: JSONCodingState) throws -> Self {
         let attempted = try scope.append(part, to: path, state: state)
         // Failure includes the attempted hop. No cursor stores the selected value.
