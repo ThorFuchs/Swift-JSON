@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
-import Synchronization
 import Testing
 @testable import JSON
 
@@ -80,32 +79,22 @@ import Testing
     #expect(report.result == "Ada")
 }
 
-private final class ProbeCancellationProgress: Sendable {
-    let ready = Mutex(false)
-    let resume = DispatchSemaphore(value: 0)
-    func checkpoint(_ work: UInt64) {
-        guard work > 0 else { return }
-        let stop = ready.withLock { flag in if flag { return false }; flag = true; return true }
-        if stop { resume.wait() }
-    }
-}
-
 @Test func readerProbeLatchesCaughtInnerCancellation() async throws {
     let value = try JSONParser().parse(#"{"name":"Ada"}"#)
-    let progress = ProbeCancellationProgress()
     let task = Task.detached { () throws -> Bool in
         do {
             _ = try probeReadWithReport(value) { root in
                 let state = try #require(root.scope.state)
-                state.meter.checkpointObserver = { progress.checkpoint($0) }
+                let before = state.meter.statistics()[.workUnits]
+                state.meter.checkpointObserver = { work in
+                    if work > before { withUnsafeCurrentTask { $0?.cancel() } }
+                }
                 do { _ = try root["name"].requiredString() } catch is CancellationError {}
                 return true
             }
             return false
         } catch is CancellationError { return true }
     }
-    while !progress.ready.withLock({ $0 }) { await Task.yield() }
-    task.cancel(); progress.resume.signal()
     #expect(try await task.value)
 }
 
@@ -138,23 +127,22 @@ private func indexIdentity<I: ProbeIndex>(_ type: I.Type) throws {
             try index.insert(ProbeKey("", position: 0, meter: &meter), meter: &meter)
         }
     }
-    let progress = ProbeCancellationProgress()
     let task = Task.detached { () throws -> UInt64 in
         var meter = try JSONWorkMeter(limits: .offline, domain: .core)
         var index = ProbeAVLIndex()
         for position in 0..<512 {
             try index.insert(ProbeKey("key\(position)", position: position, meter: &meter), meter: &meter)
         }
-        meter.checkpointObserver = { progress.checkpoint($0) }
+        let query = try ProbeKey("key511", position: -1, meter: &meter)
+        let before = meter.statistics()[.workUnits]
+        meter.checkpointObserver = { work in
+            if work > before { withUnsafeCurrentTask { $0?.cancel() } }
+        }
         do {
-            for position in 0..<10000 {
-                _ = try index.find(ProbeKey("key\(position % 512)", position: -1, meter: &meter), meter: &meter)
-            }
+            for _ in 0..<10000 { _ = try index.find(query, meter: &meter) }
             return 0
         } catch is CancellationError { return meter.statistics()[.workUnits] }
     }
-    while !progress.ready.withLock({ $0 }) { await Task.yield() }
-    task.cancel(); progress.resume.signal()
     #expect(try await task.value > 0)
 }
 
