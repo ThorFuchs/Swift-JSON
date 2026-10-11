@@ -13,9 +13,9 @@ partially read document would change the meaning of your data.
 
 [Read the documentation →](https://thorfuchs.github.io/Swift-JSON/)
 
-Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). The repository is public;
-**version 1.0.0 has not yet been tagged or released**. Until a version is published,
-use `main` and retain the resolved commit for reproducible builds.
+Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
+semantic versioning. Use a released version and retain `Package.resolved` for
+reproducible builds; `main` tracks ongoing development.
 
 ## Why Swift-JSON?
 
@@ -75,7 +75,7 @@ packages.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", branch: "main")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.0.0")
 ```
 
 Then add products to your target dependencies:
@@ -86,9 +86,10 @@ Then add products to your target dependencies:
 ```
 
 Add `JSONStreaming` and `JSONPatch` in the same way when needed. A local checkout can
-use `.package(path: "../Swift-JSON")`. After a release is published, select a semantic
-version requirement. See the [four-product consumer](Examples/Consumer) for a
-complete buildable manifest.
+use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
+releases. See the [four-product consumer](Examples/Consumer) for a complete buildable
+manifest. The website tracks `main`; release assets include compiled DocC catalogues
+for the exact released source.
 
 ## Parse, inspect and write exact values
 

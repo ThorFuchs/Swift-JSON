@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.0.0 — 2026-10-11
+
+First stable release.
 
 - Public GitHub Pages documentation with four native DocC references; the exact
   artifact publishes from `main` after native, safety and documentation CI pass.
@@ -30,9 +32,9 @@
 Qualification details and counts are in Documentation/Qualification/README.md. Resource
 policy bounds logical work/ownership; it is not an operating-system RSS ceiling.
 E09 keeps scalar scanning and no retained scratch pool. SIMD and regex prefilters
-remain unselected; projection and RFC 7464 framing remain deferred. No version tag or release has been created.
+remain unselected; projection and RFC 7464 framing remain deferred.
 
-### Candidate verification refinements
+### Exact coding and public reports
 
 - Reject lossy native String-dictionary and changed CodingKey spelling projections.
 - Add exact JSONObject Codable round-trips and a raw-schema compile report that

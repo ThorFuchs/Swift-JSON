@@ -6,9 +6,8 @@ defects, documentation corrections and focused feature proposals. For security
 reports, use the private route in [SECURITY.md](SECURITY.md).
 
 The stable support policy is **the latest published 1.x release**. Fixes are shipped
-in that line; users of older 1.x versions should upgrade. Before the first stable
-release, `main` is a candidate with best-effort maintenance. There is currently no
-1.0.0 tag or GitHub release. No paid support, response-time SLA or older-line
+in that line; users of older 1.x versions should upgrade. The `main` branch tracks
+development and receives best-effort maintenance. No paid support, response-time SLA or older-line
 backport commitment is implied.
 
 The package requires Swift tools/compiler 6.4+, Swift language mode 6 and
