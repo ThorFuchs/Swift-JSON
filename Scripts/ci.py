@@ -68,7 +68,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 61]
+        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 63]
         passed = passed and sorted(counts) == expected
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)

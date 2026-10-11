@@ -82,9 +82,26 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     ///   - hasher: The caller's randomized Swift hasher.
     public func hash(into hasher: inout Hasher) { JSON.object(self).hash(into: &hasher) }
     package func lookup(_ key: String, meter: inout JSONWorkMeter) throws -> JSON? {
-        for member in members {
+        if members.count < 32 {
+            for member in members {
+                try meter.work()
+                if try JSONComparison.textEquals(member.key.string, key, meter: &meter) { return member.value }
+            }
+            return nil
+        }
+        var fingerprint: UInt64?
+        for (position, member) in members.enumerated() {
             try meter.work()
-            if try JSONComparison.textEquals(member.key.string, key, meter: &meter) { return member.value }
+            // Keep small objects and early hits on the scalar path. Hash the query
+            // once, under this invocation's meter, only when a wide scan continues.
+            if position == 8 {
+                fingerprint = try JSONKey(key, meter: &meter).fingerprint
+            }
+            if let fingerprint {
+                if try member.key.matches(key, fingerprint: fingerprint, meter: &meter) { return member.value }
+            } else if try JSONComparison.textEquals(member.key.string, key, meter: &meter) {
+                return member.value
+            }
         }
         return nil
     }

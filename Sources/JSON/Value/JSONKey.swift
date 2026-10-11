@@ -6,7 +6,7 @@
 public struct JSONKey: Sendable, Hashable, ExpressibleByStringLiteral {
     /// The decoded scalar spelling.
     public let string: String
-    private let fingerprint: UInt64
+    package let fingerprint: UInt64
     /// Owns the supplied decoded scalar spelling without normalization or a resource quota.
     ///
     /// - Parameters:
@@ -22,6 +22,12 @@ public struct JSONKey: Sendable, Hashable, ExpressibleByStringLiteral {
         var hash: UInt64 = 14695981039346656037
         for byte in string.utf8 { try meter.work(subsystem: subsystem); hash = (hash ^ UInt64(byte)) &* 1099511628211 }
         fingerprint = hash
+    }
+    /// A candidate filter only: every fingerprint hit still compares exact scalar bytes.
+    package func matches(_ spelling: String, fingerprint: UInt64, meter: inout JSONWorkMeter) throws -> Bool {
+        try meter.work()
+        guard self.fingerprint == fingerprint else { return false }
+        return try JSONComparison.textEquals(string, spelling, meter: &meter)
     }
     /// Constructs a trusted literal value without a resource budget; bounded operations admit it later.
     ///

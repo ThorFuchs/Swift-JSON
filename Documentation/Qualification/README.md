@@ -8,7 +8,7 @@ Safety and DocC lanes run separately. Unsupported hosts fail preflight.
 The 1.0 baseline has 122 Swift Testing functions across five bundles and
 173 parameterized invocations. The first 1.1 qualification milestone adds seven
 authored prototype cases in JSONTests (54 to 61), for 129 functions, with the existing 173 parameterized invocations retained
-and seven additional nonparameterized cases. No baseline case or corpus outcome is removed. One public cap test exercises all 49 metrics;
+and seven additional nonparameterized cases. The first production lookup increment adds two further cases (JSONTests 63, total 131 functions). No baseline case or corpus outcome is removed. One public cap test exercises all 49 metrics;
 the independent runner adds nine budget/report vectors. There are three separate
 JSON/JSONSchema consumer tests. All discoveries must be nonzero.
 

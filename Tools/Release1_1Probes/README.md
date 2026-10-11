@@ -16,3 +16,21 @@ Use Scripts/qualify_release_1_1.py through Scripts/ci.py where applicable. Index
 measurements must run on an otherwise idle release-native host. Samples identify
 input hashes, finite policy, work, logical peak and refusals. They do not measure
 isolated allocator allocations, process RSS or physical mobile throughput.
+
+The small production increment is reviewed in
+[BenchmarkReview](../../Documentation/Architecture/Release1.1/BenchmarkReview.md).
+Its deterministic lookup-stage corpus can be repeated after building the real
+release testable module on the supported toolchain:
+
+```sh
+swift test -c release --filter wideLookup
+xcrun swiftc -swift-version 6 -O -parse-as-library \
+  -I .build/out/Products/Release -L .build/out/Products/Release -lJSON \
+  Tools/Release1_1Probes/LookupBenchmark.swift -o .build/lookup-benchmark
+.build/lookup-benchmark .build/lookup-samples.json
+```
+
+For A/B, build the baseline libraries in a separate worktree and compile the same
+benchmark source against those libraries. Record both core source identities and
+the benchmark/input hashes. Run measurements while local verification builds are
+idle; preserve all samples, refusal outcomes and repeated-run variance.

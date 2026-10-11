@@ -96,3 +96,21 @@ bundle cardinalities, three targeted Thread Sanitizer cases, 49 exact cap probes
 independent corpus counts and exclusions remain intact. R0's filtered run requires
 exactly seven cases. New platform declarations must later update the exact
 macOS-only manifest expectation in the same focused change.
+
+## First production increment
+
+Select only the narrow cached-fingerprint filter described in
+[BenchmarkReview](BenchmarkReview.md). The below-32-member scalar path and first
+eight scalar probes remain available. A query hash, each member probe, fingerprint
+comparison and exact candidate comparison consume the same noncopyable meter;
+there is no new table, cached mutable state or owned index allocation. The two
+additional behavior cases exercise public presence/Pointer/equality, insertion
+order, forced collision confirmation in the production comparator, inclusive and
+cumulative work exhaustion and cancellation during actual lookup work.
+
+The current 10% performance review trigger is unchanged; accept the measured
+first-filtered-hit and short-miss cost for this limited draft change. Full adaptive
+index publication/construction and keyed-builder/mobile measurement remain R1/R5,
+not completed by these tests. CI now expects JSONTests 63 and total 131 functions;
+the seven-case R0 subset, baseline parameterized invocations and all other exact
+cardinality/49-cap checks remain unchanged.
