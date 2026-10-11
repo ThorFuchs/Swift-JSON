@@ -12,12 +12,21 @@ Pushes to main, pull requests and manual dispatch run three lanes:
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
-- Documentation: public symbol graphs, complete authored API/parameter comments, executed README examples, four native DocC catalogs with warnings as errors.
+- Documentation: public symbol graphs, complete authored API/parameter comments,
+  executed README examples, four native DocC catalogs with warnings as errors,
+  native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
 checkout persists no credentials. Every lane uploads its receipts and logs even
 on failure, with 30-day retention. No secrets, private records, local archives,
-tagging, release publication or self-hosted workstation access is configured.
+tagging, package-release publication or self-hosted workstation access is configured.
+
+On `main`, a separate Pages job publishes the exact documentation artifact only
+after all three matrix lanes pass. Its narrowly scoped `pages: write` and
+`id-token: write` permissions apply only to deployment. The `github-pages`
+environment admits only `main`. PRs verify the site without publishing it.
+The deployment runner does not establish any native gate; all compilation and
+qualification occur on the supported Mac runners before publication.
 
 Checkout reads the full branch history. The public inventory check rejects known
 internal input paths in reachable history and tracked files outside the reviewed

@@ -116,6 +116,11 @@ def main():
             if entry['exit_code']:
                 raise ValueError('DocC failed: ' + product)
         receipt['catalog_bundle'] = package_catalogs(output)
+        command = ['python3', '-B', 'Scripts/build_documentation_site.py']
+        receipt['site_build'] = run(command, output / 'pages-site.log', 900)
+        receipt['site'] = json.loads((ROOT / '.build/handoff/pages/receipt.json').read_text())
+        if receipt['site_build']['exit_code'] or receipt['site']['status'] != 'passed':
+            raise ValueError('Static documentation site failed')
         receipt['status'] = 'passed'
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)

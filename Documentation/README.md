@@ -15,9 +15,10 @@ The four native DocC catalogs combine inline API documentation with focused guid
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
 
-[Build and view the DocC catalogs](DocumentationTooling.md). Generated references
-and public symbol graphs are available in CI artifacts; a hosted documentation
-website has not been activated.
+[Browse the public documentation](https://thorfuchs.github.io/Swift-JSON/) or
+[build and view the DocC catalogs locally](DocumentationTooling.md). The site
+tracks `main` and publishes after native, safety and documentation CI pass.
+Compiled archives and public symbol graphs remain available in CI artifacts.
 
 ## Behavioral contracts
 

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Public GitHub Pages documentation with four native DocC references; the exact
+  artifact publishes from `main` after native, safety and documentation CI pass.
 - Public README with eight executed Swift examples; complete authored API/parameter
   documentation, focused DocC guides and verified native-symbol DocC catalogs.
 

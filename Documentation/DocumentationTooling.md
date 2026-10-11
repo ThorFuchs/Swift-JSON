@@ -33,6 +33,8 @@ symbols, missing comments, stale examples or a failed catalog fail the lane.
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |
 | `.build/handoff/docc/compiled-catalogs.tar.gz` | All four compiled catalogs with their exact native filenames |
 | `.build/handoff/docc/compiled-catalogs.MANIFEST.sha256` | Independently verifiable hashes for every archived catalog file |
+| `.build/handoff/pages/site/` | Static site, landing page and all four references under the project base path |
+| `.build/handoff/pages/receipt.json` | Native transformations, input/output hashes and route/asset verification |
 
 Open a `.doccarchive` in Xcode for the compiled reference. To preview a source
 catalog in a local browser after the lane has produced its symbol graphs:
@@ -47,13 +49,44 @@ xcrun docc preview Sources/JSON/Documentation.docc \
 Use the URL printed by DocC. Substitute another product's catalog, graph directory
 and bundle identifier to preview it. Generated output is ignored and uploaded as
 Native CI artifacts, with 30-day hosted retention. Source catalogs and build scripts
-are versioned. A public documentation website has not been activated.
+are versioned. [GitHub Pages](https://thorfuchs.github.io/Swift-JSON/) serves the
+same qualified references from `main`.
 
 CI transports the compiled catalogs in a tar archive because native DocC filenames
 can contain colons, which GitHub's artifact uploader rejects as individual files.
 On the supported Mac, extract `compiled-catalogs.tar.gz` into an empty directory
 with `tar -xzf compiled-catalogs.tar.gz`, then open the desired `.doccarchive` in Xcode.
 The manifest and receipt preserve file-level and archive-level digests.
+
+## Publish and preview the website
+
+The docs lane uses native `docc process-archive transform-for-static-hosting` to
+prepare each qualified archive under `/Swift-JSON/<product>`. A shared landing
+page links all four references and guides. The build verifies product/guide routes,
+local HTML links and assets, rejects private-path/credential markers and symlinks,
+and records a file manifest. Only the generated site is packaged for Pages;
+source graphs, command logs and private maintainer records are not website content.
+
+The Native CI workflow uploads the exact static artifact. Its separate deployment
+job runs only on `main`, after all native, safety and docs matrix jobs succeed.
+Only that job receives `pages: write` and `id-token: write`. The `github-pages`
+environment restricts deployments to `main`; action versions are pinned by commit.
+PRs build and check the site but cannot deploy it. The deployment job performs no
+Swift compilation or native qualification. See
+[GitHub's custom Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+For a browser preview, preserve the project base path with a local alias:
+
+```sh
+mkdir -p .build/handoff/pages/preview
+ln -sfn ../site .build/handoff/pages/preview/Swift-JSON
+python3 -m http.server 8771 --directory .build/handoff/pages/preview
+```
+
+Open `http://localhost:8771/Swift-JSON/`. The preview alias is local only and is
+not included in the deployment artifact. `build-info.json` identifies the source
+commit, native compiler/SDK and CI run; the site tracks the current `main`, without
+claiming a tagged package release. Generated files remain ignored by Git.
 
 ## Write useful API comments
 

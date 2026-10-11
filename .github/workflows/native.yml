@@ -43,3 +43,35 @@ jobs:
             .build/handoff/docc/compiled-catalogs.MANIFEST.sha256
             .build/handoff/docc/*-diagnostics.json
             .build/handoff/docc/*.log
+            .build/handoff/pages/receipt.json
+            .build/handoff/pages/site.MANIFEST.sha256
+            .build/handoff/pages/*.log
+      - name: Package qualified documentation site
+        if: matrix.lane == 'docs'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: .build/handoff/pages/site
+  publish:
+    name: Documentation / publish
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: qualification
+    # Native compilation and all qualification happened in the jobs above.
+    # This job only publishes their exact static artifact.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - name: Publish qualified documentation
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
