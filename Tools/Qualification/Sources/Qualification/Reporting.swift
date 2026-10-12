@@ -99,7 +99,7 @@ struct VerifiedSuite {
         var paths: [String] = [], licenses = 0
         for record in try manifest["files"].array() {
             let path = try record["path"].text(), data = try Data(contentsOf: Self.path(path, relativeTo: root))
-            guard try digest(data) == record["sha256"].text(), data.count == record["bytes"].integer() else { throw HarnessFailure("Fixture hash/size mismatch: " + path) }
+            guard try digest(data) == record["sha256"].text(), data.count == (try record["bytes"].integer()) else { throw HarnessFailure("Fixture hash/size mismatch: " + path) }
             if try record["license"].bool() { licenses += 1 }
             paths.append(path)
         }
