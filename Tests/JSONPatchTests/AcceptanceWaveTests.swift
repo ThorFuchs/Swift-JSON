@@ -4,7 +4,9 @@ import JSON
 import JSONPatch
 
 @Test func qaWidePatchEditsPreserveExactKeyOrderThroughIndexTransitions() throws {
-    for width in [31, 32, 33, 63, 64, 65] {
+    // The two scalar-distinct keys make width 30 an actual 32-member object.
+    // Moving a member removes it before adding, exercising 32 -> 31 -> 32.
+    for width in [29, 30, 31, 32, 33, 61, 62, 63, 64, 65] {
         let members = (0..<width).map { JSONMember("k\($0)", value: .number(JSONNumber(integer: $0))) } + [.init("é", value: 1), .init("e\u{301}", value: 2)]
         let original = JSON.object(try JSONObject(members: members))
         let patch = try JSONPatch(json: JSONParser().parse(#"[{"op":"test","path":"/é","value":1.00e0},{"op":"replace","path":"/é","value":3},{"op":"move","from":"/é","path":"/~1~0"},{"op":"add","path":"/é","value":4}]"#))

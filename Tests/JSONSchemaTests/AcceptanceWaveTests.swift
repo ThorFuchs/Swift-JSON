@@ -24,7 +24,7 @@ import JSONSchema
 @Test func qaWidePayloadInstancesPreserveEvaluatedScalarLocations() throws {
     let schema = try JSONParser().parse(#"{"type":"object","allOf":[{"patternProperties":{"^k[0-9]+$":{"type":"integer"}}},{"properties":{"é":{"const":1},"e\u0301":{"const":2}},"required":["é","e\u0301"]}],"unevaluatedProperties":false}"#)
     let plan = try JSONSchemaCompiler().compile(JSONSchemaDocument(schema))
-    for width in [31, 32, 33, 64, 129] {
+    for width in [29, 30, 31, 32, 33, 62, 64, 127, 129] {
         let members = (0..<width).map { JSONMember("k\($0)", value: .number(JSONNumber(integer: $0))) } + [.init("é", value: 1), .init("e\u{301}", value: 2)]
         let object = try JSONObject(members: members)
         let value = try JSONCodablePayload(preserving: .object(object)).value()

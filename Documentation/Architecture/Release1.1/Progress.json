@@ -1,20 +1,68 @@
 {
   "schema_version": 1,
   "target_release": "1.1.0",
-  "milestone": "implementation, runtime qualification and reviewable candidate",
-  "tested_core_sha": "a48eb337b70eb075ce37c99dc3d150032f720d00",
-  "preserved_history": ["1.0.0", "W00-W12", "G01-G12", "RC01-RC08", "F01-F06", "J01-J04", "R0 turn 001"],
-  "root_function_counts": {"JSON":86,"JSONStreaming":11,"JSONSchema":38,"JSONRegexRuntime":12,"JSONPatch":9},
-  "root_function_total":156,
-  "parameterized_invocations":173,
-  "cap_probes":49,
-  "readme_examples":10,
-  "authored_public_docc_symbols":582,
-  "payload_fixtures":8,
-  "r5_matrix": {"macOS":"executed","iPhone_simulator":"executed","iPad_simulator":"executed","physical_iPhone":"executed","physical_iPad":"blocked; unavailable"},
-  "conditional_features": {"SIMD":"deferred","parallel_batches":"deferred","E11":"deferred","E12":"deferred"},
-  "evidence_policy":"Actual final native/safety/docs/mobile receipts and materialized Turn002 archive identify commands, source hashes, counts and limitations. Documentation-only successors map unchanged core/test inputs explicitly.",
-  "publication_performed":false,
-  "remaining_release_blockers":["Physical iPad smoke, disk persistence and release measurements for the agreed R5 matrix", "Complete maintainer review and protected PR integration before final release readiness"],
-  "performance_review":"IntegratedPerformance.md; unchanged 10% trigger, retain initial regression measurements and final accepted dispositions"
+  "milestone": "additional acceptance and conformance wave",
+  "tested_core_sha": "5d655f2beab569ac804890493bfafcf6045caabe",
+  "preserved_history": [
+    "1.0.0",
+    "W00-W12",
+    "G01-G12",
+    "RC01-RC08",
+    "F01-F06",
+    "J01-J04",
+    "R0 turn 001"
+  ],
+  "root_function_counts": {
+    "JSON": 97,
+    "JSONStreaming": 14,
+    "JSONSchema": 41,
+    "JSONRegexRuntime": 12,
+    "JSONPatch": 11
+  },
+  "root_function_total": 175,
+  "parameterized_invocations": 173,
+  "cap_probes": 49,
+  "readme_examples": 10,
+  "authored_public_docc_symbols": 582,
+  "payload_fixtures": 8,
+  "r5_matrix": {
+    "macOS": "executed",
+    "iPhone_simulator": "executed",
+    "iPad_simulator": "executed",
+    "physical_iPhone": "executed",
+    "physical_iPad": "blocked; unavailable"
+  },
+  "conditional_features": {
+    "SIMD": "deferred",
+    "parallel_batches": "deferred",
+    "E11": "deferred",
+    "E12": "deferred"
+  },
+  "evidence_policy": "Actual final native/safety/docs/mobile receipts and materialized Turn002 archive identify commands, source hashes, counts and limitations. Documentation-only successors map unchanged core/test inputs explicitly.",
+  "publication_performed": false,
+  "remaining_release_blockers": [
+    "Physical iPad smoke, disk persistence and release measurements for the agreed R5 matrix",
+    "Complete maintainer review and protected PR integration before final release readiness"
+  ],
+  "performance_review": "IntegratedPerformance.md; unchanged 10% trigger, retain initial regression measurements and final accepted dispositions",
+  "prior_milestones": [
+    {
+      "turn": 2,
+      "tested_core_sha": "a48eb337b70eb075ce37c99dc3d150032f720d00",
+      "root_function_total": 156,
+      "source_manifest_sha256": "2b69a683002eaa4e112bd005b3eb06e63dc8e06bfcd2b5c8485f076870f26797",
+      "return_sha256": "151ce56037763e1ca3d6d0439521020f34ca368ef77b50c31b8ef4e27fb282b6"
+    }
+  ],
+  "qa_wave": {
+    "added_functions": 19,
+    "baseline_swift_test_files_retained": 48,
+    "scope": "QA.md",
+    "native_full": "passed on tested_core_sha",
+    "safety_full": "passed on tested_core_sha; TSAN5",
+    "mobile": "both SDKs/simulators/physical iPhone passed; iPad physical blocked",
+    "supplemental_boundary_review": "pending final qa lane",
+    "docs": "pending final DocC lane",
+    "accounting_fix": "Failed Base64 scratch released; work/terminal health retained; caps/weights/version unchanged"
+  }
 }

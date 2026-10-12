@@ -46,7 +46,9 @@ private func qaDocuments() -> [String] {
 }
 
 @Test func qaIndexThresholdEditsAgreeWithOrderedScalarOracle() throws {
-    for width in [0, 1, 7, 8, 15, 16, 31, 32, 33, 63, 64, 65, 127, 128, 257] {
+    // Four special keys follow the generated fields. Include actual member
+    // counts 7/8/9, 31/32/33, 63/64/65 and 127/128/129, not just field widths.
+    for width in [0, 1, 3, 4, 5, 7, 8, 15, 16, 27, 28, 29, 31, 32, 33, 59, 60, 61, 63, 64, 65, 123, 124, 125, 127, 128, 257] {
         let keys = (0..<width).map { "prefix-\($0)-é" } + ["é", "e\u{301}", "", "/~"]
         let members = keys.enumerated().map { JSONMember($0.element, value: .number(JSONNumber(integer: $0.offset))) }
         var accumulator = try JSONObjectAccumulator()

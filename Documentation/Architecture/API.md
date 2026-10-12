@@ -35,7 +35,7 @@ order by default. Exact duplicates fail checked construction and parsing.
 | `JSONObject.build(limits:_:)` | Exclusive noncopyable member accumulator; checks before append |
 | `JSON.buildArray(limits:_:)` | Exclusive array accumulator; nested arrays remain one element |
 | `append(contentsOf:)` on array accumulator | Explicit flattening with charged work |
-| Object subscripts by String/JSONKey | Unmetered linear exact-key lookup; nil means absence |
+| Object subscripts by String/JSONKey | Unmetered exact-key lookup using immutable metadata; nil means absence |
 | `JSON.requiredMember(_:limits:)` | Bounded lookup; throws on wrong kind or missing member |
 | `JSON.presence(of:limits:)` | Bounded lookup separating absent, null and non-null value |
 | `JSONObject.presence(of:)` | Unmetered convenience with the same three states |

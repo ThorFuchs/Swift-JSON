@@ -365,12 +365,16 @@ documentation. Receipts record actual commands, toolchains, source hashes and ca
 counts. Policy exclusions are reported separately from evaluated successes. See
 [qualification](Documentation/Qualification/README.md) and [CI](Documentation/CI/README.md).
 
-Performance is measured separately on native release builds. The current reviewed
+Performance is measured separately on native release builds. The released 1.0
 streaming comparison is approximately **11% slower**, exceeding the unchanged 10%
 review trigger, with its accepted disposition and measurement limits documented in
 [performance notes](Documentation/Performance/README.md). Logical retention remains
 separate from process RSS. Scalar scanning and plan-local immutable regex sharing
 are the qualified choices. Projection and JSON text-sequence framing remain deferred.
+The 1.1 candidate's separate matched stream comparison is **15.76% slower**; its
+[integrated review](Documentation/Architecture/Release1.1/IntegratedPerformance.md)
+retains the accepted disposition. The [additional QA wave](Documentation/Architecture/Release1.1/QA.md)
+records conformance coverage and the Base64 accounting correction.
 
 ## Contributing, support and licensing
 

@@ -12,13 +12,22 @@ and seven additional nonparameterized cases. The first production lookup increme
 the independent runner adds nine budget/report vectors. There are three separate
 JSON/JSONSchema consumer tests. All discoveries must be nonzero.
 
-The current integrated 1.1 candidate checks exactly 156 root functions:
+The Turn002 integrated 1.1 candidate checked exactly 156 root functions:
 JSON 86, JSONStreaming 11, JSONSchema 38, JSONRegexRuntime 12 and JSONPatch 9.
 All 173 parameterized invocations remain. The earlier counts above describe their
 historical stages, not this source. Three additional public/mobile Swift Testing
 functions exercise eight pinned payload fixtures and three independently exited
 SwiftData disk phases. The seven-function R0 subset, all 49 cap probes, rooted
 20-case consumer and independent policies retain their exact checks.
+
+The additional QA wave adds 19 behavior functions, for exactly 175:
+JSON 97, JSONStreaming 14, JSONSchema 41, JSONRegexRuntime 12 and JSONPatch 11.
+All 48 earlier Swift test files and 173 parameterized invocations are retained.
+The focused `python3 Scripts/ci.py --lane qa` checks exact counts 11/3/3/2 in
+debug, release and Address Sanitizer. It supplements the full native/safety lanes
+and does not replace independent qualification or any of the 49 cap probes.
+Thread Sanitizer checks five shared-state cases, including concurrent payload
+opening and separate read scopes over one immutable root. See [QA](../Architecture/Release1.1/QA.md).
 
 | Independent input | Observed policy |
 | --- | --- |
