@@ -53,3 +53,14 @@ nine release samples after three warmups: median54.406542 ms and process peak RS
 allocation or hard-RSS claims, and no matched mobile optimization comparison.
 Physical iPad measurements remain blocked. Logical bytes, allocator observations,
 process RSS and caller computation remain distinct.
+
+The additional QA wave changes only Base64 failure cleanup in the runtime. Affected
+public Data/payload paths have three matched, alternating release-native process
+pairs (27 samples per source/workload, 100 invocations/sample). Valid Data medians
+range from −1.28% to +4.98%; payload decoding is +1.16%, corruption recovery −0.09%.
+Input hashes/work counters match; no new 10% timing trigger is crossed. The corrected
+recovery ledger reports final live zero instead of 300 and peak 16 instead of 300.
+This is truthful accounting of freed scratch, without an RSS/allocator improvement
+claim. The unchanged index and twelve-workload dispositions above are retained.
+The expanded physical QA harness has different work and cannot be compared with
+the earlier phone median as a matched speed result. See [QA](QA.md).

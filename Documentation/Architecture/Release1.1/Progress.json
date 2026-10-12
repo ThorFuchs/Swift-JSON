@@ -38,7 +38,7 @@
     "E11": "deferred",
     "E12": "deferred"
   },
-  "evidence_policy": "Actual final native/safety/docs/mobile receipts and materialized Turn002 archive identify commands, source hashes, counts and limitations. Documentation-only successors map unchanged core/test inputs explicitly.",
+  "evidence_policy": "Turn003 materializes actual native/safety/QA/docs/SDK/simulator/iPhone receipts, raw measurements and reproducible source archive. Turn002 and original history remain immutable. Source bindings identify unchanged runtime bytes and expanded test cases.",
   "publication_performed": false,
   "remaining_release_blockers": [
     "Physical iPad smoke, disk persistence and release measurements for the agreed R5 matrix",
@@ -61,8 +61,8 @@
     "native_full": "passed on tested_core_sha",
     "safety_full": "passed on tested_core_sha; TSAN5",
     "mobile": "both SDKs/simulators/physical iPhone passed; iPad physical blocked",
-    "supplemental_boundary_review": "pending final qa lane",
-    "docs": "pending final DocC lane",
+    "supplemental_boundary_review": "passed at e6eb46da346bee9892119fdc414abd7783e66b2c: 19 exact cases each in debug/release/ASAN",
+    "docs": "passed at e6eb46da346bee9892119fdc414abd7783e66b2c: four catalogues, 582 authored public symbols, 10 README examples; refresh final documentation successor",
     "accounting_fix": "Failed Base64 scratch released; work/terminal health retained; caps/weights/version unchanged"
   }
 }

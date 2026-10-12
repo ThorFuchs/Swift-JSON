@@ -33,3 +33,29 @@ actual commands/source and nonzero counts. Source archives exclude private input
 Git/build trees, signing profiles and device identifiers. Physical iPad remains
 blocked; conditional SIMD/parallel batches stay deferred, with no unqualified
 performance claim. No merge/tag/publication is implied by this review.
+
+## Additional Turn003 review
+
+The same implementing agent performed a separate source, fixture, receipt and
+test-body review against parent `9e61f158`. This remains distinct from independent
+human review or GitHub approval. Native/full safety ran at `5d655f2`; the reviewed
+boundary additions ran through the exact 19-case debug/release/ASAN QA lane at
+`e6eb46d`. All runtime library bytes are unchanged between those two stages.
+
+- Medium: shared Base64 failure retained freed scratch in the logical ledger.
+  Preserve the 400 failed recovery assertions; restore only the failed decoder's
+  live reservation. Successful ownership, work and terminal health remain intact.
+  Full native/ASAN, quota/cancellation-prefix tests and a public 32-byte consumer
+  verify the correction. Three matched benchmark pairs retain identical work.
+- Qualification: special keys added to generated widths obscured actual final
+  index boundaries. Expanded the corpus to actual 7/8/9, 31/32/33, 63/64/65 and
+  127/128/129 members; Patch now explicitly visits 32→31→32. All added cases pass
+  debug/release/ASAN without changing any prior test file or policy exclusion.
+- Documentation: the API table still described direct object lookup as linear.
+  It now describes immutable exact-key metadata. README distinguishes released
+  1.0's historical stream regression from the candidate's separate +15.76% pair.
+
+The final source binding, clean reproduction, actual catalogue outputs and hosted
+CI receipts accompany the local Turn003 return. Both SDKs, both simulator families
+and the updated physical iPhone public/disk harness pass. Physical iPad remains
+blocked; protected integration and publication require separate maintainer action.
