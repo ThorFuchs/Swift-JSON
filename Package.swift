@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Swift-JSON",
-    platforms: [.macOS("27.0")],
+    platforms: [.macOS("27.0"), .iOS("27.0")],
     products: [
         .library(name: "JSON", targets: ["JSON"]),
         .library(name: "JSONSchema", targets: ["JSONSchema"]),
@@ -14,7 +14,7 @@ let package = Package(
     targets: [
         .target(name: "JSON"),
         .target(name: "JSONRegexRuntime", dependencies: ["JSON"]),
-        .target(name: "JSONSchema", dependencies: ["JSON", "JSONRegexRuntime"], resources: [.copy("Resources")]),
+        .target(name: "JSONSchema", dependencies: ["JSON", "JSONRegexRuntime"], resources: [.copy("Resources/Draft2020-12")]),
         .target(name: "JSONStreaming", dependencies: ["JSON"]),
         .target(name: "JSONPatch", dependencies: ["JSON"]),
         .testTarget(name: "JSONTests", dependencies: ["JSON"], exclude: ["ImplementationPlan.md"]),

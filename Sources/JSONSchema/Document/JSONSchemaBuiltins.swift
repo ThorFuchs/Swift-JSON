@@ -32,7 +32,7 @@ extension JSONSchemaRegistry {
         for (path, identifier, size, expectedHash) in files {
             try meter.checkpoint(); try meter.charge(.schemaDocuments); try meter.resetValueBounds()
             try meter.require(.inputBytes, size); try meter.charge(.schemaBytes, size); try meter.retain(size)
-            let url = root.appendingPathComponent("Resources/Draft2020-12").appendingPathComponent(path)
+            let url = root.appendingPathComponent("Draft2020-12").appendingPathComponent(path)
             let handle: FileHandle
             do { handle = try FileHandle(forReadingFrom: url) }
             catch { throw JSONSchemaCompilationFailure(.metaSchema) }
