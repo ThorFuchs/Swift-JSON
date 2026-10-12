@@ -54,6 +54,7 @@ belongs exclusively to each invocation.
 ### Guides
 
 - <doc:ExactValuesAndCoding>
+- <doc:ExactPersistence>
 
 ### Exact model
 - ``JSON/JSON``

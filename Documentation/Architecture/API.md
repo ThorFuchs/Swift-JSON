@@ -168,3 +168,25 @@ subsystem ceilings independently. WorkUnits includes subsystem work, so subtract
 once. Failure/cancellation terminates the composition because no successful report
 accounts for failed work. The [actual consumer interface](../ConsumerInterface.md)
 and runnable consumer demonstrate this contract.
+
+## Additive 1.1 candidate
+
+JSON and JSONDocument provide `read(limits:_:)` and `readWithReport(limits:_:)`
+with synchronous non-Sendable JSONReadCursor. Throwing String/JSONKey/Int brackets,
+required kind/integer access, explicit Double/Decimal policies, raw/scalar/model
+presence and native projection share one active meter. Paths are typed and bounded;
+JSONAccessFailure carries the complete path and structured cause. Scope exit
+invalidates handles and releases root/source ownership. Resource/cancellation
+failures remain terminal when caught by a caller. See [reading](Release1.1/Reading.md).
+
+JSON `init(encoding:coding:)`, `decode(_:coding:)` and `decodeWithReport(_:coding:)`
+delegate to existing native facades. JSONCodablePayload provides
+`init(preserving:limits:)`, `preservingWithReport(_:limits:)`, `value(limits:)`
+and `valueWithReport(limits:)`. Its explicit Codable Version 1 stores validated
+UTF-8 only and shares native parent budgets. See [persistence](Release1.1/Persistence.md).
+
+The native ISO-8601 Date strategy now includes calendar fields as well as fractional
+UTC time. Prior time-only stored values cannot recover their original calendar
+date; application migration needs an independent source of that information.
+Noncanonical Base64 with nonzero unused padding bits now rejects. These corrections
+restore the documented strict/native contracts; they do not add a permissive mode.

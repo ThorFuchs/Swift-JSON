@@ -40,11 +40,11 @@ package enum JSONBase64 {
             guard let b = iterator.next(),let c = iterator.next(),let d = iterator.next(),let x = value(a),let y = value(b) else { throw malformed() }
             try emit(x << 2 | y >> 4,meter: &meter)
             if c == 61 {
-                guard d == 61, iterator.next() == nil else { throw malformed() }; break
+                guard d == 61, y & 15 == 0, iterator.next() == nil else { throw malformed() }; break
             }
             guard let z = value(c) else { throw malformed() }
             try emit(y << 4 | z >> 2,meter: &meter)
-            if d == 61 { guard iterator.next() == nil else { throw malformed() }; break }
+            if d == 61 { guard z & 3 == 0, iterator.next() == nil else { throw malformed() }; break }
             guard let w = value(d) else { throw malformed() }
             try emit(z << 6 | w,meter: &meter)
         }
