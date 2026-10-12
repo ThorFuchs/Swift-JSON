@@ -147,6 +147,9 @@ extension JSONNumber {
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func doubleValue(policy: JSONNumberConversionPolicy = .exact, limits: JSONLimits = .balanced) throws -> Double {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
+        return try doubleValue(policy: policy, meter: &meter)
+    }
+    package func doubleValue(policy: JSONNumberConversionPolicy, meter: inout JSONWorkMeter) throws -> Double {
         let text = try binaryConversionText(meter: &meter)
         try meter.checkpoint()
         guard let value = Double(text), value.isFinite else { throw JSONFailure(.conversion, code: .inexactConversion) }
@@ -170,6 +173,9 @@ extension JSONNumber {
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func decimalValue(policy: JSONNumberConversionPolicy = .exact, limits: JSONLimits = .balanced) throws -> Decimal {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
+        return try decimalValue(policy: policy, meter: &meter)
+    }
+    package func decimalValue(policy: JSONNumberConversionPolicy, meter: inout JSONWorkMeter) throws -> Decimal {
         let c = components
         guard c.digits.count <= 39, c.exponent >= -128, c.exponent <= 165 else {
             throw JSONFailure(.conversion, code: .inexactConversion)

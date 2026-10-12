@@ -5,10 +5,29 @@ Each receipt identifies the source content, command exits and environment. CI
 artifacts contain raw logs, consumer outcomes and per-case corpus results.
 Safety and DocC lanes run separately. Unsupported hosts fail preflight.
 
-The unchanged library has 122 Swift Testing functions across five bundles and
-173 parameterized invocations. One public cap test exercises all 49 metrics;
+The 1.0 baseline has 122 Swift Testing functions across five bundles and
+173 parameterized invocations. The first 1.1 qualification milestone adds seven
+authored prototype cases in JSONTests (54 to 61), for 129 functions, with the existing 173 parameterized invocations retained
+and seven additional nonparameterized cases. The first production lookup increment adds two further cases (JSONTests 63, total 131 functions). No baseline case or corpus outcome is removed. One public cap test exercises all 49 metrics;
 the independent runner adds nine budget/report vectors. There are three separate
 JSON/JSONSchema consumer tests. All discoveries must be nonzero.
+
+The Turn002 integrated 1.1 candidate checked exactly 156 root functions:
+JSON 86, JSONStreaming 11, JSONSchema 38, JSONRegexRuntime 12 and JSONPatch 9.
+All 173 parameterized invocations remain. The earlier counts above describe their
+historical stages, not this source. Three additional public/mobile Swift Testing
+functions exercise eight pinned payload fixtures and three independently exited
+SwiftData disk phases. The seven-function R0 subset, all 49 cap probes, rooted
+20-case consumer and independent policies retain their exact checks.
+
+The additional QA wave adds 19 behavior functions, for exactly 175:
+JSON 97, JSONStreaming 14, JSONSchema 41, JSONRegexRuntime 12 and JSONPatch 11.
+All 48 earlier Swift test files and 173 parameterized invocations are retained.
+The focused `python3 Scripts/ci.py --lane qa` checks exact counts 11/3/3/2 in
+debug, release and Address Sanitizer. It supplements the full native/safety lanes
+and does not replace independent qualification or any of the 49 cap probes.
+Thread Sanitizer checks five shared-state cases, including concurrent payload
+opening and separate read scopes over one immutable root. See [QA](../Architecture/Release1.1/QA.md).
 
 | Independent input | Observed policy |
 | --- | --- |
@@ -36,3 +55,8 @@ stream completion/backpressure, reports, cancellation and concurrent plan reuse
 are tested. Native safety includes Address Sanitizer, Thread Sanitizer and strict
 memory safety compilation. [CI](../CI/README.md) describes executed lanes;
 [performance](../Performance/README.md) retains the reviewed streaming disposition.
+
+The [1.1 platform policy](../Architecture/Release1.1/QualificationPolicy.json)
+accepts iPad SDK/simulator behavior and three-process disk persistence for this
+release. Physical iPad qualification is deferred and nonblocking. Physical iPhone
+evidence remains required; no test, corpus policy or resource assertion is removed.

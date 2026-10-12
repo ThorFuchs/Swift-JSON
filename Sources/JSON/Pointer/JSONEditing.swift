@@ -36,17 +36,17 @@ package enum JSONEditing {
                     switch change {
                     case .remove: continue
                     case .add(let value), .replace(let value):
-                        try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); members.append(JSONMember(member.key, value: value)); continue
+                        try meter.retain(JSONLogicalWeights.member); members.append(JSONMember(member.key, value: value)); continue
                     }
                 }
-                try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); members.append(member)
+                try meter.retain(JSONLogicalWeights.member); members.append(member)
             }
             if !found {
                 guard case .add(let value) = change else { throw JSONFailure(.pointer, code: .missingTarget) }
                 try meter.require(.objectMembers, UInt64(members.count) + 1)
-                try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); members.append(JSONMember(token, value: value))
+                try meter.retain(JSONLogicalWeights.member); members.append(JSONMember(token, value: value))
             }
-            return .object(JSONObject(admitted: members))
+            return .object(try JSONObject.indexed(admitted: members, meter: &meter))
         case .array(let array):
             let add: Bool
             if case .add = change { add = true } else { add = false }

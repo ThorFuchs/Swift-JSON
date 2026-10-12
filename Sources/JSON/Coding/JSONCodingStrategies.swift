@@ -43,10 +43,11 @@ public struct JSONCodingOptions: Sendable {
 }
 package final class JSONCodingState {
     package var meter: JSONWorkMeter
-    package let options: JSONCodingOptions
+    package private(set) var options: JSONCodingOptions
     package var failure: (any Error)?
     package private(set) var bridgedUserInfo: [CodingUserInfoKey: Any] = [:]
     private var prepared = false
+    private var preparedBytes: UInt64 = 0
     package init(options: JSONCodingOptions, meter: consuming JSONWorkMeter) {
         self.options = options; self.meter = meter
     }
@@ -55,12 +56,26 @@ package final class JSONCodingState {
         if !prepared {
             try meter.require(.objectMembers, UInt64(options.userInfo.count))
             for (key, value) in options.userInfo {
+                let before = meter.used(.retainedBytes)
                 try JSONAdmission.text(key.rawValue, key: true, meter: &meter, owned: true)
                 try meter.work(); try meter.retain(JSONLogicalWeights.member)
                 bridgedUserInfo[key] = value
+                preparedBytes += meter.used(.retainedBytes) - before
             }
             prepared = true
         }
+    }
+    package func withOptions<T>(_ requested: JSONCodingOptions, _ body: () throws -> T) throws -> T {
+        try meter.restrict(to: requested.limits)
+        let oldOptions = options, oldInfo = bridgedUserInfo, oldPrepared = prepared, oldBytes = preparedBytes
+        options = requested; bridgedUserInfo = [:]; prepared = false; preparedBytes = 0
+        func restore() throws {
+            try meter.release(preparedBytes)
+            options = oldOptions; bridgedUserInfo = oldInfo; prepared = oldPrepared; preparedBytes = oldBytes
+        }
+        do {
+            try check(); let result = try body(); try check(); try restore(); return result
+        } catch { try restore(); throw error }
     }
     package func latch(_ action: () throws -> Void) { do { try action() } catch { if failure == nil { failure = error } } }
     package func path(_ path: [any CodingKey], appending key: any CodingKey) throws -> [any CodingKey] {

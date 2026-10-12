@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 /// Noncopyable so a nested helper cannot accidentally fork an invocation's budget.
+private final class JSONMeterHealth {
+    var failure: (any Error)?
+    var observed = Array(repeating: UInt64(0), count: JSONResourceMetric.allCases.count)
+}
 package struct JSONWorkMeter: ~Copyable {
-    package let limits: JSONLimits
+    package private(set) var limits: JSONLimits
+    private let health = JSONMeterHealth()
+    private let trackAcceptedCapacities: Bool
     package let domain: JSONOperationDomain
     private var counters: [UInt64]
     private var retired: [UInt64]
@@ -13,29 +19,52 @@ package struct JSONWorkMeter: ~Copyable {
     /// Observer execution itself is trusted test code, outside owned work quotas.
     package var checkpointObserver: (@Sendable (UInt64) -> Void)?
     package mutating func schemaEvaluationPhase(_ active: Bool) { compilingEvaluation = active }
-    package init(limits: JSONLimits, domain: JSONOperationDomain) throws {
+    package init(limits: JSONLimits, domain: JSONOperationDomain, trackAcceptedCapacities: Bool = false) throws {
         try Task.checkCancellation()
         try limits.validate()
         self.limits = limits; self.domain = domain
+        self.trackAcceptedCapacities = trackAcceptedCapacities || domain == .coding
         counters = Array(repeating: 0, count: JSONResourceMetric.allCases.count)
         retired = Array(repeating: 0, count: JSONResourceMetric.allCases.count)
     }
     package func checkpoint() throws {
-        checkpointObserver?(used(.workUnits))
-        try Task.checkCancellation()
+        if let failure = health.failure { throw failure }
+        do {
+            checkpointObserver?(used(.workUnits))
+            try Task.checkCancellation()
+        } catch { health.failure = error; throw error }
     }
     package func used(_ metric: JSONResourceMetric) -> UInt64 { counters[metric.index] }
     package func require(_ metric: JSONResourceMetric, _ attempted: UInt64) throws {
-        guard attempted <= limits[metric] else { throw violation(metric, attempted) }
+        if let failure = health.failure { throw failure }
+        guard attempted <= limits[metric] else {
+            let failure = violation(metric, attempted); health.failure = failure; throw failure
+        }
+        // Fixed-policy operations never tighten after admission. Coding and read
+        // scopes retain the capacity history needed by restrict. Cumulative work
+        // already lives in counters; live ownership must use current, not peak.
+        if trackAcceptedCapacities {
+            switch metric {
+            case .workUnits, .numericWorkUnits, .compileWorkUnits, .evaluationWorkUnits,
+                 .patchWorkUnits, .totalWorkUnits, .regexCompileWorkUnits,
+                 .regexSearchWorkUnits, .aggregateRegexWorkUnits, .retainedBytes,
+                 .regexRetainedBytes, .annotationBytes, .compiledPlanBytes: break
+            default: health.observed[metric.index] = max(health.observed[metric.index], attempted)
+            }
+        }
     }
     private func violation(_ metric: JSONResourceMetric, _ attempted: UInt64?, overflow: Bool = false) -> JSONFailure {
-        JSONFailure(.resource, code: overflow ? .counterOverflow : .limitExceeded,
+        let failure = JSONFailure(.resource, code: overflow ? .counterOverflow : .limitExceeded,
                     resource: .init(domain: domain, metric: metric, limit: limits[metric],
                                     attemptedUsage: attempted, overflow: overflow))
+        if health.failure == nil { health.failure = failure }
+        return failure
     }
     package func adding(_ metric: JSONResourceMetric, _ current: UInt64, _ amount: UInt64) throws -> UInt64 {
         let (next, overflow) = current.addingReportingOverflow(amount)
-        guard !overflow else { throw violation(metric, nil, overflow: true) }
+        guard !overflow else {
+            let failure = violation(metric, nil, overflow: true); health.failure = failure; throw failure
+        }
         try require(metric, next)
         return next
     }
@@ -82,6 +111,19 @@ package struct JSONWorkMeter: ~Copyable {
         // Admit both ceilings atomically before any compiler-owned allocation, including scratch.
         if let plan { counters[JSONResourceMetric.compiledPlanBytes.index] = plan }
         counters[JSONResourceMetric.retainedBytes.index] = retained; peak = max(peak,retained)
+    }
+    /// Tightening keeps the same ledger. Earlier accepted capacities and consumed
+    /// work must fit the new ceiling; failures stay terminal even if caught.
+    package mutating func restrict(to requested: JSONLimits) throws {
+        try checkpoint()
+        guard trackAcceptedCapacities else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        let restricted = try limits.intersection(requested)
+        limits = restricted
+        for metric in JSONResourceMetric.allCases where metric != .cancellationQuantum {
+            let live = metric == .retainedBytes || metric == .regexRetainedBytes || metric == .annotationBytes || metric == .compiledPlanBytes
+            try require(metric, live ? used(metric) : max(used(metric), health.observed[metric.index]))
+        }
+        sinceCancellationCheck = 0
     }
     /// Only live ownership is refunded; work and lifetime admission remain monotonic.
     package mutating func release(_ bytes: UInt64) throws {

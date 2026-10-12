@@ -54,6 +54,7 @@ belongs exclusively to each invocation.
 ### Guides
 
 - <doc:ExactValuesAndCoding>
+- <doc:ExactPersistence>
 
 ### Exact model
 - ``JSON/JSON``
@@ -83,3 +84,9 @@ belongs exclusively to each invocation.
 - ``JSONResourceMetric``
 - ``JSONOperationStatistics``
 - ``JSONOperationReport``
+
+### Scoped reads
+
+- <doc:ScopedReads>
+- ``JSONReadCursor``
+- ``JSONAccessFailure``

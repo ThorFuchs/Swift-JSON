@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "target_release": "1.1.0",
+  "decision_id": "ipad-simulator-acceptance-2026-10-12",
+  "approved_on": "2026-10-12",
+  "approval": "Explicit maintainer release-scope decision",
+  "supersedes": "Physical iPad requirement in the original R5/M03/M05/R8 scope",
+  "baseline": {
+    "swift_tools_compiler_minimum": "6.4",
+    "swift_language_mode": "6",
+    "macos_sdk_minimum": "27",
+    "ios_ipados_minimum": "27"
+  },
+  "required_evidence": [
+    "macOS native/safety/docs",
+    "iPhoneOS and iPhoneSimulator SDK builds",
+    "iPhone simulator public behavior and three-process disk persistence",
+    "iPad simulator public behavior and three-process disk persistence",
+    "physical iPhone public behavior, three-process disk persistence and release observations"
+  ],
+  "physical_devices": {
+    "iPhone": {
+      "required_for_release": true,
+      "evidence": "Separate physical smoke, disk persistence and release observations"
+    },
+    "iPad": {
+      "required_for_release": false,
+      "status": "deferred",
+      "qualification": "SDK and iPad simulator acceptance for 1.1.0",
+      "limitation": "Physical iPad behavior, performance, memory and energy are unmeasured; simulator data makes no physical-device claim"
+    }
+  },
+  "gate_mapping": {
+    "R5": "Required matrix excludes physical iPad; all other platform/storage requirements remain",
+    "M03": "Physical iPhone smoke and release observations required; physical iPad deferred and nonblocking",
+    "M05": "Three-process disk persistence required on macOS, both simulator families and physical iPhone",
+    "M06": "Distinguish SDK builds, simulator runtime, physical iPhone observations and untested physical iPad",
+    "R8": "Physical iPad unavailability does not block local release preparation; review/integration and publication authorization remain separate"
+  },
+  "unchanged": [
+    "Four public products/private regex",
+    "Empty root dependencies",
+    "Apache-2.0/all notices",
+    "All 49 finite caps/accounting",
+    "Strict semantics and every existing test/corpus assertion",
+    "10% performance trigger and dispositions",
+    "Deferred SIMD/parallel batches and E11/E12"
+  ]
+}

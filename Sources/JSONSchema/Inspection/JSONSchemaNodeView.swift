@@ -50,21 +50,21 @@ public struct JSONSchemaNodeView: Sendable {
                 try meter.work(); try meter.retain(JSONLogicalWeights.arraySlot); keywords.append(member.key)
                 for name in annotationNames {
                     if try JSONComparison.textEquals(member.key.string, name, meter: &meter) {
-                        try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); annotations.append(member); break
+                        try meter.retain(JSONLogicalWeights.member); annotations.append(member); break
                     }
                 }
                 if try JSONSchemaPlan.Keyword.classify(member.key,meter: &meter) == nil {
-                    try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); annotations.append(member)
+                    try meter.retain(JSONLogicalWeights.member); annotations.append(member)
                 }
                 for name in constraintNames {
                     if try JSONComparison.textEquals(member.key.string, name, meter: &meter) {
-                        try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); constraints.append(member); break
+                        try meter.retain(JSONLogicalWeights.member); constraints.append(member); break
                     }
                 }
             }
         }
         return .init(raw: raw, documentPointer: pointer, retrievalURI: retrievalURI, declaredKeywords: keywords,
-                     declaredAnnotations: .init(values: JSONObject(admitted: annotations)), declaredConstraints: JSONObject(admitted: constraints), resourceURI: nil, resourcePointer: nil, referenceTargets: nil)
+                     declaredAnnotations: .init(values: try JSONObject.indexed(admitted: annotations, meter: &meter)), declaredConstraints: try JSONObject.indexed(admitted: constraints, meter: &meter), resourceURI: nil, resourcePointer: nil, referenceTargets: nil)
     }
 }
 extension JSONSchemaDocument {

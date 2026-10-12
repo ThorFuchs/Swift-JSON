@@ -45,8 +45,36 @@ public struct JSONValueEncoder: Sendable {
         return result
     }
 }
+/// Exclusive mutable keyed storage avoids extracting/copying the whole member
+/// array for every field. This object belongs to one native coding invocation.
+package final class JSONKeyedEncodingStorage {
+    package private(set) var members: [(JSONKey, JSONEncodingBox)] = []
+    private var index = JSONExactKeyIndex()
+    private var capacity = 0
+    package func set(_ key: JSONKey, box: JSONEncodingBox, meter: inout JSONWorkMeter) throws {
+        if let position = try index.find(key, meter: &meter) {
+            try meter.work(); members[position] = (key, box); return
+        }
+        try meter.require(.objectMembers, UInt64(members.count) + 1)
+        if members.count == capacity {
+            let (doubled, overflow) = capacity.multipliedReportingOverflow(by: 2)
+            guard !overflow else { throw JSONFailure(.resource, code: .counterOverflow) }
+            let next = min(Int(meter.limits[.objectMembers]), max(1, doubled))
+            let (bytes, byteOverflow) = UInt64(next).multipliedReportingOverflow(by: JSONLogicalWeights.member)
+            guard !byteOverflow else { throw JSONFailure(.resource, code: .counterOverflow) }
+            try meter.retain(bytes)
+            do { try meter.work(UInt64(members.count) + 1) }
+            catch { try meter.release(bytes); throw error }
+            members.reserveCapacity(next)
+            try meter.release(UInt64(capacity) * JSONLogicalWeights.member)
+            capacity = next
+        }
+        guard try index.insert(key, position: members.count, meter: &meter) else { throw JSONFailure(.syntax, code: .duplicateKey) }
+        members.append((key, box))
+    }
+}
 package final class JSONEncodingBox {
-    package enum Storage { case unset, value(JSON), keyed([(JSONKey, JSONEncodingBox)]), unkeyed([JSONEncodingBox]) }
+    package enum Storage { case unset, value(JSON), keyed(JSONKeyedEncodingStorage), unkeyed([JSONEncodingBox]) }
     package var storage: Storage = .unset
     package func materialize(state: JSONCodingState) throws -> JSON {
         enum Step { case node(JSONEncodingBox), object([JSONKey]), array(Int) }
@@ -58,9 +86,11 @@ package final class JSONEncodingBox {
                 switch node.storage {
                 case .unset: throw EncodingError.invalidValue("unset", .init(codingPath: [], debugDescription: "No value was encoded"))
                 case .value(let value): results.append(value)
-                case .keyed(let members):
-                    pending.append(.object(members.map { $0.0 }))
-                    for (_, box) in members.reversed() { try state.meter.work(); try state.meter.retain(16); pending.append(.node(box)) }
+                case .keyed(let storage):
+                    var keys: [JSONKey] = []
+                    for (key, _) in storage.members { try state.meter.work(); try state.meter.retain(JSONLogicalWeights.arraySlot); keys.append(key) }
+                    pending.append(.object(keys))
+                    for (_, box) in storage.members.reversed() { try state.meter.work(); try state.meter.retain(16); pending.append(.node(box)) }
                 case .unkeyed(let boxes):
                     pending.append(.array(boxes.count))
                     for box in boxes.reversed() { try state.meter.work(); try state.meter.retain(16); pending.append(.node(box)) }
@@ -68,9 +98,9 @@ package final class JSONEncodingBox {
             case .object(let keys):
                 var members: [JSONMember] = []
                 for (key, value) in zip(keys, results.suffix(keys.count)) {
-                    try state.meter.work(); try state.meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot); members.append(JSONMember(key, value: value))
+                    try state.meter.work(); try state.meter.retain(JSONLogicalWeights.member); members.append(JSONMember(key, value: value))
                 }
-                results.removeLast(keys.count); results.append(.object(JSONObject(admitted: members)))
+                results.removeLast(keys.count); results.append(.object(try JSONObject.indexed(admitted: members, meter: &state.meter)))
             case .array(let count):
                 var values: [JSON] = []
                 for value in results.suffix(count) { try state.meter.work(); try state.meter.retain(JSONLogicalWeights.arraySlot); values.append(value) }
@@ -91,7 +121,7 @@ package final class JSONNativeEncoder: Encoder {
         state.latch {
             try state.check()
             switch box.storage {
-            case .unset: box.storage = .keyed([])
+            case .unset: box.storage = .keyed(JSONKeyedEncodingStorage())
             case .keyed: break
             default: throw EncodingError.invalidValue("container", .init(codingPath: codingPath, debugDescription: "Conflicting containers"))
             }
@@ -129,7 +159,7 @@ package final class JSONNativeEncoder: Encoder {
                     throw EncodingError.invalidValue(date,.init(codingPath: codingPath,debugDescription: "ISO-8601 year must be 0000...9999"))
                 }
                 try state.meter.retain(128); try state.meter.checkpoint()
-                let text = date.ISO8601Format(.iso8601.timeZone(separator: .colon).time(includingFractionalSeconds: true))
+                let text = date.ISO8601Format(.iso8601.year().month().day().timeZone(separator: .colon).time(includingFractionalSeconds: true))
                 try state.meter.checkpoint(); try set(.string(text)); try state.meter.release(128)
             }
         } else { try value.encode(to: self) }

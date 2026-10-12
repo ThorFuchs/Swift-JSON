@@ -2,7 +2,7 @@
 /// An ordered collection of exact-key members with order-independent equality.
 ///
 /// Replacing a member preserves its position; removing and re-inserting appends it.
-/// Lookup is linear in the scalar implementation. Use bounded operations for untrusted work.
+/// Private exact-key metadata accelerates wide objects. Use bounded operations for untrusted work.
 public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// The integer position of a member in insertion order.
     public typealias Index = Int
@@ -10,6 +10,7 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     public typealias Element = JSONMember
     /// Members in deterministic insertion order.
     public let members: [JSONMember]
+    package let exactIndex: JSONExactKeyIndex
     /// Admits ordered members and rejects identical decoded scalar keys.
     ///
     /// - Throws: Duplicate-key, value/growth/work failure or cancellation.
@@ -21,26 +22,35 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         self = try Self.checked(members: members, meter: &meter)
     }
-    package init(admitted members: [JSONMember]) {
-        self.members = members
+    package init(admitted members: [JSONMember], index: JSONExactKeyIndex) {
+        self.members = members; exactIndex = index
+    }
+    package init(empty: Void) { members = []; exactIndex = .init() }
+    package static func indexed(admitted members: [JSONMember], meter: inout JSONWorkMeter) throws -> Self {
+        var index = JSONExactKeyIndex()
+        for position in members.indices {
+            guard try index.insert(members[position].key, position: position, meter: &meter) else {
+                throw JSONFailure(.syntax, code: .duplicateKey)
+            }
+        }
+        return Self(admitted: members, index: index)
     }
     package static func checked(members: [JSONMember], meter: inout JSONWorkMeter) throws -> Self {
         try meter.require(.objectMembers, UInt64(members.count))
         var output: [JSONMember] = []
+        var index = JSONExactKeyIndex()
         for member in members {
             try JSONAdmission.text(member.key.string, key: true, meter: &meter, owned: true)
-            for previous in output {
-                if try JSONComparison.textEquals(previous.key.string, member.key.string, meter: &meter) {
-                    throw JSONFailure(.syntax, code: .duplicateKey)
-                }
+            guard try index.insert(member.key, position: output.count, meter: &meter) else {
+                throw JSONFailure(.syntax, code: .duplicateKey)
             }
             try JSONAdmission.value(member.value, meter: &meter, owned: true, depth: 1)
-            try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot)
+            try meter.retain(JSONLogicalWeights.member)
             output.append(member)
         }
         try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node)
         try meter.require(.maxDepth, 1)
-        return Self(admitted: output)
+        return Self(admitted: output, index: index)
     }
     /// The first member index; equal to endIndex for an empty object.
     public var startIndex: Int { members.startIndex }
@@ -52,15 +62,15 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     /// - Parameters:
     ///   - position: A valid insertion-order member index.
     public subscript(position: Int) -> JSONMember { members[position] }
-    /// Looks up an exact decoded-scalar key with unmetered linear traversal.
+    /// Looks up an exact decoded-scalar key using private unmetered metadata.
     ///
     /// Returns nil for absence and JSON.null for a present null. Use bounded JSON
     /// member access when untrusted traversal requires work accounting.
     ///
     /// - Parameters:
     ///   - key: The exact decoded-scalar member key, without normalization.
-    public subscript(key: JSONKey) -> JSON? { members.first { $0.key == key }?.value }
-    /// Looks up an exact decoded-scalar key with unmetered linear traversal.
+    public subscript(key: JSONKey) -> JSON? { exactIndex.find(key).map { members[$0].value } }
+    /// Looks up an exact decoded-scalar key using private unmetered metadata.
     ///
     /// Returns nil for absence and JSON.null for a present null. Use bounded JSON
     /// member access when untrusted traversal requires work accounting.
@@ -82,11 +92,16 @@ public struct JSONObject: Sendable, Hashable, RandomAccessCollection {
     ///   - hasher: The caller's randomized Swift hasher.
     public func hash(into hasher: inout Hasher) { JSON.object(self).hash(into: &hasher) }
     package func lookup(_ key: String, meter: inout JSONWorkMeter) throws -> JSON? {
-        for member in members {
+        // Preserve the qualified scalar tiny/early-hit path before hashing.
+        for member in members.prefix(members.count < 32 ? members.count : 8) {
             try meter.work()
-            if try JSONComparison.textEquals(member.key.string, key, meter: &meter) { return member.value }
+            if try JSONComparison.textEquals(member.key.string, key, meter: &meter) {
+                return member.value
+            }
         }
-        return nil
+        guard members.count >= 32 else { return nil }
+        let query = try JSONKey(key, meter: &meter)
+        return try exactIndex.find(query, meter: &meter).map { members[$0].value }
     }
     /// Returns an admitted object with a member added or replaced in place.
     ///

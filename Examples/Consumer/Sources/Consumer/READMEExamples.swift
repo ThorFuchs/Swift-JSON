@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Compiled README examples; checked by the documentation lane.
 import JSON
+import Foundation
 import JSONSchema
 import JSONPatch
 import JSONStreaming
@@ -54,6 +55,21 @@ func runREADMEExamples() throws {
     let bytes = try JSONWriter().encode(reading)
     let decoded = try JSONParser().decode(Reading.self, from: bytes)
     precondition(decoded == reading)
+
+    let scoped = try value.readWithReport { root in
+        let exactCount = try root["count"].requiredInteger(as: UInt64.self)
+        let optionalNote = try root.stringPresence(of: "note")
+        return (exactCount, optionalNote)
+    }
+    precondition(scoped.result.0 == 9_007_199_254_740_993)
+    precondition(scoped.result.1 == .null)
+    precondition(scoped.statistics[.workUnits] > 0)
+
+    let payload = try JSONCodablePayload(preserving: value)
+    let transported = try PropertyListEncoder().encode(payload)
+    let restored = try PropertyListDecoder().decode(JSONCodablePayload.self, from: transported)
+    let restoredValue = try restored.value()
+    precondition(restoredValue == value)
 
     let schema = try JSONSchemaDocument(parser.parse(
         #"{"type":"object","properties":{"count":{"type":"integer"}},"required":["count"]}"#

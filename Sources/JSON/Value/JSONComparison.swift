@@ -43,10 +43,11 @@ package enum JSONAdmission {
             case .object(let object):
                 let containerDepth = try meter.adding(.maxDepth, parentDepth, 1)
                 try meter.require(.objectMembers, UInt64(object.count))
+                if owned { try meter.retain(object.exactIndex.retainedBytes) }
                 for member in object.reversed() {
                     try text(member.key.string, key: true, meter: &meter, owned: owned)
                     try meter.work(); try meter.retain(JSONLogicalWeights.frame)
-                    if owned { try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot) }
+                    if owned { try meter.retain(JSONLogicalWeights.member) }
                     stack.append((member.value, containerDepth))
                 }
             }
