@@ -6,7 +6,7 @@ from archive_candidate import files
 from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState'
+SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -69,7 +69,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [9, 11, 12, 37, 77]
+        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 2] if 'thread' in command else [9, 11, 12, 38, 78]
         passed = passed and sorted(counts) == expected
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)

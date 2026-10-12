@@ -89,3 +89,18 @@ private struct WideFields: Encodable {
     }
     #expect(try await task.value)
 }
+
+@Test func immutableIndexedObjectCanBeSharedAcrossTasks() async throws {
+    let members = (0..<256).map { JSONMember("key-\($0)", value: .number(JSONNumber(integer: $0))) }
+    let value = JSON.object(try JSONObject(members: members))
+    try await withThrowingTaskGroup(of: Void.self) { group in
+        for position in 0..<32 {
+            group.addTask {
+                for _ in 0..<10 {
+                    let selected = try value.requiredMember("key-\(position * 7)"); #expect(selected == .number(JSONNumber(integer: position * 7)))
+                }
+            }
+        }
+        try await group.waitForAll()
+    }
+}
