@@ -50,3 +50,44 @@ work; the final serialized pair is used above. All actual failure/command record
 remain evidence. These stage results precede the reader's shared-meter and ISO
 correction; affected integrated performance must be refreshed on the final source.
 The historical approximately 11% streaming disposition remains separate.
+
+## Complete trigger review
+
+All 11 construction and 16 lookup cells above 10% are retained below.
+Construction absolute increases are at most 1.541 microseconds per operation;
+lookup increases are at most 1.625 microseconds per twenty queries. These are
+observed regressions, without a statistical noise or causal attribution claim.
+Accept the small-object metadata/ownership cost for the measured wide-object
+benefit, retaining the scalar lookup path below 32. Empty measurements establish
+no throughput claim. Four predecessor refusals remain excluded from timing ratios.
+The threshold stays 10%; mobile crossovers remain unqualified.
+
+| Operation / shape / width / query | Before / after microseconds | Change | Disposition |
+| --- | ---: | ---: | --- |
+| accumulator / prefix / 0 / — | 0.584 / 0.666 | +14.04% | No throughput claim; retain observation |
+| checked / prefix / 0 / — | 0.792 / 0.875 | +10.48% | No throughput claim; retain observation |
+| checked / unicode / 0 / — | 0.709 / 0.833 | +17.49% | No throughput claim; retain observation |
+| checked / ascii / 1 / — | 1.125 / 1.417 | +25.96% | Accept measured small-case tradeoff |
+| native-keyed / unicode / 0 / — | 2.125 / 2.416 | +13.69% | No throughput claim; retain observation |
+| native-keyed / ascii / 1 / — | 4.041 / 4.542 | +12.40% | Accept measured small-case tradeoff |
+| native-keyed / unicode / 1 / — | 3.667 / 4.042 | +10.23% | Accept measured small-case tradeoff |
+| parse / ascii / 1 / — | 2.625 / 2.958 | +12.69% | Accept measured small-case tradeoff |
+| parse / prefix / 1 / — | 11.792 / 13.333 | +13.07% | Accept measured small-case tradeoff |
+| parse / unicode / 1 / — | 2.542 / 2.834 | +11.49% | Accept measured small-case tradeoff |
+| parse / unicode / 4 / — | 6.500 / 7.500 | +15.38% | Accept measured small-case tradeoff |
+| lookup / ascii / 0 / miss | 0.083 / 0.167 | +101.20% | No throughput claim; retain observation |
+| lookup / prefix / 0 / miss | 0.042 / 0.167 | +297.62% | No throughput claim; retain observation |
+| lookup / unicode / 0 / miss | 0.042 / 0.166 | +295.24% | No throughput claim; retain observation |
+| lookup / ascii / 1 / miss | 0.625 / 0.875 | +40.00% | Accept measured small-case tradeoff |
+| lookup / unicode / 1 / first | 3.542 / 3.916 | +10.56% | Accept measured small-case tradeoff |
+| lookup / unicode / 1 / last | 3.542 / 3.916 | +10.56% | Accept measured small-case tradeoff |
+| lookup / unicode / 1 / middle | 3.542 / 3.916 | +10.56% | Accept measured small-case tradeoff |
+| lookup / unicode / 1 / miss | 0.583 / 0.875 | +50.09% | Accept measured small-case tradeoff |
+| lookup / ascii / 4 / first | 2.875 / 3.208 | +11.58% | Accept measured small-case tradeoff |
+| lookup / ascii / 4 / miss | 2.334 / 2.834 | +21.42% | Accept measured small-case tradeoff |
+| lookup / unicode / 4 / miss | 2.333 / 2.833 | +21.43% | Accept measured small-case tradeoff |
+| lookup / ascii / 8 / miss | 4.542 / 5.292 | +16.51% | Accept measured small-case tradeoff |
+| lookup / unicode / 8 / miss | 4.542 / 5.292 | +16.51% | Accept measured small-case tradeoff |
+| lookup / ascii / 16 / first | 2.916 / 3.208 | +10.01% | Accept measured small-case tradeoff |
+| lookup / ascii / 16 / miss | 8.625 / 10.250 | +18.84% | Accept measured small-case tradeoff |
+| lookup / unicode / 16 / miss | 8.916 / 9.959 | +11.70% | Accept measured small-case tradeoff |
