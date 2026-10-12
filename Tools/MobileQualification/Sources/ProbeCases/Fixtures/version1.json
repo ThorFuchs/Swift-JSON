@@ -1,0 +1,86 @@
+{
+  "format_version": 1,
+  "status": "logical-envelope-fixtures; exact persistence codec qualification not yet run",
+  "cases": [
+    {
+      "id": "null",
+      "inner_utf8_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "inner_json": "null",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "bnVsbA=="
+      }
+    },
+    {
+      "id": "boolean",
+      "inner_utf8_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "inner_json": "true",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "dHJ1ZQ=="
+      }
+    },
+    {
+      "id": "string",
+      "inner_utf8_sha256": "06c3994e4804c1a17dfcc7607f72944152a706367c0c322b34fd9a8f1b1a455d",
+      "inner_json": "\"é é 🚀\"",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "IsOpIGXMgSDwn5qAIg=="
+      }
+    },
+    {
+      "id": "decimal",
+      "inner_utf8_sha256": "14be4b45f18e0d8c67b4f719b5144eee88497e413709d11d85b096d8e2346310",
+      "inner_json": "0.1",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "MC4x"
+      }
+    },
+    {
+      "id": "lexeme",
+      "inner_utf8_sha256": "59bbf72ab162059f732c213462a666646ff97896f9efd0b2ec53b97dda502472",
+      "inner_json": "-0.00e+2",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "LTAuMDBlKzI="
+      }
+    },
+    {
+      "id": "large-number",
+      "inner_utf8_sha256": "decc538c077786966ac863b5532c4027b8587ff40f6e3103379af62b44eae44d",
+      "inner_json": "123456789012345678901234567890123456789012345678901234567890",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkw"
+      }
+    },
+    {
+      "id": "array",
+      "inner_utf8_sha256": "c742fdf61c92ed1d0081e93b41b69224909adffd4484ae4a023085d827ccb229",
+      "inner_json": "[1e0,null,\"x\"]",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "WzFlMCxudWxsLCJ4Il0="
+      }
+    },
+    {
+      "id": "ordered-scalars",
+      "inner_utf8_sha256": "57c900d6ddd444977ea738f05bf6c030f968423d21f1a1410384841af835b048",
+      "inner_json": "{\"b\":1.00,\"é\":2,\"é\":3,\"a\":-0}",
+      "envelope": {
+        "format": "swift-json-value",
+        "version": 1,
+        "utf8Base64": "eyJiIjoxLjAwLCLDqSI6MiwiZcyBIjozLCJhIjotMH0="
+      }
+    }
+  ]
+}

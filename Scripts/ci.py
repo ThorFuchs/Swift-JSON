@@ -25,6 +25,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
+            ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
+            ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MCPReadiness', 'MCPReadiness', str(output / 'consumer.json')],
             ['swift', 'test', '--package-path', 'Tools/Qualification'],
@@ -69,7 +71,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 2] if 'thread' in command else [9, 11, 12, 38, 78]
+        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 2] if 'thread' in command else [9, 11, 12, 38, 86]
         passed = passed and sorted(counts) == expected
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -81,6 +83,8 @@ def check_result(command, code, log):
         passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONPatch', 'JSONSchema', 'JSONStreaming'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
+    if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
+        passed = passed and all(line in log.splitlines() for line in ['PUBLIC_BEHAVIOR passed fixtures=8', 'STREAM_CANCELLATION passed', 'DISK_PERSISTENCE passed containers=3 rows=8', 'MOBILE_QUALIFICATION passed cases=3'])
     return passed, counts
 
 def main():

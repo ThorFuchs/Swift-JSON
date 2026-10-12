@@ -19,3 +19,11 @@ iPhoneOS and iPhoneSimulator. Required subsequent evidence includes iPhone/iPad
 simulator behavior/cancellation, physical-device smoke and measurements, and real
 disk-backed SwiftData teardown/reopen using the exact payload. Keep every not-run
 row explicit; this document does not certify those later runs.
+
+The public runtime harness now executes exact numeric/scalar conversion, offline
+plans/native regex, integrity-checked packaged schemas, Patch/Merge Patch, payload
+fixtures, stream completion/terminal pulls, awaited sinks and cancellation. Mac
+Swift Testing and isolated iPhone/iPad iOS 27 simulators execute three-process
+disk save/reopen/update checks. The physical iPhone is connected with iOS 27.2
+and developer mode enabled; signing/runtime/performance are separately qualified.
+The physical iPad is unavailable and remains a mandatory R5 release blocker.

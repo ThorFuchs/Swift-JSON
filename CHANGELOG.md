@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0 — unreleased candidate
+
+- Scoped typed reads with cumulative reports, native model projection and guarded
+  cursor invalidation; explicit numeric fidelity and absent/null presence.
+- Native JSON value-coding conveniences and immutable exact Version 1 payload.
+- Metered adaptive exact-key metadata and incremental duplicate recognition;
+  ordered members and exact collision confirmation remain authoritative.
+- macOS/iOS 27 deployment minima and corrected schema bundle layout; public
+  SDK/simulator and disk-backed SwiftData consumers. Full physical-device
+  qualification remains a release gate. No tag/publication follows this change.
+- Correct native ISO-8601 calendar fields and strict Base64 unused padding bits.
+  See API migration guidance; no limits/profile weights or dependencies raised.
+
+
 ## 1.0.0 — 2026-10-11
 
 First stable release.

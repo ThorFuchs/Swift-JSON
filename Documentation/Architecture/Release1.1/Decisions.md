@@ -1,3 +1,22 @@
+# Current 1.1 decisions
+
+The sections below preserve the initial R0/first-filter stage history. Current
+successors are [Index](Index.md), [IndexMeasurements](IndexMeasurements.md),
+[Reading](Reading.md), [Persistence](Persistence.md) and [Mobile](Mobile.md).
+Production selects the controlled adaptive hash index with exact confirmation,
+32-member threshold and first-eight scalar lookup path. Every published object
+owns valid immutable metadata; construction/native keyed storage maintain it.
+The guarded reader fallback, one cumulative meter and fixed Version 1 payload
+are implemented. Resource packaging is corrected under the default build engine.
+
+SIMD and independent-work parallel batches remain deferred conditional experiments.
+The scalar path and checked Sendable immutable sharing remain. No measured mobile
+crossover/energy evidence supports shipping a new accelerator, and the selected
+wide-object change supplies the demonstrated workload benefit. This is a scope
+decision, not completed SIMD/parallel qualification. E11/E12 remain deferred.
+Physical iPad evidence blocks full R5/R8 readiness; simulator availability is not
+physical qualification. The three protected Native check names remain unchanged.
+
 # R0 architecture decisions
 
 ## Reader ownership and declarations

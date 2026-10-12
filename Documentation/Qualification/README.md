@@ -12,6 +12,14 @@ and seven additional nonparameterized cases. The first production lookup increme
 the independent runner adds nine budget/report vectors. There are three separate
 JSON/JSONSchema consumer tests. All discoveries must be nonzero.
 
+The current integrated 1.1 candidate checks exactly 156 root functions:
+JSON 86, JSONStreaming 11, JSONSchema 38, JSONRegexRuntime 12 and JSONPatch 9.
+All 173 parameterized invocations remain. The earlier counts above describe their
+historical stages, not this source. Three additional public/mobile Swift Testing
+functions exercise eight pinned payload fixtures and three independently exited
+SwiftData disk phases. The seven-function R0 subset, all 49 cap probes, rooted
+20-case consumer and independent policies retain their exact checks.
+
 | Independent input | Observed policy |
 | --- | --- |
 | JSONTestSuite, pinned in FixtureRegistry.json | 318 discovered: 101 accepted, 186 rejected, 31 strict/finite-policy rejections |

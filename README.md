@@ -161,6 +161,48 @@ by default; explicit ISO-8601 uses bounded UTC text with fractional seconds and
 four-digit years. Foreign Codable encoders/decoders determine their own numeric and
 key fidelity. Caller callbacks remain caller-owned work.
 
+## Development toward 1.1
+
+The 1.1 feature branches add scoped reads, native value-coding conveniences,
+exact Version 1 persistence and a measured private wide-object index. The released
+1.0 package remains available through the installation declaration below.
+Physical iPad qualification is pending; SDK/simulator evidence is separate from
+release support. See the [release plan](Documentation/Architecture/Release1.1/Plan.md).
+
+```swift
+let scoped = try value.readWithReport { root in
+    let exactCount = try root["count"].requiredInteger(as: UInt64.self)
+    let optionalNote = try root.stringPresence(of: "note")
+    return (exactCount, optionalNote)
+}
+precondition(scoped.result.0 == 9_007_199_254_740_993)
+precondition(scoped.result.1 == .null)
+precondition(scoped.statistics[.workUnits] > 0)
+```
+
+Throwing String/JSONKey/Int brackets preserve literal scalar keys and typed array
+indices. Required access never coerces or defaults. Presence distinguishes absent,
+null and a non-null value; native model projection shares the scope's cumulative
+meter. Double/Decimal getters require an explicit exact or rounded policy.
+Escaped cursors invalidate at scope exit and retain no selected root/source.
+
+```swift
+import Foundation
+
+let payload = try JSONCodablePayload(preserving: value)
+let transported = try PropertyListEncoder().encode(payload)
+let restored = try PropertyListDecoder().decode(JSONCodablePayload.self, from: transported)
+let restoredValue = try restored.value()
+precondition(restoredValue == value)
+```
+
+The explicit wrapper transports a fixed ASCII envelope with strict Base64 of
+complete JSON, preserving exact decimals, scalar sequences, order and admitted
+number lexemes. It retains validated bytes only. Automatic coding uses finite
+balanced limits; explicit limits can tighten them. Foreign coder work remains
+caller work. For SwiftData, use `@Attribute(.codable)` in your application target;
+see the [executed disk example](Tools/MobileQualification/README.md).
+
 ## Compile and validate schemas offline
 
 ```swift
