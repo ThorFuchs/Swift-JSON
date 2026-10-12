@@ -159,7 +159,7 @@ package final class JSONNativeEncoder: Encoder {
                     throw EncodingError.invalidValue(date,.init(codingPath: codingPath,debugDescription: "ISO-8601 year must be 0000...9999"))
                 }
                 try state.meter.retain(128); try state.meter.checkpoint()
-                let text = date.ISO8601Format(.iso8601.timeZone(separator: .colon).time(includingFractionalSeconds: true))
+                let text = date.ISO8601Format(.iso8601.year().month().day().timeZone(separator: .colon).time(includingFractionalSeconds: true))
                 try state.meter.checkpoint(); try set(.string(text)); try state.meter.release(128)
             }
         } else { try value.encode(to: self) }

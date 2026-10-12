@@ -22,6 +22,7 @@ public struct JSONDiagnostic: Sendable, Equatable {
     ///   - error: The error to classify without rendering its arbitrary description.
     public init(_ error: any Error) {
         if let error = error as? JSONFailure { kind = .failure; failure = error }
+        else if let error = error as? JSONAccessFailure { kind = .failure; failure = error.cause }
         else if error is CancellationError { kind = .cancellation; failure = nil }
         else { kind = .callerError; failure = nil }
     }

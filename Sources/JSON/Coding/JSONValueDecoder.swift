@@ -87,7 +87,7 @@ package final class JSONNativeDecoder: Decoder {
                 guard length <= 128 else { throw DecodingError.dataCorrupted(.init(codingPath: codingPath,debugDescription: "ISO-8601 text exceeds fixed format capacity")) }
             }
             try state.meter.checkpoint()
-            let strategy = Date.ISO8601FormatStyle().timeZone(separator: .colon).time(includingFractionalSeconds: true)
+            let strategy = Date.ISO8601FormatStyle().year().month().day().timeZone(separator: .colon).time(includingFractionalSeconds: true)
             guard let date = try? strategy.parse(string) else { throw DecodingError.dataCorrupted(.init(codingPath: codingPath, debugDescription: "Invalid ISO-8601 date")) }
             try state.meter.checkpoint(); return date as! T
         }

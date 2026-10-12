@@ -83,3 +83,9 @@ belongs exclusively to each invocation.
 - ``JSONResourceMetric``
 - ``JSONOperationStatistics``
 - ``JSONOperationReport``
+
+### Scoped reads
+
+- <doc:ScopedReads>
+- ``JSONReadCursor``
+- ``JSONAccessFailure``

@@ -41,7 +41,7 @@ def verify_index_samples(samples):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--mode', choices=['ownership', 'sdk', 'mobile', 'index'], required=True)
+    parser.add_argument('--mode', choices=['ownership', 'reader', 'sdk', 'mobile', 'index'], required=True)
     parser.add_argument('--output', default='.build/ci/r0/probe-receipt.json')
     args = parser.parse_args()
     output = ROOT / args.output
@@ -94,6 +94,16 @@ def main():
             run('lifetime-feature-boundary', swift + ['-typecheck', str(PROBES / 'LifetimeAnnotated.swift')], 1,
                 "'@_lifetime' attribute is only valid when experimental feature Lifetimes is enabled")
             receipt['positive_commands'] = 3; receipt['negative_compiler_cases'] = 4
+        elif args.mode == 'reader':
+            binary = directory / 'public-reader-consumer'
+            imports = ['-I', str(products)]
+            run('public-consumer-compile', swift + imports + ['-L', str(products), '-lJSON', str(PROBES / 'PublicReaderConsumer.swift'), '-o', str(binary)])
+            result = run('public-consumer-run', [str(binary)])
+            if 'PUBLIC_READER_CONSUMER passed' not in result: raise RuntimeError('Missing public reader outcomes')
+            run('public-sendable-negative', swift + imports + ['-typecheck', str(PROBES / 'PublicTaskEscape.swift')], 1, "capture of 'cursor' with non-Sendable type")
+            run('public-task-transfer-negative', swift + imports + ['-c', str(PROBES / 'PublicTaskTransfer.swift'), '-o', str(directory / 'illegal-public.o')], 1,
+                "passing closure as a 'sending' parameter risks causing data races")
+            receipt['positive_commands'] = 2; receipt['negative_compiler_cases'] = 2
         elif args.mode == 'sdk':
             for sdk, target in [('macosx', 'arm64-apple-macosx27.0'), ('iphoneos', 'arm64-apple-ios27.0'), ('iphonesimulator', 'arm64-apple-ios27.0-simulator')]:
                 path = run(sdk + '-path', ['xcrun', '--sdk', sdk, '--show-sdk-path']).strip()

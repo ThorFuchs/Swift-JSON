@@ -39,6 +39,9 @@ public struct JSONSourceMap: Sendable {
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func span(at path: [JSONLocationComponent], kind: Entry.Kind = .value, limits: JSONLimits = .balanced) throws -> JSONSourceSpan? {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
+        return try span(at: path, kind: kind, meter: &meter)
+    }
+    package func span(at path: [JSONLocationComponent], kind: Entry.Kind = .value, meter: inout JSONWorkMeter) throws -> JSONSourceSpan? {
         for entry in entries {
             try meter.work()
             if entry.kind != kind || entry.path.count != path.count { continue }

@@ -23,6 +23,7 @@ def commands(lane, output):
             ['swift', 'build', '-c', 'release'],
             ['swift', 'test'], ['swift', 'test', '-c', 'release'],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
+            ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MCPReadiness', 'MCPReadiness', str(output / 'consumer.json')],
@@ -68,7 +69,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [8, 11, 12, 37, 67]
+        expected = [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1] if 'thread' in command else [9, 11, 12, 37, 77]
         passed = passed and sorted(counts) == expected
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
