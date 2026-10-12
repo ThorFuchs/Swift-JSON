@@ -27,3 +27,10 @@ Swift Testing and isolated iPhone/iPad iOS 27 simulators execute three-process
 disk save/reopen/update checks. The physical iPhone is connected with iOS 27.2
 and developer mode enabled; signing/runtime/performance are separately qualified.
 The physical iPad is unavailable and remains a mandatory R5 release blocker.
+
+A development-signed qualification wrapper now executes the exact public harness
+on physical iPhone14ProMax/iOS27.2. Public smoke, eight fixtures, three separate app
+processes for disk save/reopen/update and nine release measurements are materialized
+as run-ID-bound files retrieved from its own container. The temporary app is
+removed afterward. Core consumers/source remain independent of UIKit/signing;
+no public UI product or server semantics are added. Physical iPad remains blocked.

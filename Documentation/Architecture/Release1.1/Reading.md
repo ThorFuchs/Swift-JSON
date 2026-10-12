@@ -50,3 +50,10 @@ select year/month/day plus fractional UTC time. Baseline epoch-only tests could 
 detect losing the calendar date. Record this as a real affected coding qualification
 failure and refresh its native/safety/consumer/DocC evidence; do not redefine it as
 permitted rounding or silently reduce the assertion.
+
+Native coding and read scopes explicitly enable accepted-capacity history because
+projection/payload limits may tighten after prior admission. Fixed-policy operations
+retain terminal health/work accounting but skip history they cannot consume. Work
+counters and live ownership supply their own restriction checks; no meter copy or
+quota reset is introduced. The final integrated performance review records this
+measured correction and retained regressions.
