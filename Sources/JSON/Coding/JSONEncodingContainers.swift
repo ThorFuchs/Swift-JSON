@@ -5,21 +5,9 @@ struct JSONKeyedEncodingContainer<Key: CodingKey>: KeyedEncodingContainerProtoco
     var codingPath: [any CodingKey] { encoder.codingPath }
     private func child(_ key: any CodingKey) throws -> JSONNativeEncoder {
         try encoder.state.check()
-        guard case .keyed(var members) = encoder.box.storage else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        guard case .keyed(let storage) = encoder.box.storage else { throw JSONFailure(.configuration, code: .invalidOperation) }
         let child = try encoder.child(key)
-        var found: Int?
-        for index in members.indices {
-            try encoder.state.meter.work()
-            if try JSONComparison.textEquals(members[index].0.string, key.stringValue, meter: &encoder.state.meter) { found = index; break }
-        }
-        for _ in members { try encoder.state.meter.work() }
-        if let found { members[found] = (try JSONKey(key.stringValue, meter: &encoder.state.meter), child.box) }
-        else {
-            try encoder.state.meter.require(.objectMembers, UInt64(members.count) + 1)
-            try encoder.state.meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot)
-            members.append((try JSONKey(key.stringValue, meter: &encoder.state.meter), child.box))
-        }
-        encoder.box.storage = .keyed(members)
+        try storage.set(JSONKey(key.stringValue, meter: &encoder.state.meter), box: child.box, meter: &encoder.state.meter)
         return child
     }
     mutating func encodeNil(forKey key: Key) throws { try child(key).set(.null) }

@@ -21,7 +21,12 @@ private struct Sample: Encodable {
                 }
                 let digest = SHA256.hash(data: try JSONEncoder().encode(keys)).map { String(format: "%02x", $0) }.joined()
                 // Caller-built fixture admission and member allocation are outside this lookup stage.
+                #if INDEX_METADATA
+                var fixtureMeter = try JSONWorkMeter(limits: .offline, domain: .core)
+                let object = try JSONObject.indexed(admitted: keys.map { JSONMember($0, value: .string($0)) }, meter: &fixtureMeter)
+                #else
                 let object = JSONObject(admitted: keys.map { JSONMember($0, value: .string($0)) })
+                #endif
                 var queries = width == 0 ? [("miss", "absent")] : [("first", keys[0]), ("middle", keys[width/2]), ("last", keys[width-1]), ("miss", shape == "prefix" ? String(repeating: "p", count: 128) + "absent" : "absent")]
                 if width > 8 { queries.append(("first-filtered", keys[8])) }
                 for (name, key) in queries {

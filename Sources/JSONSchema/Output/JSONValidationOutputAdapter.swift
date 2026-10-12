@@ -46,12 +46,12 @@ private enum JSONValidationOutputAdapter {
         try meter.work(); try meter.require(.objectMembers,UInt64(members.count)+1)
         for _ in key.utf8 { try meter.work(); try meter.charge(.diagnosticBytes) }
         try JSONAdmission.text(key,key: true,meter: &meter,owned: true)
-        try meter.retain(JSONLogicalWeights.member+JSONLogicalWeights.indexSlot)
+        try meter.retain(JSONLogicalWeights.member)
         members.append(.init(try JSONKey(key,meter: &meter),value: value))
     }
     static func object(_ members: [JSONMember],depth: UInt64,meter: inout JSONWorkMeter) throws -> JSON {
         try meter.require(.maxDepth,depth); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node)
-        return .object(JSONObject(admitted: members))
+        return .object(try JSONObject.indexed(admitted: members, meter: &meter))
     }
     static func array(_ values: [JSON],meter: inout JSONWorkMeter) throws -> JSON {
         try meter.require(.maxDepth,2); try meter.charge(.nodes); try meter.retain(JSONLogicalWeights.node); return .array(values)

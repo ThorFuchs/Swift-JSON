@@ -45,7 +45,7 @@ public struct JSONMergePatch: Sendable {
             return .init(result: patch, statistics: meter.statistics())
         }
         try meter.retain(JSONLogicalWeights.frame)
-        var stack = [Frame(target: value.objectValue == nil ? .object(JSONObject(admitted: [])) : value, patch: root, returnKey: nil)]
+        var stack = [Frame(target: value.objectValue == nil ? .object(JSONObject(empty: ())) : value, patch: root, returnKey: nil)]
         while !stack.isEmpty {
             // Retire replaced immutable targets and operation-local scratch. The active frames
             // still own their targets; re-admit those snapshots without refunding charged work.
@@ -78,7 +78,7 @@ public struct JSONMergePatch: Sendable {
                 }
             } else if case .object(let nested) = member.value {
                 try meter.require(.maxDepth, UInt64(stack.count) + 1); try meter.retain(JSONLogicalWeights.frame)
-                let target: JSON = existing?.objectValue == nil ? .object(JSONObject(admitted: [])) : existing!
+                let target: JSON = existing?.objectValue == nil ? .object(JSONObject(empty: ())) : existing!
                 stack.append(Frame(target: target, patch: nested, returnKey: member.key))
             } else {
                 try meter.resetValueBounds(); try JSONAdmission.value(member.value, meter: &meter, owned: true)

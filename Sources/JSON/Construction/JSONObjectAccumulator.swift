@@ -4,6 +4,7 @@
 /// Duplicate decoded keys fail; growth and payload work share the builder budget.
 public struct JSONObjectAccumulator: ~Copyable {
     private var members: [JSONMember] = []
+    private var index = JSONExactKeyIndex()
     private var meter: JSONWorkMeter
     /// Creates an exclusive finite builder and admits its outer object frame.
     ///
@@ -27,17 +28,15 @@ public struct JSONObjectAccumulator: ~Copyable {
     public mutating func append(_ key: String, value: JSON) throws {
         try meter.require(.objectMembers, UInt64(members.count) + 1)
         try JSONAdmission.text(key, key: true, meter: &meter, owned: true)
-        for member in members {
-            if try JSONComparison.textEquals(member.key.string, key, meter: &meter) {
-                throw JSONFailure(.syntax, code: .duplicateKey)
-            }
-        }
+        let admittedKey = try JSONKey(key, meter: &meter)
+        guard try index.find(admittedKey, meter: &meter) == nil else { throw JSONFailure(.syntax, code: .duplicateKey) }
         try JSONAdmission.value(value, meter: &meter, owned: true, depth: 1)
-        try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot)
-        members.append(JSONMember(try JSONKey(key, meter: &meter), value: value))
+        try meter.retain(JSONLogicalWeights.member)
+        guard try index.insert(admittedKey, position: members.count, meter: &meter) else { throw JSONFailure(.syntax, code: .duplicateKey) }
+        members.append(JSONMember(admittedKey, value: value))
     }
     /// Consumes the builder and transfers its already admitted result.
-    public consuming func finish() -> JSONObject { JSONObject(admitted: members) }
+    public consuming func finish() -> JSONObject { JSONObject(admitted: members, index: index) }
 }
 
 extension JSONObject {

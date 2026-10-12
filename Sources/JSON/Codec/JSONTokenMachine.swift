@@ -11,7 +11,7 @@ package struct JSONMachineEvent: Sendable {
 package struct JSONTokenMachine {
     package enum State: Sendable { case ready, reading, complete, failed, finished }
     private enum Expectation { case objectFirstKey, objectKey, colon, objectValue, objectEnd, arrayFirstValue, arrayValue, arrayEnd }
-    private struct Frame { var expectation: Expectation; var count: UInt64 = 0; var keys: [String] = [] }
+    private struct Frame { var expectation: Expectation; var count: UInt64 = 0; var keys = JSONExactKeyIndex() }
     private var lexer = JSONLexer()
     private let topLevelArrayStreaming: Bool
     package init(topLevelArrayStreaming: Bool = false, offset: UInt64 = 0) {
@@ -76,17 +76,17 @@ package struct JSONTokenMachine {
             }
             frames.removeLast(); try meter.release(JSONLogicalWeights.frame)
             // Key payload remains in a materialized value or in the caller's event; index slots are grammar-owned.
-            for _ in frame.keys { try meter.work(); try meter.release(JSONLogicalWeights.indexSlot) }
+            try meter.release(frame.keys.retainedBytes)
             if frames.isEmpty { rootComplete = true; state = .complete }
             return .init(kind: object ? .endObject : .endArray, start: token.start, end: token.end)
         case .string(let text) where expectingKey:
             let index = frames.count - 1
-            for previous in frames[index].keys {
-                if try JSONComparison.textEquals(previous, text, meter: &meter) { throw failure(token, .duplicateKey) }
+            let key = try JSONKey(text, meter: &meter)
+            guard try frames[index].keys.insert(key, position: Int(frames[index].count), meter: &meter) else {
+                throw failure(token, .duplicateKey)
             }
             frames[index].count = try meter.adding(.objectMembers, frames[index].count, 1)
-            try meter.retain(JSONLogicalWeights.indexSlot)
-            frames[index].keys.append(text); frames[index].expectation = .colon
+            frames[index].expectation = .colon
             return .init(kind: .key(text), start: token.start, end: token.end)
         case .leftObject, .leftArray:
             try beginValue(token, meter: &meter)
@@ -138,7 +138,7 @@ package struct JSONTokenMachine {
 }
 
 package struct JSONValueAssembler {
-    private struct Frame { var object: Bool; var key: String?; var members: [JSONMember] = []; var values: [JSON] = [] }
+    private struct Frame { var object: Bool; var key: JSONKey?; var members: [JSONMember] = []; var values: [JSON] = []; var index = JSONExactKeyIndex() }
     private var stack: [Frame] = []
     package init() {}
     package mutating func consume(_ event: JSONMachineEvent, meter: inout JSONWorkMeter) throws -> JSON? {
@@ -149,10 +149,14 @@ package struct JSONValueAssembler {
             let object: Bool
             if case .startObject = event.kind { object = true } else { object = false }
             stack.append(Frame(object: object)); return nil
-        case .key(let key): stack[stack.count - 1].key = key; return nil
+        case .key(let key):
+            let last = stack.count - 1
+            let key = try JSONKey(key, meter: &meter)
+            guard try stack[last].index.insert(key, position: stack[last].members.count, meter: &meter) else { throw JSONFailure(.syntax, code: .duplicateKey) }
+            stack[last].key = key; return nil
         case .endObject, .endArray:
             let frame = stack.removeLast(); try meter.release(JSONLogicalWeights.frame)
-            let value: JSON = frame.object ? .object(JSONObject(admitted: frame.members)) : .array(frame.values)
+            let value: JSON = frame.object ? .object(JSONObject(admitted: frame.members, index: frame.index)) : .array(frame.values)
             return try add(value, meter: &meter)
         case .scalar(let value):
             try meter.retain(JSONLogicalWeights.node)
@@ -164,8 +168,8 @@ package struct JSONValueAssembler {
         let index = stack.count - 1
         if stack[index].object {
             guard let key = stack[index].key else { throw JSONFailure(.syntax, code: .invalidOperation) }
-            try meter.retain(JSONLogicalWeights.member + JSONLogicalWeights.indexSlot)
-            stack[index].members.append(JSONMember(try JSONKey(key, meter: &meter), value: value)); stack[index].key = nil
+            try meter.retain(JSONLogicalWeights.member)
+            stack[index].members.append(JSONMember(key, value: value)); stack[index].key = nil
         } else { try meter.retain(JSONLogicalWeights.arraySlot); stack[index].values.append(value) }
         return nil
     }
