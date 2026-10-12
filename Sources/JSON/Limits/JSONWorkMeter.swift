@@ -5,6 +5,18 @@ private final class JSONMeterHealth {
     var observed = Array(repeating: UInt64(0), count: JSONResourceMetric.allCases.count)
 }
 package struct JSONWorkMeter: ~Copyable {
+    /// Keeps the original health alive while a public inout callback borrows an
+    /// accumulator. Replacing that accumulator cannot substitute a fresh ledger.
+    package struct Continuation {
+        private let health: JSONMeterHealth
+        fileprivate init(health: JSONMeterHealth) { self.health = health }
+        package func check(_ meter: borrowing JSONWorkMeter) throws {
+            if let failure = health.failure { throw failure }
+            guard health === meter.health else { throw JSONFailure(.configuration, code: .invalidOperation) }
+            try meter.checkpoint()
+        }
+    }
+    package var continuation: Continuation { Continuation(health: health) }
     package private(set) var limits: JSONLimits
     private let health = JSONMeterHealth()
     private let trackAcceptedCapacities: Bool

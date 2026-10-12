@@ -9,6 +9,13 @@ only `$defs` does not automatically select a definition for instance validation.
 Create a root `$ref` to the definition you intend to validate. Raw declarations,
 unknown metadata and exact number constraints remain available for inspection.
 
+``JSONSchemaBuilder`` constructs the same ordinary declarations. Its object helper
+shares a cumulative budget across member construction and document admission,
+including live object state overlapping admission scratch. Catching an owned quota
+failure or cancellation in the callback cannot make finalization succeed. Replacing
+the borrowed accumulator with a new invocation is rejected. Compilation
+remains a separate call; callback execution itself is caller-owned work.
+
 Supply external documents with unambiguous retrieval identities through
 ``JSONSchemaRegistry``. Compilation never fetches a URL. Packaged official
 meta-schemas are pinned and integrity-checked. Required unsupported vocabularies

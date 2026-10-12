@@ -6,6 +6,15 @@ These contracts describe the public behavior and its resource boundaries.
 
 JSONSchemaDocument accepts only JSON.boolean or JSON.object as the schema root. It preserves the complete raw document, optional retrieval URI and source map. A builder produces ordinary JSONSchemaDocument input. It does not bypass validation or discard unknown annotation keywords.
 
+`JSONSchemaBuilder.object(limits:_:)` uses one schema-domain meter from the
+accumulator's outer frame through document admission. Work, numeric work, aggregate
+admission counters and live ownership remain charged across both phases. Admission
+scratch overlaps the constructed object's live logical retention. A resource failure
+or cancellation caught inside the callback remains terminal; finalization cannot
+return a document from that failed invocation. Replacing the borrowed accumulator
+with a different invocation fails with invalidOperation. Caller callback work is outside
+owned quotas. Compilation is a separate public operation.
+
 JSONSchemaRegistry is an immutable bounded snapshot of explicitly supplied resource documents. Updating it produces a new snapshot. There is no automatic URLSession resolver or mutable global registry. A caller fetches resources through its own authorized application I/O before constructing the snapshot. Each compile consumes the selected snapshot within the compiler's own cumulative limits.
 
 Use JSONSchemaCompiler(options:).compile(document, registry:) throws -> CompiledJSONSchema and JSONSchemaValidator(options:).validate(instance, against:) throws -> JSONValidationResult. Compiled plans are checked Sendable and immutable; validators store configuration only. Plan IDs, resource IDs, keyword IDs and reference targets use bounded private indices. Avoid exposing upstream Schema, Context, OrderedDictionary or Regex types in signatures.
