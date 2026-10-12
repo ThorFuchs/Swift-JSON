@@ -7,6 +7,7 @@ private final class JSONMeterHealth {
 package struct JSONWorkMeter: ~Copyable {
     package private(set) var limits: JSONLimits
     private let health = JSONMeterHealth()
+    private let trackAcceptedCapacities: Bool
     package let domain: JSONOperationDomain
     private var counters: [UInt64]
     private var retired: [UInt64]
@@ -18,10 +19,11 @@ package struct JSONWorkMeter: ~Copyable {
     /// Observer execution itself is trusted test code, outside owned work quotas.
     package var checkpointObserver: (@Sendable (UInt64) -> Void)?
     package mutating func schemaEvaluationPhase(_ active: Bool) { compilingEvaluation = active }
-    package init(limits: JSONLimits, domain: JSONOperationDomain) throws {
+    package init(limits: JSONLimits, domain: JSONOperationDomain, trackAcceptedCapacities: Bool = false) throws {
         try Task.checkCancellation()
         try limits.validate()
         self.limits = limits; self.domain = domain
+        self.trackAcceptedCapacities = trackAcceptedCapacities || domain == .coding
         counters = Array(repeating: 0, count: JSONResourceMetric.allCases.count)
         retired = Array(repeating: 0, count: JSONResourceMetric.allCases.count)
     }
@@ -38,7 +40,18 @@ package struct JSONWorkMeter: ~Copyable {
         guard attempted <= limits[metric] else {
             let failure = violation(metric, attempted); health.failure = failure; throw failure
         }
-        health.observed[metric.index] = max(health.observed[metric.index], attempted)
+        // Fixed-policy operations never tighten after admission. Coding and read
+        // scopes retain the capacity history needed by restrict. Cumulative work
+        // already lives in counters; live ownership must use current, not peak.
+        if trackAcceptedCapacities {
+            switch metric {
+            case .workUnits, .numericWorkUnits, .compileWorkUnits, .evaluationWorkUnits,
+                 .patchWorkUnits, .totalWorkUnits, .regexCompileWorkUnits,
+                 .regexSearchWorkUnits, .aggregateRegexWorkUnits, .retainedBytes,
+                 .regexRetainedBytes, .annotationBytes, .compiledPlanBytes: break
+            default: health.observed[metric.index] = max(health.observed[metric.index], attempted)
+            }
+        }
     }
     private func violation(_ metric: JSONResourceMetric, _ attempted: UInt64?, overflow: Bool = false) -> JSONFailure {
         let failure = JSONFailure(.resource, code: overflow ? .counterOverflow : .limitExceeded,
@@ -103,6 +116,7 @@ package struct JSONWorkMeter: ~Copyable {
     /// work must fit the new ceiling; failures stay terminal even if caught.
     package mutating func restrict(to requested: JSONLimits) throws {
         try checkpoint()
+        guard trackAcceptedCapacities else { throw JSONFailure(.configuration, code: .invalidOperation) }
         let restricted = try limits.intersection(requested)
         limits = restricted
         for metric in JSONResourceMetric.allCases where metric != .cancellationQuantum {
