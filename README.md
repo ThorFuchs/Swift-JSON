@@ -166,8 +166,11 @@ key fidelity. Caller callbacks remain caller-owned work.
 The 1.1 feature branches add scoped reads, native value-coding conveniences,
 exact Version 1 persistence and a measured private wide-object index. The released
 1.0 package remains available through the installation declaration below.
-Physical iPad qualification is pending; SDK/simulator evidence is separate from
-release support. See the [release plan](Documentation/Architecture/Release1.1/Plan.md).
+For 1.1, iPadOS acceptance uses the SDK and iPad simulator, including disk persistence;
+physical iPad qualification is deferred and nonblocking. Physical iPhone checks
+remain required. Simulator results make no physical-device performance claim.
+See the [release plan](Documentation/Architecture/Release1.1/Plan.md) and
+[qualification policy](Documentation/Architecture/Release1.1/QualificationPolicy.json).
 
 ```swift
 let scoped = try value.readWithReport { root in

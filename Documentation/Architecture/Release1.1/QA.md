@@ -45,8 +45,10 @@ The public mobile harness additionally checks100 caught malformed Data projectio
 under32 logical bytes and wide indexed payload/Schema/Patch behavior. Both SDKs,
 isolated iPhone/iPad simulators and the physical iPhone execute the updated harness;
 disk save/reopen/update uses three independently exited processes and eight frozen
-fixtures. Physical iPad qualification remains blocked. Simulator execution does
-not establish physical-device performance.
+fixtures. This QA wave originally left physical iPad qualification blocked. The
+subsequent [maintainer policy](QualificationPolicy.json) accepts iPad simulator
+evidence for 1.1.0 and defers physical iPad execution without blocking the release.
+Simulator execution does not establish physical-device performance.
 
 The affected Base64 paths have three serial alternating release-native pairs,
 each with3 warmups,9 samples and100 public invocations/sample, finite balanced caps,
@@ -66,4 +68,6 @@ Actual receipts, failed-source reproduction, raw samples, source bindings, clean
 archive rebuilding and compiled catalogues are materialized in the local Turn003
 return. Hosted Native job artifacts supply remote source/command receipts. This
 wave does not merge the protected PR stack, qualify an MCP server, publish1.1,
-select SIMD/parallel batches, or close the unavailable physical iPad gate.
+select SIMD/parallel batches, or claim physical iPad qualification. The later
+release-scope decision supersedes the physical iPad blocker while preserving these
+historical receipts and outcomes.

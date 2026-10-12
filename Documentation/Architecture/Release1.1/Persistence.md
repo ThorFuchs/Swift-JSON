@@ -35,7 +35,9 @@ same URL, checks scalar bytes/order/lexemes, queries/sorts ordinary fields, upda
 releases again and verifies a third reopen. Optional nil and present JSON null are
 distinct. SwiftData owns its database representation; embedded JSON predicates and
 cloud synchronization are not claimed. Mac, simulator and physical-device outcomes
-are separate receipts, and missing device evidence blocks the full R5 gate.
+are separate receipts. Under the [amended 1.1 policy](QualificationPolicy.json),
+macOS, both simulator families and physical iPhone disk phases remain required;
+physical iPad disk execution is deferred and nonblocking.
 
 The first simulator release run failed the additional weak-container assertion:
 SwiftData retained a container beyond lexical scope. The debug Mac run passed it.

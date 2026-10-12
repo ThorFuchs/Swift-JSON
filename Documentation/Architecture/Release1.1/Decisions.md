@@ -14,8 +14,11 @@ The scalar path and checked Sendable immutable sharing remain. No measured mobil
 crossover/energy evidence supports shipping a new accelerator, and the selected
 wide-object change supplies the demonstrated workload benefit. This is a scope
 decision, not completed SIMD/parallel qualification. E11/E12 remain deferred.
-Physical iPad evidence blocks full R5/R8 readiness; simulator availability is not
-physical qualification. The three protected Native check names remain unchanged.
+The maintainer's 2026-10-12 decision accepts SDK and iPad simulator qualification
+for 1.1.0. Physical iPad execution is deferred and does not block R5/R8; simulator
+results remain distinct from physical qualification. Physical iPhone evidence and
+the three protected Native check names remain required. The exact amended scope
+is [QualificationPolicy.json](QualificationPolicy.json).
 
 # R0 architecture decisions
 

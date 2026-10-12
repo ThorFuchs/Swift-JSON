@@ -55,3 +55,8 @@ stream completion/backpressure, reports, cancellation and concurrent plan reuse
 are tested. Native safety includes Address Sanitizer, Thread Sanitizer and strict
 memory safety compilation. [CI](../CI/README.md) describes executed lanes;
 [performance](../Performance/README.md) retains the reviewed streaming disposition.
+
+The [1.1 platform policy](../Architecture/Release1.1/QualificationPolicy.json)
+accepts iPad SDK/simulator behavior and three-process disk persistence for this
+release. Physical iPad qualification is deferred and nonblocking. Physical iPhone
+evidence remains required; no test, corpus policy or resource assertion is removed.

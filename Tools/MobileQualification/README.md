@@ -26,4 +26,7 @@ within five ancestor checks. The simulator controller creates/deletes only its o
 isolated iPhone/iPad devices and records exact outcomes and source hashes.
 
 SDK compilation, simulator runtime and physical-device performance are distinct
-claims. The physical iPad is unavailable; its agreed gate remains blocked.
+claims. The [1.1 qualification policy](../../Documentation/Architecture/Release1.1/QualificationPolicy.json)
+accepts iPad SDK/simulator behavior and disk persistence for this release.
+Physical iPad checks are deferred and nonblocking; physical iPhone checks remain
+required. No physical iPad performance, memory or energy claim follows.

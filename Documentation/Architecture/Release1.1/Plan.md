@@ -47,5 +47,8 @@ python3 Scripts/qualify_release_1_1.py --mode index --output .build/ci/index/rec
 Keep actual logs/receipts under ignored build/evidence directories. Each records
 source inputs, environment, command exits and counts. A failed or absent runtime
 cannot advertise support. Inspect simulator resource signing separately from SDK
-compilation. Physical iPhone/iPad performance and real disk teardown/reopen remain
-mandatory later gates. No merge, tag or publication follows from this plan.
+compilation. Physical iPhone observations and real disk teardown/reopen remain
+required. The original plan also required a physical iPad; the explicit 2026-10-12
+[policy decision](QualificationPolicy.json) now accepts iPad simulator execution
+for 1.1.0 and defers physical iPad qualification without blocking the release train.
+No merge, tag or publication follows from this plan.

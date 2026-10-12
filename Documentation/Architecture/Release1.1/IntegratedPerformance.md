@@ -51,7 +51,9 @@ Physical iPhone14ProMax/iOS27.2 current-candidate public-product/payload work ha
 nine release samples after three warmups: median54.406542 ms and process peak RSS
 24395776 bytes. This is a whole app/SDK peak, including UIKit, without isolated
 allocation or hard-RSS claims, and no matched mobile optimization comparison.
-Physical iPad measurements remain blocked. Logical bytes, allocator observations,
+Physical iPad measurements remain unexecuted and, under the subsequent
+[1.1 qualification policy](QualificationPolicy.json), deferred and nonblocking.
+Logical bytes, allocator observations,
 process RSS and caller computation remain distinct.
 
 The additional QA wave changes only Base64 failure cleanup in the runtime. Affected

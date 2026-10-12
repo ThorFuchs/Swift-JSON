@@ -32,3 +32,10 @@ or releases. Published version tags are protected against updates and deletion.
 
 Creating a version tag and its GitHub release are deliberate maintainer actions after
 this review. A successful CI run alone does not authorize them.
+
+For 1.1.0, apply the maintainer-approved
+[qualification policy](Documentation/Architecture/Release1.1/QualificationPolicy.json):
+both mobile SDKs and iPhone/iPad simulator behavior/disk phases remain required,
+along with physical iPhone checks. Physical iPad qualification is deferred and
+does not block this release. Preserve that limitation in release notes; never
+present simulator data as physical-device performance or memory evidence.

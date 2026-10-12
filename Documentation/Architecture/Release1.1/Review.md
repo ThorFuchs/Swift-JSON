@@ -30,8 +30,9 @@ No blanket unsafe/actor annotations, permissive parser or regex fallback is adde
 Retain 1.0/W00–W12/G01–G12/RC/F/J and R0 history. Native/safety/docs, independent
 policies, all49 caps, public consumers and physical/simulator receipts identify
 actual commands/source and nonzero counts. Source archives exclude private input,
-Git/build trees, signing profiles and device identifiers. Physical iPad remains
-blocked; conditional SIMD/parallel batches stay deferred, with no unqualified
+Git/build trees, signing profiles and device identifiers. At this review's original
+scope, physical iPad remained blocked; conditional SIMD/parallel batches stay
+deferred, with no unqualified
 performance claim. No merge/tag/publication is implied by this review.
 
 ## Additional Turn003 review
@@ -57,5 +58,8 @@ boundary additions ran through the exact 19-case debug/release/ASAN QA lane at
 
 The final source binding, clean reproduction, actual catalogue outputs and hosted
 CI receipts accompany the local Turn003 return. Both SDKs, both simulator families
-and the updated physical iPhone public/disk harness pass. Physical iPad remains
-blocked; protected integration and publication require separate maintainer action.
+and the updated physical iPhone public/disk harness pass. This review originally
+left physical iPad blocked. The subsequent 2026-10-12
+[maintainer scope decision](QualificationPolicy.json) removes that release blocker
+and accepts iPad simulator qualification while retaining untested hardware as a
+limitation. Protected integration and publication require separate maintainer action.

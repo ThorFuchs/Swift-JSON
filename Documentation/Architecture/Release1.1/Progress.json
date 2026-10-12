@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "target_release": "1.1.0",
-  "milestone": "additional acceptance and conformance wave",
+  "milestone": "maintainer-approved iPad simulator qualification policy",
   "tested_core_sha": "5d655f2beab569ac804890493bfafcf6045caabe",
   "preserved_history": [
     "1.0.0",
@@ -30,7 +30,7 @@
     "iPhone_simulator": "executed",
     "iPad_simulator": "executed",
     "physical_iPhone": "executed",
-    "physical_iPad": "blocked; unavailable"
+    "physical_iPad": "deferred; not required for 1.1 release; no physical-device claims"
   },
   "conditional_features": {
     "SIMD": "deferred",
@@ -41,7 +41,6 @@
   "evidence_policy": "Turn003 materializes actual native/safety/QA/docs/SDK/simulator/iPhone receipts, raw measurements and reproducible source archive. Turn002 and original history remain immutable. Source bindings identify unchanged runtime bytes and expanded test cases.",
   "publication_performed": false,
   "remaining_release_blockers": [
-    "Physical iPad smoke, disk persistence and release measurements for the agreed R5 matrix",
     "Complete maintainer review and protected PR integration before final release readiness"
   ],
   "performance_review": "IntegratedPerformance.md; unchanged 10% trigger, retain initial regression measurements and final accepted dispositions",
@@ -52,6 +51,12 @@
       "root_function_total": 156,
       "source_manifest_sha256": "2b69a683002eaa4e112bd005b3eb06e63dc8e06bfcd2b5c8485f076870f26797",
       "return_sha256": "151ce56037763e1ca3d6d0439521020f34ca368ef77b50c31b8ef4e27fb282b6"
+    },
+    {
+      "turn": 3,
+      "source_sha": "c40c5ffba28ce7aeae926efea21e6c3be76c4787",
+      "return_sha256": "a50465cbfd30ae8a699117d589676bd5d9e3964c2584268d251d230911d5a823",
+      "physical_iPad_status": "blocked under the original scope; historical evidence retained"
     }
   ],
   "qa_wave": {
@@ -60,9 +65,16 @@
     "scope": "QA.md",
     "native_full": "passed on tested_core_sha",
     "safety_full": "passed on tested_core_sha; TSAN5",
-    "mobile": "both SDKs/simulators/physical iPhone passed; iPad physical blocked",
+    "mobile": "Mac/both SDKs/both simulators/physical iPhone executed; physical iPad deferred, nonblocking",
     "supplemental_boundary_review": "passed at e6eb46da346bee9892119fdc414abd7783e66b2c: 19 exact cases each in debug/release/ASAN",
     "docs": "passed at e6eb46da346bee9892119fdc414abd7783e66b2c: four catalogues, 582 authored public symbols, 10 README examples; refresh final documentation successor",
     "accounting_fix": "Failed Base64 scratch released; work/terminal health retained; caps/weights/version unchanged"
+  },
+  "qualification_policy": "QualificationPolicy.json",
+  "gate_disposition": {
+    "R5": "Required evidence satisfied by unchanged runtime/consumer source and materialized Turn003 receipts under amended policy",
+    "M03": "Satisfied for required physical iPhone; physical iPad deferred",
+    "M05": "Satisfied on Mac/both simulators/physical iPhone; physical iPad deferred",
+    "R8": "Local qualification can proceed; maintainer review/protected integration and publication authorization remain separate"
   }
 }

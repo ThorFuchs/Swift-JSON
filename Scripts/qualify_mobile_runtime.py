@@ -14,10 +14,16 @@ def main():
     args = parser.parse_args()
     output = ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
+    policy_path = ROOT / 'Documentation/Architecture/Release1.1/QualificationPolicy.json'
+    policy = json.loads(policy_path.read_text())
     source = [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
     receipt = {'schema_version': 1, 'status': 'running', 'environment': collect(),
         'git_head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-        'source_inputs': source, 'commands': [], 'simulators': [], 'physical_devices': 'separate physical receipts required; iPad unavailable, confirmed by maintainer',
+        'source_inputs': source, 'commands': [], 'simulators': [],
+        'qualification_policy': {'path': policy_path.relative_to(ROOT).as_posix(),
+            'sha256': hashlib.sha256(policy_path.read_bytes()).hexdigest(),
+            'decision_id': policy['decision_id']},
+        'physical_devices': policy['physical_devices'],
         'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat()}
     def save(): output.write_text(json.dumps(receipt, indent=2) + '\n')
     def run(name, command):

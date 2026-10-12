@@ -9,7 +9,8 @@
   ordered members and exact collision confirmation remain authoritative.
 - macOS/iOS 27 deployment minima and corrected schema bundle layout; public
   SDK/simulator and disk-backed SwiftData consumers. Full physical-device
-  qualification remains a release gate. No tag/publication follows this change.
+  qualification follows the approved 1.1 matrix: physical iPhone required, iPad
+  SDK/simulator acceptance with physical iPad deferred. No tag/publication follows.
 - Correct native ISO-8601 calendar fields and strict Base64 unused padding bits.
   See API migration guidance; no limits/profile weights or dependencies raised.
 - Release failed Base64 scratch from logical retention while preserving consumed
