@@ -107,6 +107,8 @@ private func expectAccess(_ path: [JSONLocationComponent], _ code: JSONFailure.C
 }
 
 @Test func readAccessSharedProjectionLimitsAndTerminalAccounting() throws {
+    var history = JSONCodingOptions(); history.limits[.stringBytes] = 6
+    #expect(throws: JSONFailure.self) { try JSON.string("history").read { try $0.decode(String.self, coding: history) } }
     var huge = JSONLimits.balanced; huge[.inputBytes] = UInt64(Int.max) - 1
     var lifetime = try JSONWorkMeter(limits: huge, domain: .core)
     for _ in 0..<2 { try lifetime.charge(.inputBytes, huge[.inputBytes]); try lifetime.resetValueBounds() }

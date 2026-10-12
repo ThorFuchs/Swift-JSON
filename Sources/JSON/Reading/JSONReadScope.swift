@@ -11,7 +11,7 @@ package final class JSONReadScope {
     private var pathBytes: UInt64 = 0
     private var retiredPathBytes: UInt64 = 0
     package init(_ document: JSONDocument, limits: JSONLimits) throws {
-        let state = JSONCodingState(options: .init(limits: limits), meter: try JSONWorkMeter(limits: limits, domain: .core))
+        let state = JSONCodingState(options: .init(limits: limits), meter: try JSONWorkMeter(limits: limits, domain: .core, trackAcceptedCapacities: true))
         try JSONAdmission.value(document.root, meter: &state.meter, owned: true)
         if let source = document.source { try JSONAdmission.text(source, meter: &state.meter, owned: true) }
         if let bytes = document.sourceBytes {
