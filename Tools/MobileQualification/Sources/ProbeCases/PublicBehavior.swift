@@ -52,6 +52,40 @@ public func publicBehavior() throws {
         let reopened = try PropertyListDecoder().decode(JSONCodablePayload.self, from: PropertyListEncoder().encode(payload))
         try verify(exactBytes(reopened.value()) == Data(fixture.inner_json.utf8), "opaque payload fidelity")
     }
+    try acceptanceWave()
+}
+private struct RecoveringData: Decodable {
+    let rejected: Int
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        var count = 0
+        for _ in 0..<100 {
+            do { _ = try container.decode(Data.self); throw ProbeFailure.assertion("malformed Base64 accepted") }
+            catch is DecodingError { count += 1 }
+        }
+        rejected = count
+    }
+}
+private func acceptanceWave() throws {
+    var limits = JSONLimits.balanced; limits[.retainedBytes] = 32
+    let recovered = try JSON.string("AAAA!").decodeWithReport(RecoveringData.self, coding: .init(limits: limits))
+    try verify(recovered.result.rejected == 100 && recovered.statistics[.retainedBytes] == 0, "ordinary corruption releases scratch")
+    try verify(recovered.statistics[.workUnits] > 100 && recovered.statistics.peakLogicalRetainedBytes <= 32, "failed work remains cumulative")
+    let members = (0..<33).map { JSONMember("k\($0)", value: .number(JSONNumber(integer: $0))) } + [.init("é", value: 1), .init("e\u{301}", value: 2)]
+    let wide = JSON.object(try JSONObject(members: members))
+    let payload = try JSONCodablePayload(preserving: wide)
+    let reopened = try JSON(encoding: payload).decode(JSONCodablePayload.self).value()
+    try verify(exactBytes(reopened) == exactBytes(wide), "indexed native payload fidelity")
+    let raw = try JSONParser().parse(#"{"patternProperties":{"^k[0-9]+$":{"type":"integer"}},"properties":{"é":{"const":1},"e\u0301":{"const":2}},"unevaluatedProperties":false}"#)
+    let plan = try JSONSchemaCompiler().compile(JSONSchemaDocument(raw))
+    try verify(JSONSchemaValidator().validate(reopened, against: plan).isValid, "indexed evaluated locations")
+    let patch = try JSONPatch(json: JSONParser().parse(#"[{"op":"move","from":"/k32","path":"/new"},{"op":"remove","path":"/k0"}]"#))
+    guard case .document(let changed) = try patch.applying(to: reopened) else { throw ProbeFailure.assertion("indexed Patch root removed") }
+    try changed.read { cursor in
+        try verify(cursor["new"].requiredInteger(as: Int.self) == 32, "indexed Patch selection")
+        try verify(cursor.presence(of: "k0") == .absent, "indexed Patch removal")
+        try verify(cursor["é"].requiredInteger(as: Int.self) == 1 && cursor["e\u{301}"].requiredInteger(as: Int.self) == 2, "indexed scalar keys")
+    }
 }
 private struct Chunks: AsyncSequence, Sendable {
     typealias Element = JSONByteChunk

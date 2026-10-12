@@ -30,28 +30,36 @@ package enum JSONBase64 {
         return (text,count)
     }
     package static func decode(_ string: String,meter: inout JSONWorkMeter) throws -> Data {
-        var iterator = string.utf8.makeIterator(), bytes: [UInt8] = []
-        func malformed() -> JSONFailure { .init(.syntax,code: .invalidSyntax) }
-        func emit(_ byte: UInt8,meter: inout JSONWorkMeter) throws {
-            try meter.work(); try meter.retain(1); bytes.append(byte)
-        }
-        while let a = iterator.next() {
-            try meter.work()
-            guard let b = iterator.next(),let c = iterator.next(),let d = iterator.next(),let x = value(a),let y = value(b) else { throw malformed() }
-            try emit(x << 2 | y >> 4,meter: &meter)
-            if c == 61 {
-                guard d == 61, y & 15 == 0, iterator.next() == nil else { throw malformed() }; break
+        let before = meter.used(.retainedBytes)
+        do {
+            var iterator = string.utf8.makeIterator(), bytes: [UInt8] = []
+            func malformed() -> JSONFailure { .init(.syntax,code: .invalidSyntax) }
+            func emit(_ byte: UInt8,meter: inout JSONWorkMeter) throws {
+                try meter.work(); try meter.retain(1); bytes.append(byte)
             }
-            guard let z = value(c) else { throw malformed() }
-            try emit(y << 4 | z >> 2,meter: &meter)
-            if d == 61 { guard z & 3 == 0, iterator.next() == nil else { throw malformed() }; break }
-            guard let w = value(d) else { throw malformed() }
-            try emit(z << 6 | w,meter: &meter)
+            while let a = iterator.next() {
+                try meter.work()
+                guard let b = iterator.next(),let c = iterator.next(),let d = iterator.next(),let x = value(a),let y = value(b) else { throw malformed() }
+                try emit(x << 2 | y >> 4,meter: &meter)
+                if c == 61 {
+                    guard d == 61, y & 15 == 0, iterator.next() == nil else { throw malformed() }; break
+                }
+                guard let z = value(c) else { throw malformed() }
+                try emit(y << 4 | z >> 2,meter: &meter)
+                if d == 61 { guard z & 3 == 0, iterator.next() == nil else { throw malformed() }; break }
+                guard let w = value(d) else { throw malformed() }
+                try emit(z << 6 | w,meter: &meter)
+            }
+            for _ in bytes { try meter.work() }
+            try meter.retain(UInt64(bytes.count)); try meter.checkpoint()
+            let result = Data(bytes)
+            try meter.checkpoint(); try meter.release(UInt64(bytes.count))
+            return result
+        } catch {
+            // No result owns failed scratch. Refund live bytes, never consumed
+            // work or terminal health, so ordinary corruption can be handled.
+            try meter.release(meter.used(.retainedBytes) - before)
+            throw error
         }
-        for _ in bytes { try meter.work() }
-        try meter.retain(UInt64(bytes.count)); try meter.checkpoint()
-        let result = Data(bytes)
-        try meter.checkpoint(); try meter.release(UInt64(bytes.count))
-        return result
     }
 }
