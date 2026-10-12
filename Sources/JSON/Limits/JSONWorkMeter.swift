@@ -41,9 +41,11 @@ package struct JSONWorkMeter: ~Copyable {
         health.observed[metric.index] = max(health.observed[metric.index], attempted)
     }
     private func violation(_ metric: JSONResourceMetric, _ attempted: UInt64?, overflow: Bool = false) -> JSONFailure {
-        JSONFailure(.resource, code: overflow ? .counterOverflow : .limitExceeded,
+        let failure = JSONFailure(.resource, code: overflow ? .counterOverflow : .limitExceeded,
                     resource: .init(domain: domain, metric: metric, limit: limits[metric],
                                     attemptedUsage: attempted, overflow: overflow))
+        if health.failure == nil { health.failure = failure }
+        return failure
     }
     package func adding(_ metric: JSONResourceMetric, _ current: UInt64, _ amount: UInt64) throws -> UInt64 {
         let (next, overflow) = current.addingReportingOverflow(amount)
