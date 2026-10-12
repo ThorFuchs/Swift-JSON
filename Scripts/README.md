@@ -9,6 +9,8 @@ separate from the dependency-free library. Native lanes fail on unsupported host
 | `python3 Scripts/preflight.py` | Actual native OS/compiler/SDK receipt |
 | `python3 Scripts/ci.py --lane native` | Manifests, builds, Swift Testing, consumers and suites |
 | `python3 Scripts/ci.py --lane safety` | Address/Thread Sanitizer and strict memory safety |
+| `python3 Scripts/ci.py --lane linux` | Actual Linux preflight, all four products, exact root/cap/corpus/consumer counts |
+| `python3 Scripts/ci.py --lane linux-safety` | Linux Address/Thread Sanitizer and strict memory safety |
 | `python3 Scripts/ci.py --lane docs` | Four DocC catalogs, authored API/parameter coverage, executed README examples and verified static Pages site |
 | `python3 Scripts/build_documentation_site.py` | Transform already-qualified DocC archives and verify static routes/assets |
 | `python3 Scripts/qualification_watchdog.py --timeout 900 --output PATH -- COMMAND` | Process-group timeout and native receipt |

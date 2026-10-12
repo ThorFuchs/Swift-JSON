@@ -59,6 +59,10 @@
           "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
           "line": 41,
           "code": "try input.meter.require(.inputBytes, UInt64(line.count) + 1); try input.meter.retain(1); line.append(byte)"
+        },
+        {
+          "path": "Sources/JSON/Integrity/JSONSHA256Core.swift",
+          "owner": "SHA-256 production JSONWorkMeter context; bounded input, scratch, padding/schedule/compression and output"
         }
       ],
       "public_probe_outcome": "limitExceeded",
@@ -834,6 +838,10 @@
           "path": "Sources/JSONSchema/Formats/JSONSchemaFormats.swift",
           "line": 22,
           "code": "try meter.release(meter.used(.retainedBytes)-before); return true"
+        },
+        {
+          "path": "Sources/JSON/Integrity/JSONSHA256Core.swift",
+          "owner": "SHA-256 production JSONWorkMeter context; bounded input, scratch, padding/schedule/compression and output"
         }
       ],
       "public_probe_outcome": "limitExceeded",
@@ -864,6 +872,10 @@
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
           "line": 73,
           "code": "counters[JSONResourceMetric.workUnits.index] = total"
+        },
+        {
+          "path": "Sources/JSON/Integrity/JSONSHA256Core.swift",
+          "owner": "SHA-256 production JSONWorkMeter context; bounded input, scratch, padding/schedule/compression and output"
         }
       ],
       "public_probe_outcome": "limitExceeded",
@@ -1254,6 +1266,10 @@
           "path": "Sources/JSON/Limits/JSONLimits.swift",
           "line": 138,
           "code": "Validate quantum in 1...1024 before invocation."
+        },
+        {
+          "path": "Sources/JSON/Integrity/JSONSHA256Core.swift",
+          "owner": "SHA-256 production JSONWorkMeter context; bounded input, scratch, padding/schedule/compression and output"
         }
       ],
       "public_probe_outcome": "invalidLimits",
@@ -1394,6 +1410,10 @@
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
           "line": 61,
           "code": "case .schemaCompilation: domainMetric = .compileWorkUnits"
+        },
+        {
+          "path": "Sources/JSON/Integrity/JSONSHA256Core.swift",
+          "owner": "SHA-256 production JSONWorkMeter context; bounded input, scratch, padding/schedule/compression and output"
         }
       ],
       "public_probe_outcome": "limitExceeded",
@@ -1429,6 +1449,10 @@
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
           "line": 91,
           "code": "counters[JSONResourceMetric.compiledPlanBytes.index] -= bytes"
+        },
+        {
+          "path": "Sources/JSON/Integrity/JSONSHA256Core.swift",
+          "owner": "SHA-256 production JSONWorkMeter context; bounded input, scratch, padding/schedule/compression and output"
         }
       ],
       "public_probe_outcome": "limitExceeded",

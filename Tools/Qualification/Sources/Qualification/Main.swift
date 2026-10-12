@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+#if canImport(Darwin)
 import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif canImport(Musl)
+import Musl
+#endif
 
 @main struct Qualification {
     static func main() async {
@@ -18,7 +24,9 @@ import Darwin
         let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
         var report = QualificationReport(command: CommandLine.arguments.dropFirst().joined(separator: " "))
         do {
+            #if os(macOS)
             guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 else { throw HarnessFailure("macOS 27 native baseline required") }
+            #endif
             let suites = try loadValue(root.appendingPathComponent(registry))["suites"].array()
             guard !suites.isEmpty else { throw HarnessFailure("No registered suites") }
             for suite in suites {

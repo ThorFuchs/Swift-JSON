@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
-import CryptoKit
 import Testing
 @testable import JSON
 
@@ -24,7 +23,8 @@ private struct PayloadPair: Codable { let a: JSONCodablePayload; let b: JSONCoda
     #expect(fixtures.count == 8)
     for fixture in fixtures {
         let bytes = Data(fixture.inner_json.utf8)
-        #expect(SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined() == fixture.inner_utf8_sha256)
+        var meter = try JSONWorkMeter(limits: .balanced, domain: .core)
+        #expect(try JSONSHA256Core.hexadecimal(bytes, accounting: &meter) == fixture.inner_utf8_sha256)
         let root = try JSONParser().parse(bytes)
         let payload = try JSONCodablePayload(preserving: root)
         let encoded = try JSONEncoder().encode(payload)

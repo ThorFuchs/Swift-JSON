@@ -70,6 +70,11 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
+The Linux development branch adds portable schema integrity for all four products
+without runtime dependencies. Its initial qualification scope is Swift 6.4+,
+64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
+for execution gates and limits. Apple platform requirements remain unchanged.
+
 ## Installation
 
 Add the package to your `Package.swift`:

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
-import CryptoKit
 import JSON
 extension JSONSchemaRegistry {
     /// Loads the integrity-checked packaged Draft 2020-12 meta-schema registry.
@@ -49,31 +48,13 @@ extension JSONSchemaRegistry {
                 data.append(chunk)
                 try meter.release(UInt64(amount))
             }
+            try meter.checkpoint(); try meter.retain(1)
             do {
-                try meter.checkpoint(); try meter.retain(1)
                 guard try handle.read(upToCount: 1)?.isEmpty ?? true else { throw JSONSchemaCompilationFailure(.metaSchema) }
             } catch { throw JSONSchemaCompilationFailure(.metaSchema) }
             try meter.release(1)
             guard UInt64(data.count) == size else { throw JSONSchemaCompilationFailure(.metaSchema) }
-            var digest = SHA256(), offset = 0
-            while offset < data.count {
-                let end = min(offset + Int(meter.limits[.cancellationQuantum]),data.count)
-                try meter.retain(UInt64(end-offset))
-                let block = Data(data[offset..<end])
-                for _ in block { try meter.work() }
-                digest.update(data: block); try meter.checkpoint()
-                try meter.release(UInt64(end-offset)); offset = end
-            }
-            var hexadecimal: [UInt8] = []
-            func hex(_ nibble: UInt8) -> UInt8 { nibble < 10 ? nibble+48 : nibble+87 }
-            for byte in digest.finalize() {
-                try meter.work(2); try meter.retain(2)
-                hexadecimal.append(hex(byte >> 4)); hexadecimal.append(hex(byte & 15))
-            }
-            try meter.retain(64); let hash = String(decoding: hexadecimal,as: UTF8.self)
-            for _ in hexadecimal { try meter.work() }
-            try meter.release(128)
-            guard hash == expectedHash else { throw JSONSchemaCompilationFailure(.metaSchema) }
+            try verifyBuiltin(data, size: size, expectedHash: expectedHash, meter: &meter)
             var bytes: [UInt8] = []
             for byte in data { try meter.work(); try meter.retain(1); bytes.append(byte) }
             let raw = try JSONParser().parse(bytes, meter: &meter)
@@ -84,5 +65,14 @@ extension JSONSchemaRegistry {
             try meter.release(size * 2)
         }
         return documents
+    }
+    package static func verifyBuiltin(_ data: Data, size: UInt64, expectedHash: String,
+                                      meter: inout JSONWorkMeter) throws {
+        try meter.work()
+        guard UInt64(data.count) == size else { throw JSONSchemaCompilationFailure(.metaSchema) }
+        let hash = try JSONSHA256Core.hexadecimal(data, accounting: &meter)
+        defer { try? meter.release(64) }
+        try meter.work(64)
+        guard hash.utf8.elementsEqual(expectedHash.utf8) else { throw JSONSchemaCompilationFailure(.metaSchema) }
     }
 }
