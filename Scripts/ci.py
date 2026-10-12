@@ -77,7 +77,7 @@ def check_result(command, code, log):
             passed = passed and len(probes) == 49 and dict(probes) == expected_probes
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
-        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONPatch', 'JSONSchema', 'JSONStreaming'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}]
+        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONPatch', 'JSONSchema', 'JSONStreaming'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
     return passed, counts

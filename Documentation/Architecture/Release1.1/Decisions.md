@@ -79,8 +79,9 @@ fields. In-memory rereading is not evidence; no cloud-sync claim is intended.
 
 ## Mobile platform and CI
 
-Propose `.macOS("27.0")` and `.iOS("27.0")`; iPadOS shares iOS. The root manifest
-remains macOS-only pending the focused platform PR. All four products, private
+The mobile feature manifest declares `.macOS("27.0")` and `.iOS("27.0")`;
+iPadOS shares iOS. See [mobile qualification](Mobile.md) for the packaging fix
+and the distinction between deployment minima and executed support evidence. All four products, private
 regex and schema resources compile for iPhoneOS with the default build engine.
 The simulator default engine fails while signing the schema resource bundle; its
 `Resources` directory layout needs qualification. The documented deprecated native
