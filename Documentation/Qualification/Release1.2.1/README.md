@@ -1,0 +1,20 @@
+# 1.2.1 test quality work
+
+This proposed patch-release work extends tests and qualification on the published
+1.2.0 implementation. It changes no product API or behavior at the planning stage.
+
+- [Audit of existing unit, integration and platform evidence](Audit.md)
+- [Native five-module coverage baseline](CoverageBaseline.json)
+- [Eight-work-package test expansion plan](Plan.md)
+- [Machine-readable acceptance groups](AcceptanceMatrix.json)
+
+Source baseline: `25fb04f747e583209b4c4511abf39e11ef5b4f80` (`1.2.0`).
+Native baseline: 192 root functions, 173 parameterized invocations; 96.06% authored
+executable lines and 91.39% regions. These execution measures do not establish
+assertion completeness or unsupported branch/device coverage.
+
+Recommended first wave: complete coverage export/cardinality checks, explicit
+Codable containers and precise failures, then held source/sink backpressure.
+Subsequent waves expand combined schema/regex decisions, Patch, public end-to-end
+flows and bounded adversarial/mutation evidence. Existing independent suites,
+all 49 caps and platform-specific limitations remain authoritative.

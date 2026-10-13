@@ -1,0 +1,1377 @@
+{
+  "schema_version": 1,
+  "source_version": "1.2.0",
+  "source_commit": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+  "scope": "Native debug root Swift Testing execution, all five binary mappings; tools/consumers measured separately",
+  "run_exit": 0,
+  "root_functions": 192,
+  "parameterized_invocations": 173,
+  "root_test_files": 52,
+  "physical_source_files": 108,
+  "compiler": "Apple Swift 6.4 (swiftlang-6.4.0.34.1)",
+  "language_mode": 6,
+  "os": "macOS 27.0 ARM64",
+  "sdk": "27.2",
+  "llvm": "Apple LLVM 21.0.0",
+  "coverage_command": [
+    "swift",
+    "test",
+    "--enable-code-coverage",
+    "--disable-xctest"
+  ],
+  "export_policy": "llvm-cov export with the merged profile and all five instrumented test executables; exact paths/binary/profile hashes retained in local maintainer evidence",
+  "default_export_incomplete": true,
+  "branch_coverage_available": false,
+  "mcdc_available": false,
+  "module_summaries": [
+    {
+      "module": "JSON",
+      "all_source": {
+        "files": 50,
+        "lines": {
+          "count": 3443,
+          "covered": 3243,
+          "percent": 94.19111240197502
+        },
+        "regions": {
+          "count": 3427,
+          "covered": 3045,
+          "percent": 88.85322439451416
+        },
+        "functions": {
+          "count": 595,
+          "covered": 534,
+          "percent": 89.74789915966386
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "authored": {
+        "files": 50,
+        "lines": {
+          "count": 3443,
+          "covered": 3243,
+          "percent": 94.19111240197502
+        },
+        "regions": {
+          "count": 3427,
+          "covered": 3045,
+          "percent": 88.85322439451416
+        },
+        "functions": {
+          "count": 595,
+          "covered": 534,
+          "percent": 89.74789915966386
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "files": 0,
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    {
+      "module": "JSONSchema",
+      "all_source": {
+        "files": 32,
+        "lines": {
+          "count": 2410,
+          "covered": 2361,
+          "percent": 97.96680497925311
+        },
+        "regions": {
+          "count": 3088,
+          "covered": 2891,
+          "percent": 93.62046632124353
+        },
+        "functions": {
+          "count": 384,
+          "covered": 365,
+          "percent": 95.05208333333333
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "authored": {
+        "files": 32,
+        "lines": {
+          "count": 2410,
+          "covered": 2361,
+          "percent": 97.96680497925311
+        },
+        "regions": {
+          "count": 3088,
+          "covered": 2891,
+          "percent": 93.62046632124353
+        },
+        "functions": {
+          "count": 384,
+          "covered": 365,
+          "percent": 95.05208333333333
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "files": 0,
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    {
+      "module": "JSONRegexRuntime",
+      "all_source": {
+        "files": 6,
+        "lines": {
+          "count": 689,
+          "covered": 678,
+          "percent": 98.40348330914368
+        },
+        "regions": {
+          "count": 739,
+          "covered": 690,
+          "percent": 93.36941813261164
+        },
+        "functions": {
+          "count": 91,
+          "covered": 88,
+          "percent": 96.7032967032967
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "authored": {
+        "files": 5,
+        "lines": {
+          "count": 659,
+          "covered": 648,
+          "percent": 98.33080424886191
+        },
+        "regions": {
+          "count": 695,
+          "covered": 646,
+          "percent": 92.94964028776978
+        },
+        "functions": {
+          "count": 88,
+          "covered": 85,
+          "percent": 96.5909090909091
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "files": 1,
+        "lines": {
+          "count": 30,
+          "covered": 30,
+          "percent": 100.0
+        },
+        "regions": {
+          "count": 44,
+          "covered": 44,
+          "percent": 100.0
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100.0
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    {
+      "module": "JSONStreaming",
+      "all_source": {
+        "files": 10,
+        "lines": {
+          "count": 232,
+          "covered": 225,
+          "percent": 96.98275862068965
+        },
+        "regions": {
+          "count": 269,
+          "covered": 255,
+          "percent": 94.79553903345725
+        },
+        "functions": {
+          "count": 60,
+          "covered": 57,
+          "percent": 95.0
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "authored": {
+        "files": 10,
+        "lines": {
+          "count": 232,
+          "covered": 225,
+          "percent": 96.98275862068965
+        },
+        "regions": {
+          "count": 269,
+          "covered": 255,
+          "percent": 94.79553903345725
+        },
+        "functions": {
+          "count": 60,
+          "covered": 57,
+          "percent": 95.0
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "files": 0,
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    {
+      "module": "JSONPatch",
+      "all_source": {
+        "files": 4,
+        "lines": {
+          "count": 185,
+          "covered": 179,
+          "percent": 96.75675675675676
+        },
+        "regions": {
+          "count": 212,
+          "covered": 192,
+          "percent": 90.56603773584905
+        },
+        "functions": {
+          "count": 16,
+          "covered": 15,
+          "percent": 93.75
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "authored": {
+        "files": 4,
+        "lines": {
+          "count": 185,
+          "covered": 179,
+          "percent": 96.75675675675676
+        },
+        "regions": {
+          "count": 212,
+          "covered": 192,
+          "percent": 90.56603773584905
+        },
+        "functions": {
+          "count": 16,
+          "covered": 15,
+          "percent": 93.75
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "files": 0,
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    }
+  ],
+  "authored": {
+    "files": 101,
+    "lines": {
+      "count": 6929,
+      "covered": 6656,
+      "percent": 96.06003752345215
+    },
+    "regions": {
+      "count": 7691,
+      "covered": 7029,
+      "percent": 91.3925367312443
+    },
+    "functions": {
+      "count": 1143,
+      "covered": 1056,
+      "percent": 92.38845144356955
+    },
+    "branches": {
+      "count": 0,
+      "covered": 0,
+      "percent": null
+    },
+    "mcdc": {
+      "count": 0,
+      "covered": 0,
+      "percent": null
+    }
+  },
+  "generated": {
+    "files": 1,
+    "lines": {
+      "count": 30,
+      "covered": 30,
+      "percent": 100.0
+    },
+    "regions": {
+      "count": 44,
+      "covered": 44,
+      "percent": 100.0
+    },
+    "functions": {
+      "count": 3,
+      "covered": 3,
+      "percent": 100.0
+    },
+    "branches": {
+      "count": 0,
+      "covered": 0,
+      "percent": null
+    },
+    "mcdc": {
+      "count": 0,
+      "covered": 0,
+      "percent": null
+    }
+  },
+  "unmapped_source_classification": [
+    {
+      "path": "Sources/JSON/Pointer/JSONLocationComponent.swift",
+      "classification": "declaration_only_without_mapping",
+      "covered_claim": false
+    },
+    {
+      "path": "Sources/JSONSchema/Formats/JSONIDNAData.swift",
+      "classification": "generated_data_without_mapping",
+      "covered_claim": false
+    },
+    {
+      "path": "Sources/JSONSchema/Output/JSONValidationOutput.swift",
+      "classification": "declaration_only_without_mapping",
+      "covered_claim": false
+    },
+    {
+      "path": "Sources/JSONStreaming/JSONFraming.swift",
+      "classification": "declaration_only_without_mapping",
+      "covered_claim": false
+    },
+    {
+      "path": "Sources/JSONStreaming/JSONTopLevelArrayEvent.swift",
+      "classification": "declaration_only_without_mapping",
+      "covered_claim": false
+    },
+    {
+      "path": "Sources/JSONPatch/JSONPatchResult.swift",
+      "classification": "declaration_only_without_mapping",
+      "covered_claim": false
+    }
+  ],
+  "hotspots": [
+    {
+      "path": "Sources/JSON/Limits/JSONOperationContext.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 1,
+          "covered": 0,
+          "percent": 0
+        },
+        "instantiations": {
+          "count": 1,
+          "covered": 0,
+          "percent": 0
+        },
+        "lines": {
+          "count": 3,
+          "covered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 2,
+          "covered": 0,
+          "notcovered": 2,
+          "percent": 0
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Value/JSONFingerprint.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 2,
+          "covered": 0,
+          "percent": 0
+        },
+        "instantiations": {
+          "count": 2,
+          "covered": 0,
+          "percent": 0
+        },
+        "lines": {
+          "count": 50,
+          "covered": 0,
+          "percent": 0
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 51,
+          "covered": 0,
+          "notcovered": 51,
+          "percent": 0
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Coding/JSONEncodingContainers.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 40,
+          "covered": 13,
+          "percent": 32.5
+        },
+        "instantiations": {
+          "count": 40,
+          "covered": 13,
+          "percent": 32.5
+        },
+        "lines": {
+          "count": 82,
+          "covered": 31,
+          "percent": 37.80487804878049
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 88,
+          "covered": 39,
+          "notcovered": 49,
+          "percent": 44.31818181818182
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Coding/JSONDecodingContainers.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 39,
+          "covered": 23,
+          "percent": 58.97435897435898
+        },
+        "instantiations": {
+          "count": 39,
+          "covered": 23,
+          "percent": 58.97435897435898
+        },
+        "lines": {
+          "count": 82,
+          "covered": 62,
+          "percent": 75.60975609756098
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 92,
+          "covered": 52,
+          "notcovered": 40,
+          "percent": 56.52173913043478
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Construction/JSONConstruction.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 5,
+          "covered": 3,
+          "percent": 60
+        },
+        "instantiations": {
+          "count": 5,
+          "covered": 3,
+          "percent": 60
+        },
+        "lines": {
+          "count": 5,
+          "covered": 3,
+          "percent": 60
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 5,
+          "covered": 3,
+          "notcovered": 2,
+          "percent": 60
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Coding/JSONCodableBridge.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 10,
+          "covered": 10,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 10,
+          "covered": 10,
+          "percent": 100
+        },
+        "lines": {
+          "count": 84,
+          "covered": 56,
+          "percent": 66.66666666666666
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 110,
+          "covered": 69,
+          "notcovered": 41,
+          "percent": 62.727272727272734
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Coding/JSONValueConveniences.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 3,
+          "covered": 2,
+          "percent": 66.66666666666666
+        },
+        "instantiations": {
+          "count": 3,
+          "covered": 2,
+          "percent": 66.66666666666666
+        },
+        "lines": {
+          "count": 9,
+          "covered": 6,
+          "percent": 66.66666666666666
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 6,
+          "covered": 4,
+          "notcovered": 2,
+          "percent": 66.66666666666666
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONStreaming/JSONByteChunk.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 3,
+          "covered": 2,
+          "percent": 66.66666666666666
+        },
+        "instantiations": {
+          "count": 3,
+          "covered": 2,
+          "percent": 66.66666666666666
+        },
+        "lines": {
+          "count": 3,
+          "covered": 2,
+          "percent": 66.66666666666666
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 3,
+          "covered": 2,
+          "notcovered": 1,
+          "percent": 66.66666666666666
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Value/JSON.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "lines": {
+          "count": 48,
+          "covered": 44,
+          "percent": 91.66666666666666
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 46,
+          "covered": 35,
+          "notcovered": 11,
+          "percent": 76.08695652173914
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONSchema/Compilation/JSONSchemaShape.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 6,
+          "covered": 6,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 6,
+          "covered": 6,
+          "percent": 100
+        },
+        "lines": {
+          "count": 73,
+          "covered": 68,
+          "percent": 93.15068493150685
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 94,
+          "covered": 73,
+          "notcovered": 21,
+          "percent": 77.6595744680851
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Diagnostics/JSONPreview.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 7,
+          "covered": 7,
+          "percent": 100
+        },
+        "lines": {
+          "count": 98,
+          "covered": 95,
+          "percent": 96.93877551020408
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 147,
+          "covered": 122,
+          "notcovered": 25,
+          "percent": 82.99319727891157
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Value/JSONKey.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 9,
+          "covered": 8,
+          "percent": 88.88888888888889
+        },
+        "instantiations": {
+          "count": 9,
+          "covered": 8,
+          "percent": 88.88888888888889
+        },
+        "lines": {
+          "count": 29,
+          "covered": 28,
+          "percent": 96.55172413793103
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 24,
+          "covered": 20,
+          "notcovered": 4,
+          "percent": 83.33333333333334
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONSchema/Document/JSONSchemaDocument.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 4,
+          "covered": 3,
+          "percent": 75
+        },
+        "instantiations": {
+          "count": 4,
+          "covered": 3,
+          "percent": 75
+        },
+        "lines": {
+          "count": 15,
+          "covered": 12,
+          "percent": 80
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 12,
+          "covered": 10,
+          "notcovered": 2,
+          "percent": 83.33333333333334
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONSchema/Compilation/JSONSchemaPlan.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 7,
+          "covered": 6,
+          "percent": 85.71428571428571
+        },
+        "instantiations": {
+          "count": 7,
+          "covered": 6,
+          "percent": 85.71428571428571
+        },
+        "lines": {
+          "count": 10,
+          "covered": 9,
+          "percent": 90
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 13,
+          "covered": 11,
+          "notcovered": 2,
+          "percent": 84.61538461538461
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Document/JSONDocument.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 4,
+          "covered": 4,
+          "percent": 100
+        },
+        "lines": {
+          "count": 28,
+          "covered": 26,
+          "percent": 92.85714285714286
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 37,
+          "covered": 32,
+          "notcovered": 5,
+          "percent": 86.48648648648648
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 5,
+          "covered": 4,
+          "percent": 80
+        },
+        "instantiations": {
+          "count": 5,
+          "covered": 4,
+          "percent": 80
+        },
+        "lines": {
+          "count": 67,
+          "covered": 66,
+          "percent": 98.50746268656717
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 68,
+          "covered": 59,
+          "notcovered": 9,
+          "percent": 86.76470588235294
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSON/Reading/JSONReadCursor.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 63,
+          "covered": 58,
+          "percent": 92.06349206349206
+        },
+        "instantiations": {
+          "count": 63,
+          "covered": 58,
+          "percent": 92.06349206349206
+        },
+        "lines": {
+          "count": 273,
+          "covered": 262,
+          "percent": 95.97069597069597
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 170,
+          "covered": 148,
+          "notcovered": 22,
+          "percent": 87.05882352941177
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONPatch/JSONPatch.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 10,
+          "covered": 9,
+          "percent": 90
+        },
+        "instantiations": {
+          "count": 10,
+          "covered": 9,
+          "percent": 90
+        },
+        "lines": {
+          "count": 116,
+          "covered": 111,
+          "percent": 95.6896551724138
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 151,
+          "covered": 132,
+          "notcovered": 19,
+          "percent": 87.41721854304636
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONRegexRuntime/RegexParser.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 51,
+          "covered": 48,
+          "percent": 94.11764705882352
+        },
+        "instantiations": {
+          "count": 51,
+          "covered": 48,
+          "percent": 94.11764705882352
+        },
+        "lines": {
+          "count": 327,
+          "covered": 316,
+          "percent": 96.63608562691131
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 380,
+          "covered": 336,
+          "notcovered": 44,
+          "percent": 88.42105263157895
+        }
+      },
+      "generated": false
+    },
+    {
+      "path": "Sources/JSONSchema/Formats/JSONIDNAMapping.swift",
+      "summary": {
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "instantiations": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100
+        },
+        "lines": {
+          "count": 48,
+          "covered": 48,
+          "percent": 100
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "notcovered": 0,
+          "percent": 0
+        },
+        "regions": {
+          "count": 62,
+          "covered": 55,
+          "notcovered": 7,
+          "percent": 88.70967741935483
+        }
+      },
+      "generated": false
+    }
+  ],
+  "unused_helpers": [
+    {
+      "path": "Sources/JSON/Limits/JSONOperationContext.swift",
+      "source_and_test_reference_scan": "Declaration only",
+      "policy": "Requires disposition; do not write test-only calls to increase coverage"
+    },
+    {
+      "path": "Sources/JSON/Value/JSONFingerprint.swift",
+      "source_and_test_reference_scan": "Declaration only",
+      "policy": "Requires disposition; do not write test-only calls to increase coverage"
+    }
+  ],
+  "raw_export_sha256": "481ddfe3f7d96bd3dc07738c447f124af0ae3327935672ac71067531ecff6581",
+  "original_default_export_sha256": "a94b4e6f87415c72c740d62bb3f8f22369548faba34d73547ca7f6e6c3ffc5bf",
+  "profile_sha256": "38d1f678d32b0351057b9ceb1e55739f2add92b5d84a23bdc601a459891ebe66",
+  "binary_sha256": [
+    {
+      "module": "JSON",
+      "sha256": "52b7ee27cdfec6a83edb1bacdb7e803c8a58bda34ca82b5d34b541a071e5758f"
+    },
+    {
+      "module": "JSONSchema",
+      "sha256": "5ec38245dfe5d51f66c893b42891823ef2da1db161cd1a5b67fc3ef2a95ef4e0"
+    },
+    {
+      "module": "JSONRegexRuntime",
+      "sha256": "deec10278f74f7268b6af80c26be29e9020a69e7cf9cb22684efbbcd3497c0e4"
+    },
+    {
+      "module": "JSONStreaming",
+      "sha256": "b1487a066d1e6c467a831df9bae2ff65a6b3dc5dfc6b3df3d63db7b006e40b68"
+    },
+    {
+      "module": "JSONPatch",
+      "sha256": "92e3fc6c7e23c76ce5000a32ab019624a0d10dcf0880e34db22537dbcb61142b"
+    }
+  ],
+  "measured_utc": "2026-10-13T23:00:21.272850+00:00",
+  "limitations": [
+    "Executed lines/regions do not establish assertion quality or all decisions",
+    "Compiler-synthesized/data-only mappings are not silently marked covered",
+    "No fresh portable/device/RSS or throughput claim",
+    "Existing unchanged-source qualification remains separate"
+  ]
+}

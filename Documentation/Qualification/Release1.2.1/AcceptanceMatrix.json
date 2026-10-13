@@ -1,0 +1,512 @@
+{
+  "schema_version": 1,
+  "source_version": "1.2.0",
+  "source_commit": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+  "target_version": "1.2.1",
+  "status": "plan_only",
+  "rows": [
+    {
+      "id": "HAR-01",
+      "work_package": "T00",
+      "module": "All",
+      "topic": "Complete coverage export",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "fresh 192/173 root coverage run",
+        "default export omitted schema/regex/streaming mappings"
+      ],
+      "extension": "Export every test binary; fail missing module/executable/profile coverage; report generated and unmapped files explicitly.",
+      "oracle": "Expected source/module membership plus known omitted-object negative probe",
+      "acceptance": [
+        "all five implementation modules present",
+        "all exact discoveries retained",
+        "branch/MC/DC marked unavailable"
+      ]
+    },
+    {
+      "id": "HAR-02",
+      "work_package": "T00",
+      "module": "All",
+      "topic": "Unused code and evidence denominator",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "JSONOperationContext/JSONFingerprint declaration-only reference scan and 0% coverage"
+      ],
+      "extension": "Record retain/use/remove disposition before an adjusted active-code denominator. Preserve unadjusted totals.",
+      "oracle": "Direct source/reference inspection and code review",
+      "acceptance": [
+        "no artificial test-only callers",
+        "cleanup separate from tests-only scope"
+      ]
+    },
+    {
+      "id": "CORE-01",
+      "work_package": "T01",
+      "module": "JSON",
+      "topic": "Numeric and primitive type matrix",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "machineIntegerBoundaries",
+        "boundedBinaryBridgePreservesLongHalfwayAndSubnormalTails",
+        "qaSmallIntegerProjectionUsesMathematicalRangeOracle"
+      ],
+      "extension": "All documented native signed/unsigned widths, boundaries/equivalent decimal spellings, binary extrema/ties and Decimal precision/exponent failures.",
+      "oracle": "Fixed exact mathematical vectors and platform type limits",
+      "acceptance": [
+        "exact versus rounded distinction",
+        "error category/code and path",
+        "native Int/WASI32 scope separate"
+      ]
+    },
+    {
+      "id": "CORE-02",
+      "work_package": "T01",
+      "module": "JSON",
+      "topic": "Exact object/value invariants",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "scalarIdentityAndOrderedObjectSemantics",
+        "qaIndexThresholdEditsAgreeWithOrderedScalarOracle",
+        "controlledIndexCollisionsAndRefusedRehashPreservePriorMetadata"
+      ],
+      "extension": "Seeded equality/hash/order/copy-on-write laws and edit histories around each real index boundary, preserving baseline collisions.",
+      "oracle": "Independent ordered member lists and fixed decimal identity vectors",
+      "acceptance": [
+        "scalar distinction",
+        "equal values hash equally within a process",
+        "order stable on replace/remove/reinsert",
+        "no persistent hash claim"
+      ]
+    },
+    {
+      "id": "COD-01",
+      "work_package": "T01",
+      "module": "JSON",
+      "topic": "Explicit native container paths",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "nativeCodingUsesValuesAndComposedBytes",
+        "superCodingAndNonSendableModelsWorkSynchronously"
+      ],
+      "extension": "Nested keyed/unkeyed containers from keyed and unkeyed parents; super-for-key; single-value primitives; empty/end/nil index state.",
+      "oracle": "Hand-authored model decode/encode probes with literal expected values/paths",
+      "acceptance": [
+        "exact fields and order where contracted",
+        "EOF/wrong-kind coding paths",
+        "successful roundtrip plus independent expected representation"
+      ]
+    },
+    {
+      "id": "COD-02",
+      "work_package": "T01",
+      "module": "JSON",
+      "topic": "Latched nonthrowing Codable operations",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "codingKeyEnumerationRejectsChangedScalarSpelling",
+        "readAccessSharedProjectionLimitsAndTerminalAccounting",
+        "payloadCaughtOperationalFailureStaysTerminalAndCorruptionDoesNot"
+      ],
+      "extension": "contains/allKeys/nestedContainer/superEncoder failure/cancellation and catches; ordinary projection recovery without reset.",
+      "oracle": "Explicit failing-limit/caller models with named phase markers",
+      "acceptance": [
+        "owned failure terminal",
+        "ordinary/caller errors correctly classified",
+        "work not refunded",
+        "no result certified after failed ownership"
+      ]
+    },
+    {
+      "id": "COD-03",
+      "work_package": "T01",
+      "module": "JSON",
+      "topic": "Foreign coder fidelity and fallback",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "qaGeneratedExactRoundTripsAcrossNativeAndForeignPayloads",
+        "stringDictionaryProjectionRejectsScalarCollisions"
+      ],
+      "extension": "Controlled foreign scalar/keyed/unkeyed coders and Int64/UInt64/Decimal fallback, six kinds, unsupported exact values and propagated errors.",
+      "oracle": "Deliberate independent coder probes and fixed representability vectors",
+      "acceptance": [
+        "no hidden Double fallback",
+        "foreign limitations explicit",
+        "Version1 wrapper remains exact",
+        "all six kinds represented"
+      ]
+    },
+    {
+      "id": "COD-04",
+      "work_package": "T01",
+      "module": "JSON",
+      "topic": "Overloads/literals/conveniences",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "nativeCodingUsesValuesAndComposedBytes",
+        "payloadNativeCompositionUsesOneCumulativeMeter"
+      ],
+      "extension": "Literal/convenience value shapes, String/Data/byte parser facade parity and native value-coding convenience reports.",
+      "oracle": "Same small golden documents across independently expected entry points",
+      "acceptance": [
+        "correct admitted result",
+        "configured limits intersection",
+        "no duplicate/reset work"
+      ]
+    },
+    {
+      "id": "DIA-01",
+      "work_package": "T02",
+      "module": "JSON",
+      "topic": "Source and structured error fidelity",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "sourceSpansUseTypedPathsAndInvalidateOnEdit",
+        "qaMappedScalarPathsUseUTF8ByteCoordinates",
+        "diagnosticNeverRetainsCallerErrorDescription"
+      ],
+      "extension": "CR/LF/CRLF, multibyte/escaped keys, nested source spans, full first-failing paths and selected failure enums.",
+      "oracle": "Golden original byte offsets, half-open ranges and typed path fixtures",
+      "acceptance": [
+        "category/code/metric",
+        "overflow attemptedUsage nil",
+        "source replacement invalidates mapping",
+        "caller description not traversed"
+      ]
+    },
+    {
+      "id": "DIA-02",
+      "work_package": "T02",
+      "module": "JSON",
+      "topic": "Preview/redaction/completeness",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "previewRedactsExactKeysBeforeTraversingValues",
+        "previewCapsTotalTraversalAndOutputWithoutAdmittingWholeDocument"
+      ],
+      "extension": "Small/zero byte/depth/node/marker boundaries, nested redactions, scalar-distinct keys and UTF8 truncation.",
+      "oracle": "Golden allowed snippets and independently bounded byte counts",
+      "acceptance": [
+        "redact before reading rejected payload",
+        "completeness explicit",
+        "no replacement-character corruption",
+        "no serializer claim"
+      ]
+    },
+    {
+      "id": "BUD-01",
+      "work_package": "T02",
+      "module": "All",
+      "topic": "49 real operation boundary owners",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "publicOperationsReachEveryActiveResourceCap",
+        "everyResourcePolicyMatchesNativeProfilesAndInclusiveOverflowBoundaries"
+      ],
+      "extension": "Add real-operation N-1/N/N+1 and composed-lifetime rows for all meaningful metrics; retain zero quantum/scratch exceptions.",
+      "oracle": "Same complete operation calibration plus explicit owner/outcome map",
+      "acceptance": [
+        "all49 baseline probes unchanged",
+        "no nested reset",
+        "peak versus live correct",
+        "synthetic overflow does not allocate huge inputs"
+      ]
+    },
+    {
+      "id": "BUD-02",
+      "work_package": "T02",
+      "module": "All",
+      "topic": "Terminal work/cancellation and ownership",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "retiredWorkOverflowIsAtomicAndTerminal",
+        "cancellationReachesOwnedWork",
+        "sha256CompressionCancellationLatchesWithoutRetainingScratch"
+      ],
+      "extension": "Cancellation/failure at compile/evaluate/coding/stream/Patch owned checkpoints and await-return boundaries; exact refund behavior.",
+      "oracle": "Counted progress observers and actor gates with cleanup",
+      "acceptance": [
+        "cancellation after real progress",
+        "no later owned work/handoffs after terminal error",
+        "consumed work retained",
+        "caller work excluded"
+      ]
+    },
+    {
+      "id": "SCH-01",
+      "work_package": "T03",
+      "module": "JSONSchema",
+      "topic": "Applicators/evaluated locations/output",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "evaluatedLocationsFlowThroughSuccessfulReferencesAndComposition",
+        "arrayContainsAndConditionalAnnotationsRespectTheirBranches",
+        "outputCapacityCannotChangeVerdictsOrTruncateSilently"
+      ],
+      "extension": "Combined successful/failed branch and zero/one/multiple-match matrix with unevaluated state, output and diagnostic policies.",
+      "oracle": "Independent expected valid/invalid/operational decision table and official output schema",
+      "acceptance": [
+        "annotation success/rollback rules",
+        "no quota-as-invalidity",
+        "output conversion does not reevaluate",
+        "incompleteness explicit"
+      ]
+    },
+    {
+      "id": "SCH-02",
+      "work_package": "T03",
+      "module": "JSONSchema",
+      "topic": "References and immutable registries",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "productiveRecursionProgressesAndNonproductiveCyclesThrow",
+        "URIResolutionUsesRFC3986AndPercentFragmentsRemainEncoded",
+        "concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState"
+      ],
+      "extension": "Nested lexical bases, anchors/encoded pointers/dynamic shadowing, registry snapshots and shared-plan recovery combinations.",
+      "oracle": "Golden URI/resource/instance/keyword locations and separate invocation histories",
+      "acceptance": [
+        "productive recursion allowed",
+        "cycles operational",
+        "no online resolution",
+        "no global mutable cache/state leak"
+      ]
+    },
+    {
+      "id": "SCH-03",
+      "work_package": "T03",
+      "module": "JSONSchema",
+      "topic": "Raw/compiled inspection and compilation shapes",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "rawDeclarationInspectionNeverInfersOrNarrowsConstraints",
+        "compiledInspectionExposesStaticTargetsAndDynamicAmbiguity",
+        "schemaBuilderSharesConstructionAndDocumentAdmissionWork"
+      ],
+      "extension": "Public declaration getter/report paths, absent/null/unknown metadata, Boolean/raw graph nodes and malformed keyword shapes; selected builder composition additions.",
+      "oracle": "Exact raw fixture declarations and documented required vocabulary/dialect rules",
+      "acceptance": [
+        "no inferred defaults/effective schema",
+        "dynamic target ambiguity preserved",
+        "selected builder phases cumulative",
+        "compile error versus resource/cancel distinguished"
+      ]
+    },
+    {
+      "id": "REG-01",
+      "work_package": "T03",
+      "module": "JSONRegexRuntime",
+      "topic": "VM semantic decisions",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "deterministicIndependentRegexDifferentialCases",
+        "scalarBacktrackingSemantics",
+        "pinnedUnicodePropertiesAndIdentifierNames"
+      ],
+      "extension": "Paired capture rollback/unset, nullable repetition, nested lookaround/direction, anchors/line terminators and grammar/property negative matrices.",
+      "oracle": "Pinned independently generated outcomes, constrained to ECMA262-2020 and Unicode13",
+      "acceptance": [
+        "match and no-match paired",
+        "unsupported/malformed compiled errors explicit",
+        "newer engine grammar not adopted",
+        "immutable program exclusive state"
+      ]
+    },
+    {
+      "id": "REG-02",
+      "work_package": "T03",
+      "module": "JSONRegexRuntime",
+      "topic": "Regex budget/cleanup decisions",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "adversarialRegexPathsExhaustWorkInsteadOfReturningInvalidity",
+        "regexSearchLimitResetsButAggregateLimitNeverResets",
+        "sharedRegexProgramHasExclusiveConcurrentSearchState"
+      ],
+      "extension": "Instruction/state/capture/compile/search/aggregate boundaries across candidates, backreferences, sharing and interruption.",
+      "oracle": "Measured complete invocation and retained-state invariants",
+      "acceptance": [
+        "all owned scans charged",
+        "no branch swallows resource/cancel",
+        "scratch released",
+        "new invocation recovers independently"
+      ]
+    },
+    {
+      "id": "STR-01",
+      "work_package": "T04",
+      "module": "JSONStreaming",
+      "topic": "Held source/sink backpressure",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "earlyStopDoesNotPullAheadAndChunkAdmissionIsImmediate",
+        "awaitedSinkProducesIdenticalBytesAndStatistics",
+        "qaSinkCancellationAfterAcceptanceKeepsPrefixAndStopsHandoffs"
+      ],
+      "extension": "Gate actual suspension; release/fail/cancel with counters before/after resume and bounded test cleanup.",
+      "oracle": "Actor-owned pull/generation/handoff logs and expected accepted prefix",
+      "acceptance": [
+        "one handoff/pull outstanding",
+        "no generation while sink held",
+        "accepted bytes cannot be recalled",
+        "source producer cancellation not invented"
+      ]
+    },
+    {
+      "id": "STR-02",
+      "work_package": "T04",
+      "module": "JSONStreaming",
+      "topic": "Framing, partitions and terminal behavior",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "streamEverySplitAgreesWithNativeParser",
+        "strictNDJSONPreservesPhysicalBoundariesAndLocations",
+        "rootArrayAllElementsCompleteOnceAtEverySplit"
+      ],
+      "extension": "Bounded seeded multi-part splits/empty chunks, late failures, record boundaries, trailing whitespace/EOF and terminal next behavior.",
+      "oracle": "Golden strict documents, explicit framing decisions and original byte coordinates",
+      "acceptance": [
+        "no early completion",
+        "no skipped malformed records",
+        "exactly once completion",
+        "no further pull after terminal error"
+      ]
+    },
+    {
+      "id": "PAT-01",
+      "work_package": "T04",
+      "module": "JSONPatch",
+      "topic": "RFC6902 operation/state matrix",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "allRFC6902OperationsAndArrayMoveOrdering",
+        "rootRemovalRecreationAndNullRemainDistinct",
+        "patchFailuresAreTransactionalAndStrict"
+      ],
+      "extension": "Six operations by object/array/root state, same-path move, descendant/missing parents, fields, scalar/escaped keys and copy independence.",
+      "oracle": "Normative fixture results and bounded independent ordered-value model",
+      "acceptance": [
+        "absence versus null",
+        "remove before target resolution",
+        "input unchanged on failure",
+        "irrelevant fields treated per RFC"
+      ]
+    },
+    {
+      "id": "PAT-02",
+      "work_package": "T04",
+      "module": "JSONPatch",
+      "topic": "RFC7396/staging/budget sequences",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "mergePatchRFC7396ExamplesAndScalarKeys",
+        "mergePatchAdmitsInputsIndividuallyAndChecksIntermediateStates",
+        "discardedStagesReleaseOwnershipWithoutRefundingWork"
+      ],
+      "extension": "Normative appendix fixtures and small generated histories, intermediate peaks, stage failure and cumulative work.",
+      "oracle": "Normative expected outputs and independent member-list histories",
+      "acceptance": [
+        "arrays replace",
+        "null member deletes/root null remains JSON",
+        "intermediate cap applies",
+        "work not refunded by removal"
+      ]
+    },
+    {
+      "id": "E2E-01",
+      "work_package": "T05",
+      "module": "Public products",
+      "topic": "Portable public workflow",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "Examples/Consumer ProductExamples",
+        "20 rooted public consumer vectors",
+        "Tools/WasmAudit 13 public functions"
+      ],
+      "extension": "SwiftTesting bytes/read/schema/Patch/write/reparse/Version1 workflows with golden results and no private imports.",
+      "oracle": "Named independent golden inputs/results plus actual public accounting reports",
+      "acceptance": [
+        "four public products only",
+        "regex through public schema",
+        "exact scalar/number/presence preserved",
+        "positive/invalid/operational separate"
+      ]
+    },
+    {
+      "id": "E2E-02",
+      "work_package": "T05",
+      "module": "Public products",
+      "topic": "Transactional import and error injection",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "provisionalEventsNeverCertifyMalformedTail",
+        "failedStagePermanentlyTerminatesTheCallerAccount",
+        "MobileQualification disk phases"
+      ],
+      "extension": "Late tail/IO/quota/cancellation failures and a caller-staged commit plus cumulative remaining-work composition.",
+      "oracle": "Caller-owned stage logs, accepted prefix and complete-operation budget",
+      "acceptance": [
+        "no test-application commit before completion",
+        "no fabricated failure report",
+        "no retry with full allowance",
+        "actual disk phases remain separate"
+      ]
+    },
+    {
+      "id": "ASS-01",
+      "work_package": "T06",
+      "module": "All",
+      "topic": "Seeded valid/invalid replay and mutants",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "qaGeneratedExactRoundTripsAcrossNativeAndForeignPayloads",
+        "deterministicMalformedReplayPreservesStrictProgressAndRoundTrips"
+      ],
+      "extension": "Bounded additional replay and a 20-40 single-site mutant pilot across high-risk invariants.",
+      "oracle": "Independent seed/fixture outcomes and manually classified non-equivalent mutants",
+      "acceptance": [
+        "minimized replay retained",
+        "survived/equivalent/unbuildable/timeout separate",
+        "no blanket nonzero tests",
+        "no conditional optimization selected"
+      ]
+    },
+    {
+      "id": "QUAL-01",
+      "work_package": "T07",
+      "module": "All",
+      "topic": "Actual platform/safety/consumer closure",
+      "status": "planned_extension",
+      "existing_evidence": [
+        "1.2.0 Native/Linux seven passed jobs",
+        "65 WASI commands with explicit per-host scopes"
+      ],
+      "extension": "Refresh affected actual lanes and exact discoveries; portability and source archive/public consumer checks after changes.",
+      "oracle": "Materialized receipts bound to exact source, environment and input pins",
+      "acceptance": [
+        "all49 caps retained",
+        "policy cases separate",
+        "WASI sanitizers unavailable not passes",
+        "physical iPad deferred",
+        "no 1.3 features in patch"
+      ]
+    }
+  ],
+  "proposed_targets": {
+    "authored_line_percent_per_module": 98,
+    "authored_region_percent_per_module": 95,
+    "policy": "Proposed review targets plus full agreed contract/decision closure; justified uncovered paths require explicit disposition. No unsupported branch percentage."
+  },
+  "new_features": false,
+  "root_dependency_changes": false,
+  "public_product_changes": false,
+  "work_packages": [
+    "T00",
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06",
+    "T07"
+  ]
+}
