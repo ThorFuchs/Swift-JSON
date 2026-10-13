@@ -108,7 +108,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [16] if 'export|Export|apple' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 39 if sys.platform == 'linux' else 41, 51, 107]
+        expected = [16] if 'export|Export|apple' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 2, 4] if 'thread' in command else [11, 12, 14, 39 if sys.platform == 'linux' else 41, 51, 107]
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
