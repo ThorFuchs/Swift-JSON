@@ -43,3 +43,18 @@ streaming regression is documented in ../Performance/README.md.
 
 Run locally with `python3 Scripts/ci.py --lane native`, `--lane safety` or `--lane docs`.
 The first hosted result must be inspected before marking CI qualified.
+
+## Linux development lanes
+
+The additive Linux workflow selects the pinned official Swift 6.4.0 Ubuntu 24.04
+multi-architecture image on ARM64 and x86_64 hosted runners. It runs `linux` and
+`linux-safety` with separate runtime preflight, source receipts and exact test,
+consumer, corpus and 49-cap discovery checks. SwiftData/Apple compiler probes
+remain in Native CI. The existing required `Native / native`, `Native / safety`
+and `Native / docs` names and protection settings are preserved. This workflow
+does not publish artifacts to a release or deploy documentation.
+
+Local ARM64 VM execution qualifies its observed Linux environment; an unexecuted
+x86_64 job is pending evidence. Workflow preparation does not establish hosted
+success. Read the [Linux contract](../Architecture/Linux.md) before extending
+distribution, architecture or libc claims.

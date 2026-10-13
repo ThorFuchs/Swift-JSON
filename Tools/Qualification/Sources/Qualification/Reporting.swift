@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
-import CryptoKit
 import JSON
 import JSONSchema
 
@@ -13,7 +12,17 @@ func errorCode(_ error: any Error) -> String {
     if let error = error as? JSONSchemaEvaluationFailure { return "schemaEvaluation:\(error.category)" }
     return String(describing: type(of: error))
 }
-func digest(_ bytes: Data) -> String { SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined() }
+// Fixture/provenance work is trusted harness work, outside owned library quotas.
+private struct FixtureHashAccounting: JSONHashAccounting {
+    mutating func hashWork(_ amount: UInt64) throws {}
+    mutating func hashRetain(_ bytes: UInt64) throws {}
+    mutating func hashRelease(_ bytes: UInt64) throws {}
+    mutating func hashInput(_ bytes: UInt64) throws {}
+}
+func digest(_ bytes: Data) throws -> String {
+    var accounting = FixtureHashAccounting()
+    return try JSONSHA256Core.hexadecimal(bytes, accounting: &accounting)
+}
 func loadValue(_ url: URL) throws -> JSON { try JSONParser().parse(Data(contentsOf: url)) }
 extension JSON {
     subscript(_ name: String) -> JSON { objectValue?[name] ?? .null }
@@ -62,9 +71,19 @@ struct QualificationReport: Encodable, Sendable {
     let schema_version = 1
     let command: String
     let time_utc = ISO8601DateFormatter().string(from: Date())
-    let environment = ["os": ProcessInfo.processInfo.operatingSystemVersionString, "architecture": "arm64", "swift_language": "6", "required_tools": "6.4", "resource_profile": "balanced", "logical_accounting_version": "1"]
+    let environment = ["os": ProcessInfo.processInfo.operatingSystemVersionString, "architecture": qualificationArchitecture,
+                       "swift_language": "6", "required_tools": "6.4", "resource_profile": "balanced", "logical_accounting_version": "1"]
     var status = "failed", suites: [SuiteReceipt] = [], authored: [AuthoredReceipt] = [], errors: [String] = []
     let runtime_network_access = false
+}
+private var qualificationArchitecture: String {
+    #if arch(arm64)
+    "arm64"
+    #elseif arch(x86_64)
+    "x86_64"
+    #else
+    "unqualified"
+    #endif
 }
 struct VerifiedSuite {
     let root: URL, repository: String, commit: String, expected: Int, manifestHash: String
@@ -74,13 +93,13 @@ struct VerifiedSuite {
         guard expected > 0, try entry["status"].text() == "imported" else { throw HarnessFailure("Suite missing or zero: " + repository) }
         root = try Self.path(try entry["fixture_path"].text(), relativeTo: repositoryRoot)
         let manifestURL = try Self.path(try entry["manifest"].text(), relativeTo: repositoryRoot)
-        let bytes = try Data(contentsOf: manifestURL); manifestHash = digest(bytes)
+        let bytes = try Data(contentsOf: manifestURL); manifestHash = try digest(bytes)
         let manifest = try JSONParser().parse(bytes)
         guard try manifest["commit"].text() == commit, try manifest["repository"].text() == repository, try manifest["expected_cases"].integer() == expected else { throw HarnessFailure("Suite manifest identity mismatch") }
         var paths: [String] = [], licenses = 0
         for record in try manifest["files"].array() {
             let path = try record["path"].text(), data = try Data(contentsOf: Self.path(path, relativeTo: root))
-            guard digest(data) == (try record["sha256"].text()), data.count == (try record["bytes"].integer()) else { throw HarnessFailure("Fixture hash/size mismatch: " + path) }
+            guard try digest(data) == record["sha256"].text(), data.count == (try record["bytes"].integer()) else { throw HarnessFailure("Fixture hash/size mismatch: " + path) }
             if try record["license"].bool() { licenses += 1 }
             paths.append(path)
         }

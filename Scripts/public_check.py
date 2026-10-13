@@ -9,6 +9,10 @@ PRIVATE = ('Documentation/Design/', 'Documentation/Execution/', 'Documentation/R
 
 def main():
     errors = []
+    digest_source = ROOT / 'Sources/JSON/Integrity/JSONSHA256Core.swift'
+    digest_mirror = ROOT / 'Tools/Qualification/Sources/Qualification/JSONSHA256Core.swift'
+    if digest_source.read_bytes() != digest_mirror.read_bytes():
+        errors.append('Qualification digest mirror differs from the private source')
     selected = files()
     names = {p.relative_to(ROOT).as_posix() for p in selected}
     git = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)

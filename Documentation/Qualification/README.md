@@ -5,6 +5,13 @@ Each receipt identifies the source content, command exits and environment. CI
 artifacts contain raw logs, consumer outcomes and per-case corpus results.
 Safety and DocC lanes run separately. Unsupported hosts fail preflight.
 
+The Linux development increment adds four private integrity tests and one schema
+integrity test: exactly 180 root functions (JSON 101, JSONSchema 42, regex 12,
+streaming 14, Patch 11) with the 173 parameterized invocations retained. Targeted
+shared-state safety adds the sixth function for concurrent hashing. Historical
+counts below remain the receipts for their original stages. The
+[Linux contract](../Architecture/Linux.md) defines the separate runtime lanes.
+
 The 1.0 baseline has 122 Swift Testing functions across five bundles and
 173 parameterized invocations. The first 1.1 qualification milestone adds seven
 authored prototype cases in JSONTests (54 to 61), for 129 functions, with the existing 173 parameterized invocations retained
@@ -37,6 +44,13 @@ N/N+1 live retention, terminal caught resource failures/cancellation, caller err
 exact keys/numbers/order, separate compilation and callback replacement of the
 invocation ledger. The four-product external
 consumer also checks the 150-unit composed-budget regression.
+
+Integrating Linux support with that fix retains all nine builder cases and all
+five integrity cases: exactly 189 root functions (JSON 101, JSONSchema 51,
+JSONRegexRuntime 12, JSONStreaming 14, JSONPatch 11), 173 parameterized invocations
+and six shared-state safety functions. Both Linux architectures and the three
+Apple lanes qualify this combined source; historical counts above remain tied to
+their original snapshots.
 
 | Independent input | Observed policy |
 | --- | --- |

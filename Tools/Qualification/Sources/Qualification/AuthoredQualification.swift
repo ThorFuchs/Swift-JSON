@@ -41,7 +41,7 @@ private func isResource(_ operation: () throws -> Void, metric: JSONResourceMetr
 func qualifyAuthored(root: URL) async throws -> [AuthoredReceipt] {
     let url = root.appendingPathComponent("Tests/Fixtures/core-regressions.json"), data = try Data(contentsOf: url)
     let fixture = try JSONParser().parse(data)
-    var semantics = AuthoredReceipt(name: "authored_public_semantics", input_sha256: digest(data))
+    var semantics = AuthoredReceipt(name: "authored_public_semantics", input_sha256: try digest(data))
     for item in try fixture["codec"].array() {
         let text = try item["utf8_text"].text(), id = try item["id"].text(), expected = try item["expected"].text()
         let result = try verdict(Array(text.utf8))

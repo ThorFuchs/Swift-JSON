@@ -66,7 +66,12 @@ func everyByteSplitUsesIdenticalGrammar(text: String) throws {
         let name = file.lastPathComponent
         let duplicate = name == "y_object_duplicated_key.json" || name == "y_object_duplicated_key_and_value.json"
         do {
-            _ = try JSONParser().parse(Data(contentsOf: file))
+            // Keep the empty-file vector; Swift 6.4 Linux Data(contentsOf:)
+            // leaks its read buffer for that input. FileHandle closes explicitly.
+            let handle = try FileHandle(forReadingFrom: file)
+            defer { try? handle.close() }
+            let bytes = try handle.readToEnd() ?? Data()
+            _ = try JSONParser().parse(bytes)
             #expect(!name.hasPrefix("n_") && !duplicate, "Unexpected acceptance: \(name)")
             accepted += 1
         } catch let failure as JSONFailure {

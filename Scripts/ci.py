@@ -3,10 +3,10 @@
 """Execute public native CI lanes with command, source and environment receipts."""
 import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
-from preflight import collect
+from preflight import collect, collect_linux
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes'
+SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -15,6 +15,18 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'linux':
+        # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
+        # probes are separate Apple acceptance; they never become Linux passes.
+        return [c for c in commands('native', ROOT / output)
+                if not any(x in c for x in ['Tools/MobileQualification', '--mode'])] + [
+            ['python3', '-B', 'Scripts/qualify_linux_reproduction.py', '--output', str(output / 'reproduction')]]
+    if lane == 'linux-safety':
+        # Every behavior case uses Swift Testing. Do not start the generated
+        # zero-case XCTest runners, which leak in the pinned Linux runtime.
+        return [['python3', '-B', 'Scripts/linux_runtime_diagnostics.py', '--output', str(output / 'runtime-diagnostics')]] + [
+            c + ['--disable-xctest'] if c[:2] == ['swift', 'test'] else c
+            for c in commands('safety', ROOT / output)]
     if lane == 'qa':
         return [
             ['swift', 'test', '--filter', 'qa'],
@@ -77,8 +89,10 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 3] if 'thread' in command else [11, 12, 14, 50, 97]
+        expected = [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 4] if 'thread' in command else [11, 12, 14, 51, 101]
         passed = passed and sorted(counts) == expected
+        if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
+            passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
             matrix = json.loads((ROOT / 'Documentation/Qualification/LimitsMatrix.json').read_text())
@@ -95,14 +109,15 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
     output.mkdir(parents=True, exist_ok=True)
     inputs = snapshot()
     commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True)
-    receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': collect(), 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
+    environment = collect_linux() if args.lane.startswith('linux') else collect()
+    receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     save()
@@ -135,7 +150,7 @@ def main():
         save()
     else:
         receipt['status'] = 'passed'
-    if receipt['status'] == 'passed' and args.lane == 'native':
+    if receipt['status'] == 'passed' and args.lane in ('native', 'linux'):
         try:
             receipt['materialized_outcomes'] = materialized_outcomes(output)
         except (OSError, KeyError, ValueError, TypeError) as error:

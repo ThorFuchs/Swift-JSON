@@ -1,0 +1,17 @@
+{
+  "algorithm": "FIPS 180-4 SHA-256",
+  "standard": "https://doi.org/10.6028/NIST.FIPS.180-4",
+  "originalCodeLicense": "Apache-2.0",
+  "generator": "Python standard-library hashlib.sha256",
+  "fixture": "SHA256Vectors.json",
+  "fixture_sha256": "1b92c746b1f1af580cce162eefcb7b2d482e384fee8b23906bd07cba7899d20a",
+  "vectors": 24,
+  "formula": "byte[i]=(i*37+11)%256; lengths fixed in fixture",
+  "additionalKnownAnswers": [
+    "empty",
+    "abc",
+    "abcdbc...nopq",
+    "one million ASCII a"
+  ],
+  "upstreamSourceAdapted": false
+}

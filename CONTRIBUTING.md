@@ -19,6 +19,10 @@ python3 Scripts/ci.py --lane safety
 python3 Scripts/ci.py --lane docs
 ```
 
+For Linux changes also run `python3 Scripts/ci.py --lane linux` and
+`--lane linux-safety` on an actual Swift 6.4+ Ubuntu 24.04/glibc runtime.
+Linux results supplement the Apple gates; see the [platform contract](Documentation/Architecture/Linux.md).
+
 Keep APIs neutral and exact, budgets cumulative and mutable state invocation-owned.
 Do not add platforms, permissive parsing, online schema resolution, fallback engines
 or runtime dependencies without an explicit design review. Benchmark and fixture
