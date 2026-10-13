@@ -36,6 +36,22 @@ and does not replace independent qualification or any of the 49 cap probes.
 Thread Sanitizer checks five shared-state cases, including concurrent payload
 opening and separate read scopes over one immutable root. See [QA](../Architecture/Release1.1/QA.md).
 
+The subsequent schema-builder accounting fix adds nine public behavior functions,
+for exactly 184: JSON 97, JSONStreaming 14, JSONSchema 50, JSONRegexRuntime 12 and
+JSONPatch 11. The 173 parameterized invocations and earlier qualification history
+remain unchanged. The new cases cover cumulative core/schema work and admission,
+N/N+1 live retention, terminal caught resource failures/cancellation, caller errors,
+exact keys/numbers/order, separate compilation and callback replacement of the
+invocation ledger. The four-product external
+consumer also checks the 150-unit composed-budget regression.
+
+Integrating Linux support with that fix retains all nine builder cases and all
+five integrity cases: exactly 189 root functions (JSON 101, JSONSchema 51,
+JSONRegexRuntime 12, JSONStreaming 14, JSONPatch 11), 173 parameterized invocations
+and six shared-state safety functions. Both Linux architectures and the three
+Apple lanes qualify this combined source; historical counts above remain tied to
+their original snapshots.
+
 | Independent input | Observed policy |
 | --- | --- |
 | JSONTestSuite, pinned in FixtureRegistry.json | 318 discovered: 101 accepted, 186 rejected, 31 strict/finite-policy rejections |

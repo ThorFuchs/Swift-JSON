@@ -42,7 +42,7 @@
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 113,
+          "line": 167,
           "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
         },
         {
@@ -96,7 +96,7 @@
         },
         {
           "path": "Sources/JSON/Construction/JSONObjectAccumulator.swift",
-          "line": 7,
+          "line": 21,
           "code": "try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)"
         },
         {
@@ -191,7 +191,7 @@
         },
         {
           "path": "Sources/JSON/Construction/JSONObjectAccumulator.swift",
-          "line": 7,
+          "line": 21,
           "code": "try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)"
         },
         {
@@ -206,12 +206,12 @@
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 46,
+          "line": 87,
           "code": "if metric == .nodes && domain == .schemaCompilation {"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 113,
+          "line": 167,
           "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
         },
         {
@@ -381,7 +381,7 @@
         },
         {
           "path": "Sources/JSON/Construction/JSONObjectAccumulator.swift",
-          "line": 11,
+          "line": 33,
           "code": "try meter.require(.objectMembers, UInt64(members.count) + 1)"
         },
         {
@@ -546,7 +546,7 @@
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 113,
+          "line": 167,
           "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
         },
         {
@@ -706,42 +706,42 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 53,
+          "line": 94,
           "code": "if metric == .retainedBytes { peak = max(peak, next) }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 80,
+          "line": 121,
           "code": "let retained = try adding(.retainedBytes,used(.retainedBytes),bytes)"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 84,
+          "line": 125,
           "code": "counters[JSONResourceMetric.retainedBytes.index] = retained; peak = max(peak,retained)"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 88,
+          "line": 142,
           "code": "guard bytes <= used(.retainedBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 93,
+          "line": 147,
           "code": "counters[JSONResourceMetric.retainedBytes.index] -= bytes"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 98,
+          "line": 152,
           "code": "try checkpoint(); try require(.retainedBytes, liveBytes)"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 101,
+          "line": 155,
           "code": "counters[JSONResourceMetric.retainedBytes.index] = liveBytes"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 105,
+          "line": 159,
           "code": "if metric != .retainedBytes && metric != .regexRetainedBytes {"
         },
         {
@@ -860,17 +860,17 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 24,
+          "line": 45,
           "code": "checkpointObserver?(used(.workUnits))"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 58,
+          "line": 99,
           "code": "let total = try adding(.workUnits, used(.workUnits), amount)"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 73,
+          "line": 114,
           "code": "counters[JSONResourceMetric.workUnits.index] = total"
         },
         {
@@ -1059,7 +1059,7 @@
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 113,
+          "line": 167,
           "code": "for metric: JSONResourceMetric in [.nodes, .aggregateTextBytes, .outputBytes, .inputBytes] { try retire(metric) }"
         },
         {
@@ -1254,7 +1254,7 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 70,
+          "line": 111,
           "code": "if amount >= limits[.cancellationQuantum] || sinceCancellationCheck >= limits[.cancellationQuantum] - amount {"
         },
         {
@@ -1353,22 +1353,22 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 47,
+          "line": 88,
           "code": "let schemaNext = try adding(.schemaNodes, used(.schemaNodes), amount)"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 48,
+          "line": 89,
           "code": "let (_, overflow) = retired[JSONResourceMetric.schemaNodes.index].addingReportingOverflow(schemaNext)"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 49,
+          "line": 90,
           "code": "guard !overflow else { throw violation(.schemaNodes, nil, overflow: true) }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 50,
+          "line": 91,
           "code": "counters[JSONResourceMetric.schemaNodes.index] = schemaNext"
         }
       ],
@@ -1408,7 +1408,7 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 61,
+          "line": 102,
           "code": "case .schemaCompilation: domainMetric = .compileWorkUnits"
         },
         {
@@ -1432,22 +1432,22 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 81,
+          "line": 122,
           "code": "let plan = try domain == .schemaCompilation ? adding(.compiledPlanBytes,used(.compiledPlanBytes),bytes) : nil"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 83,
+          "line": 124,
           "code": "if let plan { counters[JSONResourceMetric.compiledPlanBytes.index] = plan }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 90,
+          "line": 144,
           "code": "guard bytes <= used(.compiledPlanBytes) else { throw JSONFailure(.configuration,code: .invalidLimits) }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 91,
+          "line": 145,
           "code": "counters[JSONResourceMetric.compiledPlanBytes.index] -= bytes"
         },
         {
@@ -1471,17 +1471,17 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 62,
+          "line": 103,
           "code": "case .schemaEvaluation: domainMetric = .evaluationWorkUnits"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 69,
+          "line": 110,
           "code": "let stagedEvaluation = try compilingEvaluation && domain == .schemaCompilation ? adding(.evaluationWorkUnits, used(.evaluationWorkUnits), amount) : nil"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 76,
+          "line": 117,
           "code": "if let next = stagedEvaluation { counters[JSONResourceMetric.evaluationWorkUnits.index] = next }"
         }
       ],
@@ -1566,12 +1566,12 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 121,
+          "line": 175,
           "code": "guard bytes <= used(.annotationBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 122,
+          "line": 176,
           "code": "counters[JSONResourceMetric.annotationBytes.index] -= bytes"
         },
         {
@@ -1766,7 +1766,7 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 115,
+          "line": 169,
           "code": "package mutating func beginRegexSearch() throws { try retire(.regexSearchWorkUnits) }"
         },
         {
@@ -1811,17 +1811,17 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 105,
+          "line": 159,
           "code": "if metric != .retainedBytes && metric != .regexRetainedBytes {"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 117,
+          "line": 171,
           "code": "guard bytes <= used(.regexRetainedBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 118,
+          "line": 172,
           "code": "counters[JSONResourceMetric.regexRetainedBytes.index] -= bytes"
         },
         {
@@ -1941,7 +1941,7 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 99,
+          "line": 153,
           "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
         },
         {
@@ -1971,7 +1971,7 @@
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 99,
+          "line": 153,
           "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
         },
         {
@@ -2031,12 +2031,12 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 64,
+          "line": 105,
           "code": "case .streaming: domainMetric = .totalWorkUnits"
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 99,
+          "line": 153,
           "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
         }
       ],
@@ -2191,7 +2191,7 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 63,
+          "line": 104,
           "code": "case .patch: domainMetric = .patchWorkUnits"
         }
       ],
@@ -2216,7 +2216,7 @@
         },
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 99,
+          "line": 153,
           "code": "let lifetime: [JSONResourceMetric] = [.totalInputBytes, .totalRecords, .totalWorkUnits, .totalScannedNodes]"
         }
       ],
@@ -2236,7 +2236,7 @@
       "accounting_sites": [
         {
           "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
-          "line": 97,
+          "line": 151,
           "code": "resetRecord retires per-record state; selected scalar E09 retains no reusable scratch pool (zero bytes)."
         }
       ],

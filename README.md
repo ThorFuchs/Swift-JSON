@@ -52,7 +52,7 @@ familiar route from Swift models to the exact value model.
 | --- | --- |
 | Swift tools and compiler | 6.4 or later |
 | Swift language mode | 6 |
-| Platform and SDK | macOS 27 or later |
+| Platform and SDK | macOS 27, iOS 27 or iPadOS 27 and later |
 | Runtime dependencies | None outside the package and platform SDK |
 | License | Apache-2.0 original code, with retained upstream notices |
 
@@ -80,7 +80,7 @@ for execution gates and limits. Apple platform requirements remain unchanged.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.0.0")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.1.0")
 ```
 
 Then add products to your target dependencies:
@@ -166,12 +166,11 @@ by default; explicit ISO-8601 uses bounded UTC text with fractional seconds and
 four-digit years. Foreign Codable encoders/decoders determine their own numeric and
 key fidelity. Caller callbacks remain caller-owned work.
 
-## Development toward 1.1
+## Scoped reads and exact persistence
 
-The 1.1 feature branches add scoped reads, native value-coding conveniences,
-exact Version 1 persistence and a measured private wide-object index. The released
-1.0 package remains available through the installation declaration below.
-For 1.1, iPadOS acceptance uses the SDK and iPad simulator, including disk persistence;
+Release 1.1.0 includes scoped reads, native value-coding conveniences,
+exact Version 1 persistence and a measured private wide-object index.
+iPadOS acceptance uses the SDK and iPad simulator, including disk persistence;
 physical iPad qualification is deferred and nonblocking. Physical iPhone checks
 remain required. Simulator results make no physical-device performance claim.
 See the [release plan](Documentation/Architecture/Release1.1/Plan.md) and
