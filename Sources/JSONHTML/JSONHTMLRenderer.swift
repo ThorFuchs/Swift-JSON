@@ -75,7 +75,11 @@ public struct JSONHTMLRenderer: Sendable {
             throw error
         }
     }
-    private func renderBody(_ value: JSON, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
+    // Caller has already admitted this root under the same invocation meter.
+    package func renderAdmitted(_ value: JSON, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
+        try renderBody(value, admitted: true, meter: &meter)
+    }
+    private func renderBody(_ value: JSON, admitted: Bool = false, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         try meter.checkpoint()
         try options.limits.validate()
         guard (0...8).contains(options.indentation), (1...8).contains(options.tabWidth),
@@ -88,7 +92,7 @@ public struct JSONHTMLRenderer: Sendable {
             guard byte >= 32 && byte != 127 else { throw JSONHTMLFailure.invalidConfiguration }
         }
         // One admission and one ledger; the cursor never calls a public writer facade.
-        try JSONAdmission.value(value, meter: &meter)
+        if !admitted { try JSONAdmission.value(value, meter: &meter) }
         try JSONHTMLDocumentBuffer.require(.renderedJSONNodes, meter.used(.nodes), options.limits.maxRenderedJSONNodes)
         if options.presentation == .interactive { return try renderInteractive(value, meter: &meter) }
         var output = JSONHTMLDocumentBuffer(limits: options.limits)
