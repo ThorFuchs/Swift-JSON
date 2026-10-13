@@ -226,8 +226,11 @@ public struct JSONLimits: Sendable, Equatable {
     /// - Throws: `JSONFailure` with invalidLimits for unsupported configurations.
     public func validate() throws {
         for metric in JSONResourceMetric.allCases {
-            guard self[metric] < UInt64.max,
-                  !metric.requiresIntCapacity || self[metric] < UInt64(Int.max) else {
+            let maximum = self[metric]
+            // Ordinary capacities take the original single-read fast path.
+            // Only wider UInt64 quotas need classification; UInt64.max still fails.
+            guard maximum < UInt64(Int.max) ||
+                  (!metric.requiresIntCapacity && maximum < UInt64.max) else {
                 throw JSONFailure(.configuration, code: .invalidLimits)
             }
         }
