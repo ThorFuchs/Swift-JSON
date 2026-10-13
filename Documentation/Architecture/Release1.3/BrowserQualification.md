@@ -81,6 +81,18 @@ are checked separately. These print/manual speech observations preceded the
 no-script visibility fix; their normal-script layout/content/labels are unchanged.
 The corrected Safari no-script and enhancement-restoration checks follow it.
 
+## Integrated test discovery
+
+The WASI parent adds three JSON functions: `retiredWorkOverflowIsAtomicAndTerminal`,
+`capacityAndUInt64QuotaConfigurationBoundariesRemainDistinct` and
+`UInt64QuotasCrossIntBoundaryWithoutNarrowingOrReset`. The inherited CI count
+expectation remained 104, so the first combined native lane rejected a successful
+Swift test exit: actual JSON 107 versus expected 104. Its failed receipt remains.
+The feature corrects only this exact expectation: six bundles are 107 JSON,
+51 schema, 14 regex, 12 streaming, 11 patch and 25 HTML, total **220**; the existing
+173 parameter invocations and all 49 cap probes remain required. No tests are
+removed, skipped, weakened or replaced with a nonzero/exit-only discovery check.
+
 ## Evidence scope
 
 Native/safety/docs/browser lanes refresh after the source commit. Any failing lane

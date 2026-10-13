@@ -93,6 +93,16 @@
     "evidence": "BrowserQualification.md; materialized exact-source lane receipts",
     "final_source_lanes": "Refresh required after this source commit; failures remain open.",
     "native_safari": "Served/file exact content, collapse/reveal/search focus, accepted copy, exact JSON/Pointer downloads, complete collapsed print; corrected no-script Pointer controls and restored enabled scripting.",
-    "regression_fix": "Hide Pointer actions until handlers installed; all applicable 37-case matrix entries assert visibility."
+    "regression_fix": "Hide Pointer actions until handlers installed; all applicable 37-case matrix entries assert visibility.",
+    "expected_integrated_root_functions": 220,
+    "exact_bundle_counts": [
+      107,
+      51,
+      14,
+      12,
+      11,
+      25
+    ],
+    "discovery_correction": "Inherited WASI three added JSON tests require 107, not 104; actual successful test exit initially failed stale harness cardinality. Failure preserved; 173 parameter cases and 49 probes unchanged."
   }
 }
