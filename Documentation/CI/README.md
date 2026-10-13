@@ -79,3 +79,15 @@ not share sheets, receiving-editor UI, simulator execution or paginated PDF.
 Root discovery adds 16 Apple functions (14 without CoreTransferable), and the
 shared export case joins the targeted Thread Sanitizer lane. All 49 cap checks
 and the 173 baseline parameterized invocations remain required.
+
+## Structured Swift Testing receipts
+
+Swift 6.4's supported event stream records discovered, started and completed
+function identities and parameterized case completions. CI checks these identities,
+exact bundle cardinality and every baseline parameterized function's count (173
+invocations total), and rejects missing/duplicate/skipped/issue/malformed events.
+Human console summaries are retained as diagnostics; observed hosted runs can
+truncate those summaries even with exit zero. JSONL is split on LF so Unicode line
+separators inside valid message strings are preserved. Eleven harness regression
+probes test these failures; they supplement the Swift Testing behavior suite.
+This change does not reduce discovery, cases, sanitizer coverage or the 49 caps.
