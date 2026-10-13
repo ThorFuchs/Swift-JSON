@@ -73,3 +73,7 @@ Chromium supplies desktop/mobile screenshots. Playwright WebKit screenshot
 synchronization injects a `body {}` stylesheet, which the document correctly blocks;
 WebKit therefore uses DOM/layout/interaction checks without that screenshot hook.
 CSP and console assertions remain enforced, and no unsafe-inline bypass is added.
+
+## Subsequent browser closure
+
+See [BrowserQualification.md](BrowserQualification.md) for the isolated Firefox solution, all 37 executed browser cases, native Safari and maintainer-observed VoiceOver results. The original failed/unexecuted evidence above remains historical. WASI main is integrated on the feature branch only; final-source native/safety/docs/browser receipts refresh for the combined source.

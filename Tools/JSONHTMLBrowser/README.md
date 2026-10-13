@@ -26,3 +26,5 @@ Chromium supplies desktop/mobile screenshots. Playwright WebKit screenshot
 synchronization injects a `body {}` stylesheet, which the document correctly blocks;
 WebKit therefore uses DOM/layout/interaction checks without that screenshot hook.
 CSP and console assertions remain enforced, and no unsafe-inline bypass is added.
+
+On macOS, the harness gives Firefox a disposable `MOZ_APP_DATA` directory to avoid personal app-data access (Mozilla bug 2069536). Sandbox defaults remain intact. Internal automatic-favicon denials and their exact matching CSP events are retained separately in `browserPolicyEvents`; other errors/violations still fail. See [browser qualification closure](../../Documentation/Architecture/Release1.3/BrowserQualification.md).

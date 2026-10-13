@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
+const os = require('node:os');
 const crypto = require('node:crypto');
 const assert = require('node:assert/strict');
 const {pathToFileURL} = require('node:url');
@@ -26,21 +27,29 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(path.join(fixtures, name)));
 });
 const activeBrowsers = [];
+const isolatedDataDirectories = [];
 const save = () => fs.writeFileSync(path.join(out, 'browser.json'), JSON.stringify(receipt, null, 2) + '\n');
 async function main() {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const origin = 'http://127.0.0.1:' + server.address().port;
   for (const engine of ['chromium', 'webkit', 'firefox']) {
     let browser;
-    try { browser = await playwright[engine].launch({headless: true, timeout: 30_000}); }
+    const launch = {headless: true, timeout: 30_000};
+    if (engine === 'firefox' && process.platform === 'darwin') {
+      // Mozilla bug 2069536: bare launches must not access personal app-data directories.
+      const data = fs.mkdtempSync(path.join(os.tmpdir(), 'jsonhtml-firefox-app-data-'));
+      isolatedDataDirectories.push(data);
+      launch.env = {...process.env, MOZ_APP_DATA: data};
+    }
+    try { browser = await playwright[engine].launch(launch); }
     catch (error) {
       receipt.engines.push({name: engine, status: 'blocked', error: error.message, executedCases: 0, unexecutedCases: engine === 'chromium' ? 13 : 12});
       save(); continue;
     }
     activeBrowsers.push(browser);
-    receipt.engines.push({name: engine, status: 'started', version: browser.version(), executable: path.basename(playwright[engine].executablePath())});
+    receipt.engines.push({name: engine, status: 'started', version: browser.version(), executable: path.basename(playwright[engine].executablePath()), isolatedApplicationData: engine === 'firefox' && process.platform === 'darwin'});
     async function run(name, fixture, protocol, javaScriptEnabled, action, extra = {}) {
-      const errors = [], requests = [], violations = [];
+      const errors = [], requests = [], violations = [], browserPolicyEvents = [];
       const context = await browser.newContext({javaScriptEnabled, acceptDownloads: true, viewport: {width: 1440, height: 1000}, ...extra});
       await context.route('**/*', async route => {
         const url = route.request().url();
@@ -49,10 +58,17 @@ async function main() {
       });
       const page = await context.newPage();
       page.on('pageerror', error => errors.push(error.message));
-      page.on('console', message => {if (message.type() === 'error') errors.push(message.text());});
+      page.on('console', message => {
+        if (message.type() !== 'error') return;
+        const text = message.text();
+        if (engine === 'firefox' && text.includes('resource:///modules/FaviconLoader.sys.mjs') &&
+            text.includes(origin + '/favicon.ico') && text.includes('(img-src)') && text.includes("default-src 'none'")) {
+          browserPolicyEvents.push({kind: 'browser_automatic_favicon_denied', message: text});
+        } else errors.push(text);
+      });
       await context.addInitScript(() => {
         window.__violations = [];
-        document.addEventListener('securitypolicyviolation', e => window.__violations.push(e.violatedDirective));
+        document.addEventListener('securitypolicyviolation', e => window.__violations.push({directive: e.violatedDirective, blockedURI: e.blockedURI, sourceFile: e.sourceFile}));
       });
       const entry = {engine, name, fixture, protocol, javaScriptEnabled, status: 'running'};
       receipt.cases.push(entry); save();
@@ -67,13 +83,24 @@ async function main() {
           while (iterator.nextNode()) count++; return count;
         });
         assert.ok(dom <= record.domUpperBound, 'DOM bound undercounts actual nodes');
+        entry.browserPolicyEvents = browserPolicyEvents;
         entry.actualDOMNodes = dom; entry.domUpperBound = record.domUpperBound;
         if (fixture !== 'formatted') {
           assert.equal(await page.locator('#jh-tree .node').count(), record.nodes);
           assert.equal(await page.locator('#jh-toolbar').isVisible(), javaScriptEnabled);
+          assert.ok(await page.locator('.pointer-actions').count() > 0);
+          assert.equal((await page.locator('.pointer-actions:visible').count()) > 0, javaScriptEnabled, 'Pointer actions require installed enhancement handlers');
         }
         await action(page, context, record);
-        if (javaScriptEnabled) violations.push(...await page.evaluate(() => window.__violations));
+        if (javaScriptEnabled) {
+          for (const event of await page.evaluate(() => window.__violations)) {
+            if (engine === 'firefox' && event.directive === 'img-src' &&
+                event.blockedURI === origin + '/favicon.ico' &&
+                browserPolicyEvents.some(e => e.kind === 'browser_automatic_favicon_denied')) {
+              browserPolicyEvents.push({kind: 'browser_automatic_favicon_csp_event', ...event});
+            } else violations.push(event);
+          }
+        }
         const enhancedDOM = await page.evaluate(() => {let count = 0; const it = document.createTreeWalker(document, NodeFilter.SHOW_ALL); while (it.nextNode()) count++; return count;});
         assert.ok(enhancedDOM <= record.domUpperBound, 'Enhanced DOM bound undercounts');
         entry.enhancedDOMNodes = enhancedDOM;
@@ -220,4 +247,4 @@ async function main() {
   receipt.status = 'passed'; receipt.expectedCases = 37; receipt.passedCases = 37; receipt.unexpectedSkips = 0;
   save(); console.log('JSONHTML_BROWSER passed engines=3 cases=37 skips=0');
 }
-main().catch(error => {receipt.status = 'failed'; receipt.error = error.stack; save(); console.error(error); process.exitCode = 1;}).finally(async () => {await Promise.all(activeBrowsers.map(b => b.close().catch(() => {}))); server.close();});
+main().catch(error => {receipt.status = 'failed'; receipt.error = error.stack; save(); console.error(error); process.exitCode = 1;}).finally(async () => {await Promise.all(activeBrowsers.map(b => b.close().catch(() => {}))); for (const data of isolatedDataDirectories) fs.rmSync(data, {recursive: true, force: true}); server.close();});

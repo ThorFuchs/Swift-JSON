@@ -113,9 +113,10 @@
       "status": "partial",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH13",
@@ -123,9 +124,10 @@
       "requirement": "Default expansion, bounded outline, ancestor opening, focus, root/empty/numeric/special-key paths and generated IDs behave coherently.",
       "status": "partial",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH14",
@@ -133,9 +135,10 @@
       "requirement": "Copy/download bytes decode to the owned formatted JSON; RFC Pointer metadata preserves controls, CR/LF, NUL and exact scalar sequences.",
       "status": "partial",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH15",
@@ -143,9 +146,10 @@
       "requirement": "Raw and escaped Pointer copy modes have explicit labels; unavailable clipboard behavior is reported and manual/UTF-8 alternatives work.",
       "status": "partial",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH16",
@@ -153,9 +157,10 @@
       "requirement": "Literal search is bounded/chunked, preserves scalar distinction, opens matched ancestors and reports its rendered-text scope honestly.",
       "status": "partial",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH17",
@@ -164,9 +169,10 @@
       "status": "partial",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH18",
@@ -175,9 +181,10 @@
       "status": "partial",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH19",
@@ -186,23 +193,28 @@
       "status": "partial",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
     },
     {
       "id": "JH20",
       "gate": "H2",
       "requirement": "Annotations attach by exact typed path or identify missing targets at their parent; no empty list asserts schema validity.",
       "status": "not_run",
-      "evidence": []
+      "evidence": [
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+      ]
     },
     {
       "id": "JH21",
       "gate": "H2",
       "requirement": "JSONDocument locations remain coherent, unmapped/replaced roots invent none, and annotation messages/paths are bounded and escaped.",
       "status": "not_run",
-      "evidence": []
+      "evidence": [
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+      ]
     },
     {
       "id": "JH22",

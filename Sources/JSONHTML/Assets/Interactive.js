@@ -113,7 +113,6 @@
     };
     step();
   };
-  document.getElementById('jh-toolbar').hidden = false;
   query.addEventListener('input', search);
   document.addEventListener('click', event => {
     const link = event.target.closest('a[data-target]');
@@ -138,5 +137,7 @@
     else if (action === 'copy-pointer-escaped') void copy(node.dataset.pointerEscaped, 'Pointer JSON string');
     else if (action === 'download-pointer') download(node.dataset.pointer, 'pointer.txt');
   });
+  document.body.classList.add('enhanced');
+  document.getElementById('jh-toolbar').hidden = false;
   say('Interactive controls ready. Search scope: rendered JSON key/value text.');
 })();

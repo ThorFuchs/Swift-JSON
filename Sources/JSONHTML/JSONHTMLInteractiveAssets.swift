@@ -4,7 +4,7 @@ package enum JSONHTMLInteractiveAssets {
     package static let base64Alphabet: [UInt8] = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".utf8)
     package static let css = #"""
 /* SPDX-License-Identifier: Apache-2.0; Swift-JSON interactive asset v1 */
-.interactive .toolbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}.interactive button,.interactive input{font:inherit;padding:.35rem .55rem;border:1px solid currentColor;border-radius:.3rem;background:var(--bg);color:var(--fg)}.interactive :focus-visible{outline:3px solid var(--num);outline-offset:3px}.interactive .layout{display:grid;grid-template-columns:minmax(0,1fr) 18rem;gap:1.5rem}.interactive .layout:not(:has(.outline)){grid-template-columns:minmax(0,1fr)}.interactive .outline{max-height:70vh;overflow:auto;position:sticky;top:1rem;align-self:start}.interactive a{color:var(--num);overflow-wrap:anywhere}.interactive ul{padding-left:1.1rem}.interactive .node{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.7;overflow-wrap:anywhere}.interactive .children{padding-left:1.25rem;border-left:1px solid var(--fg);margin-left:.35rem}.interactive summary{cursor:pointer}.interactive .pointer-label{font-size:.8em;opacity:.85;margin-inline:.5rem}.interactive .pointer-actions{display:inline-flex;gap:.3rem;flex-wrap:wrap}.interactive .pointer-actions button{font-size:.75rem;padding:.1rem .3rem}.interactive .search-hit{outline:2px solid var(--num);outline-offset:2px}.interactive #jh-status{min-height:1.7rem}.interactive .manual-copy textarea{display:block;width:100%;min-height:8rem;font-family:monospace}.interactive .print-json{display:none}.interactive [hidden]{display:none!important}.interactive code{white-space:pre-wrap}.interactive .search-results{max-height:16rem;overflow:auto}.interactive .kind{font-weight:600}@media(max-width:700px){body.interactive{padding:1rem}.interactive .layout{grid-template-columns:1fr}.interactive .outline{position:static;max-height:15rem}.interactive .pointer-actions{display:flex}.interactive .children{padding-left:.75rem}}@media print{.interactive .toolbar,.interactive .layout,.interactive .manual-copy,.interactive #jh-status,.interactive .search-results,.interactive noscript{display:none!important}.interactive .print-json{display:block!important}.interactive .print-json pre{white-space:pre-wrap;overflow:visible}}
+.interactive .toolbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}.interactive button,.interactive input{font:inherit;padding:.35rem .55rem;border:1px solid currentColor;border-radius:.3rem;background:var(--bg);color:var(--fg)}.interactive :focus-visible{outline:3px solid var(--num);outline-offset:3px}.interactive .layout{display:grid;grid-template-columns:minmax(0,1fr) 18rem;gap:1.5rem}.interactive .layout:not(:has(.outline)){grid-template-columns:minmax(0,1fr)}.interactive .outline{max-height:70vh;overflow:auto;position:sticky;top:1rem;align-self:start}.interactive a{color:var(--num);overflow-wrap:anywhere}.interactive ul{padding-left:1.1rem}.interactive .node{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1.7;overflow-wrap:anywhere}.interactive .children{padding-left:1.25rem;border-left:1px solid var(--fg);margin-left:.35rem}.interactive summary{cursor:pointer}.interactive .pointer-label{font-size:.8em;opacity:.85;margin-inline:.5rem}.interactive:not(.enhanced) .pointer-actions{display:none}.interactive .pointer-actions{display:inline-flex;gap:.3rem;flex-wrap:wrap}.interactive .pointer-actions button{font-size:.75rem;padding:.1rem .3rem}.interactive .search-hit{outline:2px solid var(--num);outline-offset:2px}.interactive #jh-status{min-height:1.7rem}.interactive .manual-copy textarea{display:block;width:100%;min-height:8rem;font-family:monospace}.interactive .print-json{display:none}.interactive [hidden]{display:none!important}.interactive code{white-space:pre-wrap}.interactive .search-results{max-height:16rem;overflow:auto}.interactive .kind{font-weight:600}@media(max-width:700px){body.interactive{padding:1rem}.interactive .layout{grid-template-columns:1fr}.interactive .outline{position:static;max-height:15rem}.interactive .pointer-actions{display:flex}.interactive .children{padding-left:.75rem}}@media print{.interactive .toolbar,.interactive .layout,.interactive .manual-copy,.interactive #jh-status,.interactive .search-results,.interactive noscript{display:none!important}.interactive .print-json{display:block!important}.interactive .print-json pre{white-space:pre-wrap;overflow:visible}}
 """#
     package static let script = #"""
 // SPDX-License-Identifier: Apache-2.0
@@ -122,7 +122,6 @@ package enum JSONHTMLInteractiveAssets {
     };
     step();
   };
-  document.getElementById('jh-toolbar').hidden = false;
   query.addEventListener('input', search);
   document.addEventListener('click', event => {
     const link = event.target.closest('a[data-target]');
@@ -147,9 +146,11 @@ package enum JSONHTMLInteractiveAssets {
     else if (action === 'copy-pointer-escaped') void copy(node.dataset.pointerEscaped, 'Pointer JSON string');
     else if (action === 'download-pointer') download(node.dataset.pointer, 'pointer.txt');
   });
+  document.body.classList.add('enhanced');
+  document.getElementById('jh-toolbar').hidden = false;
   say('Interactive controls ready. Search scope: rendered JSON key/value text.');
 })();
 """#
-    package static let styleHash = "ZViqigi/3L6QAgh4IHgRZSMK0MTDXXYvGytdlYTJfoQ="
-    package static let scriptHash = "CefCjyzNV1pVYg7GAqXuWfG1Q+aJ7xTdozRxnHyb+H4="
+    package static let styleHash = "fi44l6KCKEBAprWu6rC4hvdhuRlXkKrLPRfZZl6TXrw="
+    package static let scriptHash = "JPrAwRyMk+9Ugeh/SMuDKPXdJRom5+Hq7qc4Xo4GLPs="
 }

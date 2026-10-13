@@ -6,7 +6,7 @@
   "captured_briefing_base": "e9c6693c7cb29df5125e1699fef70f98229ccfdf",
   "feature_branch": "codex/1.3-jsonhtml",
   "pr": null,
-  "release_train_dependency": "Integrate final qualified 1.2.0 Linux/WASI source before final feature gates",
+  "release_train_dependency": "WASI main 25fb04f integrated; final five-product portable release qualification remains a later gate",
   "expected_final_products": [
     "JSON",
     "JSONSchema",
@@ -24,7 +24,8 @@
     "Five-product public consumer and 628 documented declarations",
     "JSON/JSONHTML iPhoneOS and iPhoneSimulator module/public-interface typechecks only",
     "12 interactive behavior functions; initial native debug/release 217 functions and 173 parameter cases passed",
-    "Pinned browser harness: 37 required cases, exact byte downloads and explicit unexecuted engine counts"
+    "Pinned browser harness: 37 required cases, exact byte downloads and explicit unexecuted engine counts",
+    "All 37 browser cases executed; native Safari exact downloads/focus and four maintainer-observed VoiceOver checks"
   ],
   "implementation_qualified": false,
   "next_increment": "Complete blocked browser/accessibility/final-platform qualification; continue separately scoped annotation and transfer/export work",
@@ -54,7 +55,7 @@
       "entries": 8
     }
   ],
-  "updated_utc": "2026-10-13T11:26:47.617801+00:00",
+  "updated_utc": "2026-10-13T21:53:26.614788+00:00",
   "evidence_locations": [
     "Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-compatible",
     "Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-compatible",
@@ -72,8 +73,26 @@
     "expected_root_functions": 217,
     "expected_parameter_cases": 173,
     "expected_browser_cases": 37,
-    "browser_blocker": "Pinned Firefox startup times out with host sandbox-extension/graphics errors; unexecuted cases are not successes",
+    "browser_blocker": "Resolved using invocation-owned MOZ_APP_DATA; earlier failed evidence retained.",
     "preserved_baseline_metrics": 49,
     "final_source_refresh": "Native/safety/docs/browser lane receipts refresh after this source commit; any failures remain open in the materialized handoff"
+  },
+  "browser_closure": {
+    "upstream_main": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+    "integration_commit": "e6bca54",
+    "automated_matrix": {
+      "passed": 37,
+      "engines": {
+        "chromium": 13,
+        "webkit": 12,
+        "firefox": 12
+      },
+      "skips": 0
+    },
+    "voiceover": "Maintainer manual observations: four checks passed; restored off. Automated caption access unavailable.",
+    "evidence": "BrowserQualification.md; materialized exact-source lane receipts",
+    "final_source_lanes": "Refresh required after this source commit; failures remain open.",
+    "native_safari": "Served/file exact content, collapse/reveal/search focus, accepted copy, exact JSON/Pointer downloads, complete collapsed print; corrected no-script Pointer controls and restored enabled scripting.",
+    "regression_fix": "Hide Pointer actions until handlers installed; all applicable 37-case matrix entries assert visibility."
   }
 }
