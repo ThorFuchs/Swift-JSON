@@ -29,7 +29,8 @@ OUT.mkdir(parents=True, exist_ok=True)
 RECEIPT = {'schema_version': 1, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
            'commands': [], 'input_commits': {'baseline': BASE, 'candidate': CANDIDATE},
            'policy': {'minimum_pre_run_idle_percent': 90, 'consecutive_samples': 3,
-                      'sample_interval_seconds': 5, 'during_run_expected_owned_cpu_cores': 1,
+                      'sample_interval_seconds': 5, 'post_run_settling_samples': 9,
+                      'during_run_expected_owned_cpu_cores': 1,
                       'other_high_cpu_compiler_or_renderer_processes': 0,
                       'measurement_swapins': 0, 'measurement_swapouts': 0,
                       'review_trigger_percent': 10},
@@ -181,7 +182,7 @@ let package = Package(name: "BuilderBenchmark", platforms: [.macOS("27.0")],
         monitor.wait(timeout=5)
         monitor_file.close()
     RECEIPT['during'] = parse_top((OUT / 'host-during.txt').read_text())
-    after = run(['top', '-l', '4', '-s', '5', '-n', '0'], 'host-after.txt', timeout=30)
+    after = run(['top', '-l', '9', '-s', '5', '-n', '0'], 'host-after.txt', timeout=50)
     RECEIPT['after'] = parse_top(after)
     RECEIPT['other_heavy_after'] = other_heavy('processes-after.txt')
     first = RECEIPT['before']['swap'][-1]
@@ -211,6 +212,7 @@ try:
     main()
 except BaseException as error:
     RECEIPT['error'] = repr(error)
+    print('Qualification failed: ' + repr(error), flush=True)
     exit_code = 1
 finally:
     RECEIPT['finished_utc'] = utc()
