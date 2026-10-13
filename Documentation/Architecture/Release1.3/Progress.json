@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "target_release": "1.3.0",
+  "status": "Plan and isolated feature branch prepared; implementation pending",
+  "actual_base": "532f725740a4d61c32bc9870986d050b71f9db78",
+  "captured_briefing_base": "e9c6693c7cb29df5125e1699fef70f98229ccfdf",
+  "feature_branch": "codex/1.3-jsonhtml",
+  "pr": null,
+  "release_train_dependency": "Integrate final qualified 1.2.0 Linux/WASI source before final feature gates",
+  "expected_final_products": [
+    "JSON",
+    "JSONSchema",
+    "JSONStreaming",
+    "JSONPatch",
+    "JSONHTML"
+  ],
+  "current_manifest_products": 4,
+  "qualified_scope": [
+    "Briefing integrity only",
+    "Source/worktree/ruleset orientation",
+    "Three supported Apple SDK declaration probes only"
+  ],
+  "implementation_qualified": false,
+  "next_increment": "Same-package conformance/API probes, additive indentation units and tested formatted renderer/export path; introduce fifth target and exact checks with working source",
+  "open_decisions": [
+    "Measured finite renderer/export/PDF presets",
+    "Executed PDF backend/pagination/defaults",
+    "Qualified RTF strategy",
+    "Exact final declaration shapes"
+  ],
+  "notes": [
+    "No raw private briefing packs or source-clone records enter Git",
+    "No empty product or passing placeholder tests",
+    "Existing core defaults and 49 metric meanings retained",
+    "No messages, merge, release or protection changes"
+  ],
+  "input_packets": [
+    {
+      "file": "JSONHTML-Transfer-Export-Codex-Briefing-v0.1.zip",
+      "sha256": "5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105",
+      "bytes": 75580,
+      "entries": 40
+    },
+    {
+      "file": "JSONHTML-Fifth-Product-Briefing-v0.1.zip",
+      "sha256": "5985664bbc71b188fb0aeecf7b3eb4d872ce41e2d3e16851dfb36eecee91b61f",
+      "bytes": 15997,
+      "entries": 8
+    }
+  ],
+  "updated_utc": "2026-10-13T10:48:57.258071+00:00"
+}
