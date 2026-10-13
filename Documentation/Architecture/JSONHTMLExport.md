@@ -1,0 +1,132 @@
+# JSONHTML native transfer and prepared export
+
+This additive 1.3 development increment provides JSON, UTF-8 text, Markdown and
+static HTML. RTF and PDF remain separate qualification milestones. Requesting
+either fails atomically; they are never advertised. Published 1.2 versions do not
+provide this API.
+
+`JSONExportDocument.prepare(_:options:)` and
+`prepareWithReport(_:options:)` synchronously prepare immutable artifacts without
+executing WebKit. No source root, mutable cache, native view or temporary file is
+retained. `data(for:)` looks up the exact identifier. `selecting(_:)` changes only
+per-item advertisement; hidden artifacts remain retained and available for exact
+lookup. Empty or unavailable selections fail. There is no public artifact injection.
+
+Defaults request all four formats, filename stem `JSON`, title `JSON`, one literal
+tab per level, LF, light HTML and tab display width four. Indentation is 0...8;
+display width is 1...8. `compactJSON` affects native JSON only. Existing writer and
+renderer defaults and typed initializer references are unchanged.
+
+Native JSON uses the strict writer/parser, insertion order and preserved numeric
+lexemes. Constructed numbers retain the exact normalized fallback. Whitespace and
+original string escape spellings are not source-document reconstruction. Decoded
+scalar sequences remain distinct; neither Swift String equality nor floating-point
+round trips establish fidelity. Text is the pretty JSON body with quoted string
+roots. Markdown adds a `json` code fence longer than any backtick run in the body,
+using LF before and after the unchanged body and after the closing fence.
+
+HTML is expanded and script-free, with fixed hash-authorized CSS and escaped data.
+It includes a bounded escaped title and has no disclosure controls, outline,
+annotations, line numbers or hidden values. Default light styling is deterministic.
+System fonts and the renderer's offline CSP remain in effect. Standalone file
+opening and rich-editor paste compatibility are separate qualification claims.
+
+## Apple transfer boundary
+
+Importing JSONHTML on supported Apple SDKs introduces the package's sole
+`JSON: Transferable` conformance. Its declaration needs no `@retroactive` because
+the compiler recognizes the same-package ownership exception. Compilation with
+warnings as errors and an independent consumer qualify this placement.
+
+Direct representations are JSON, static HTML, UTF-8 plain text, Markdown in that
+order. Only JSON imports. Every direct request gets fixed finite defaults and its
+own invocation. The prepared wrapper is export-only in the same order, with
+conditions for available/selected artifacts and matching filename extensions.
+Closures additionally guard selection: the SDK's generic-text helper can try a
+hidden statically declared representation before reaching the selected subtype.
+Conditions alone are insufficient to protect that path. An explicit hidden JSON
+request fails; Markdown-only generic text reaches Markdown after hidden candidates
+are refused. Prefer explicit format selection when a receiver's choice matters.
+
+CoreTransferable may wrap a parser failure in its transport error. Applications
+requiring native structured diagnostics should call JSONParser directly. Transfer
+does not add a permissive parser. JSON text import rejects invalid UTF-8, decoded
+duplicate keys, trailing syntax and trailing commas under balanced finite limits.
+
+The initial module links CoreTransferable and UniformTypeIdentifiers conditionally.
+Pure preparation is actor-independent and remains available without those modules.
+The approved future PDF amendment permits narrow WebKit/platform-print support in
+JSONHTML, while core JSON must never import those frameworks. WebKit/AppKit/PDFKit
+currently occur only in the T0 probe tool, not in shipped targets. JH25's old
+module-wide UI dependency exclusion is superseded by this explicit boundary.
+
+## Finite accounting
+
+One noncopyable JSONWorkMeter admits the root once, then serves cursor formatting,
+Markdown scan/wrapping, static HTML, bounded metadata, artifact tables and result
+copies. The HTML helper accepts an already admitted root under that same meter.
+Export and HTML core limits intersect before execution; no nested public facade
+starts a fresh budget. Checked output growth, cancellation inside owned loops,
+copy admission and terminal latching apply throughout. Failure returns no partial
+document/report, releases owned scratch and preserves an enclosing reservation.
+
+Initial export policy:
+
+| Capacity | Default inclusive ceiling |
+| --- | ---: |
+| Core | JSONLimits.balanced, all 49 existing metrics |
+| One representation | 8,388,608 bytes |
+| All prepared artifacts | 16,777,216 bytes |
+| Plain title | 4,096 UTF-8 bytes |
+| Filename component | 128 UTF-8 bytes |
+| HTML | JSONHTMLLimits defaults, document ceiling intersected with representation ceiling |
+
+Zero forbids usage. Allocation capacities must be below Int.max; UInt64.max is
+invalid. Checked arithmetic refuses overflow. Title controls are rejected. Filename
+components additionally reject empty/dot components, slash, backslash, colon and
+bidi controls. No path is derived from the JSON or title. Extensions are fixed.
+
+Each artifact reserves its logical bytes even if Foundation shares actual storage.
+Construction buffers coexist with copies and contribute to peak logical retention;
+table/report/selection entries reserve 48 logical bytes per format. The report
+contains core statistics, per-format bytes and their aggregate. The title is
+released after preparation; the bounded filename remains owned. Hidden artifacts
+remain in aggregate counts after selection. Logical retained bytes are not RSS;
+owned work units are not caller/transport instructions or an elapsed-time deadline.
+Separate public calls require caller composition. There is no failure report that
+would justify retrying with a fresh budget.
+
+These are initial finite policy values, exercised with pinned small fixtures,
+generated deep/wide values and inclusive boundary tests. Measurements do not
+establish maximum workload throughput, hard RSS or receiving-app resource bounds.
+There is no unlimited or device-specific widening preset.
+
+## Qualification and remaining scope
+
+`Scripts/ci.py --lane export` runs fixed-count debug/release behavior tests and the
+independent five-product consumer, verifies all six fixture hashes, compiles
+WebPage declarations on macOS/iPhoneOS/iPhoneSimulator and builds the public mobile
+consumers. It records actual commands, exits, source manifest and toolchain.
+The consumer produces four files and tests native import, exact selected exports,
+discovery, suggested filenames, immutable selection and cumulative reports.
+SDK builds do not establish simulator/device/share-sheet/drag/drop qualification.
+
+The T0 offscreen WebPage probe uses nonpersistent per-job state, disables content
+JavaScript/subresources, denies external navigation, awaits finished navigation,
+sets print media and captures an explicit region. Independent PDFKit inspection
+finds the final sentinel on one tall page. This is region capture, not paginated
+A4/Letter output or a qualified cancellation/timeout backend. No PDF public
+preparation method or default paper policy is frozen from that result. An external
+probe watchdog is not a production timeout guarantee.
+
+Remaining milestones: bounded styled RTF with independent Mac/mobile decode and
+rich-editor evidence; an explicit MainActor PDF operation with genuine paginated
+A4/Letter output, lifecycle cancellation and finite PDF limits; real Mac/mobile
+receiving apps and simulator/device integration. The existing physical iPad
+deferral is preserved. These incomplete gates must remain explicit in returns.
+
+The synthetic fixture bytes originate in the JSONHTML Transfer/Export briefing
+ZIP SHA-256 `5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105`.
+Their registry pins all six files; no fixture is executable instruction input.
+All export implementation and fixed assets are original Apache-2.0 code; upstream
+notices remain intact. No third-party renderer or external package is introduced.

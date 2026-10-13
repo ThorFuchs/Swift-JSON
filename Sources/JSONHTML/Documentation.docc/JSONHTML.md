@@ -11,7 +11,8 @@ The 1.3 development API provides formatted mode and an explicit interactive mode
 Interactive documents use native disclosures plus fixed offline controls for outline
 navigation, literal search, exact JSON/Pointer copy and UTF-8 downloads. A separate
 complete formatted block serves printing independently of collapsed state.
-Annotations, transfer conformance, RTF and PDF preparation remain later increments.
+Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML are
+available in this development increment. RTF, PDF and annotations remain later increments.
 
 Every call owns one cumulative finite core budget through admission, token
 formatting, escaping, fixed assets and metadata emission and final Data or String copying. The
@@ -24,6 +25,7 @@ browser heap, browser instruction quotas, process RSS or printing behavior.
 
 - <doc:FormattedRendering>
 - <doc:InteractiveRendering>
+- <doc:PreparedExport>
 
 ### Rendering
 
@@ -39,3 +41,13 @@ browser heap, browser instruction quotas, process RSS or printing behavior.
 - ``JSONHTMLStatistics``
 - ``JSONHTMLResourceMetric``
 - ``JSONHTMLFailure``
+
+### Prepared native export
+
+- ``JSONExportDocument``
+- ``JSONExportOptions``
+- ``JSONExportFormat``
+- ``JSONExportLimits``
+- ``JSONExportReport``
+- ``JSONExportResourceMetric``
+- ``JSONExportFailure``

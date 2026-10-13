@@ -104,5 +104,30 @@
       25
     ],
     "discovery_correction": "Inherited WASI three added JSON tests require 107, not 104; actual successful test exit initially failed stale harness cardinality. Failure preserved; 173 parameter cases and 49 probes unchanged."
+  },
+  "transfer_export_increment": {
+    "branch": "codex/1.3-jsonhtml-transfer",
+    "base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
+    "upstream_main": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+    "status": "four-format implementation; full T0-T6 qualification incomplete",
+    "new_swift_testing_functions": 16,
+    "expected_apple_root_functions": 236,
+    "expected_parameter_cases": 173,
+    "preserved_metrics": 49,
+    "conformance": "single conditional JSON: Transferable in JSONHTML; compiler-owned package exception, no retroactive annotation",
+    "shared_preparation": "one root admission, one cumulative noncopyable meter, selected-format closure guards",
+    "pdf_probe": "offscreen WebPage region: one 595 x 3500 point page, final sentinel; not A4/Letter pagination",
+    "incomplete": [
+      "styled RTF",
+      "qualified paginated PDF and lifecycle cancellation",
+      "Mac/mobile receiving-app UI and simulator/device runtime",
+      "final five-product portable qualification"
+    ],
+    "evidence": [
+      "../JSONHTMLExport.md",
+      "TransferExportIncrement.md",
+      "Scripts/ci.py --lane export",
+      "Tools/JSONHTMLExport"
+    ]
   }
 }

@@ -105,4 +105,9 @@ func runREADMEExamples() throws {
         initiallyExpandedDepth: 2, outlineDepth: 3
     )).renderWithReport(value)
     precondition(interactiveHTML.statistics.copyJSONBytes > 0)
+
+    let exportReport = try JSONExportDocument.prepareWithReport(value)
+    let markdownItem = try exportReport.result.selecting([.markdown])
+    let markdownBytes = try markdownItem.data(for: .markdown)
+    precondition(exportReport.operation[.nodes] > 0 && !markdownBytes.isEmpty)
 }

@@ -63,7 +63,7 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact highlighted HTML, offline disclosures/search and native-byte copy/download (1.3 development) |
+| **JSONHTML** | Exact HTML, offline exploration and immutable native transfer/export (1.3 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch` and `JSONHTML` build on `JSON`. The package-private
@@ -370,7 +370,23 @@ scalar identity. Clipboard acceptance and manual copying depend on the browser;
 printing includes the full formatted JSON independently of disclosure state.
 Read the [formatted guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
 and [interactive guide](Sources/JSONHTML/Documentation.docc/InteractiveRendering.md)
-for limits and browser qualifications. Annotations, transfer formats, RTF and PDF
+for limits and browser qualifications. Prepare immutable exact JSON, UTF-8 text,
+Markdown and static HTML together, then explicitly select the offered format:
+
+```swift
+let exportReport = try JSONExportDocument.prepareWithReport(value)
+let markdownItem = try exportReport.result.selecting([.markdown])
+let markdownBytes = try markdownItem.data(for: .markdown)
+precondition(exportReport.operation[.nodes] > 0 && !markdownBytes.isEmpty)
+```
+
+On Apple platforms, importing JSONHTML adds JSON's native Transferable conformance.
+Only strict JSON imports; presentation formats export. Default preparation uses one
+tab per level, LF and light static HTML, sharing one finite cumulative budget.
+Read the [prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md)
+and [architecture contract](Documentation/Architecture/JSONHTMLExport.md) for format
+selection, transport error wrapping and finite limits. Real receiving-app behavior
+is qualified separately from API/file transport. Annotations, RTF and explicit PDF
 preparation remain later increments. Published 1.2 versions do not include JSONHTML.
 
 ## Documentation and examples

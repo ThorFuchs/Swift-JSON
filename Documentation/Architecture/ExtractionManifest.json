@@ -197,5 +197,12 @@
     "Private FIPS 180-4 SHA-256 is an original Swift implementation with checked cumulative production accounting, bounded scratch and inner cancellation. The separate trusted fixture tool mirrors its primitive core byte-for-byte; public_check verifies parity. No CryptoKit fallback or runtime dependency is introduced.",
     "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted."
   ],
-  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies."
+  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
+  "jsonhtml_export_original_contributions": {
+    "license": "Apache-2.0",
+    "adapted_third_party_code": false,
+    "source": "Sources/JSONHTML/JSONExportDocument.swift; JSONExportOptions.swift; JSONTransferable.swift",
+    "synthetic_fixture_pack_sha256": "5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105",
+    "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers; WebKit/AppKit/PDFKit only in the T0 probe tool. No new root package dependency."
+  }
 }

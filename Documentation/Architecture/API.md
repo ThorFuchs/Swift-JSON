@@ -12,7 +12,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
-| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport | Shared exact formatting, offline interactive HTML, exact copy/download and cumulative bounded emission |
+| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONExportDocument, JSONExportOptions, JSONExportReport | Exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch and HTML depend on JSON. There are five public
@@ -191,3 +191,9 @@ UTC time. Prior time-only stored values cannot recover their original calendar
 date; application migration needs an independent source of that information.
 Noncanonical Base64 with nonzero unused padding bits now rejects. These corrections
 restore the documented strict/native contracts; they do not add a permissive mode.
+
+## Additive 1.3 prepared export
+
+See the [export contract](JSONHTMLExport.md) for compiler-proven declarations,
+finite limits, selected-format transfer guards and the remaining RTF/PDF and
+receiving-app qualification boundaries.

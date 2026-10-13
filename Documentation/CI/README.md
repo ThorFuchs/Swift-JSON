@@ -67,3 +67,15 @@ It preserves all 192/173 root discoveries, independent corpus policies and 49 ca
 outcomes; both hosts also execute the frozen public consumer. The
 [WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
 This local lane neither activates hosted CI nor substitutes for Apple/Linux gates.
+
+## JSONHTML export development lane
+
+`python3 Scripts/ci.py --lane export` requires 16 focused Swift Testing functions
+in both configurations, 35 public consumer outcomes, six pinned fixtures and three
+Apple SDK declaration probes. It builds all five products in iPhoneOS and
+simulator consumers. A bounded offscreen WebPage region experiment remains outside
+the production API. The lane establishes native API/file transport and SDK builds,
+not share sheets, receiving-editor UI, simulator execution or paginated PDF.
+Root discovery adds 16 Apple functions (14 without CoreTransferable), and the
+shared export case joins the targeted Thread Sanitizer lane. All 49 cap checks
+and the 173 baseline parameterized invocations remain required.

@@ -57,3 +57,12 @@ not qualify simulator/device execution, Linux/WASI runtime or transfer/PDF APIs.
 See [InteractiveIncrement.md](InteractiveIncrement.md) for the compiler-compatible
 additive options, one-meter metadata/copy path, browser policy, exact tests and
 remaining Safari/accessibility/Firefox/platform qualification.
+
+## Native transfer/export increment
+
+See [TransferExportIncrement.md](TransferExportIncrement.md) and the
+[export contract](../JSONHTMLExport.md) for actual four-format declarations,
+immutable artifacts, conditional transfer conformance, finite initial capacities
+and the explicit future PDF framework amendment. RTF/PDF and real receiving-app
+qualification remain separate. Generic type negotiation requires a selected-format
+guard in the closure, beyond `.exportingCondition`, on the observed SDK.
