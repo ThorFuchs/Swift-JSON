@@ -1,23 +1,14 @@
-name: Native CI
+# Qualification-only branch. Never merge this workflow into main.
+name: PR17 Native Performance Qualification
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: native-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  qualification:
-    name: Native / ${{ matrix.lane }}
+  performance:
+    name: Builder performance / native
     runs-on: xcode-27
-    timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        lane: [native, safety, docs]
+    timeout-minutes: 30
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
@@ -26,53 +17,12 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
-      - name: Preserve native receipts
+      - run: python3 -B Scripts/qualify_schema_builder_performance.py
+      - name: Preserve native performance receipts
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: native-${{ matrix.lane }}
+          name: pr17-builder-performance
           if-no-files-found: error
           retention-days: 30
-          path: |
-            .build/ci/
-            .build/handoff/docc/receipt.json
-            .build/handoff/docc/coverage.json
-            .build/handoff/docc/symbols/
-            .build/handoff/docc/compiled-catalogs.tar.gz
-            .build/handoff/docc/compiled-catalogs.MANIFEST.sha256
-            .build/handoff/docc/*-diagnostics.json
-            .build/handoff/docc/*.log
-            .build/handoff/pages/receipt.json
-            .build/handoff/pages/site.MANIFEST.sha256
-            .build/handoff/pages/*.log
-      - name: Package qualified documentation site
-        if: matrix.lane == 'docs'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          path: .build/handoff/pages/site
-          include-hidden-files: true # Preserve the verified .nojekyll file; only the generated site is uploaded.
-  publish:
-    name: Documentation / publish
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: qualification
-    # Native compilation and all qualification happened in the jobs above.
-    # This job only publishes their exact static artifact.
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Configure Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-      - name: Publish qualified documentation
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          path: .build/pr17-performance/results/
