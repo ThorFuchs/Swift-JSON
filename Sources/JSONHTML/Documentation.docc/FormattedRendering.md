@@ -49,5 +49,5 @@ invocation, so an immutable renderer may be shared across tasks.
 This API formats values only. A source document can be rendered through its
 `root`; it does not imply preservation of source whitespace or source locations.
 Browser accessibility, printing and the complete supported-platform matrix need
-their separate later qualification. Transfer/export, RTF, PDF and interactive
-rendering are not implemented by this increment.
+their separate later qualification. Transfer/export, RTF and PDF remain future increments. See <doc:InteractiveRendering>
+for the separately selected interactive presentation.

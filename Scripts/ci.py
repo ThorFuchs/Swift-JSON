@@ -33,6 +33,12 @@ def commands(lane, output):
             ['swift', 'test', '-c', 'release', '--filter', 'qa'],
             ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/ci-address', '--filter', 'qa'],
         ]
+    if lane == 'browser':
+        return [
+            ['python3', '-B', 'Scripts/verify_html_assets.py'],
+            ['swift', 'run', '-c', 'release', '--package-path', 'Tools/JSONHTMLBrowser', 'BrowserFixtures', str(output / 'fixtures')],
+            ['python3', '-B', 'Scripts/qualify_html_browser.py', '--fixtures', str(output / 'fixtures'), '--output', str(output / 'browser')],
+        ]
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -89,7 +95,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4] if 'thread' in command else [11, 12, 13, 14, 51, 104]
+        expected = [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 25, 51, 104]
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
@@ -108,11 +114,17 @@ def check_result(command, code, log):
         passed = json.loads(log)['dependencies'] == []
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
         passed = passed and all(line in log.splitlines() for line in ['PUBLIC_BEHAVIOR passed fixtures=8', 'STREAM_CANCELLATION passed', 'DISK_PERSISTENCE passed containers=3 rows=8', 'MOBILE_QUALIFICATION passed cases=3'])
+    if command[:3] == ['python3', '-B', 'Scripts/verify_html_assets.py']:
+        passed = passed and 'JSONHTML_ASSETS passed count=2' in log.splitlines()
+    if 'BrowserFixtures' in command:
+        passed = passed and 'JSONHTML_BROWSER_FIXTURES passed count=8' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
+        passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=37 skips=0' in log.splitlines()
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'browser'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -148,7 +160,7 @@ def main():
         receipt['commands'].append(entry)
         print(json.dumps(entry), flush=True)
         if not passed:
-            receipt['status'] = 'failed'
+            receipt['status'] = 'blocked' if args.lane == 'browser' and code == 2 else 'failed'
             break
         save()
     else:

@@ -112,37 +112,50 @@
       "requirement": "Formatted mode has no script; interactive native disclosure remains usable with scripting disabled and allows multiple open branches.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH13",
       "gate": "H2",
       "requirement": "Default expansion, bounded outline, ancestor opening, focus, root/empty/numeric/special-key paths and generated IDs behave coherently.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH14",
       "gate": "H2",
       "requirement": "Copy/download bytes decode to the owned formatted JSON; RFC Pointer metadata preserves controls, CR/LF, NUL and exact scalar sequences.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH15",
       "gate": "H2",
       "requirement": "Raw and escaped Pointer copy modes have explicit labels; unavailable clipboard behavior is reported and manual/UTF-8 alternatives work.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH16",
       "gate": "H2",
       "requirement": "Literal search is bounded/chunked, preserves scalar distinction, opens matched ancestors and reports its rendered-text scope honestly.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH17",
@@ -150,9 +163,10 @@
       "requirement": "Script/style closing strings, ampersands, quotes, event-handler payloads and keys such as __proto__/constructor remain inert data.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH18",
@@ -160,9 +174,10 @@
       "requirement": "No payload-driven innerHTML, executable interpolation, URLs/selectors or script-element text assignment appears in the output/control path.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH19",
@@ -170,9 +185,10 @@
       "requirement": "Emitted CSS/JS asset hashes match CSP block bytes; controls work under policy and external resource requests remain absent.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH20",
@@ -192,22 +208,31 @@
       "id": "JH22",
       "gate": "H3",
       "requirement": "Safari, Firefox and Chromium execute file/served, JS on/off, outline/search/copy/download and policy cases with recorded versions.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH23",
       "gate": "H3",
       "requirement": "Keyboard/focus, text/contrast/themes and relevant VoiceOver behavior are reviewed; accessibility claims match the executed evidence.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH24",
       "gate": "H3",
       "requirement": "Print output includes every value regardless of collapse/script state, excludes UI clutter, and preserves applicable UI state.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+      ],
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH25",
@@ -226,9 +251,10 @@
       "requirement": "Representative generation/output-expansion/retention and browser DOM/interactivity measurements justify finite preset values.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH27",
@@ -236,9 +262,10 @@
       "requirement": "Existing JSONWriter behavior, native/safety/docs lanes, public examples and baseline semantic/corpus cases remain qualified.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "JH28",
@@ -246,9 +273,10 @@
       "requirement": "Final feature branch/PR head/base, review disposition, source/asset hashes, actual receipts and release placement are recorded.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
     },
     {
       "id": "TX01",

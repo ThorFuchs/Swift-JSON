@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
 
-/// Successful counts from one complete formatted rendering invocation.
+/// Successful counts from one complete HTML rendering invocation.
 public struct JSONHTMLStatistics: Sendable, Equatable {
     /// Shared admission, token formatting, escaping, assets and final-copy accounting.
     public let operation: JSONOperationStatistics
@@ -11,9 +11,16 @@ public struct JSONHTMLStatistics: Sendable, Equatable {
     public let domNodeUpperBound: UInt64
     /// Complete document bytes; final result copies do not add output bytes.
     public let documentBytes: UInt64
-    package init(operation: JSONOperationStatistics, nodes: UInt64, dom: UInt64, bytes: UInt64) {
+    /// Emitted container outline entries; zero in formatted mode or when disabled.
+    public let outlineEntries: UInt64
+    /// Emitted Base64 metadata bytes; distinct from complete document and raw copy bytes.
+    public let metadataBytes: UInt64
+    /// Raw exact JSON bytes embedded for interactive copy/download; zero in formatted mode.
+    public let copyJSONBytes: UInt64
+    package init(operation: JSONOperationStatistics, nodes: UInt64, dom: UInt64, bytes: UInt64, outline: UInt64, metadata: UInt64, copyBytes: UInt64) {
         self.operation = operation; renderedJSONNodes = nodes
         domNodeUpperBound = dom; documentBytes = bytes
+        outlineEntries = outline; metadataBytes = metadata; copyJSONBytes = copyBytes
     }
 }
 

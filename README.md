@@ -63,7 +63,7 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact, highlighted, script-free standalone HTML with cumulative reports (1.3 development) |
+| **JSONHTML** | Exact highlighted HTML, offline disclosures/search and native-byte copy/download (1.3 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch` and `JSONHTML` build on `JSON`. The package-private
@@ -340,16 +340,32 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
-## Formatted HTML (1.3 development)
+## Standalone HTML (1.3 development)
 
 The additive `JSONHTML` product renders complete highlighted HTML from the same
-exact writer cursor. It preserves number lexemes and insertion order, escapes
-payload text and includes fixed CSS under a hash-based Content Security Policy.
-Every call shares one finite budget through admission, formatting and final copying.
-The [formatted rendering guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
-describes its API and provisional HTML capacities. Interactive controls, transfer
-formats, RTF and PDF remain later increments. Existing published versions do not
-include this product.
+exact writer cursor. Formatted mode is script-free. Opt into interactive mode for
+native disclosures, a container outline, case-sensitive literal search and exact
+JSON/Pointer copy and downloads. All assets are embedded and hash-authorized;
+no network access or browser JSON number conversion is needed.
+
+```swift
+import JSONHTML
+
+let interactiveHTML = try JSONHTMLRenderer(options: .init(
+    title: "Exact values", presentation: .interactive,
+    initiallyExpandedDepth: 2, outlineDepth: 3
+)).renderWithReport(value)
+precondition(interactiveHTML.statistics.copyJSONBytes > 0)
+```
+
+Every call shares one finite budget through admission, metadata, formatting and
+final copying. Downloads use native UTF-8 bytes, preserving numeric lexemes and
+scalar identity. Clipboard acceptance and manual copying depend on the browser;
+printing includes the full formatted JSON independently of disclosure state.
+Read the [formatted guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
+and [interactive guide](Sources/JSONHTML/Documentation.docc/InteractiveRendering.md)
+for limits and browser qualifications. Annotations, transfer formats, RTF and PDF
+preparation remain later increments. Published 1.2 versions do not include JSONHTML.
 
 ## Documentation and examples
 

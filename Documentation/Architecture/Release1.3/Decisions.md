@@ -51,3 +51,9 @@ browser calibration is still required before final preset qualification.
 Actual JSON/JSONHTML modules and a public report consumer typecheck on iPhoneOS and
 iPhoneSimulator SDK 27.2, Swift 6.4/language 6, with warnings as errors. This does
 not qualify simulator/device execution, Linux/WASI runtime or transfer/PDF APIs.
+
+## Interactive increment decisions
+
+See [InteractiveIncrement.md](InteractiveIncrement.md) for the compiler-compatible
+additive options, one-meter metadata/copy path, browser policy, exact tests and
+remaining Safari/accessibility/Firefox/platform qualification.

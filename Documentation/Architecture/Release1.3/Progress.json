@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "target_release": "1.3.0",
-  "status": "First formatted renderer increment implemented; full 1.3 gates remain partial",
+  "status": "Formatted and interactive increments implemented; browser/platform/final 1.3 gates remain partial",
   "actual_base": "532f725740a4d61c32bc9870986d050b71f9db78",
   "captured_briefing_base": "e9c6693c7cb29df5125e1699fef70f98229ccfdf",
   "feature_branch": "codex/1.3-jsonhtml",
@@ -22,10 +22,12 @@
     "Formatted exact Data/String rendering and cumulative reports",
     "16 new behavior functions; complete local native/safety/docs lanes",
     "Five-product public consumer and 628 documented declarations",
-    "JSON/JSONHTML iPhoneOS and iPhoneSimulator module/public-interface typechecks only"
+    "JSON/JSONHTML iPhoneOS and iPhoneSimulator module/public-interface typechecks only",
+    "12 interactive behavior functions; initial native debug/release 217 functions and 173 parameter cases passed",
+    "Pinned browser harness: 37 required cases, exact byte downloads and explicit unexecuted engine counts"
   ],
   "implementation_qualified": false,
-  "next_increment": "Integrate the qualified 1.2 base when ready; continue scoped interactive rendering and export/compiler probes under separate gates",
+  "next_increment": "Complete blocked browser/accessibility/final-platform qualification; continue separately scoped annotation and transfer/export work",
   "open_decisions": [
     "Measured finite renderer/export/PDF presets",
     "Executed PDF backend/pagination/defaults",
@@ -57,7 +59,21 @@
     "Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-compatible",
     "Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-compatible",
     "Scripts/ci.py --lane docs --output .build/ci/jsonhtml-docs-compatible",
-    "Documentation/Architecture/Release1.3/Increment.md"
+    "Documentation/Architecture/Release1.3/Increment.md",
+    "Documentation/Architecture/Release1.3/InteractiveIncrement.md",
+    "Scripts/ci.py --lane native --output .build/ci/jsonhtml-interactive-final-native",
+    "Scripts/ci.py --lane safety --output .build/ci/jsonhtml-interactive-final-safety",
+    "Scripts/ci.py --lane docs --output .build/ci/jsonhtml-interactive-final-docs",
+    "Scripts/ci.py --lane browser --output .build/ci/jsonhtml-interactive-final-browser"
   ],
-  "final_source_refresh": "The final-source lane receipts are materialized privately after committing this source; initial full lanes already passed. Any final failure keeps that lane open."
+  "final_source_refresh": "The final-source lane receipts are materialized privately after committing this source; initial full lanes already passed. Any final failure keeps that lane open.",
+  "interactive_increment": {
+    "parent_commit": "41fdf1c5045ef171059981ffcbc59a5aef8f998a",
+    "expected_root_functions": 217,
+    "expected_parameter_cases": 173,
+    "expected_browser_cases": 37,
+    "browser_blocker": "Pinned Firefox startup times out with host sandbox-extension/graphics errors; unexecuted cases are not successes",
+    "preserved_baseline_metrics": 49,
+    "final_source_refresh": "Native/safety/docs/browser lane receipts refresh after this source commit; any failures remain open in the materialized handoff"
+  }
 }

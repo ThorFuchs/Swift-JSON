@@ -2,16 +2,17 @@
 import Foundation
 import JSON
 
-/// An immutable facade producing complete, expanded, highlighted standalone HTML.
+/// An immutable facade producing complete highlighted standalone HTML.
 ///
 /// Rendering is actor-independent and executes no browser or UI framework. It uses
 /// the strict JSON writer's exact bytes, insertion order and preserved lexemes.
-/// CSS is fixed and hash-authorized; scripts and external resources are denied.
+/// Assets are fixed and hash-authorized. Interactive mode needs no external resources.
+/// Formatted mode remains script-free; interactive disclosures work without scripting.
 public struct JSONHTMLRenderer: Sendable {
     /// Immutable configuration; finite capacities are checked on every invocation.
     public let options: JSONHTMLRenderingOptions
 
-    /// Creates a formatted renderer without allocating a document or invoking UI.
+    /// Creates a renderer without allocating a document or invoking UI.
     /// - Parameters:
     ///   - options: Presentation choices and finite capacities for each independent call.
     public init(options: JSONHTMLRenderingOptions = .init()) { self.options = options }
@@ -41,6 +42,7 @@ public struct JSONHTMLRenderer: Sendable {
         try chargeCopy(document.bytes, meter: &meter)
         let result = Data(document.bytes)
         try meter.release(UInt64(document.bytes.count))
+        try meter.checkpoint()
         return .init(result: result, statistics: document.statistics(meter.statistics()))
     }
 
@@ -55,6 +57,7 @@ public struct JSONHTMLRenderer: Sendable {
         try chargeCopy(document.bytes, meter: &meter)
         let result = String(decoding: document.bytes, as: UTF8.self)
         try meter.release(UInt64(document.bytes.count))
+        try meter.checkpoint()
         return .init(result: result, statistics: document.statistics(meter.statistics()))
     }
 
@@ -75,7 +78,8 @@ public struct JSONHTMLRenderer: Sendable {
     private func renderBody(_ value: JSON, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         try meter.checkpoint()
         try options.limits.validate()
-        guard (0...8).contains(options.indentation), (1...8).contains(options.tabWidth) else {
+        guard (0...8).contains(options.indentation), (1...8).contains(options.tabWidth),
+              options.initiallyExpandedDepth >= 0, options.outlineDepth.map({ $0 >= 0 }) ?? true else {
             throw JSONHTMLFailure.invalidConfiguration
         }
         try JSONAdmission.text(options.title, meter: &meter)
@@ -86,6 +90,7 @@ public struct JSONHTMLRenderer: Sendable {
         // One admission and one ledger; the cursor never calls a public writer facade.
         try JSONAdmission.value(value, meter: &meter)
         try JSONHTMLDocumentBuffer.require(.renderedJSONNodes, meter.used(.nodes), options.limits.maxRenderedJSONNodes)
+        if options.presentation == .interactive { return try renderInteractive(value, meter: &meter) }
         var output = JSONHTMLDocumentBuffer(limits: options.limits)
         try output.addDOM(24, meter: &meter) // Includes fixed tags, text and optional parser-created nodes.
         try output.append("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'none'; style-src 'sha256-", meter: &meter)
@@ -131,6 +136,9 @@ package struct JSONHTMLDocumentBuffer {
     package var bytes: [UInt8] = []
     private var nodes: UInt64 = 0
     private var dom: UInt64 = 0
+    private var outline: UInt64 = 0
+    private var metadata: UInt64 = 0
+    private var copyBytes: UInt64 = 0
     private let limits: JSONHTMLLimits
     package init(limits: JSONHTMLLimits) { self.limits = limits }
     package static func require(_ metric: JSONHTMLResourceMetric, _ count: UInt64, _ limit: UInt64) throws {
@@ -150,6 +158,14 @@ package struct JSONHTMLDocumentBuffer {
         try meter.work()
         nodes = try Self.adding(.renderedJSONNodes, nodes, 1, limits.maxRenderedJSONNodes)
     }
+    package mutating func setCopyBytes(_ count: UInt64) { copyBytes = count }
+    package mutating func addOutline(meter: inout JSONWorkMeter) throws {
+        try meter.work(); outline = try Self.adding(.outlineEntries, outline, 1, limits.maxOutlineEntries)
+    }
+    package mutating func addMetadata(meter: inout JSONWorkMeter) throws {
+        try meter.work(); metadata = try Self.adding(.metadataBytes, metadata, 1, limits.maxMetadataBytes)
+    }
+    package mutating func appendByte(_ byte: UInt8, meter: inout JSONWorkMeter) throws { try append(byte, meter: &meter) }
     package mutating func append(_ text: String, meter: inout JSONWorkMeter) throws {
         for byte in text.utf8 { try append(byte, meter: &meter) }
     }
@@ -174,6 +190,6 @@ package struct JSONHTMLDocumentBuffer {
         }
     }
     package func statistics(_ operation: JSONOperationStatistics) -> JSONHTMLStatistics {
-        .init(operation: operation, nodes: nodes, dom: dom, bytes: UInt64(bytes.count))
+        .init(operation: operation, nodes: nodes, dom: dom, bytes: UInt64(bytes.count), outline: outline, metadata: metadata, copyBytes: copyBytes)
     }
 }

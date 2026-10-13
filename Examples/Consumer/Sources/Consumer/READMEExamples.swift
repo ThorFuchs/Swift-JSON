@@ -5,6 +5,7 @@ import Foundation
 import JSONSchema
 import JSONPatch
 import JSONStreaming
+import JSONHTML
 
 func inspectArray<Source: AsyncSequence>(_ source: Source) async throws -> UInt64
 where Source.Element == JSONByteChunk {
@@ -98,4 +99,10 @@ func runREADMEExamples() throws {
         .parseWithReport(Array(#"{"ready":true}"#.utf8))
     precondition(report.result.objectValue?["ready"] == true)
     precondition(report.statistics[.workUnits] > 0)
+
+    let interactiveHTML = try JSONHTMLRenderer(options: .init(
+        title: "Exact values", presentation: .interactive,
+        initiallyExpandedDepth: 2, outlineDepth: 3
+    )).renderWithReport(value)
+    precondition(interactiveHTML.statistics.copyJSONBytes > 0)
 }

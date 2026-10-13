@@ -50,3 +50,15 @@ print("JSONHTML_PUBLIC_CONSUMER passed roots=1 exact_number=1 cumulative_refusal
 try runREADMEExamples()
 try await runProductExamples()
 print("Consumer passed: exact values/Codable/Pointer, Patch/Merge Patch, schema documents/registry, streams/sink, reports and Sendable; immutable schema compilation/evaluation/output/inspection")
+
+let interactiveReport = try JSONHTMLRenderer(options: .init(presentation: .interactive)).renderWithReport(value)
+requireSendable(interactiveReport)
+precondition(interactiveReport.statistics.operation[.nodes] == htmlReport.statistics.operation[.nodes])
+precondition(interactiveReport.statistics.copyJSONBytes > 0 && interactiveReport.statistics.metadataBytes > 0)
+var interactiveLimits = JSONHTMLLimits()
+interactiveLimits.core[.workUnits] = interactiveReport.statistics.operation[.workUnits] - 1
+var refusedInteractive = false
+do { _ = try JSONHTMLRenderer(options: .init(limits: interactiveLimits, presentation: .interactive)).render(value) }
+catch let failure as JSONFailure { precondition(failure.category == .resource); refusedInteractive = true }
+precondition(refusedInteractive)
+print("JSONHTML_INTERACTIVE_PUBLIC_CONSUMER passed exact_metadata=1 cumulative_refusal=1")

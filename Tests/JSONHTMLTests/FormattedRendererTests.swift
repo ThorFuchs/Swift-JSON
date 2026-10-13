@@ -96,6 +96,8 @@ private func body(_ html: String) throws -> [UInt8] {
         case .documentBytes: report.statistics.documentBytes
         case .renderedJSONNodes: report.statistics.renderedJSONNodes
         case .domNodes: report.statistics.domNodeUpperBound
+        case .outlineEntries: report.statistics.outlineEntries
+        case .metadataBytes: report.statistics.metadataBytes
         }
         for delta in [-1, 0, 1] {
             var limits = JSONHTMLLimits()
@@ -104,6 +106,8 @@ private func body(_ html: String) throws -> [UInt8] {
             case .documentBytes: limits.maxDocumentBytes = cap
             case .renderedJSONNodes: limits.maxRenderedJSONNodes = cap
             case .domNodes: limits.maxDOMNodes = cap
+            case .outlineEntries: limits.maxOutlineEntries = cap
+            case .metadataBytes: limits.maxMetadataBytes = cap
             }
             let renderer = JSONHTMLRenderer(options: .init(limits: limits))
             if delta < 0 {
@@ -185,7 +189,8 @@ private func body(_ html: String) throws -> [UInt8] {
 }
 
 @Test func sharedFormattedHTMLRendererHasIndependentConcurrentInvocations() async throws {
-    let renderer = JSONHTMLRenderer()
+    for mode in [JSONHTMLPresentation.formatted, .interactive] {
+    let renderer = JSONHTMLRenderer(options: .init(presentation: mode))
     let root = try JSONParser().parse(#"{"é":9007199254740993,"é":[-0.00e+2,null]}"#)
     let expected = try renderer.renderWithReport(root)
     try await withThrowingTaskGroup(of: JSONHTMLRenderReport<Data>.self) { group in
@@ -196,6 +201,7 @@ private func body(_ html: String) throws -> [UInt8] {
             count += 1
         }
         #expect(count == 16)
+    }
     }
 }
 

@@ -16,3 +16,9 @@ Actual adaptations are recorded in Documentation/Architecture/ExtractionManifest
 Original copyrights and applicable notices remain in the source and license files.
 The root package has no third-party runtime dependencies or foreign binary backend.
 Research and discarded comparison experiments are not distributed dependencies.
+
+Playwright 1.62.1 is an optional qualification-only development tool (Apache-2.0),
+with its full license, NOTICE and third-party notices retained under
+Licenses/PlaywrightQualification. No Playwright source or browser binary is adapted
+or shipped as a library runtime dependency. The browser tool has its own manifest;
+root package dependencies remain empty.
