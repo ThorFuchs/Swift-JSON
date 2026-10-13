@@ -1,6 +1,15 @@
 # Changelog
 
-## 1.1.0 — unreleased candidate
+## Unreleased
+
+- Keep object-schema construction and document admission within one cumulative
+  budget, including live retention and terminal owned failures/cancellation.
+  Tight limits that previously fit each phase separately can now fail the composed
+  call. Public signatures and finite default profiles are unchanged.
+- Update release documentation for the published 1.1.0 package and its macOS,
+  iOS and iPadOS 27 baseline.
+
+## 1.1.0 — 2026-10-12
 
 - Scoped typed reads with cumulative reports, native model projection and guarded
   cursor invalidation; explicit numeric fidelity and absent/null presence.
@@ -10,7 +19,7 @@
 - macOS/iOS 27 deployment minima and corrected schema bundle layout; public
   SDK/simulator and disk-backed SwiftData consumers. Full physical-device
   qualification follows the approved 1.1 matrix: physical iPhone required, iPad
-  SDK/simulator acceptance with physical iPad deferred. No tag/publication follows.
+  SDK/simulator acceptance with physical iPad deferred.
 - Correct native ISO-8601 calendar fields and strict Base64 unused padding bits.
   See API migration guidance; no limits/profile weights or dependencies raised.
 - Release failed Base64 scratch from logical retention while preserving consumed

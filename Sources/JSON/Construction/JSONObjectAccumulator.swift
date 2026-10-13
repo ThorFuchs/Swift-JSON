@@ -13,9 +13,13 @@ public struct JSONObjectAccumulator: ~Copyable {
     /// - Parameters:
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(limits: JSONLimits = .balanced) throws {
-        var initialMeter = try JSONWorkMeter(limits: limits, domain: .core)
+        try self.init(meter: JSONWorkMeter(limits: limits, domain: .core))
+    }
+    /// Transfers an invocation's exclusive ledger into construction.
+    package init(meter: consuming JSONWorkMeter) throws {
+        var initialMeter = meter
         try initialMeter.require(.maxDepth, 1); try initialMeter.charge(.nodes); try initialMeter.retain(JSONLogicalWeights.node)
-        meter = initialMeter
+        self.meter = initialMeter
     }
     /// Appends admitted payloads while retaining cumulative builder work.
     ///
@@ -37,6 +41,13 @@ public struct JSONObjectAccumulator: ~Copyable {
     }
     /// Consumes the builder and transfers its already admitted result.
     public consuming func finish() -> JSONObject { JSONObject(admitted: members, index: index) }
+    package var continuation: JSONWorkMeter.Continuation { meter.continuation }
+    /// Continues an owned composition without copying or restarting its ledger.
+    package consuming func finish<Result>(continuation: JSONWorkMeter.Continuation, _ body: (JSONObject, inout JSONWorkMeter) throws -> Result) throws -> Result {
+        try continuation.check(meter)
+        let object = JSONObject(admitted: members, index: index)
+        return try body(object, &meter)
+    }
 }
 
 extension JSONObject {
