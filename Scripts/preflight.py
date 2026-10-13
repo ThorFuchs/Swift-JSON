@@ -64,6 +64,7 @@ def collect_linux():
         result['distribution'] = {}
         result['errors'].append(str(error))
     result['libc'] = platform.libc_ver()
+    result['python'] = sys.version
     try:
         compiler_ok = result['commands'][0]['exit_code'] == 0 and version(result['commands'][0].get('stdout', '')) >= (6,4,0)
     except ValueError:
