@@ -6,6 +6,9 @@ import Testing
 @Test func exactFormattingKeepsLegacyDefaultsAndAddsLiteralTabs() throws {
     let root = try JSONParser().parse(#"{"b":[-0.00e+2,true],"a":"é"}"#)
     #expect(try JSONWriter().writeString(root) == #"{"b":[0,true],"a":"é"}"#)
+    let originalInitializer: (JSONLimits, Int?, JSONWritingOptions.KeyOrder, JSONNumberTextStyle) -> JSONWritingOptions = JSONWritingOptions.init
+    let original = originalInitializer(.balanced, 2, .insertion, .preserved)
+    #expect(original.indentationUnit == .spaces)
     let legacy = JSONWritingOptions(indentation: 2, keyOrder: .insertion, numberStyle: .preserved)
     #expect(try JSONWriter(options: legacy).writeString(root) == "{\n  \"b\": [\n    -0.00e+2,\n    true\n  ],\n  \"a\": \"é\"\n}")
     var tabs = legacy; tabs.indentationUnit = .tabs; tabs.indentation = 1

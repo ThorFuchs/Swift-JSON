@@ -7,7 +7,7 @@
 | Specification precedence | Transfer/export explicit amendments override conflicting renderer statements; remaining H/JH requirements remain. |
 | Package boundary | JSONHTML depends on JSON only; private regex and empty root external dependencies remain. Apple framework declarations/execution stay conditional and out of core JSON. |
 | Framework amendment | JSONHTML may link Apple PDF/printing frameworks. Pure HTML/native export preparation remains actor-independent and does not execute WebKit. |
-| Writer compatibility | Proposed JSONIndentationUnit with default spaces; append the defaulted option to retain existing calls. Export tabs/preserved lexemes are explicit. Final declaration requires compiler/behavior evidence. |
+| Writer compatibility | JSONIndentationUnit defaults to spaces through the retained legacy initializer; a separate overload requires the unit explicitly, preserving typed initializer references. Export tabs/preserved lexemes are explicit. Final declaration requires compiler/behavior evidence. |
 | Asset strategy | Prefer versioned original Swift constants for fixed CSS/JS; measure and qualify hashes, CSP and full emitted bytes before selection is frozen. |
 | RTF | Prefer owned bounded token-based emission. Strategy remains provisional until independent text/style and platform evidence. |
 | PDF | Prefer modern WebPage where executed behavior qualifies it. Region capture is distinct from pagination; A4/Letter/default geometry and backend remain open. |
@@ -23,7 +23,13 @@ Review findings resolved in this plan: captured base/release assignment is stale
 
 ## First formatted increment decisions
 
-The native compiler accepts the appended defaulted `JSONIndentationUnit` option.
+Ordinary calls accept an appended defaulted `JSONIndentationUnit`, but a further
+Swift 6.4 consumer probe proved that this changes the original initializer's
+function type. The final declaration therefore retains the four-argument
+initializer with its original defaults and adds a five-argument overload whose
+`indentationUnit` is required. The legacy initializer delegates with `.spaces`;
+callers opt into `.tabs` explicitly. Public consumer and behavior tests exercise
+both ordinary calls and the original typed initializer reference.
 The original cursor now emits package-only byte classifications and value-start
 markers; its byte facade consumes exactly the same steps and accounting. JSONHTML
 uses that cursor directly after one admission, with one noncopyable writing meter.

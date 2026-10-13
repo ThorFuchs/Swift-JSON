@@ -26,6 +26,18 @@ public struct JSONWritingOptions: Sendable {
     public var numberStyle: JSONNumberTextStyle
     /// Space or tab units; compact output ignores this choice.
     public var indentationUnit: JSONIndentationUnit
+    /// Creates the legacy space-indented configuration, preserving its initializer function type.
+    ///
+    /// - Parameters:
+    ///   - limits: Finite inclusive capacities and work quotas for this call.
+    ///   - indentation: Spaces per level, 0...8, or nil for compact output.
+    ///   - keyOrder: Insertion or scalar key order.
+    ///   - numberStyle: Normalized or preserved numeric spelling.
+    public init(limits: JSONLimits = .balanced, indentation: Int? = nil,
+                keyOrder: KeyOrder = .insertion, numberStyle: JSONNumberTextStyle = .normalized) {
+        self.init(limits: limits, indentation: indentation, keyOrder: keyOrder,
+                  numberStyle: numberStyle, indentationUnit: .spaces)
+    }
     /// Creates the value configuration; finite limits are checked at operation entry.
     ///
     /// - Parameters:
@@ -33,10 +45,10 @@ public struct JSONWritingOptions: Sendable {
     ///   - indentation: Units per level, 0...8, or nil for compact output.
     ///   - keyOrder: Insertion or scalar key order.
     ///   - numberStyle: Normalized or preserved numeric spelling.
-    ///   - indentationUnit: Spaces by default, or literal horizontal tabs.
+    ///   - indentationUnit: Literal space or tab units; this overload requires an explicit choice.
     public init(limits: JSONLimits = .balanced, indentation: Int? = nil,
                 keyOrder: KeyOrder = .insertion, numberStyle: JSONNumberTextStyle = .normalized,
-                indentationUnit: JSONIndentationUnit = .spaces) {
+                indentationUnit: JSONIndentationUnit) {
         self.limits = limits; self.indentation = indentation; self.keyOrder = keyOrder; self.numberStyle = numberStyle
         self.indentationUnit = indentationUnit
     }

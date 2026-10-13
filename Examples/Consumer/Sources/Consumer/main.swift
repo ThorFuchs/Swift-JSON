@@ -30,6 +30,8 @@ do {
 precondition(builderFailure?.resource?.metric == .workUnits)
 precondition(builderFailure?.resource?.domain == .schemaCompilation)
 print("SCHEMA_BUILDER_CUMULATIVE_BUDGET passed limit=150 minimum_payload_scans=200")
+let originalWriterOptions: (JSONLimits, Int?, JSONWritingOptions.KeyOrder, JSONNumberTextStyle) -> JSONWritingOptions = JSONWritingOptions.init
+precondition(originalWriterOptions(.balanced, nil, .insertion, .normalized).indentationUnit == .spaces)
 let htmlRenderer = JSONHTMLRenderer(options: .init(title: "Public exact values", indentation: 1, indentationUnit: .tabs))
 requireSendable(htmlRenderer)
 let htmlReport = try htmlRenderer.renderWithReport(value)

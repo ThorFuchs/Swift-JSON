@@ -27,9 +27,9 @@ The full initial native, safety and docs lanes passed with unchanged inputs.
 After source review corrections, the committed source is refreshed through:
 
 ```
-python3 -B Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-final
-python3 -B Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-final
-python3 -B Scripts/ci.py --lane docs --output .build/ci/jsonhtml-docs-final
+python3 -B Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-compatible
+python3 -B Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-compatible
+python3 -B Scripts/ci.py --lane docs --output .build/ci/jsonhtml-docs-compatible
 ```
 
 Expected discovery is exact: 205 root functions, 173 parameterized invocations,
@@ -38,7 +38,7 @@ in mobile and downstream consumers, and one qualification function. Independent
 syntax: 318 observed, 287 evaluated successes, 31 strict/finite-policy dispositions.
 Independent schema: 2337 observed, 2300 evaluated successes, 37 policy dispositions.
 The rooted downstream consumer retains 20 cases (8 positive, 12 negative) and two
-operational errors. Five DocC catalogues cover all 627 authored public declarations;
+operational errors. Five DocC catalogues cover all 628 authored public declarations;
 README examples compile and run. Actual command exits, per-case records, hashes
 and source identities belong to the materialized lane receipts, not these counts.
 
@@ -54,6 +54,15 @@ retention includes buffer/result overlap. Timings are observational under concur
 host work, not idle-host comparisons or throughput guarantees. HTML defaults are
 provisional finite policy; browser calibration remains pending. Existing performance
 dispositions and the 10% review trigger remain unchanged.
+
+## Initializer compatibility correction
+
+A public Swift 6.4 compiler probe failed when the original four-argument initializer
+was stored as a function value after appending a defaulted fifth parameter. The
+final source retains that original initializer and adds an explicit-unit overload.
+The compiled public consumer and existing formatting test now cover that source
+form. All affected lanes are refreshed after this correction; predecessor receipts
+remain separate. The release checklist also now selects five products for 1.3.
 
 ## Review and remaining gates
 

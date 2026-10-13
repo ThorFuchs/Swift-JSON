@@ -21,7 +21,7 @@
     "Three supported Apple SDK declaration probes only",
     "Formatted exact Data/String rendering and cumulative reports",
     "16 new behavior functions; complete local native/safety/docs lanes",
-    "Five-product public consumer and 627 documented declarations",
+    "Five-product public consumer and 628 documented declarations",
     "JSON/JSONHTML iPhoneOS and iPhoneSimulator module/public-interface typechecks only"
   ],
   "implementation_qualified": false,
@@ -54,9 +54,9 @@
   ],
   "updated_utc": "2026-10-13T11:26:47.617801+00:00",
   "evidence_locations": [
-    "Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-final",
-    "Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-final",
-    "Scripts/ci.py --lane docs --output .build/ci/jsonhtml-docs-final",
+    "Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-compatible",
+    "Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-compatible",
+    "Scripts/ci.py --lane docs --output .build/ci/jsonhtml-docs-compatible",
     "Documentation/Architecture/Release1.3/Increment.md"
   ],
   "final_source_refresh": "The final-source lane receipts are materialized privately after committing this source; initial full lanes already passed. Any final failure keeps that lane open."
