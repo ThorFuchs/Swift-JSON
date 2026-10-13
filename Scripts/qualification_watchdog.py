@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Bounded external watchdog for a public-engine qualification command; no in-process timeout race."""
-import argparse,datetime,hashlib,json,pathlib,subprocess,sys,time
-from preflight import collect
+import argparse,datetime,hashlib,json,pathlib,platform,subprocess,sys,time
+from preflight import collect,collect_linux
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 def main():
  p=argparse.ArgumentParser();p.add_argument('--timeout',type=int,default=900);p.add_argument('--output',default='.build/handoff/watchdog.json');p.add_argument('command',nargs=argparse.REMAINDER);a=p.parse_args()
  command=a.command[1:] if a.command[:1]==['--'] else a.command
  if not command or not 1<=a.timeout<=1800:p.error('Provide a command and 1...1800 second timeout')
  destination=ROOT/a.output;destination.parent.mkdir(parents=True,exist_ok=True);log=destination.with_suffix('.log')
- receipt={'schema_version':1,'environment':collect(),'command':command,'timeout_seconds':a.timeout,'time_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'failed'}
+ receipt={'schema_version':1,'environment':collect_linux() if platform.system()=='Linux' else collect(),'command':command,'timeout_seconds':a.timeout,'time_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'failed'}
  started=time.monotonic()
  with log.open('w') as stream:
   try:

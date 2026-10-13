@@ -56,8 +56,9 @@ explicitly closed FileHandle reads, including the zero-byte JSON rejection case.
 Address/Leak Sanitizer and Thread Sanitizer remain enabled without suppressions.
 Diagnostic upstream failures are recorded separately from package behavior.
 
-The public consumer resolves its copied Resources directory relative to bundleURL;
-Linux Foundation can already point resourceURL into that directory. Both layouts
+On Linux the public consumer resolves its copied Resources directory relative to
+bundleURL; Foundation can already point resourceURL into that directory. Apple
+uses resourceURL so it retains the platform's bundle Contents layout. Both layouts
 retain the same frozen definition/vector bytes and all 20 explicitly rooted cases.
 Linux qualification also verifies a byte-equal source archive, extracts it into a
 clean directory, builds all products and executes six integrity/resource cases
