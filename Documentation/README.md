@@ -31,6 +31,7 @@ Compiled archives and public symbol graphs remain available in CI artifacts.
 - [Pointer, JSON Patch and Merge Patch](Architecture/Patch.md)
 - [Concurrency, cancellation and caller-work boundaries](Architecture/Concurrency.md)
 - [Linux platform and portable schema integrity](Architecture/Linux.md)
+- [WebAssembly audit and unresolved qualification boundary](Architecture/WebAssemblyAudit.md)
 
 ## Consumers, qualification and maintenance
 

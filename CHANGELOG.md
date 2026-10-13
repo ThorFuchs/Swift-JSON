@@ -9,6 +9,12 @@
   shared strict-writer token formatting, literal tab indentation, cumulative
   finite reports, bounded script-free output and a fifth native DocC catalogue.
   Interactive rendering and transfer/RTF/PDF export remain later increments.
+- Add local full-language wasm32 WASI support, preserving all four products and
+  the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
+  Int.max without changing profiles; allocation capacities retain Int guards.
+  Check retired work overflow before admission. Load integrity-pinned schema
+  resources beside the WASI command and throw structured missing-resource errors.
+  Add exact portable qualification with explicit host/safety scope.
 
 - Keep object-schema construction and document admission within one cumulative
   budget, including live retention and terminal owned failures/cancellation.

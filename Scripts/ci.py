@@ -15,6 +15,11 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'wasm':
+        return [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')],
+        ]
     if lane == 'linux':
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
         # probes are separate Apple acceptance; they never become Linux passes.
@@ -95,7 +100,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 25, 51, 104]
+        expected = [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 25, 51, 104]
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
@@ -124,7 +129,7 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'browser'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -145,7 +150,7 @@ def main():
         log_path = output / ('command-%02d.log' % index)
         with log_path.open('w') as stream:
             try:
-                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
+                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane == 'wasm' else 1800)
                 code = result.returncode
             except (OSError, subprocess.TimeoutExpired) as error:
                 stream.write('\n' + str(error) + '\n')
@@ -172,6 +177,14 @@ def main():
             receipt['status'] = 'failed'
             receipt['evidence_error'] = str(error)
             print('Native evidence failed: ' + str(error), flush=True)
+    if receipt['status'] == 'passed' and args.lane == 'wasm':
+        try:
+            wasi = json.loads((output / 'probes/wasi.json').read_text())
+            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':104,'JSONSchemaTests':51,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11}:
+                raise ValueError('Missing WASI qualification boundary')
+            receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
+        except (OSError,KeyError,ValueError,TypeError) as error:
+            receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
     receipt['source_inputs_unchanged'] = snapshot() == inputs
     if not receipt['source_inputs_unchanged']:
         receipt['status'] = 'failed'

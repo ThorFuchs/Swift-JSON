@@ -58,3 +58,12 @@ Local ARM64 VM execution qualifies its observed Linux environment; an unexecuted
 x86_64 job is pending evidence. Workflow preparation does not establish hosted
 success. Read the [Linux contract](../Architecture/Linux.md) before extending
 distribution, architecture or libc claims.
+
+## Local WASI lane
+
+`python3 Scripts/ci.py --lane wasm` requires the matching Swift.org 6.4.0 compiler,
+SDK and WasmKit plus Node. It records cross-build and runtime outcomes separately.
+It preserves all 192/173 root discoveries, independent corpus policies and 49 cap
+outcomes; both hosts also execute the frozen public consumer. The
+[WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
+This local lane neither activates hosted CI nor substitutes for Apple/Linux gates.
