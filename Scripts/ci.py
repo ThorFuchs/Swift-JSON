@@ -15,6 +15,12 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'wasm-audit':
+        return [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['swift', 'test', '--package-path', 'Tools/WasmAudit'],
+            ['python3', '-B', 'Scripts/wasm_audit.py', '--output', str(output / 'probes')],
+        ]
     if lane == 'linux':
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
         # probes are separate Apple acceptance; they never become Linux passes.
@@ -89,7 +95,7 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 4] if 'thread' in command else [11, 12, 14, 51, 101]
+        expected = [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 4] if 'thread' in command else [11, 12, 14, 51, 101]
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
@@ -109,7 +115,7 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm-audit'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -157,6 +163,14 @@ def main():
             receipt['status'] = 'failed'
             receipt['evidence_error'] = str(error)
             print('Native evidence failed: ' + str(error), flush=True)
+    if receipt['status'] == 'passed' and args.lane == 'wasm-audit':
+        try:
+            audit = json.loads((output / 'probes/audit.json').read_text())
+            if audit['audit_status'] != 'completed' or audit['support_qualification'] != 'blocked' or audit['runtime_feature_groups'] != {'wasmkit': 12, 'node': 12} or len(audit['commands']) != 24:
+                raise ValueError('Missing or changed WebAssembly audit boundary')
+            receipt['materialized_audit'] = {'path': 'probes/audit.json', 'sha256': hashlib.sha256((output / 'probes/audit.json').read_bytes()).hexdigest(), 'support_qualification': audit['support_qualification']}
+        except (OSError, KeyError, ValueError, TypeError) as error:
+            receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
     receipt['source_inputs_unchanged'] = snapshot() == inputs
     if not receipt['source_inputs_unchanged']:
         receipt['status'] = 'failed'
