@@ -29,7 +29,8 @@ OUT.mkdir(parents=True, exist_ok=True)
 RECEIPT = {'schema_version': 1, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
            'commands': [], 'input_commits': {'baseline': BASE, 'candidate': CANDIDATE},
            'policy': {'minimum_pre_run_idle_percent': 90, 'consecutive_samples': 3,
-                      'sample_interval_seconds': 5, 'post_run_settling_samples': 9,
+                      'sample_interval_seconds': 5, 'post_run_policy': 'three consecutive quiet samples, up to 300 seconds',
+                      'each_process_bracketed_by_quiet_admission': True,
                       'during_run_expected_owned_cpu_cores': 1,
                       'other_high_cpu_compiler_or_renderer_processes': 0,
                       'measurement_swapins': 0, 'measurement_swapouts': 0,
@@ -78,7 +79,7 @@ def other_heavy(log):
     return result
 
 
-def quiet_admission():
+def quiet_admission(phase):
     command = ['top', '-l', '61', '-s', '5', '-n', '0']
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                             text=True, bufsize=1)
@@ -93,7 +94,7 @@ def quiet_admission():
                 # First top sample is cumulative rather than the preceding interval.
                 if len(parsed['idle_percent']) >= 4 and all(
                         x >= 90 for x in parsed['idle_percent'][-3:]):
-                    heavy = other_heavy('processes-before.txt')
+                    heavy = other_heavy('processes-' + phase + '.txt')
                     if not heavy:
                         admitted = True
                         break
@@ -101,13 +102,11 @@ def quiet_admission():
         if proc.poll() is None:
             proc.terminate()
         code = proc.wait(timeout=5)
-        (OUT / 'host-before.txt').write_text(''.join(captured))
-        RECEIPT['host_sampling_command'] = {'command': command, 'exit_code': code,
+        (OUT / ('host-' + phase + '.txt')).write_text(''.join(captured))
+        sampling_command = {'command': command, 'exit_code': code,
                                           'intentionally_stopped_at_admission': admitted,
                                           'maximum_wait_seconds': 300}
-    RECEIPT['before'] = parse_top(''.join(captured))
-    RECEIPT['other_heavy_before'] = heavy
-    RECEIPT['admission_passed'] = admitted
+    RECEIPT.setdefault('host_windows', {})[phase] = {'samples': parse_top(''.join(captured)), 'other_heavy': heavy, 'admitted': admitted, 'sampling_command': sampling_command}
     return admitted
 
 
@@ -158,15 +157,18 @@ let package = Package(name: "BuilderBenchmark", platforms: [.macOS("27.0")],
         binaries[kind] = binary
         RECEIPT.setdefault('binaries', {})[kind] = {'sha256': hashlib.sha256(binary.read_bytes()).hexdigest(),
                                                    'bytes': binary.stat().st_size}
-    if not quiet_admission():
+    if not quiet_admission('initial'):
         raise RuntimeError('quiet-host admission failed; no timing result admitted')
-    print('Quiet admission passed: ' + str(RECEIPT['before']['idle_percent'][-3:]), flush=True)
+    RECEIPT['before'] = RECEIPT['host_windows']['initial']['samples']
+    RECEIPT['admission_passed'] = True
+    print('Initial quiet admission passed: ' + str(RECEIPT['before']['idle_percent'][-3:]), flush=True)
     monitor_file = (OUT / 'host-during.txt').open('w')
     monitor = subprocess.Popen(['top', '-l', '0', '-s', '2', '-n', '0'],
                                stdout=monitor_file, stderr=subprocess.STDOUT)
     try:
         for label in ORDER:
             kind = label.rsplit('-', 1)[0]
+            assert quiet_admission('before-' + label), 'pre-process quiet guard failed: ' + label
             text = run([str(binaries[kind])], label + '.json', timeout=60)
             result = json.loads(text)
             assert result['warmups'] == 3 and result['repetitions'] == 9 and len(result['samples']) == 2
@@ -177,13 +179,14 @@ let package = Package(name: "BuilderBenchmark", platforms: [.macOS("27.0")],
                     ('description100', 20000, 240000), ('wide64_strings256', 1000, 768000)]
             RECEIPT['runs'].append({'label': label, **result})
             print(label + ': ' + str({x['workload']: x['medianNanoseconds'] for x in result['samples']}), flush=True)
+            assert quiet_admission('after-' + label), 'post-process quiet guard failed: ' + label
+            print('Post-process quiet admission passed: ' + label, flush=True)
     finally:
         monitor.terminate()
         monitor.wait(timeout=5)
         monitor_file.close()
     RECEIPT['during'] = parse_top((OUT / 'host-during.txt').read_text())
-    after = run(['top', '-l', '9', '-s', '5', '-n', '0'], 'host-after.txt', timeout=50)
-    RECEIPT['after'] = parse_top(after)
+    RECEIPT['after'] = RECEIPT['host_windows']['after-baseline-2']['samples']
     RECEIPT['other_heavy_after'] = other_heavy('processes-after.txt')
     first = RECEIPT['before']['swap'][-1]
     last = RECEIPT['after']['swap'][-1]
