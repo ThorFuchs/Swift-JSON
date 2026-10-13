@@ -20,6 +20,11 @@ import JSON
     #expect(meter.statistics()[.regexSearchWorkUnits] == 7)
 }
 @Test func cumulativeReportCounterOverflowIsCheckedBeforeAdmission() throws {
+    #if arch(wasm32)
+    // A wasm32 Int capacity cannot overflow a UInt64 report with two records.
+    // Work ledgers can reach the same boundary without allocating those bytes.
+    try checkRetiredWorkOverflow()
+    #else
     var limits = JSONLimits.balanced; limits[.nodes] = UInt64(Int.max) - 1
     var meter = try JSONWorkMeter(limits: limits, domain: .core)
     try meter.charge(.nodes, UInt64(Int.max) - 1); try meter.resetValueBounds()
@@ -27,4 +32,15 @@ import JSON
     do { try meter.charge(.nodes, 4); Issue.record("Cumulative report must not wrap") }
     catch let failure as JSONFailure { #expect(failure.code == .counterOverflow && failure.resource?.metric == .nodes) }
     #expect(meter.used(.nodes) == 0)
+    #endif
 }
+private func checkRetiredWorkOverflow() throws {
+    var limits = JSONLimits.balanced; limits[.workUnits] = UInt64.max - 1
+    var meter = try JSONWorkMeter(limits: limits, domain: .core)
+    try meter.work(UInt64.max - 3); try meter.resetRecord(liveBytes: 0)
+    do { try meter.work(4); Issue.record("Cumulative work report must not wrap") }
+    catch let failure as JSONFailure { #expect(failure.code == .counterOverflow && failure.resource?.metric == .workUnits) }
+    #expect(meter.used(.workUnits) == 0)
+    #expect(meter.statistics()[.workUnits] == UInt64.max - 3)
+}
+@Test func retiredWorkOverflowIsAtomicAndTerminal() throws { try checkRetiredWorkOverflow() }

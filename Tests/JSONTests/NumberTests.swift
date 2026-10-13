@@ -66,9 +66,9 @@ func exactDivisibilityUsesDecimalMathematics(a: String, b: String, expected: Boo
     #expect(throws: JSONFailure.self) { try lhs.isMultiple(of: rhs, meter: &meter) }
     limits = .balanced; limits[.absoluteExponent] = UInt64(Int.max) - 1
     do {
-        _ = try JSONNumber(parsing: "0.001e-9223372036854775806", limits: limits)
+        _ = try JSONNumber(parsing: "0.001e-\(Int.max - 1)", limits: limits)
         Issue.record("Checked exponent subtraction must reject overflow")
-    } catch let failure as JSONFailure { #expect(failure.code == .counterOverflow && failure.resource?.metric == .absoluteExponent) }
+    } catch let failure as JSONFailure { #expect(failure.code == (Int.bitWidth == 64 ? .counterOverflow : .limitExceeded) && failure.resource?.metric == .absoluteExponent) }
 }
 
 @Test func boundedBinaryBridgePreservesLongHalfwayAndSubnormalTails() throws {

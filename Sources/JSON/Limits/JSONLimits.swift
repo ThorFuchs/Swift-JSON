@@ -103,6 +103,18 @@ public enum JSONResourceMetric: String, CaseIterable, Sendable, Codable {
     /// Maximum logical scratch bytes retained across a record boundary; the selected scalar reader retains no reuse pool.
     case maxReusableBufferBytes
 
+    /// UInt64 ledgers never become allocation sizes or array indices. All other
+    /// metrics retain the addressable-capacity guard, including numeric exponents.
+    package var requiresIntCapacity: Bool {
+        switch self {
+        case .workUnits, .numericWorkUnits, .compileWorkUnits, .evaluationWorkUnits,
+             .regexCompileWorkUnits, .regexSearchWorkUnits, .aggregateRegexWorkUnits,
+             .patchWorkUnits, .totalWorkUnits, .totalInputBytes, .totalRecords,
+             .totalScannedNodes: false
+        default: true
+        }
+    }
+
     package var index: Int {
         switch self {
         case .inputBytes: 0
@@ -208,12 +220,17 @@ public struct JSONLimits: Sendable, Equatable {
 
     /// Checks supported finite capacities and cancellation configuration.
     ///
-    /// All maxima must fit supported Int capacity; cancellation quantum must be 1...1024
+    /// Allocation/index capacities must be below Int.max. Cumulative UInt64 quotas
+    /// must be below UInt64.max; cancellation quantum must be 1...1024
     /// and pending event/value capacities must be at most one. Zero forbids quota usage.
     /// - Throws: `JSONFailure` with invalidLimits for unsupported configurations.
     public func validate() throws {
         for metric in JSONResourceMetric.allCases {
-            guard self[metric] < UInt64(Int.max) else {
+            let maximum = self[metric]
+            // Ordinary capacities take the original single-read fast path.
+            // Only wider UInt64 quotas need classification; UInt64.max still fails.
+            guard maximum < UInt64(Int.max) ||
+                  (!metric.requiresIntCapacity && maximum < UInt64.max) else {
                 throw JSONFailure(.configuration, code: .invalidLimits)
             }
         }

@@ -108,6 +108,12 @@ package struct JSONWorkMeter: ~Copyable {
         let domainNext = try domainMetric.map { try adding($0, used($0), amount) }
         let subsystemNext = try subsystem.map { try adding($0, used($0), amount) }
         let stagedEvaluation = try compilingEvaluation && domain == .schemaCompilation ? adding(.evaluationWorkUnits, used(.evaluationWorkUnits), amount) : nil
+        // Report totals include retired record/search work. Admit their sums
+        // before committing any counter, just as charge() does for capacities.
+        try requireReportSum(.workUnits, total)
+        if let metric = domainMetric, let next = domainNext { try requireReportSum(metric, next) }
+        if let metric = subsystem, let next = subsystemNext { try requireReportSum(metric, next) }
+        if let next = stagedEvaluation { try requireReportSum(.evaluationWorkUnits, next) }
         if amount >= limits[.cancellationQuantum] || sinceCancellationCheck >= limits[.cancellationQuantum] - amount {
             try checkpoint(); sinceCancellationCheck = 0
         } else { sinceCancellationCheck += amount }
@@ -115,6 +121,10 @@ package struct JSONWorkMeter: ~Copyable {
         if let metric = domainMetric, let next = domainNext { counters[metric.index] = next }
         if let metric = subsystem, let next = subsystemNext { counters[metric.index] = next }
         if let next = stagedEvaluation { counters[JSONResourceMetric.evaluationWorkUnits.index] = next }
+    }
+    private func requireReportSum(_ metric: JSONResourceMetric, _ next: UInt64) throws {
+        let (_, overflow) = retired[metric.index].addingReportingOverflow(next)
+        guard !overflow else { throw violation(metric, nil, overflow: true) }
     }
     package mutating func retain(_ bytes: UInt64) throws {
         try checkpoint()

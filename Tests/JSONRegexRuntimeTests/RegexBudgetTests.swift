@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import Testing
 import Synchronization
+#if canImport(Dispatch)
 import Dispatch
+#endif
 import JSON
 @testable import JSONRegexRuntime
 
@@ -25,6 +27,7 @@ import JSON
     let program = try RegexCompiler.compile("^(a|aa)+b$", meter: &states)
     #expect(throws: JSONFailure.self) { try program.search("aaaaaa!", meter: &states) }
 }
+#if canImport(Dispatch)
 private final class RegexCancellationProgress: Sendable {
     let ready = Mutex(false)
     let resume = DispatchSemaphore(value: 0)
@@ -37,25 +40,35 @@ private final class RegexCancellationProgress: Sendable {
     }
 }
 
+#endif
+
 @Test func countedRepetitionHasBoundedProgramSizeAndCancellationIsObservable() async throws {
     var meter = try JSONWorkMeter(limits: .balanced, domain: .regex)
     let program = try RegexCompiler.compile("a{1000000000000}", meter: &meter)
     #expect(program.instructions.count < 10)
     #expect(try !program.search("aaa", meter: &meter))
     let pathological = try RegexCompiler.compile("^(a+)+$",meter: &meter)
+    #if canImport(Dispatch)
     let progress = RegexCancellationProgress()
+    #endif
     let cancelled = Task.detached { () throws -> UInt64 in
         var limits = JSONLimits.offline
         limits[.regexSearchWorkUnits] = 1_000_000_000; limits[.evaluationWorkUnits] = 1_000_000_000
         limits[.workUnits] = 1_000_000_000
         var invocation = try JSONWorkMeter(limits: limits,domain: .regex)
+        #if canImport(Dispatch)
         invocation.checkpointObserver = { progress.checkpoint($0) }
+        #else
+        invocation.checkpointObserver = { if $0 >= 4096 { withUnsafeCurrentTask { $0?.cancel() } } }
+        #endif
         do { _ = try pathological.search(String(repeating: "a",count: 1_000)+"!",meter: &invocation) }
         catch is CancellationError { return invocation.used(.regexSearchWorkUnits) }
         return 0
     }
+    #if canImport(Dispatch)
     while !progress.ready.withLock({ $0 }) { await Task.yield() }
     cancelled.cancel(); progress.resume.signal()
+    #endif
     let charged = try await cancelled.value
     print("Inner cancellation regex: \(charged) charged search units")
     #expect(charged > 1024)

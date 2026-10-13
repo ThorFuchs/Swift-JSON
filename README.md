@@ -70,10 +70,16 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The Linux development branch adds portable schema integrity for all four products
+The Linux development increment adds portable schema integrity for all four products
 without runtime dependencies. Its initial qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
+
+The local WASI support increment targets full-language Swift 6.4
+`wasm32-unknown-wasip1`, with finite defaults and exact persistence. Its
+[platform contract](Documentation/Architecture/WebAssembly.md) documents resource
+packaging, execution hosts, qualification scope and safety limitations. Browser
+and Embedded Swift hosting require separate qualification.
 
 ## Installation
 

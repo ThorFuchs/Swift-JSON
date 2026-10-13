@@ -27,7 +27,18 @@ extension JSONSchemaRegistry {
         ]
         _ = try meter.adding(.schemaDocuments, meter.used(.schemaDocuments), UInt64(files.count))
         var documents: [JSONSchemaDocument] = []
+        #if os(WASI)
+        // SwiftPM Bundle.module calls Foundation Bundle.main, which traps when
+        // no directory is preopened. Resolve the documented command-relative
+        // bundle directly so missing permissions/resources throw a schema error.
+        guard let command = CommandLine.arguments.first, command.hasPrefix("/") else {
+            throw JSONSchemaCompilationFailure(.metaSchema)
+        }
+        let root = URL(fileURLWithPath: command).deletingLastPathComponent()
+            .appendingPathComponent("Swift-JSON_JSONSchema.bundle", isDirectory: true)
+        #else
         guard let root = Bundle.module.resourceURL else { throw JSONSchemaCompilationFailure(.metaSchema) }
+        #endif
         for (path, identifier, size, expectedHash) in files {
             try meter.checkpoint(); try meter.charge(.schemaDocuments); try meter.resetValueBounds()
             try meter.require(.inputBytes, size); try meter.charge(.schemaBytes, size); try meter.retain(size)
