@@ -28,7 +28,9 @@ public struct ReadinessReceipt: Codable, Sendable {
     public let cumulativeStages: [RemainingWork.Stage]
 }
 private func resource(_ name: String) throws -> [UInt8] {
-    let path = Bundle.module.resourceURL!.appendingPathComponent("Resources").appendingPathComponent(name)
+    // The copied directory is relative to the bundle itself. On Linux,
+    // resourceURL may already select a directory literally named Resources.
+    let path = Bundle.module.bundleURL.appendingPathComponent("Resources").appendingPathComponent(name)
     return Array(try Data(contentsOf: path))
 }
 public func runReadiness() throws -> ReadinessReceipt {

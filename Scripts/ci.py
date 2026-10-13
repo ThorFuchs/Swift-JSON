@@ -21,7 +21,11 @@ def commands(lane, output):
         return [c for c in commands('native', ROOT / output)
                 if not any(x in c for x in ['Tools/MobileQualification', '--mode'])]
     if lane == 'linux-safety':
-        return commands('safety', ROOT / output)
+        # Every behavior case uses Swift Testing. Do not start the generated
+        # zero-case XCTest runners, which leak in the pinned Linux runtime.
+        return [['python3', '-B', 'Scripts/linux_runtime_diagnostics.py', '--output', str(output / 'runtime-diagnostics')]] + [
+            c + ['--disable-xctest'] if c[:2] == ['swift', 'test'] else c
+            for c in commands('safety', ROOT / output)]
     if lane == 'qa':
         return [
             ['swift', 'test', '--filter', 'qa'],
