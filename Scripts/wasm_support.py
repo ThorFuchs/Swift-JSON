@@ -64,7 +64,8 @@ def main():
         for config in ['debug', 'release']:
             build = [swift, 'build', '-c', config, '--swift-sdk', SDK]
             scratch = '.build/wasm-audit-root'
-            run('root-build-' + config, build + ['--scratch-path', scratch, '--build-tests'])
+            run('root-build-' + config, build + ['--scratch-path', scratch, '--build-tests'] +
+                (['-Xswiftc', '-enable-testing'] if config == 'release' else []))
             roots = {name: binary(scratch, config, name + '-test-runner') for name in COUNTS}
             invocations = 0
             for name, count in COUNTS.items():
