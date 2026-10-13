@@ -1,30 +1,37 @@
-# WebAssembly audit consumer
+# Public WASI consumer
 
-This separate development tool imports all four public products from the local
-package. It adds no root product or remote dependency. Its 13 Swift Testing
-functions check explicit conservative behavior and record the default-profile
-and persistence blockers. A test confirming a blocker does not qualify that
-blocked capability.
+This separate qualification package imports the four public products and adds
+no external dependencies. The library root dependency graph stays empty.
+It now exercises balanced defaults and exact persistence; the initial audit
+receipts at commit 5ca1079 retain the original blocked observations.
 
-Use the matching Swift.org 6.4.0 toolchain and `swift-6.4.0-RELEASE_wasm` SDK,
-with WasmKit and Node on PATH:
+Use the matching official Swift 6.4.0 compiler and full-language SDK:
 
 ```sh
-python3 Scripts/ci.py --lane wasm-audit
+swift build --package-path Tools/WasmAudit --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path .build/wasm-audit-consumer
 ```
 
-The lane runs host consumer tests, cross-builds every library and the consumer,
-and executes the same module and all 13 compiled Swift Testing functions in both
-WasmKit and Node/V8. The two engines each exercise 12 named feature groups. Schema
-cases require an explicit WASI preopen of the build-product directory containing
-the copied nine-resource bundle. The unmounted failure remains in the receipt.
-No debug bundle override is required for the mounted probes.
+The command and its SwiftPM resource bundle reside under
+`.build/wasm-audit-consumer/out/Products/Debug-webassembly-wasm32` with Swift Build.
+Pass the absolute module path. `core`, `profiles`, `resources`, `schema`,
+`streaming` and `benchmark` are public command modes. For Node:
 
-The harness also records profile rejection, bare-host import requirements,
-the unchanged root suite's missing Dispatch module and Embedded Swift's missing
-Foundation module. These nonzero/blocked outcomes remain separate from evaluated
-successes. An exit-zero completed audit is not a WebAssembly support gate.
+```sh
+node Tools/WasmAudit/run-node.mjs /absolute/path/WasmAudit.wasm schema --resources
+```
 
-The [audit contract](../../Documentation/Architecture/WebAssemblyAudit.md)
-describes the findings and the work required before adding a support claim.
-No browser, worker-thread, hard memory or throughput qualification is implied.
+For WasmKit, preopen the directory containing the command and bundle:
+
+```sh
+wasmkit run --dir /absolute/path /absolute/path/WasmAudit.wasm schema
+```
+
+`missing-resources` intentionally runs without a preopen and requires a structured
+meta-schema failure, with no trap. The 13 Swift Testing functions have the same
+public semantics on native and WASI. The broader root/corpus/49-cap/frozen consumer
+qualification runs through `python3 Scripts/ci.py --lane wasm`; source paths and
+private build outputs stay outside archives. `--repo` grants fixture access only
+for qualification, and `command -- ...` passes explicit executable arguments.
+
+See the [WASI contract](../../Documentation/Architecture/WebAssembly.md) for
+cooperative cancellation, safety/measurement policy and unqualified host modes.

@@ -1,10 +1,20 @@
 // SPDX-License-Identifier: Apache-2.0
 import WasmAuditKit
+import JSONSchema
 
 @main struct Audit {
     static func main() async throws {
         let mode = CommandLine.arguments.dropFirst().first ?? "core"
         switch mode {
+        case "missing-resources":
+            do {
+                _ = try JSONSchemaRegistry.draft2020_12()
+                throw ProbeFailure.assertion("Missing resources were accepted")
+            } catch let failure as JSONSchemaCompilationFailure {
+                guard failure.category == .metaSchema else { throw failure }
+                print("MISSING_RESOURCES structured_metaSchema")
+            }
+        case "benchmark": try await Probes.benchmark()
         case "profiles": try Probes.profiles(); try Probes.payloadObservation()
         case "core":
             try Probes.exactNumbers(); print("CASE exact_numbers passed")

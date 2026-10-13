@@ -11,17 +11,18 @@ import Musl
 @main struct Qualification {
     static func main() async {
         var arguments = Array(CommandLine.arguments.dropFirst())
-        var registry: String?, output: String?, all = false
+        var registry: String?, output: String?, rootPath: String?, all = false
         while !arguments.isEmpty {
             let argument = arguments.removeFirst()
             if argument == "--all" { all = true }
-            else if (argument == "--registry" || argument == "--output"), !arguments.isEmpty {
+            else if (argument == "--registry" || argument == "--output" || argument == "--root"), !arguments.isEmpty {
                 let value = arguments.removeFirst()
-                if argument == "--registry" { registry = value } else { output = value }
+                if argument == "--registry" { registry = value }
+                else if argument == "--root" { rootPath = value } else { output = value }
             } else { print("Usage: Qualification --all --registry PATH --output PATH"); exit(2) }
         }
         guard all, let registry, let output else { print("Usage: Qualification --all --registry PATH --output PATH"); exit(2) }
-        let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
+        let root = URL(fileURLWithPath: rootPath ?? FileManager.default.currentDirectoryPath, isDirectory: true)
         var report = QualificationReport(command: CommandLine.arguments.dropFirst().joined(separator: " "))
         do {
             #if os(macOS)
@@ -47,7 +48,13 @@ import Musl
             let encoder = Foundation.JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
             let destination = root.appendingPathComponent(output)
             try FileManager.default.createDirectory(at: destination.deletingLastPathComponent(), withIntermediateDirectories: true)
+            #if os(WASI)
+            // Trusted harness receipt, not a transactional library output.
+            // WASI Foundation has no temporary-file atomic write implementation.
+            try encoder.encode(report).write(to: destination)
+            #else
             try encoder.encode(report).write(to: destination, options: .atomic)
+            #endif
         } catch { print("Could not save qualification receipt: \(errorCode(error))"); exit(1) }
         print("Qualification \(report.status)"); exit(report.status == "passed" ? 0 : 1)
     }

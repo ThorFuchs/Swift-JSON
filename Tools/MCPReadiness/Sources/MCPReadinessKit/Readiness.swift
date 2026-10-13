@@ -28,7 +28,13 @@ public struct ReadinessReceipt: Codable, Sendable {
     public let cumulativeStages: [RemainingWork.Stage]
 }
 private func resource(_ name: String) throws -> [UInt8] {
-    #if os(Linux)
+    #if os(WASI)
+    guard let command = CommandLine.arguments.first, command.hasPrefix("/") else {
+        throw ReadinessFailure.expectation("Absolute command path required")
+    }
+    let path = URL(fileURLWithPath: command).deletingLastPathComponent()
+        .appendingPathComponent("MCPReadiness_MCPReadinessKit.bundle/Resources").appendingPathComponent(name)
+    #elseif os(Linux)
     // Linux resourceURL already selects the copied directory named Resources.
     let path = Bundle.module.bundleURL.appendingPathComponent("Resources").appendingPathComponent(name)
     #else

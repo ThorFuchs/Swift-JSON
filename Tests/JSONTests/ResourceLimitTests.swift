@@ -2,7 +2,9 @@
 import Foundation
 import Testing
 import Synchronization
+#if canImport(Dispatch)
 import Dispatch
+#endif
 @testable import JSON
 
 @Test(arguments: [UInt64(2), 3, 4])
@@ -82,6 +84,7 @@ func invalidCancellationConfiguration(quantum: UInt64) {
     catch { #expect(error is CancellationError) }
 }
 
+#if canImport(Dispatch)
 private final class OwnedCancellationProgress: Sendable {
     let ready = Mutex(false)
     let resume = DispatchSemaphore(value: 0)
@@ -94,11 +97,15 @@ private final class OwnedCancellationProgress: Sendable {
     }
 }
 
+#endif
+
 @Test func cancellationReachesOwnedWork() async throws {
     // Returning the interrupted meter's counters proves cancellation happened
     // after real owned numeric/lexer work, rather than only at a facade entry.
     for numeric in [true,false] {
+        #if canImport(Dispatch)
         let progress = OwnedCancellationProgress()
+        #endif
         let bytes = numeric ? Array(repeating: UInt8(55),count: 4_000_000) : [34] + Array(repeating: UInt8(97),count: 4_000_000) + [34]
         let task = Task.detached { () throws -> UInt64 in
             var limits = JSONLimits.offline
@@ -106,7 +113,13 @@ private final class OwnedCancellationProgress: Sendable {
             limits[.numberDigits] = 4_000_000; limits[.numberTokenBytes] = 4_000_000
             limits[.numericWorkUnits] = 200_000_000; limits[.workUnits] = 200_000_000
             var meter = try JSONWorkMeter(limits: limits,domain: numeric ? .core : .parsing)
+            #if canImport(Dispatch)
             meter.checkpointObserver = { progress.checkpoint($0) }
+            #else
+            // WASI has a cooperative executor: cancel this task only after
+            // actual owned work, without pretending another thread can preempt it.
+            meter.checkpointObserver = { if $0 >= 4096 { withUnsafeCurrentTask { $0?.cancel() } } }
+            #endif
             do {
                 if numeric { _ = try JSONNumber.parse(bytes,meter: &meter) }
                 else { _ = try JSONParser().parse(bytes,meter: &meter) }
@@ -115,8 +128,10 @@ private final class OwnedCancellationProgress: Sendable {
             }
             return 0
         }
+        #if canImport(Dispatch)
         while !progress.ready.withLock({ $0 }) { await Task.yield() }
         task.cancel(); progress.resume.signal()
+        #endif
         let charged = try await task.value
         print("Inner cancellation \(numeric ? "number" : "codec"): \(charged) charged units")
         #expect(charged > 1024)
@@ -135,7 +150,7 @@ private final class OwnedCancellationProgress: Sendable {
             #expect(observed.insert(metric).inserted)
             for (profile,column) in [(JSONLimits.conservative,"conservative"),(JSONLimits.balanced,"balanced"),(JSONLimits.offline,"offline")] {
                 let limit = try #require(fields[column]?.numberValue).integer(as: UInt64.self)
-                #expect(profile[metric] == limit && limit > 0 && limit < UInt64(Int.max))
+                #expect(profile[metric] == limit && limit > 0 && limit < UInt64.max && (!metric.requiresIntCapacity || limit < UInt64(Int.max)))
                 let meter = try JSONWorkMeter(limits: profile,domain: .core)
                 #expect(try meter.adding(metric,limit-1,1) == limit)
                 do { _ = try meter.adding(metric,limit,1); Issue.record("Inclusive ceiling exceeded: \(name)") }
@@ -146,4 +161,40 @@ private final class OwnedCancellationProgress: Sendable {
         }
     }
     #expect(observed.count == 49 && observed == Set(JSONResourceMetric.allCases))
+}
+
+@Test func capacityAndUInt64QuotaConfigurationBoundariesRemainDistinct() throws {
+    var capacities = 0, quotas = 0
+    for metric in JSONResourceMetric.allCases {
+        var limits = JSONLimits.balanced
+        limits[metric] = UInt64.max
+        #expect(throws: JSONFailure.self) { try limits.validate() }
+        if metric.requiresIntCapacity {
+            capacities += 1
+            limits[metric] = UInt64(Int.max)
+            #expect(throws: JSONFailure.self) { try limits.validate() }
+        } else {
+            quotas += 1
+            limits[metric] = UInt64(Int.max) + 1
+            try limits.validate()
+        }
+    }
+    #expect(capacities == 37 && quotas == 12)
+    for profile in [JSONLimits.conservative, .balanced, .offline] { try profile.validate() }
+}
+@Test func UInt64QuotasCrossIntBoundaryWithoutNarrowingOrReset() throws {
+    for metric in JSONResourceMetric.allCases where !metric.requiresIntCapacity {
+        let boundary = UInt64(Int.max) + 1
+        var limits = JSONLimits.balanced; limits[metric] = boundary
+        var meter = try JSONWorkMeter(limits: limits, domain: .core)
+        // Synthetic ledger admission: no physical allocation or execution claim.
+        try meter.charge(metric, boundary)
+        #expect(meter.used(metric) == boundary && meter.statistics()[metric] == boundary)
+        do { try meter.charge(metric); Issue.record("Quota must reject N+1") }
+        catch let failure as JSONFailure {
+            #expect(failure.resource?.metric == metric && failure.resource?.attemptedUsage == boundary + 1)
+        }
+        #expect(meter.used(metric) == boundary)
+        #expect(throws: JSONFailure.self) { try meter.checkpoint() }
+    }
 }

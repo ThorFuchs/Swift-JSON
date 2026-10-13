@@ -16,30 +16,24 @@ func rejects(_ category: JSONFailure.Category, _ body: () throws -> Void) throws
     throw ProbeFailure.assertion("Expected \(category)")
 }
 
-/// Audit only: explicit conservative limits never change the package defaults.
+/// Public WASI consumer: package defaults remain finite and unchanged.
 public enum Probes {
-    public static let limits = JSONLimits.conservative
+    public static let limits = JSONLimits.balanced
     public static func parse(_ text: String) throws -> JSON {
         try JSONParser(options: .init(limits: limits)).parse(text)
     }
     public static func profiles() throws {
         print("TARGET int_bits=\(Int.bitWidth)")
         for (name, profile) in [("conservative", JSONLimits.conservative), ("balanced", .balanced), ("offline", .offline)] {
-            let exceeds = JSONResourceMetric.allCases.filter { profile[$0] >= UInt64(Int.max) }.map { String(describing: $0) }
-            do {
-                try profile.validate()
-                try require(exceeds.isEmpty, "Accepted an unrepresentable profile")
-                print("OBSERVATION profile=\(name) accepted exceeds_int=[]")
-            } catch let error as JSONFailure {
-                try require(!exceeds.isEmpty && error.code == .invalidLimits, "Unexpected profile rejection")
-                print("OBSERVATION profile=\(name) blocked code=invalidLimits exceeds_int=\(exceeds)")
-            }
+            try profile.validate()
+            let value = try JSONParser(options: .init(limits: profile)).parse("9007199254740993")
+            try require(try value.numberValue!.integer(as: UInt64.self, limits: profile) == 9_007_199_254_740_993, "Profile exactness")
+            print("PROFILE \(name) passed")
         }
-        if Int.bitWidth == 32 {
-            try rejects(.configuration) { _ = try JSONParser().parse("0") }
-            print("OBSERVATION default_parser blocked code=invalidLimits")
-        } else { _ = try JSONParser().parse("0") }
+        try require(try JSONParser().parse("0") == 0, "Default parser")
+        print("DEFAULT_PARSER passed")
     }
+
     public static func exactNumbers() throws {
         let n = try JSONNumber(parsing: "9007199254740993", limits: limits)
         try require(try n.integer(as: UInt64.self, limits: limits) == 9_007_199_254_740_993, "Lost exact integer")
@@ -100,17 +94,13 @@ public enum Probes {
     }
     public static func payloadObservation() throws {
         let value = try parse(#"{"n":9007199254740993}"#)
-        if Int.bitWidth == 32 {
-            try rejects(.configuration) { _ = try JSONCodablePayload(preserving: value, limits: limits) }
-            print("OBSERVATION payload_explicit_conservative blocked balanced_intersection_invalidLimits")
-        } else {
-            let payload = try JSONCodablePayload(preserving: value, limits: limits)
-            let encoded = try PropertyListEncoder().encode(payload)
-            let opened = try PropertyListDecoder().decode(JSONCodablePayload.self, from: encoded)
-            try require(try opened.value(limits: limits) == value, "Persistence envelope")
-            print("OBSERVATION payload_explicit_conservative accepted")
-        }
+        let payload = try JSONCodablePayload(preserving: value, limits: limits)
+        let encoded = try PropertyListEncoder().encode(payload)
+        let opened = try PropertyListDecoder().decode(JSONCodablePayload.self, from: encoded)
+        try require(try opened.value(limits: limits) == value, "Persistence envelope")
+        print("PERSISTENCE passed")
     }
+
     public static func resourceRegistry() throws {
         let registry = try JSONSchemaRegistry.draft2020_12(limits: limits)
         try require(registry.documents.count == 9, "Missing pinned resources")
@@ -227,5 +217,24 @@ extension Probes {
         }
         try require(try await stopped.value, "Writer cancellation not observed")
         try require(await sink.calls == 1, "Writes after cancellation")
+    }
+}
+
+extension Probes {
+    /// Fixed bounded calibration workload; it does not establish an RSS cap.
+    public static func benchmark() async throws {
+        let bytes = Array(("[" + Array(repeating: "9007199254740993", count: 1000).joined(separator: ",") + "]").utf8)
+        var peak: UInt64 = 0, work: UInt64 = 0
+        for _ in 0..<10 {
+            let report = try JSONParser().parseWithReport(bytes)
+            try require(report.result.arrayValue?.count == 1000, "Calibration parse")
+            peak = max(peak, report.statistics.peakLogicalRetainedBytes)
+            work += report.statistics[.workUnits]
+        }
+        let framed = Array(Array(repeating: "0", count: 1000).joined(separator: "\n").appending("\n").utf8)
+        var records = 0
+        for try await _ in NDJSONValueSequence(Chunks(bytes: framed)) { records += 1 }
+        try require(records == 1000, "Calibration records")
+        print("WASI_CALIBRATION parse_invocations=10 input_bytes=\(bytes.count) records=\(records) parse_logical_peak=\(peak) parse_work=\(work)")
     }
 }

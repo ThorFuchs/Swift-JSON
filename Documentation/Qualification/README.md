@@ -83,3 +83,9 @@ The [1.1 platform policy](../Architecture/Release1.1/QualificationPolicy.json)
 accepts iPad SDK/simulator behavior and three-process disk persistence for this
 release. Physical iPad qualification is deferred and nonblocking. Physical iPhone
 evidence remains required; no test, corpus policy or resource assertion is removed.
+
+The WASI increment adds three boundary/accounting functions: 192 root functions
+(JSON 104, schema 51, regex 12, streaming 14, Patch 11), retaining all 173 parameter
+invocations and all 49 public metric outcomes. Native 64-bit overflow/rendezvous
+cases remain; wasm32 uses UInt64 ledgers and cooperative checkpoint cancellation.
+Run the [WASI lane](../Architecture/WebAssembly.md) for its explicit per-host scope.

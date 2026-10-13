@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "target": "wasm32-unknown-wasip1",
+  "published_profiles_changed": false,
+  "capacity_metrics": 37,
+  "counter_metrics": 12,
+  "metrics": [
+    {
+      "metric": "inputBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "maxDepth",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "nodes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "objectMembers",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "arrayItems",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "stringBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "aggregateTextBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "keyBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "numberDigits",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "numberTokenBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "absoluteExponent",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "retainedBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "workUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "numericWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "outputBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "sourceMapEntries",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "issues",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "diagnosticBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "cancellationQuantum",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "schemaDocuments",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "schemaBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "schemaNodes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "referenceEdges",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "compileWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "compiledPlanBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "evaluationWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "evaluationFrames",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "annotationEntries",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "annotationBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "regexPatternBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "aggregateRegexPatternBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "regexProgramInstructions",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "regexCompileWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "regexSearchWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "aggregateRegexWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "regexRetainedBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "regexCaptureGroups",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "chunkBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "pendingEvents",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "pendingValues",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "totalInputBytes",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "totalRecords",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "totalWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "operations",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "pointerBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "pointerTokens",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    },
+    {
+      "metric": "patchWorkUnits",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "totalScannedNodes",
+      "maximum_rule": "below_UInt64_max",
+      "kind": "cumulative_counter"
+    },
+    {
+      "metric": "maxReusableBufferBytes",
+      "maximum_rule": "below_Int_max",
+      "kind": "addressable_capacity_or_configuration"
+    }
+  ]
+}

@@ -109,13 +109,24 @@ private func expectAccess(_ path: [JSONLocationComponent], _ code: JSONFailure.C
 @Test func readAccessSharedProjectionLimitsAndTerminalAccounting() throws {
     var history = JSONCodingOptions(); history.limits[.stringBytes] = 6
     #expect(throws: JSONFailure.self) { try JSON.string("history").read { try $0.decode(String.self, coding: history) } }
-    var huge = JSONLimits.balanced; huge[.inputBytes] = UInt64(Int.max) - 1
+    var huge = JSONLimits.balanced
+    #if arch(wasm32)
+    let metric = JSONResourceMetric.workUnits
+    huge[metric] = UInt64.max - 1
     var lifetime = try JSONWorkMeter(limits: huge, domain: .core)
-    for _ in 0..<2 { try lifetime.charge(.inputBytes, huge[.inputBytes]); try lifetime.resetValueBounds() }
-    #expect(throws: JSONFailure.self) { try lifetime.charge(.inputBytes, huge[.inputBytes]) }
-    let terminal = lifetime.statistics()[.inputBytes]
+    try lifetime.work(UInt64.max - 2); try lifetime.resetRecord(liveBytes: 0)
+    try lifetime.work(1); try lifetime.resetRecord(liveBytes: 0)
+    #expect(throws: JSONFailure.self) { try lifetime.work(2) }
+    #else
+    let metric = JSONResourceMetric.inputBytes
+    huge[metric] = UInt64(Int.max) - 1
+    var lifetime = try JSONWorkMeter(limits: huge, domain: .core)
+    for _ in 0..<2 { try lifetime.charge(metric, huge[metric]); try lifetime.resetValueBounds() }
+    #expect(throws: JSONFailure.self) { try lifetime.charge(metric, huge[metric]) }
+    #endif
+    let terminal = lifetime.statistics()[metric]
     #expect(throws: JSONFailure.self) { try lifetime.checkpoint() }
-    #expect(lifetime.statistics()[.inputBytes] == terminal)
+    #expect(lifetime.statistics()[metric] == terminal)
     let model = ReadModel(count: .max, name: "e\u{301}", bytes: Data([0, 1, 255]))
     let value = try JSON(encoding: model)
     #expect(try value.decode(ReadModel.self) == model)

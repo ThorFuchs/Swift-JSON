@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add local full-language wasm32 WASI support, preserving all four products and
+  the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
+  Int.max without changing profiles; allocation capacities retain Int guards.
+  Check retired work overflow before admission. Load integrity-pinned schema
+  resources beside the WASI command and throw structured missing-resource errors.
+  Add exact portable qualification with explicit host/safety scope.
+
 - Keep object-schema construction and document admission within one cumulative
   budget, including live retention and terminal owned failures/cancellation.
   Tight limits that previously fit each phase separately can now fail the composed
