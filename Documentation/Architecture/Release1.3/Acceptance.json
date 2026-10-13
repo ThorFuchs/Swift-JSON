@@ -6,85 +6,115 @@
       "id": "JH01",
       "gate": "H0",
       "requirement": "The product/module is JSONHTML in the same package; its target depends on JSON and the exact public set contains five products.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "JH02",
       "gate": "H0",
       "requirement": "Forward product policy, manifest/CI assertions, consumers and test-count expectations are revised coherently; historical released records remain accurate.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "JH03",
       "gate": "H0",
       "requirement": "Data/String/report APIs, checked Sendable configuration, finite presets and asset strategy compile through a public consumer.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH04",
       "gate": "H1",
       "requirement": "All six root kinds, empty containers and mixed deep/wide structures produce a complete strict UTF-8 HTML document.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "JH05",
       "gate": "H1",
       "requirement": "Large integers, exact decimals, negative zero and admitted exponent/number spellings survive display and exported JSON without JS numeric conversion.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH06",
       "gate": "H1",
       "requirement": "Scalar-distinct composed/decomposed keys/strings and insertion/array order remain distinct and ordered.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "JH07",
       "gate": "H1",
       "requirement": "One noncopyable invocation meter covers admission, traversal, token helpers, paths, assets, Base64, annotations and result copies.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH08",
       "gate": "H1",
       "requirement": "Inclusive boundaries and checked overflow cover core work/output/retention and renderer node/DOM/document/outline/annotation capacities.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH09",
       "gate": "H1",
       "requirement": "Cancellation inside owned loops and valid restrictive/zero ceilings produce honest failures without a successful partial result/report.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "JH10",
       "gate": "H1",
       "requirement": "Repeated and concurrent calls have exclusive state; deterministic output uses stable IDs/assets and no clock/random mutation.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH11",
       "gate": "H1",
       "requirement": "Data and String materialization charges are complete; final-document byte count is distinguished from cumulative core helper output.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "JH12",
       "gate": "H2",
       "requirement": "Formatted mode has no script; interactive native disclosure remains usable with scripting disabled and allows multiple open branches.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH13",
@@ -118,22 +148,31 @@
       "id": "JH17",
       "gate": "H2",
       "requirement": "Script/style closing strings, ampersands, quotes, event-handler payloads and keys such as __proto__/constructor remain inert data.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH18",
       "gate": "H2",
       "requirement": "No payload-driven innerHTML, executable interpolation, URLs/selectors or script-element text assignment appears in the output/control path.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH19",
       "gate": "H2",
       "requirement": "Emitted CSS/JS asset hashes match CSP block bytes; controls work under policy and external resource requests remain absent.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH20",
@@ -174,30 +213,42 @@
       "id": "JH25",
       "gate": "H3",
       "requirement": "Five-product/platform/resource qualification; pure rendering does not execute UI frameworks, while JSONHTML may link narrowly isolated Apple PDF/printing frameworks.",
-      "status": "not_run",
-      "evidence": [],
-      "amendment": "Maintainer-approved transfer/export framework amendment; original JH25 remains historical."
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "amendment": "Maintainer-approved transfer/export framework amendment; original JH25 remains historical.",
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH26",
       "gate": "H3",
       "requirement": "Representative generation/output-expansion/retention and browser DOM/interactivity measurements justify finite preset values.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH27",
       "gate": "H4",
       "requirement": "Existing JSONWriter behavior, native/safety/docs lanes, public examples and baseline semantic/corpus cases remain qualified.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "JH28",
       "gate": "H4",
       "requirement": "Final feature branch/PR head/base, review disposition, source/asset hashes, actual receipts and release placement are recorded.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX01",
@@ -212,23 +263,31 @@
       "id": "TX02",
       "gate": "T0",
       "requirement": "Exact five-product manifest, forward policy and CI expectations; no sixth product or external root package dependency.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "TX03",
       "gate": "T0",
       "requirement": "Final public APIs, reports, errors, finite presets and representation builders compile with actual Swift 6.4 / SDK 27.",
-      "status": "not_run",
-      "evidence": [],
-      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open.",
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX04",
       "gate": "T0",
       "requirement": "Explicit framework amendment; pure generation executes without WebKit; core JSON imports no WebKit/AppKit/UIKit.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX05",
@@ -249,43 +308,59 @@
       "id": "TX07",
       "gate": "T1",
       "requirement": "Legacy writer default/output/mutation/initializer behavior retained under spaces, compact and zero indentation.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "TX08",
       "gate": "T1",
       "requirement": "Tabs emitted directly by the cursor; checked 0...8 unit count and separate tab display width.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ]
     },
     {
       "id": "TX09",
       "gate": "T1",
       "requirement": "Shared helpers admit the input once and keep one noncopyable native preparation meter across selected formats.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX10",
       "gate": "T2",
       "requirement": "Exact large numbers, negative zero, exponent spellings and constructed-number fallback; insertion order preserved.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX11",
       "gate": "T2",
       "requirement": "Composed/decomposed keys and strings, empty/numeric/control/special keys preserve decoded scalar identity.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX12",
       "gate": "T2",
       "requirement": "All six root kinds, empty containers and mixed/deep/wide values are handled without recursive untrusted traversal.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX13",
@@ -298,8 +373,11 @@
       "id": "TX14",
       "gate": "T2",
       "requirement": "JSON/native JSON equality does not replace separate scalar/order/lexeme checks; no Foundation JSON authority.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX15",
@@ -368,36 +446,51 @@
       "id": "TX24",
       "gate": "T2",
       "requirement": "One native preparation call is all-or-nothing; failures install no partial artifact or successful report.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX25",
       "gate": "T3",
       "requirement": "Static transfer HTML is complete, expanded, highlighted and script-free with deterministic default theme.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX26",
       "gate": "T3",
       "requirement": "Static export omits controls/hidden disclosure/line numbers/outline/annotations by default; no JSON truncation.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX27",
       "gate": "T3",
       "requirement": "Escaping/CSP/assets hold for script/style delimiters, quotes, ampersands, Unicode/control and prototype-like keys.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX28",
       "gate": "T3",
       "requirement": "No external requests/fonts or browser numeric reconstruction; emitted CSS/CSP hashes match actual block bytes.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX29",
@@ -417,22 +510,31 @@
       "id": "TX31",
       "gate": "T3",
       "requirement": "Inclusive minus-one/boundary/plus-one and overflow probes for work/retention/output/metadata/style/HTML caps.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX32",
       "gate": "T3",
       "requirement": "Cancellation inside owned loops, result-copy failure and terminal latch behavior preserve accounting.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX33",
       "gate": "T3",
       "requirement": "Repeated and concurrent native calls are deterministic and invocation-owned; all state is checked Sendable.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX34",
@@ -537,8 +639,11 @@
       "id": "TX48",
       "gate": "T6",
       "requirement": "Five-product public consumers/resources and Apple framework boundary qualify Mac/iOS/iPadOS SDK/simulator/device cases.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX49",
@@ -565,50 +670,65 @@
       "id": "TX52",
       "gate": "T6",
       "requirement": "Native/safety/docs lanes pass on final exact candidate with deliberate nonzero suite/case counts and current base.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX53",
       "gate": "T6",
       "requirement": "Generation, combined preparation, RTF/PDF expansion and responsiveness measurements justify frozen finite profiles.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX54",
       "gate": "T6",
       "requirement": "Public docs/examples describe exactness, preparation, format selection, recipient and system-resource boundaries.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX55",
       "gate": "T6",
       "requirement": "Separate review pass findings resolved; final API/framework/limits choices and source/log/artifact identity returned.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
     {
       "id": "TX56",
       "gate": "T6",
       "requirement": "Release slot reconciled; no main push/tag/release/messages under this brief alone; all incomplete rows explicit.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+      ],
+      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     }
   ],
   "gate_status": {
-    "H0": "not_run",
-    "H1": "not_run",
+    "H0": "partial",
+    "H1": "partial",
     "H2": "not_run",
-    "H3": "not_run",
-    "H4": "not_run",
-    "T0": "not_run",
-    "T1": "not_run",
-    "T2": "not_run",
-    "T3": "not_run",
+    "H3": "partial",
+    "H4": "partial",
+    "T0": "partial",
+    "T1": "partial",
+    "T2": "partial",
+    "T3": "partial",
     "T4": "not_run",
     "T5": "not_run",
-    "T6": "not_run"
+    "T6": "partial"
   }
 }

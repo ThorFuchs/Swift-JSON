@@ -6,13 +6,14 @@ behavioral contracts and native qualification procedure.
 
 ## API references and guided reading
 
-The four native DocC catalogs combine inline API documentation with focused guides:
+The five native DocC catalogs combine inline API documentation with focused guides:
 
 | Product | Catalog source | Guide |
 | --- | --- | --- |
 | JSON | [JSON](../Sources/JSON/Documentation.docc/JSON.md) | [Exact values and native coding](../Sources/JSON/Documentation.docc/ExactValuesAndCoding.md) |
 | JSONSchema | [JSONSchema](../Sources/JSONSchema/Documentation.docc/JSONSchema.md) | [Offline schema validation](../Sources/JSONSchema/Documentation.docc/OfflineValidation.md) |
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
+| JSONHTML | [JSONHTML](../Sources/JSONHTML/Documentation.docc/JSONHTML.md) | [Formatted rendering](../Sources/JSONHTML/Documentation.docc/FormattedRendering.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
 
 [Browse the public documentation](https://thorfuchs.github.io/Swift-JSON/) or
@@ -33,7 +34,7 @@ Compiled archives and public symbol graphs remain available in CI artifacts.
 
 ## Consumers, qualification and maintenance
 
-- [Four-product compiled example](../Examples/Consumer/README.md)
+- [Five-product compiled example](../Examples/Consumer/README.md)
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)
 - [Native CI lanes and receipts](CI/README.md)

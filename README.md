@@ -63,9 +63,10 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
+| **JSONHTML** | Exact, highlighted, script-free standalone HTML with cumulative reports (1.3 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
-`JSONSchema`, `JSONStreaming` and `JSONPatch` build on `JSON`. The package-private
+`JSONSchema`, `JSONStreaming`, `JSONPatch` and `JSONHTML` build on `JSON`. The package-private
 `JSONRegexRuntime` is an implementation detail and has no public product. The root
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
@@ -90,9 +91,9 @@ Then add products to your target dependencies:
 .product(name: "JSONSchema", package: "swift-json")
 ```
 
-Add `JSONStreaming` and `JSONPatch` in the same way when needed. A local checkout can
+Add `JSONStreaming`, `JSONPatch` and the 1.3 development product `JSONHTML` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [four-product consumer](Examples/Consumer) for a complete buildable
+releases. See the [five-product consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 
@@ -339,6 +340,17 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
+## Formatted HTML (1.3 development)
+
+The additive `JSONHTML` product renders complete highlighted HTML from the same
+exact writer cursor. It preserves number lexemes and insertion order, escapes
+payload text and includes fixed CSS under a hash-based Content Security Policy.
+Every call shares one finite budget through admission, formatting and final copying.
+The [formatted rendering guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
+describes its API and provisional HTML capacities. Interactive controls, transfer
+formats, RTF and PDF remain later increments. Existing published versions do not
+include this product.
+
 ## Documentation and examples
 
 Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
@@ -348,11 +360,11 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The four DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The five DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all four catalogs on a supported native host:
+Build all five catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs

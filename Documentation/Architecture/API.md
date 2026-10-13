@@ -1,7 +1,7 @@
 # Public API contract
 
 This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the four DocC catalogs. Examples
+graphs supply the complete declarations in the five DocC catalogs. Examples
 in the [README](../../README.md) are compiled and executed by the public consumer.
 
 ## Products and ownership
@@ -12,9 +12,10 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
+| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport | Shared exact formatting, script-free standalone HTML and cumulative bounded emission |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming and Patch depend on JSON. There are four public
+JSONRegexRuntime. Streaming, Patch and HTML depend on JSON. There are five public
 products and no external root-package dependencies. Runtime code uses no HTTP,
 UI, MCP or documentation-tool dependencies.
 
@@ -66,7 +67,7 @@ BOM, malformed UTF-8, unpaired surrogate escapes, raw controls, malformed number
 duplicate decoded keys and trailing data. BOM rejection is the package's strict
 policy. Parsing and streaming use one grammar.
 
-JSONWritingOptions selects compact output or indentation of 0...8 spaces, insertion
+JSONWritingOptions selects compact output or indentation of 0...8 units (spaces by default or literal tabs), insertion
 or scalar key order, and normalized or preserved number text. Preserved lexemes
 were admitted with their grammar and identity. Sorting makes no cryptographic
 canonicalization claim.

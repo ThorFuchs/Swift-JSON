@@ -20,3 +20,28 @@ The initial SDK declaration probe typechecked DataRepresentation, exportingCondi
 The first probe was stopped by the default module-cache sandbox path before loading the standard library. The successful run used an invocation-owned explicit module-cache directory. No compatibility or unsafe compiler flag was added.
 
 Review findings resolved in this plan: captured base/release assignment is stale; fifth-product and Apple PDF amendments are explicit; PDF region export cannot establish pagination; default numeric policy requires measurements; all six formats remain in the intended objective; source/receiver/system work and historical qualification remain separate.
+
+## First formatted increment decisions
+
+The native compiler accepts the appended defaulted `JSONIndentationUnit` option.
+The original cursor now emits package-only byte classifications and value-start
+markers; its byte facade consumes exactly the same steps and accounting. JSONHTML
+uses that cursor directly after one admission, with one noncopyable writing meter.
+No second parser/formatter or temporary formatted JSON buffer is introduced.
+
+The initial public API is formatted-only: `JSONHTMLRenderer`, immutable facade
+options, Data/String and successful report variants. It does not advertise
+interactive or transfer behavior before implementation. HTML-specific failures
+are latched into the same package meter before scratch cleanup. Final copies
+charge overlapping logical ownership; successful core output counts HTML bytes.
+
+The fixed original CSS is a Swift constant. Its emitted bytes and CSP SHA-256 are
+checked against an independent Python known answer. Print selectors explicitly
+override all three theme classes, a specificity issue found during source review.
+The HTML DOM count is an upper bound: 24 fixed nodes plus four per syntax or
+whitespace run. Defaults provisionally reuse existing balanced node/output caps;
+browser calibration is still required before final preset qualification.
+
+Actual JSON/JSONHTML modules and a public report consumer typecheck on iPhoneOS and
+iPhoneSimulator SDK 27.2, Swift 6.4/language 6, with warnings as errors. This does
+not qualify simulator/device execution, Linux/WASI runtime or transfer/PDF APIs.

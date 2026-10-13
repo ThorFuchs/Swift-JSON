@@ -59,28 +59,40 @@ public struct JSONWriter: Sendable {
     }
 }
 
+/// Syntax classification attached to bytes from the single strict writer.
+package enum JSONWritingTokenKind: String, Sendable {
+    case key, string, number, boolean, null, punctuation, whitespace
+}
+package struct JSONWritingByte: Sendable {
+    package let byte: UInt8
+    package let kind: JSONWritingTokenKind
+    package let beginsValue: Bool
+}
+
 /// Explicit traversal cursor also used by awaited streaming sinks.
 package struct JSONWritingCursor {
     private enum Step {
-        case value(JSON, Int), byte(UInt8), text(String.UTF8View.Iterator), escaped(String.UTF8View.Iterator)
+        case value(JSON, Int), byte(UInt8, JSONWritingTokenKind = .punctuation)
+        case text(String.UTF8View.Iterator, JSONWritingTokenKind), escaped(String.UTF8View.Iterator, JSONWritingTokenKind)
         case digits([UInt8], Int), indent(Int)
     }
     private var stack: [Step]
     private let options: JSONWritingOptions
     private var initialized = false
+    private var beginsValue = false
     package init(value: JSON, options: JSONWritingOptions) { stack = [.value(value, 0)]; self.options = options }
     private mutating func push(_ step: Step, meter: inout JSONWorkMeter) throws {
         try meter.retain(JSONLogicalWeights.frame); stack.append(step)
     }
     private mutating func newline(_ depth: Int, meter: inout JSONWorkMeter) throws {
         if let indentation = options.indentation {
-            let (spaces, overflow) = depth.multipliedReportingOverflow(by: indentation)
+            let (units, overflow) = depth.multipliedReportingOverflow(by: indentation)
             guard !overflow else { throw JSONFailure(.configuration, code: .invalidLimits) }
-            try push(.indent(spaces), meter: &meter); try push(.byte(10), meter: &meter)
+            try push(.indent(units), meter: &meter); try push(.byte(10, .whitespace), meter: &meter)
         }
     }
-    private mutating func quoted(_ text: String, meter: inout JSONWorkMeter) throws {
-        try push(.byte(34), meter: &meter); try push(.escaped(text.utf8.makeIterator()), meter: &meter); try push(.byte(34), meter: &meter)
+    private mutating func quoted(_ text: String, kind: JSONWritingTokenKind = .string, meter: inout JSONWorkMeter) throws {
+        try push(.byte(34, kind), meter: &meter); try push(.escaped(text.utf8.makeIterator(), kind), meter: &meter); try push(.byte(34, kind), meter: &meter)
     }
     private func scalarLess(_ a: JSONMember, _ b: JSONMember, meter: inout JSONWorkMeter) throws -> Bool {
         var l = a.key.string.utf8.makeIterator(), r = b.key.string.utf8.makeIterator()
@@ -120,42 +132,51 @@ package struct JSONWritingCursor {
         return values
     }
     package mutating func next(meter: inout JSONWorkMeter) throws -> UInt8? {
+        try nextToken(meter: &meter)?.byte
+    }
+    private mutating func token(_ byte: UInt8, _ kind: JSONWritingTokenKind) -> JSONWritingByte {
+        let result = JSONWritingByte(byte: byte, kind: kind, beginsValue: beginsValue)
+        beginsValue = false
+        return result
+    }
+    package mutating func nextToken(meter: inout JSONWorkMeter) throws -> JSONWritingByte? {
         if !initialized { try meter.retain(JSONLogicalWeights.frame); initialized = true }
         while let step = stack.popLast() {
             try meter.release(JSONLogicalWeights.frame)
             try meter.work()
             switch step {
-            case .byte(let byte): return byte
+            case .byte(let byte, let kind): return token(byte, kind)
             case .indent(let count):
-                if count > 0 { try push(.indent(count - 1), meter: &meter); return 32 }
-            case .text(var iterator):
-                if let byte = iterator.next() { try push(.text(iterator), meter: &meter); return byte }
+                if count > 0 { try push(.indent(count - 1), meter: &meter); return token(options.indentationUnit == .spaces ? 32 : 9, .whitespace) }
+            case .text(var iterator, let kind):
+                if let byte = iterator.next() { try push(.text(iterator, kind), meter: &meter); return token(byte, kind) }
             case .digits(let digits, let index):
-                if index < digits.count { try push(.digits(digits, index + 1), meter: &meter); return digits[index] + 48 }
-            case .escaped(var iterator):
+                if index < digits.count { try push(.digits(digits, index + 1), meter: &meter); return token(digits[index] + 48, .number) }
+            case .escaped(var iterator, let kind):
                 if let byte = iterator.next() {
-                    try push(.escaped(iterator), meter: &meter)
+                    try push(.escaped(iterator, kind), meter: &meter)
                     switch byte {
-                    case 34, 92: try push(.byte(byte), meter: &meter); return 92
+                    case 34, 92: try push(.byte(byte, kind), meter: &meter); return token(92, kind)
                     case 0...31:
                         let hex: [UInt8] = Array("0123456789abcdef".utf8)
-                        try push(.byte(hex[Int(byte & 15)]), meter: &meter); try push(.byte(hex[Int(byte >> 4)]), meter: &meter)
-                        try push(.byte(48), meter: &meter); try push(.byte(48), meter: &meter); try push(.byte(117), meter: &meter); return 92
-                    default: return byte
+                        try push(.byte(hex[Int(byte & 15)], kind), meter: &meter); try push(.byte(hex[Int(byte >> 4)], kind), meter: &meter)
+                        try push(.byte(48, kind), meter: &meter); try push(.byte(48, kind), meter: &meter); try push(.byte(117, kind), meter: &meter); return token(92, kind)
+                    default: return token(byte, kind)
                     }
                 }
             case .value(let value, let depth):
+                beginsValue = true
                 switch value {
-                case .null: try push(.text("null".utf8.makeIterator()), meter: &meter)
-                case .boolean(let boolean): try push(.text((boolean ? "true" : "false").utf8.makeIterator()), meter: &meter)
+                case .null: try push(.text("null".utf8.makeIterator(), .null), meter: &meter)
+                case .boolean(let boolean): try push(.text((boolean ? "true" : "false").utf8.makeIterator(), .boolean), meter: &meter)
                 case .string(let text): try quoted(text, meter: &meter)
                 case .number(let number):
-                    if options.numberStyle == .preserved, let lexeme = number.originalLexeme { try push(.text(lexeme.utf8.makeIterator()), meter: &meter) }
+                    if options.numberStyle == .preserved, let lexeme = number.originalLexeme { try push(.text(lexeme.utf8.makeIterator(), .number), meter: &meter) }
                     else {
                         let c = number.components
-                        if c.exponent != 0 { try push(.text(String(c.exponent).utf8.makeIterator()), meter: &meter); try push(.byte(101), meter: &meter) }
+                        if c.exponent != 0 { try push(.text(String(c.exponent).utf8.makeIterator(), .number), meter: &meter); try push(.byte(101, .number), meter: &meter) }
                         try push(.digits(c.digits, 0), meter: &meter)
-                        if c.negative { try push(.byte(45), meter: &meter) }
+                        if c.negative { try push(.byte(45, .number), meter: &meter) }
                     }
                 case .array(let values):
                     try push(.byte(93), meter: &meter)
@@ -172,8 +193,8 @@ package struct JSONWritingCursor {
                     if !members.isEmpty { try newline(depth, meter: &meter) }
                     for index in members.indices.reversed() {
                         try meter.work(); try push(.value(members[index].value, depth + 1), meter: &meter)
-                        if options.indentation != nil { try push(.byte(32), meter: &meter) }
-                        try push(.byte(58), meter: &meter); try quoted(members[index].key.string, meter: &meter)
+                        if options.indentation != nil { try push(.byte(32, .whitespace), meter: &meter) }
+                        try push(.byte(58), meter: &meter); try quoted(members[index].key.string, kind: .key, meter: &meter)
                         try newline(depth + 1, meter: &meter)
                         if index > 0 { try push(.byte(44), meter: &meter) }
                     }

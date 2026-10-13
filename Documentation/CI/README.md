@@ -8,12 +8,12 @@ are recorded; macOS/SDK 27 and Swift 6.4 remain minimums.
 Pushes to main, pull requests and manual dispatch run three lanes:
 
 - Native: public inventory, manifest/dependency graph, release build, debug and
-  release Swift Testing, four-product example, rooted JSON/JSONSchema consumer,
+  release Swift Testing, five-product example, rooted JSON/JSONSchema consumer,
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, four native DocC catalogs with warnings as errors,
+  executed README examples, five native DocC catalogs with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and

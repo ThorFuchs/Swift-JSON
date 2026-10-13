@@ -39,6 +39,10 @@ package struct JSONWorkMeter: ~Copyable {
         counters = Array(repeating: 0, count: JSONResourceMetric.allCases.count)
         retired = Array(repeating: 0, count: JSONResourceMetric.allCases.count)
     }
+    /// Latch an owned subsystem failure before cleaning up its scratch.
+    package func recordFailure(_ error: any Error) {
+        if health.failure == nil { health.failure = error }
+    }
     package func checkpoint() throws {
         if let failure = health.failure { throw failure }
         do {

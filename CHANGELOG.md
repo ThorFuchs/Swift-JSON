@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Develop JSONHTML as the fifth product for 1.3: exact formatted standalone HTML,
+  shared strict-writer token formatting, literal tab indentation, cumulative
+  finite reports, bounded script-free output and a fifth native DocC catalogue.
+  Interactive rendering and transfer/RTF/PDF export remain later increments.
+
 - Keep object-schema construction and document admission within one cumulative
   budget, including live retention and terminal owned failures/cancellation.
   Tight limits that previously fit each phase separately can now fail the composed
