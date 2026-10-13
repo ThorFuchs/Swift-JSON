@@ -21,3 +21,8 @@ seams qualify UI outcome handling separately from the Chromium clipboard test.
 Textareas can normalize line endings; exact UTF-8 Pointer downloads remain the
 byte-preserving path. WebKit is not a native Safari result, mobile viewports are
 not device qualification, and VoiceOver remains a separate manual release gate.
+
+Chromium supplies desktop/mobile screenshots. Playwright WebKit screenshot
+synchronization injects a `body {}` stylesheet, which the document correctly blocks;
+WebKit therefore uses DOM/layout/interaction checks without that screenshot hook.
+CSP and console assertions remain enforced, and no unsafe-inline bypass is added.

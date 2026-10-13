@@ -36,8 +36,10 @@ package enum JSONHTMLInteractiveAssets {
       if (parent.tagName === 'DETAILS') parent.open = true;
     }
     if (node.tagName === 'DETAILS') node.open = true;
-    node.focus({preventScroll: true});
-    node.scrollIntoView({block: 'nearest'});
+    if (focus) {
+      node.focus({preventScroll: true});
+      node.scrollIntoView({block: 'nearest'});
+    }
   };
   const download = (encoded, filename) => {
     const url = URL.createObjectURL(new Blob([bytes(encoded)], {type: filename.endsWith('.txt') ? 'text/plain;charset=utf-8' : 'application/json;charset=utf-8'}));
@@ -149,5 +151,5 @@ package enum JSONHTMLInteractiveAssets {
 })();
 """#
     package static let styleHash = "ZViqigi/3L6QAgh4IHgRZSMK0MTDXXYvGytdlYTJfoQ="
-    package static let scriptHash = "FhFTH1Ne5Y99evqwxUMK6h6n0tLakTWXAEcr/iz8KMg="
+    package static let scriptHash = "CefCjyzNV1pVYg7GAqXuWfG1Q+aJ7xTdozRxnHyb+H4="
 }

@@ -68,3 +68,8 @@ headless and windowed modes; do not claim its unexecuted matrix passed.
 Annotations/source locations, transfer/RTF/PDF preparation and measured final
 presets remain future increments. Existing release/performance history and the
 10% review trigger are unchanged. No PR merge, tag or publication is performed.
+
+Chromium supplies desktop/mobile screenshots. Playwright WebKit screenshot
+synchronization injects a `body {}` stylesheet, which the document correctly blocks;
+WebKit therefore uses DOM/layout/interaction checks without that screenshot hook.
+CSP and console assertions remain enforced, and no unsafe-inline bypass is added.

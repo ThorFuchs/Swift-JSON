@@ -27,8 +27,10 @@
       if (parent.tagName === 'DETAILS') parent.open = true;
     }
     if (node.tagName === 'DETAILS') node.open = true;
-    node.focus({preventScroll: true});
-    node.scrollIntoView({block: 'nearest'});
+    if (focus) {
+      node.focus({preventScroll: true});
+      node.scrollIntoView({block: 'nearest'});
+    }
   };
   const download = (encoded, filename) => {
     const url = URL.createObjectURL(new Blob([bytes(encoded)], {type: filename.endsWith('.txt') ? 'text/plain;charset=utf-8' : 'application/json;charset=utf-8'}));

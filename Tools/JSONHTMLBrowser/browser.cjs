@@ -14,7 +14,7 @@ fs.mkdirSync(out, {recursive: true});
 const records = JSON.parse(fs.readFileSync(path.join(fixtures, 'fixtures.json')));
 assert.equal(records.length, 8);
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
-const receipt = {status: 'running', playwright: version, fixtures: [], engines: [], cases: [], limitations: ['Playwright WebKit is not native Safari qualification.', 'Viewport tests do not qualify physical mobile browsers or VoiceOver.', 'Clipboard API acceptance is separate from platform clipboard transformations; exact downloads are independently compared.', 'Search chunking is not an instruction, CPU, heap or process RSS guarantee.']};
+const receipt = {status: 'running', playwright: version, fixtures: [], engines: [], cases: [], limitations: ['Screenshots are captured in Chromium; WebKit screenshots would inject a CSP-blocked synchronization stylesheet. WebKit DOM/layout/interaction checks still enforce CSP.', 'Playwright WebKit is not native Safari qualification.', 'Viewport tests do not qualify physical mobile browsers or VoiceOver.', 'Clipboard API acceptance is separate from platform clipboard transformations; exact downloads are independently compared.', 'Search chunking is not an instruction, CPU, heap or process RSS guarantee.']};
 for (const name of fs.readdirSync(fixtures).sort()) {
   const bytes = fs.readFileSync(path.join(fixtures, name));
   receipt.fixtures.push({path: name, bytes: bytes.length, sha256: sha(bytes)});
@@ -83,7 +83,7 @@ async function main() {
         entry.status = 'passed'; entry.consoleErrors = errors; entry.externalRequests = requests; entry.cspViolations = violations;
       } catch (e) {
         entry.status = 'failed'; entry.error = e.stack; entry.consoleErrors = errors; entry.externalRequests = requests; entry.cspViolations = violations;
-        await page.screenshot({path: path.join(out, engine + '-' + name + '-failure.png'), fullPage: true}).catch(() => {});
+        if (engine === 'chromium') await page.screenshot({path: path.join(out, engine + '-' + name + '-failure.png'), fullPage: true, caret: 'initial'}).catch(() => {});
         throw e;
       } finally { await context.close(); save(); }
     }
@@ -166,9 +166,12 @@ async function main() {
       assert.ok(await page.getByRole('button', {name: 'Download JSON (UTF-8)', exact: true}).isVisible());
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
       assert.equal(overflow, false, 'Mobile horizontal overflow');
-      await page.screenshot({path: path.join(out, engine + '-mobile.png'), fullPage: true});
+      // Playwright WebKit inserts an unauthorized body{} style during screenshot synchronization.
+      // Keep enforcement intact and capture visual evidence in Chromium; all engines retain DOM/layout checks.
+      if (engine === 'chromium') await page.screenshot({path: path.join(out, engine + '-mobile.png'), fullPage: true, caret: 'initial'});
       await page.setViewportSize({width: 1440, height: 1000});
-      await page.screenshot({path: path.join(out, engine + '-desktop.png'), fullPage: true});
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), false);
+      if (engine === 'chromium') await page.screenshot({path: path.join(out, engine + '-desktop.png'), fullPage: true, caret: 'initial'});
     }, {viewport: {width: 390, height: 844}});
     await run('complete-print', 'deep', 'http', true, async page => {
       assert.equal(await page.locator('details[open]').count(), 0);
@@ -193,8 +196,19 @@ async function main() {
     });
     if (engine === 'chromium') await run('native-browser-clipboard', 'exact', 'http', true, async (page, context) => {
       await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-      await page.getByRole('button', {name: 'Copy JSON', exact: true}).click(); await status(page, 'Browser accepted JSON');
-      assert.deepEqual(Buffer.from(await page.evaluate(() => navigator.clipboard.readText()), 'utf8'), fs.readFileSync(path.join(fixtures, 'exact.json')));
+      // Keep previous clipboard text in browser memory only; never put it in receipts.
+      await page.evaluate(async () => {window.__previousClipboard = await navigator.clipboard.readText();});
+      try {
+        await page.getByRole('button', {name: 'Copy JSON', exact: true}).click(); await status(page, 'Browser accepted JSON');
+        assert.deepEqual(Buffer.from(await page.evaluate(() => navigator.clipboard.readText()), 'utf8'), fs.readFileSync(path.join(fixtures, 'exact.json')));
+      } finally {
+        await page.evaluate(async () => {
+          const current = await navigator.clipboard.readText();
+          const expected = new TextDecoder().decode(Uint8Array.from(atob(document.getElementById('jh-copy-json').dataset.bytes), c => c.charCodeAt(0)));
+          if (current === expected) await navigator.clipboard.writeText(window.__previousClipboard);
+          delete window.__previousClipboard;
+        });
+      }
     });
     await browser.close();
   }
