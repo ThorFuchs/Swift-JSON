@@ -48,4 +48,6 @@ jobs:
           name: linux-${{ matrix.architecture }}-${{ matrix.lane }}
           if-no-files-found: error
           retention-days: 30
-          path: .build/ci/
+          path: |
+            .build/ci/
+            !.build/ci/**/reproduction/extracted/**

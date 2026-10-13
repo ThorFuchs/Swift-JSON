@@ -48,6 +48,21 @@ cases. SwiftData examples and Apple SDK/compiler ownership probes remain in the
 Apple lanes; they do not become Linux evaluated successes. DocC qualification
 continues on the supported Mac toolchain.
 
+The pinned Swift 6.4 Linux runtime leaks from an empty XCTest runner and
+Foundation's `Data(contentsOf:)` empty-file read. Isolated sanitizer probes
+reproduce both with no JSON imports. Linux safety starts only Swift Testing
+(all 180 functions and 173 invocations remain) and trusted fixture I/O uses
+explicitly closed FileHandle reads, including the zero-byte JSON rejection case.
+Address/Leak Sanitizer and Thread Sanitizer remain enabled without suppressions.
+Diagnostic upstream failures are recorded separately from package behavior.
+
+The public consumer resolves its copied Resources directory relative to bundleURL;
+Linux Foundation can already point resourceURL into that directory. Both layouts
+retain the same frozen definition/vector bytes and all 20 explicitly rooted cases.
+Linux qualification also verifies a byte-equal source archive, extracts it into a
+clean directory, builds all products and executes six integrity/resource cases
+and the four-product public consumer from that extracted source.
+
 WebAssembly, browser hosting, other distributions, musl deployment and 32-bit
 profile calibration require separate qualification. This change adds none of
 those claims. The concurrent schema-builder accounting change is a separate
