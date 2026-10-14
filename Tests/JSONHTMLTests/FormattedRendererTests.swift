@@ -98,6 +98,7 @@ private func body(_ html: String) throws -> [UInt8] {
         case .domNodes: report.statistics.domNodeUpperBound
         case .outlineEntries: report.statistics.outlineEntries
         case .metadataBytes: report.statistics.metadataBytes
+        case .annotations: report.statistics.annotations
         }
         for delta in [-1, 0, 1] {
             var limits = JSONHTMLLimits()
@@ -108,6 +109,7 @@ private func body(_ html: String) throws -> [UInt8] {
             case .domNodes: limits.maxDOMNodes = cap
             case .outlineEntries: limits.maxOutlineEntries = cap
             case .metadataBytes: limits.maxMetadataBytes = cap
+            case .annotations: limits.maxAnnotations = cap
             }
             let renderer = JSONHTMLRenderer(options: .init(limits: limits))
             if delta < 0 {

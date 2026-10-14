@@ -37,6 +37,8 @@ public struct JSONHTMLLimits: Sendable {
     public var maxOutlineEntries: UInt64 = JSONLimits.balanced[.objectMembers]
     /// Maximum emitted Base64 metadata bytes, including copy JSON and Pointer forms.
     public var maxMetadataBytes: UInt64 = JSONLimits.balanced[.aggregateTextBytes]
+    /// Inclusive accepted diagnostic count; empty lists make no validation claim.
+    public var maxAnnotations: UInt64 = JSONLimits.balanced[.issues]
     /// Browser search query ceiling in UTF-8 bytes, zero through 65,536.
     ///
     /// This is a query capacity, not a browser instruction or heap quota.
@@ -84,7 +86,7 @@ public struct JSONHTMLLimits: Sendable {
         try core.validate()
         guard maxRenderedJSONNodes < UInt64(Int.max), maxDOMNodes < UInt64(Int.max),
               maxDocumentBytes < UInt64(Int.max), maxOutlineEntries < UInt64(Int.max),
-              maxMetadataBytes < UInt64(Int.max), maxSearchQueryBytes <= 65_536 else { throw JSONHTMLFailure.invalidConfiguration }
+              maxMetadataBytes < UInt64(Int.max), maxAnnotations < UInt64(Int.max), maxSearchQueryBytes <= 65_536 else { throw JSONHTMLFailure.invalidConfiguration }
     }
 }
 
@@ -102,6 +104,9 @@ public struct JSONHTMLRenderingOptions: Sendable {
     public var tabWidth: Int
     /// Finite shared core and HTML capacities.
     public var limits: JSONHTMLLimits
+
+    /// Caller-supplied typed diagnostics; rendering does not execute schema validation.
+    public var annotations: [JSONHTMLAnnotation] = []
 
     /// Formatted by default; interactive behavior is explicitly selected.
     public var presentation: JSONHTMLPresentation = .formatted
@@ -165,6 +170,8 @@ public enum JSONHTMLResourceMetric: String, Sendable {
     case outlineEntries
     /// Emitted Base64 metadata UTF-8 bytes.
     case metadataBytes
+    /// Caller-supplied diagnostics accepted for the complete document.
+    case annotations
 }
 
 /// Bounded HTML-specific failures; core resource failures and cancellation propagate unchanged.

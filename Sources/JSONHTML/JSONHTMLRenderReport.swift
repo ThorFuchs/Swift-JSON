@@ -17,10 +17,12 @@ public struct JSONHTMLStatistics: Sendable, Equatable {
     public let metadataBytes: UInt64
     /// Raw exact JSON bytes embedded for interactive copy/download; zero in formatted mode.
     public let copyJSONBytes: UInt64
-    package init(operation: JSONOperationStatistics, nodes: UInt64, dom: UInt64, bytes: UInt64, outline: UInt64, metadata: UInt64, copyBytes: UInt64) {
+    /// Accepted caller-supplied diagnostics; zero does not assert schema validity.
+    public let annotations: UInt64
+    package init(operation: JSONOperationStatistics, nodes: UInt64, dom: UInt64, bytes: UInt64, outline: UInt64, metadata: UInt64, copyBytes: UInt64, annotations: UInt64) {
         self.operation = operation; renderedJSONNodes = nodes
         domNodeUpperBound = dom; documentBytes = bytes
-        outlineEntries = outline; metadataBytes = metadata; copyJSONBytes = copyBytes
+        outlineEntries = outline; metadataBytes = metadata; copyJSONBytes = copyBytes; self.annotations = annotations
     }
 }
 

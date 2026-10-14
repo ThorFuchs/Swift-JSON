@@ -13,7 +13,7 @@ assert.equal(version, '1.62.1', 'Qualification requires the pinned Playwright ve
 const fixtures = path.resolve(process.argv[2]), out = path.resolve(process.argv[3]);
 fs.mkdirSync(out, {recursive: true});
 const records = JSON.parse(fs.readFileSync(path.join(fixtures, 'fixtures.json')));
-assert.equal(records.length, 8);
+assert.equal(records.length, 10);
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const receipt = {status: 'running', playwright: version, fixtures: [], engines: [], cases: [], limitations: ['Screenshots are captured in Chromium; WebKit screenshots would inject a CSP-blocked synchronization stylesheet. WebKit DOM/layout/interaction checks still enforce CSP.', 'Playwright WebKit is not native Safari qualification.', 'Viewport tests do not qualify physical mobile browsers or VoiceOver.', 'Clipboard API acceptance is separate from platform clipboard transformations; exact downloads are independently compared.', 'Search chunking is not an instruction, CPU, heap or process RSS guarantee.']};
 for (const name of fs.readdirSync(fixtures).sort()) {
@@ -43,7 +43,7 @@ async function main() {
     }
     try { browser = await playwright[engine].launch(launch); }
     catch (error) {
-      receipt.engines.push({name: engine, status: 'blocked', error: error.message, executedCases: 0, unexecutedCases: engine === 'chromium' ? 13 : 12});
+      receipt.engines.push({name: engine, status: 'blocked', error: error.message, executedCases: 0, unexecutedCases: engine === 'chromium' ? 16 : 15});
       save(); continue;
     }
     activeBrowsers.push(browser);
@@ -85,7 +85,7 @@ async function main() {
         assert.ok(dom <= record.domUpperBound, 'DOM bound undercounts actual nodes');
         entry.browserPolicyEvents = browserPolicyEvents;
         entry.actualDOMNodes = dom; entry.domUpperBound = record.domUpperBound;
-        if (fixture !== 'formatted') {
+        if (record.presentation === 'interactive') {
           assert.equal(await page.locator('#jh-tree .node').count(), record.nodes);
           assert.equal(await page.locator('#jh-toolbar').isVisible(), javaScriptEnabled);
           assert.ok(await page.locator('.pointer-actions').count() > 0);
@@ -221,6 +221,40 @@ async function main() {
       await page.evaluate(() => {const q = document.getElementById('jh-query'); q.value = '\ud800'; q.dispatchEvent(new Event('input'));});
       await status(page, 'Unicode scalar text');
     });
+    for (const protocol of ['http', 'file']) await run('typed-annotations-' + protocol, 'annotated', protocol, true, async page => {
+      assert.equal(await page.locator('[id^="jh-a-"]').count(), 5);
+      assert.equal(await page.locator('img').count(), 0);
+      assert.equal(await page.locator('script').count(), 1);
+      assert.equal(await page.locator('#jh-a-0 a').getAttribute('data-target'), 'jh-n-4');
+      assert.equal(await page.locator('#jh-a-1 a').getAttribute('data-target'), 'jh-n-5');
+      assert.equal(await page.locator('#jh-a-2').getAttribute('data-missing'), 'true');
+      assert.equal(await page.locator('#jh-a-2 a').getAttribute('data-target'), 'jh-n-6');
+      assert.ok((await page.locator('#jh-a-2').textContent()).includes('Parent source span:'));
+      assert.ok((await page.locator('#jh-a-2').textContent()).includes('index [99] / key "0"'));
+      assert.ok((await page.locator('#jh-a-0').textContent()).includes('\\u0000\\u000d\\u000a'));
+      assert.equal(await page.locator('#jh-a-4 a').getAttribute('data-target'), 'jh-n-3');
+      const expected = await page.locator('#jh-a-4').textContent();
+      assert.ok(expected.includes('~1/a\\u0000\\u000d\\u000a'));
+      await page.locator('#jh-a-4 a').click();
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'jh-n-3');
+      assert.equal(await page.locator('#jh-n-0').getAttribute('open') !== null, true);
+      assert.equal(await page.locator('#jh-n-1').getAttribute('open') !== null, true);
+      assert.equal(await page.locator('#jh-n-3').getAttribute('aria-describedby'), 'jh-a-4');
+      const download = await downloaded(page, '[data-action="download-json"]');
+      assert.deepEqual(download.bytes, fs.readFileSync(path.join(fixtures, 'annotated.json')));
+      assert.equal(await page.evaluate(() => document.body.textContent.includes('private-label-not-emitted')), false);
+    });
+    await run('formatted-annotations-no-script', 'annotated-formatted', 'file', false, async page => {
+      assert.equal(await page.locator('script').count(), 0);
+      assert.equal(await page.locator('pre code').textContent(), fs.readFileSync(path.join(fixtures, 'annotated-formatted.json'), 'utf8'));
+      assert.equal(await page.locator('#jh-n-4').getAttribute('aria-describedby'), 'jh-a-0');
+      assert.equal(await page.locator('#jh-a-3').getAttribute('data-missing'), 'true');
+      assert.equal(await page.locator('#jh-a-3 a').getAttribute('href'), '#jh-n-0');
+      await page.locator('#jh-a-4 a').click();
+      assert.ok(page.url().endsWith('#jh-n-3'));
+      await page.emulateMedia({media: 'print'});
+      assert.ok(await page.locator('#jh-a-4').isVisible());
+    });
     if (engine === 'chromium') await run('native-browser-clipboard', 'exact', 'http', true, async (page, context) => {
       await context.grantPermissions(['clipboard-read', 'clipboard-write']);
       // Keep previous clipboard text in browser memory only; never put it in receipts.
@@ -239,12 +273,12 @@ async function main() {
     });
     await browser.close();
   }
-  receipt.expectedCases = 37; receipt.passedCases = receipt.cases.filter(c => c.status === 'passed').length;
+  receipt.expectedCases = 46; receipt.passedCases = receipt.cases.filter(c => c.status === 'passed').length;
   receipt.unexecutedCases = receipt.engines.reduce((sum, e) => sum + (e.unexecutedCases || 0), 0);
   if (receipt.unexecutedCases) {receipt.status = 'blocked'; save(); console.error('Browser startup blocked; unexecuted cases=' + receipt.unexecutedCases); process.exitCode = 2; return;}
-  assert.equal(receipt.cases.length, 37);
-  assert.equal(receipt.cases.filter(c => c.status === 'passed').length, 37);
-  receipt.status = 'passed'; receipt.expectedCases = 37; receipt.passedCases = 37; receipt.unexpectedSkips = 0;
-  save(); console.log('JSONHTML_BROWSER passed engines=3 cases=37 skips=0');
+  assert.equal(receipt.cases.length, 46);
+  assert.equal(receipt.cases.filter(c => c.status === 'passed').length, 46);
+  receipt.status = 'passed'; receipt.expectedCases = 46; receipt.passedCases = 46; receipt.unexpectedSkips = 0;
+  save(); console.log('JSONHTML_BROWSER passed engines=3 cases=46 skips=0');
 }
 main().catch(error => {receipt.status = 'failed'; receipt.error = error.stack; save(); console.error(error); process.exitCode = 1;}).finally(async () => {await Promise.all(activeBrowsers.map(b => b.close().catch(() => {}))); for (const data of isolatedDataDirectories) fs.rmSync(data, {recursive: true, force: true}); server.close();});

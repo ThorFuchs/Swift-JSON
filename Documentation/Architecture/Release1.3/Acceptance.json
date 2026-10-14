@@ -8,8 +8,22 @@
       "requirement": "The product/module is JSONHTML in the same package; its target depends on JSON and the exact public set contains five products.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH02",
@@ -17,18 +31,46 @@
       "requirement": "Forward product policy, manifest/CI assertions, consumers and test-count expectations are revised coherently; historical released records remain accurate.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH03",
       "gate": "H0",
       "requirement": "Data/String/report APIs, checked Sendable configuration, finite presets and asset strategy compile through a public consumer.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH04",
@@ -36,18 +78,46 @@
       "requirement": "All six root kinds, empty containers and mixed deep/wide structures produce a complete strict UTF-8 HTML document.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH05",
       "gate": "H1",
       "requirement": "Large integers, exact decimals, negative zero and admitted exponent/number spellings survive display and exported JSON without JS numeric conversion.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH06",
@@ -55,28 +125,70 @@
       "requirement": "Scalar-distinct composed/decomposed keys/strings and insertion/array order remain distinct and ordered.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH07",
       "gate": "H1",
       "requirement": "One noncopyable invocation meter covers admission, traversal, token helpers, paths, assets, Base64, annotations and result copies.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH08",
       "gate": "H1",
       "requirement": "Inclusive boundaries and checked overflow cover core work/output/retention and renderer node/DOM/document/outline/annotation capacities.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH09",
@@ -84,18 +196,46 @@
       "requirement": "Cancellation inside owned loops and valid restrictive/zero ceilings produce honest failures without a successful partial result/report.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH10",
       "gate": "H1",
       "requirement": "Repeated and concurrent calls have exclusive state; deterministic output uses stable IDs/assets and no clock/random mutation.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH11",
@@ -103,192 +243,463 @@
       "requirement": "Data and String materialization charges are complete; final-document byte count is distinguished from cumulative core helper output.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH12",
       "gate": "H2",
       "requirement": "Formatted mode has no script; interactive native disclosure remains usable with scripting disabled and allows multiple open branches.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH13",
       "gate": "H2",
       "requirement": "Default expansion, bounded outline, ancestor opening, focus, root/empty/numeric/special-key paths and generated IDs behave coherently.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH14",
       "gate": "H2",
       "requirement": "Copy/download bytes decode to the owned formatted JSON; RFC Pointer metadata preserves controls, CR/LF, NUL and exact scalar sequences.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH15",
       "gate": "H2",
       "requirement": "Raw and escaped Pointer copy modes have explicit labels; unavailable clipboard behavior is reported and manual/UTF-8 alternatives work.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH16",
       "gate": "H2",
       "requirement": "Literal search is bounded/chunked, preserves scalar distinction, opens matched ancestors and reports its rendered-text scope honestly.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH17",
       "gate": "H2",
       "requirement": "Script/style closing strings, ampersands, quotes, event-handler payloads and keys such as __proto__/constructor remain inert data.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH18",
       "gate": "H2",
       "requirement": "No payload-driven innerHTML, executable interpolation, URLs/selectors or script-element text assignment appears in the output/control path.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH19",
       "gate": "H2",
       "requirement": "Emitted CSS/JS asset hashes match CSP block bytes; controls work under policy and external resource requests remain absent.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
         "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open.",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+              "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+            ],
+            "limitation": "Automated browser matrix passed, with explicitly recorded denied favicon events. Native Safari/maintainer VoiceOver scope is recorded separately; annotations, final mobile/platform and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH20",
       "gate": "H2",
       "requirement": "Annotations attach by exact typed path or identify missing targets at their parent; no empty list asserts schema validity.",
-      "status": "not_run",
+      "status": "passed",
       "evidence": [
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
-      ]
+        "DiagnosticAnnotations.md; AnnotationTests.swift (12 native behavior functions); Examples/Consumer public document API; 46-case browser receipt in successor return",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "DiagnosticAnnotations.md; AnnotationTests.swift (12 native behavior functions); Examples/Consumer public document API; 46-case browser receipt in successor return"
+            ],
+            "limitation": "Targeted semantic/budget/cancellation and file/served three-engine behavior passed. Final source native/safety/DocC/platform refresh and receiver readiness remain separate gates."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH21",
       "gate": "H2",
       "requirement": "JSONDocument locations remain coherent, unmapped/replaced roots invent none, and annotation messages/paths are bounded and escaped.",
-      "status": "not_run",
+      "status": "passed",
       "evidence": [
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
-      ]
+        "DiagnosticAnnotations.md; AnnotationTests.swift (12 native behavior functions); Examples/Consumer public document API; 46-case browser receipt in successor return",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "DiagnosticAnnotations.md; AnnotationTests.swift (12 native behavior functions); Examples/Consumer public document API; 46-case browser receipt in successor return"
+            ],
+            "limitation": "Targeted semantic/budget/cancellation and file/served three-engine behavior passed. Final source native/safety/DocC/platform refresh and receiver readiness remain separate gates."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH22",
       "gate": "H3",
       "requirement": "Safari, Firefox and Chromium execute file/served, JS on/off, outline/search/copy/download and policy cases with recorded versions.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+            ],
+            "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH23",
       "gate": "H3",
       "requirement": "Keyboard/focus, text/contrast/themes and relevant VoiceOver behavior are reviewed; accessibility claims match the executed evidence.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+            ],
+            "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative recorded receiver/accessibility matrix; physical iPad uses the approved simulator policy. TextEdit rich-save normalization and human-observed speech are explicit; no exhaustive receiver or accessibility certification is claimed."
     },
     {
       "id": "JH24",
       "gate": "H3",
       "requirement": "Print output includes every value regardless of collapse/script state, excludes UI clutter, and preserves applicable UI state.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+            ],
+            "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH25",
       "gate": "H3",
       "requirement": "Five-product/platform/resource qualification; pure rendering does not execute UI frameworks, while JSONHTML may link narrowly isolated Apple PDF/printing frameworks.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "FormattedRendererTests.swift; InteractiveRendererTests.swift; AnnotationTests.swift; Examples/Consumer; 46-case browser receipt; ReviewAndQualification.md"
       ],
       "amendment": "Maintainer-approved transfer/export framework amendment; original JH25 remains historical.",
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH26",
       "gate": "H3",
       "requirement": "Representative generation/output-expansion/retention and browser DOM/interactivity measurements justify finite preset values.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "ReviewAndQualification.md; 18 release-native and 54 three-engine browser observations; public consumer export/PDF measurements; retained performance disposition"
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+            ],
+            "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative busy-host calibration supports finite initial policy; not idle A/B, maximum-workload throughput, hard RSS or a browser/platform instruction guarantee. Existing 10% review trigger and dispositions unchanged."
     },
     {
       "id": "JH27",
       "gate": "H4",
       "requirement": "Existing JSONWriter behavior, native/safety/docs lanes, public examples and baseline semantic/corpus cases remain qualified.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+            ],
+            "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "JH28",
       "gate": "H4",
       "requirement": "Final feature branch/PR head/base, review disposition, source/asset hashes, actual receipts and release placement are recorded.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
-        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+        "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "Interactive increment: InteractiveIncrement.md; 25 HTML Swift Testing functions and pinned 37-case browser harness, actual executed/blocked outcomes in materialized receipts"
+            ],
+            "limitation": "Implemented native behavior is tested; Firefox startup, native Safari/VoiceOver, final platform integration and final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX01",
@@ -296,8 +707,22 @@
       "requirement": "Reconcile live source/worktree/renderer branches and preserve unrelated changes before tracked edits.",
       "status": "passed",
       "evidence": [
-        "Live main/origin, tag, worktree and ruleset reads; isolated codex/1.3-jsonhtml checkout at 532f725; primary checkout unchanged"
-      ]
+        "Live main/origin, tag, worktree and ruleset reads; isolated codex/1.3-jsonhtml checkout at 532f725; primary checkout unchanged",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "Live main/origin, tag, worktree and ruleset reads; isolated codex/1.3-jsonhtml checkout at 532f725; primary checkout unchanged"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX02",
@@ -305,44 +730,112 @@
       "requirement": "Exact five-product manifest, forward policy and CI expectations; no sixth product or external root package dependency.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX03",
       "gate": "T0",
       "requirement": "Final public APIs, reports, errors, finite presets and representation builders compile with actual Swift 6.4 / SDK 27.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open.",
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable.",
+            "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX04",
       "gate": "T0",
       "requirement": "Explicit framework amendment; pure generation executes without WebKit; core JSON imports no WebKit/AppKit/UIKit.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX05",
       "gate": "T0",
       "requirement": "One JSON conformance in JSONHTML, qualified same-package compiler behavior and independent public consumers.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX06",
       "gate": "T0",
       "requirement": "Actual UTType and exported/imported-content-type probes, conditional availability and correct extensions.",
-      "status": "not_run",
-      "evidence": [],
-      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": [],
+            "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX07",
@@ -350,8 +843,22 @@
       "requirement": "Legacy writer default/output/mutation/initializer behavior retained under spaces, compact and zero indentation.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX08",
@@ -359,405 +866,1202 @@
       "requirement": "Tabs emitted directly by the cursor; checked 0...8 unit count and separate tab display width.",
       "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
-      ]
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ]
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX09",
       "gate": "T1",
       "requirement": "Shared helpers admit the input once and keep one noncopyable native preparation meter across selected formats.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX10",
       "gate": "T2",
       "requirement": "Exact large numbers, negative zero, exponent spellings and constructed-number fallback; insertion order preserved.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX11",
       "gate": "T2",
       "requirement": "Composed/decomposed keys and strings, empty/numeric/control/special keys preserve decoded scalar identity.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX12",
       "gate": "T2",
       "requirement": "All six root kinds, empty containers and mixed/deep/wide values are handled without recursive untrusted traversal.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX13",
       "gate": "T2",
       "requirement": "Native .json import uses strict parser and finite defaults; invalid UTF-8, duplicate keys and trailing syntax fail.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX14",
       "gate": "T2",
       "requirement": "JSON/native JSON equality does not replace separate scalar/order/lexeme checks; no Foundation JSON authority.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX15",
       "gate": "T2",
       "requirement": "Plain text contains only the pretty JSON body with quoted scalar-string roots and no UI/fence/labels.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX16",
       "gate": "T2",
       "requirement": "Markdown uses json info string, safe fence, actual tabs, LF policy and unaltered JSON body bytes.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX17",
       "gate": "T2",
       "requirement": "No mutable global export defaults, shared render cache or heavy ProxyRepresentation getter.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX18",
       "gate": "T2",
       "requirement": "Immutable prepared artifacts match advertised/available sets; conditional exports omit missing or unselected data.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX19",
       "gate": "T2",
       "requirement": "Selecting unavailable/empty format sets fails; explicit JSON/Markdown/PDF selection advertises exactly that format.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX20",
       "gate": "T2",
       "requirement": "Exact data(for:) lookup does no rendering/subtype negotiation; unavailable data produces bounded error.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX21",
       "gate": "T2",
       "requirement": "Bounded filename/title validation prevents control/path/separator traversal and selects correct extensions.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX22",
       "gate": "T2",
       "requirement": "Wrapper presentation formats are export-only; direct import advertises native JSON only.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX23",
       "gate": "T2",
       "requirement": "Direct exports use documented bounded defaults and independently owned state per transport request.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX24",
       "gate": "T2",
       "requirement": "One native preparation call is all-or-nothing; failures install no partial artifact or successful report.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX25",
       "gate": "T3",
       "requirement": "Static transfer HTML is complete, expanded, highlighted and script-free with deterministic default theme.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX26",
       "gate": "T3",
       "requirement": "Static export omits controls/hidden disclosure/line numbers/outline/annotations by default; no JSON truncation.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX27",
       "gate": "T3",
       "requirement": "Escaping/CSP/assets hold for script/style delimiters, quotes, ampersands, Unicode/control and prototype-like keys.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX28",
       "gate": "T3",
       "requirement": "No external requests/fonts or browser numeric reconstruction; emitted CSS/CSP hashes match actual block bytes.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX29",
       "gate": "T3",
       "requirement": "Standalone HTML opening and native rich-paste compatibility are qualified separately.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative recorded receiver/accessibility matrix; physical iPad uses the approved simulator policy. TextEdit rich-save normalization and human-observed speech are explicit; no exhaustive receiver or accessibility certification is claimed."
     },
     {
       "id": "TX30",
       "gate": "T3",
       "requirement": "Per-format and aggregate prepared byte limits include hidden artifacts and overlapping owned buffers.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "not_run",
+            "evidence": []
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX31",
       "gate": "T3",
       "requirement": "Inclusive minus-one/boundary/plus-one and overflow probes for work/retention/output/metadata/style/HTML caps.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX32",
       "gate": "T3",
       "requirement": "Cancellation inside owned loops, result-copy failure and terminal latch behavior preserve accounting.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX33",
       "gate": "T3",
       "requirement": "Repeated and concurrent native calls are deterministic and invocation-owned; all state is checked Sendable.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX34",
       "gate": "T4",
       "requirement": "RTF is valid styled RTF with token colors/monospace/tab stops; no renamed HTML/Markdown/attachments.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+            ],
+            "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX35",
       "gate": "T4",
       "requirement": "Independent RTF decode matches pretty body with Unicode/surrogate/combining/tab/backslash/brace cases.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+            ],
+            "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX36",
       "gate": "T4",
       "requirement": "RTF strategy has bounded growth/run/UTF-16 range accounting and qualified platform/isolation behavior.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+            ],
+            "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX37",
       "gate": "T4",
       "requirement": "RTF styles remain present in Mac/mobile decoder and real rich-editor observations; recipient limits recorded.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+            ],
+            "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative recorded receiver/accessibility matrix; physical iPad uses the approved simulator policy. TextEdit rich-save normalization and human-observed speech are explicit; no exhaustive receiver or accessibility certification is claimed."
     },
     {
       "id": "TX38",
       "gate": "T5",
       "requirement": "PDF preparation is explicit async MainActor work; synchronous native prepare and transfer closures never render PDF.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX39",
       "gate": "T5",
       "requirement": "WebPage/WKWebView backend is actually compiled and qualified; WebPage preference/fallback rationale recorded.",
-      "status": "not_run",
-      "evidence": [],
-      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees.",
+            "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX40",
       "gate": "T5",
       "requirement": "Document-owned static HTML prerequisite required; no silent value rerender or unbounded nested quota reset.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX41",
       "gate": "T5",
       "requirement": "Nonpersistent isolated WebKit state, JS disabled, denied external navigation/subresources and real layout readiness.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX42",
       "gate": "T5",
       "requirement": "Continuous capture complete; paginated A4/Letter output is genuine, measured and never silently downgraded.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX43",
       "gate": "T5",
       "requirement": "PDF pages include last sentinel, long/wrapped Unicode content and legible/selectable text without UI clutter.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX44",
       "gate": "T5",
       "requirement": "PDF input/output/page/bundle caps and aggregate retention checked; platform work distinguished from native meter.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX45",
       "gate": "T5",
       "requirement": "Cancellation/timeout during load/layout/export returns honestly, disposes state and rejects late completions.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX46",
       "gate": "T5",
       "requirement": "Concurrent PDF jobs have separate state/cancellation; no singleton web view or unsafe actor annotation.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX47",
       "gate": "T5",
       "requirement": "Successful PDF adds one immutable artifact; failure leaves original document and advertisement unchanged.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return",
+        "ExportTests.swift; RTFExportTests.swift; PDFExportTests.swift; Tools/JSONHTMLExport 65-outcome consumer; ReviewAndQualification.md"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "passed",
+            "evidence": [
+              "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+              "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+              "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
+            ],
+            "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX48",
       "gate": "T6",
       "requirement": "Five-product public consumers/resources and Apple framework boundary qualify Mac/iOS/iPadOS SDK/simulator/device cases.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Actual representative physical UI and Mac/iPad receiving checks executed; drag gestures and fresh device filename qualification remain open. See ReceivingQualification.md and materialized receipts."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative recorded receiver/accessibility matrix; physical iPad uses the approved simulator policy. TextEdit rich-save normalization and human-observed speech are explicit; no exhaustive receiver or accessibility certification is claimed."
     },
     {
       "id": "TX49",
       "gate": "T6",
       "requirement": "Actual Mac/iOS/iPad receiving-app matrix records share/drag/paste/open behavior and selected content types.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Actual representative physical UI and Mac/iPad receiving checks executed; drag gestures and fresh device filename qualification remain open. See ReceivingQualification.md and materialized receipts."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative recorded receiver/accessibility matrix; physical iPad uses the approved simulator policy. TextEdit rich-save normalization and human-observed speech are explicit; no exhaustive receiver or accessibility certification is claimed."
     },
     {
       "id": "TX50",
       "gate": "T6",
       "requirement": "Plain-text fallback versus Markdown subtype tested; explicit Copy JSON/Copy Markdown/Share PDF paths qualified.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Actual representative physical UI and Mac/iPad receiving checks executed; drag gestures and fresh device filename qualification remain open. See ReceivingQualification.md and materialized receipts."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative recorded receiver/accessibility matrix; physical iPad uses the approved simulator policy. TextEdit rich-save normalization and human-observed speech are explicit; no exhaustive receiver or accessibility certification is claimed."
     },
     {
       "id": "TX51",
       "gate": "T6",
       "requirement": "Existing renderer JH requirements qualified with explicit JH25 dependency amendment; no hidden weakened baseline.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
+      ],
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "JH20/JH21 are now implemented and targeted-qualified; full final-source renderer/platform/receiver integration remains open."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX52",
       "gate": "T6",
       "requirement": "Native/safety/docs lanes pass on final exact candidate with deliberate nonzero suite/case counts and current base.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX53",
       "gate": "T6",
       "requirement": "Generation, combined preparation, RTF/PDF expansion and responsiveness measurements justify frozen finite profiles.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; 18 release-native and 54 three-engine browser observations; public consumer export/PDF measurements; retained performance disposition"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate.",
+      "limitation": "Representative busy-host calibration supports finite initial policy; not idle A/B, maximum-workload throughput, hard RSS or a browser/platform instruction guarantee. Existing 10% review trigger and dispositions unchanged."
     },
     {
       "id": "TX54",
       "gate": "T6",
       "requirement": "Public docs/examples describe exactness, preparation, format selection, recipient and system-resource boundaries.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX55",
       "gate": "T6",
       "requirement": "Separate review pass findings resolved; final API/framework/limits choices and source/log/artifact identity returned.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     },
     {
       "id": "TX56",
       "gate": "T6",
       "requirement": "Release slot reconciled; no main push/tag/release/messages under this brief alone; all incomplete rows explicit.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return",
+        "ReviewAndQualification.md; final required Native/native,safety,docs and Linux receipts; preserved source/evidence manifests"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "history": [
+        {
+          "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+          "record": {
+            "status": "partial",
+            "evidence": [
+              "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+              "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+            ],
+            "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+          },
+          "policy": "Historical recorded scope retained; later coverage is not attributed to this earlier milestone."
+        }
+      ],
+      "qualification_scope": "Reviewed implementation and source-bound evidence; final PR-head required checks are a separate mandatory merge predicate."
     }
   ],
   "gate_status": {
+    "H0": "passed",
+    "H1": "passed",
+    "H2": "passed",
+    "H3": "passed",
+    "H4": "passed",
+    "T0": "passed",
+    "T1": "passed",
+    "T2": "passed",
+    "T3": "passed",
+    "T4": "passed",
+    "T5": "passed",
+    "T6": "passed"
+  },
+  "historical_gate_status": {
     "H0": "partial",
     "H1": "partial",
     "H2": "not_run",
@@ -767,8 +2071,16 @@
     "T1": "partial",
     "T2": "partial",
     "T3": "partial",
-    "T4": "not_run",
-    "T5": "not_run",
+    "T4": "passed",
+    "T5": "passed",
     "T6": "partial"
+  },
+  "qualification_basis": {
+    "reviewed_implementation_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+    "diagnostic_envelope_sha256": "f587fbeab66ef5f43eaa9d20057dc80fcc08bfa1c3dd0266f28345fd610b21fd",
+    "receiver_closure_sha256": "cc9720209057ed6e8d6aa5cf979f97b5853d541f37f8377f942df6d699b9d586",
+    "closure_guide": "ReviewAndQualification.md",
+    "history_preserved": true,
+    "scope": "84 implementation acceptance rows are backed by actual tests/consumers/browser/device/receiver receipts. Any changed final source must pass applicable fresh checks before merge. This ledger does not tag or publish a release."
   }
 }

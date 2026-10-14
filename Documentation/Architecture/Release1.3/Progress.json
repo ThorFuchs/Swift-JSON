@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "target_release": "1.3.0",
-  "status": "Formatted and interactive increments implemented; browser/platform/final 1.3 gates remain partial",
+  "status": "Implementation and representative qualification complete; protected PR-stack integration requires passing final-head checks",
   "actual_base": "532f725740a4d61c32bc9870986d050b71f9db78",
   "captured_briefing_base": "e9c6693c7cb29df5125e1699fef70f98229ccfdf",
-  "feature_branch": "codex/1.3-jsonhtml",
-  "pr": null,
-  "release_train_dependency": "WASI main 25fb04f integrated; final five-product portable release qualification remains a later gate",
+  "feature_branch": "codex/1.3-jsonhtml-transfer",
+  "pr": 22,
+  "release_train_dependency": "Qualified 1.2/WASI main25fb04f integrated; renderer PR21 merged as d463d0418e0fc201229ae38af6464e56311f6e11; portable five-product Node/Linux scope qualified",
   "expected_final_products": [
     "JSON",
     "JSONSchema",
@@ -16,30 +16,25 @@
   ],
   "current_manifest_products": 5,
   "qualified_scope": [
-    "Briefing integrity only",
-    "Source/worktree/ruleset orientation",
-    "Three supported Apple SDK declaration probes only",
-    "Formatted exact Data/String rendering and cumulative reports",
-    "16 new behavior functions; complete local native/safety/docs lanes",
-    "Five-product public consumer and 628 documented declarations",
-    "JSON/JSONHTML iPhoneOS and iPhoneSimulator module/public-interface typechecks only",
-    "12 interactive behavior functions; initial native debug/release 217 functions and 173 parameter cases passed",
-    "Pinned browser harness: 37 required cases, exact byte downloads and explicit unexecuted engine counts",
-    "All 37 browser cases executed; native Safari exact downloads/focus and four maintainer-observed VoiceOver checks"
+    "Native 270 functions/173 parameters; ASAN270/173; TSAN10; strict memory warnings-as-errors",
+    "Portable Linux/Node 256 functions/173 parameters; WasmKit14 public consumer functions/probes, not full root",
+    "All49 baseline cap probes and populated pinned independent suites with exclusions separate",
+    "38 focused export functions;65 public consumer outcomes/eight artifacts; three Apple SDKs",
+    "65 actual consumer outcomes on Mac, physical iPhone and iPhone/iPad simulators",
+    "46 browser cases/zero skips; native Safari exact/diagnostic navigation and human VoiceOver scope",
+    "Three delivered Mac exact JSON/Markdown/generic String drop callbacks; physical and simulated A4.pdf Files save/reopen",
+    "Five compiled DocC catalogues,771 declarations and13 executed README fences",
+    "18 release-native representative measurements;54 browser observations across six frozen workloads/three engines",
+    "Immutable source/evidence archives, clean reproduction and reviewed public framework/dependency boundary"
   ],
-  "implementation_qualified": false,
-  "next_increment": "Complete blocked browser/accessibility/final-platform qualification; continue separately scoped annotation and transfer/export work",
-  "open_decisions": [
-    "Measured finite renderer/export/PDF presets",
-    "Executed PDF backend/pagination/defaults",
-    "Qualified RTF strategy",
-    "Exact final declaration shapes"
-  ],
+  "implementation_qualified": true,
+  "next_increment": "Complete protected PR22 integration after current required checks and source review; post-merge verification, tagging and publication remain separate",
+  "open_decisions": [],
   "notes": [
-    "No raw private briefing packs or source-clone records enter Git",
-    "No empty product or passing placeholder tests",
-    "Existing core defaults and 49 metric meanings retained",
-    "No messages, merge, release or protection changes"
+    "Private briefs, device records, logs and build outputs remain outside public Git/source archives",
+    "Original milestone objects and failed-probe history retained",
+    "All49 metric values/meanings and10% performance review trigger unchanged",
+    "Explicit maintainer authorization2026-10-14 permits protected PR21/22 review and merge only; no tag/release publication, direct main push or protection bypass"
   ],
   "input_packets": [
     {
@@ -55,7 +50,7 @@
       "entries": 8
     }
   ],
-  "updated_utc": "2026-10-13T21:53:26.614788+00:00",
+  "updated_utc": "2026-10-14T20:31:44.666625+00:00",
   "evidence_locations": [
     "Scripts/ci.py --lane native --output .build/ci/jsonhtml-native-compatible",
     "Scripts/ci.py --lane safety --output .build/ci/jsonhtml-safety-compatible",
@@ -67,7 +62,7 @@
     "Scripts/ci.py --lane docs --output .build/ci/jsonhtml-interactive-final-docs",
     "Scripts/ci.py --lane browser --output .build/ci/jsonhtml-interactive-final-browser"
   ],
-  "final_source_refresh": "The final-source lane receipts are materialized privately after committing this source; initial full lanes already passed. Any final failure keeps that lane open.",
+  "final_source_refresh": "Current required Native/native,safety,docs and supporting Linux checks must pass on the final PR head before merge; preserve byte-identity reuse for unchanged implementation, assets, fixtures and tests.",
   "interactive_increment": {
     "parent_commit": "41fdf1c5045ef171059981ffcbc59a5aef8f998a",
     "expected_root_functions": 217,
@@ -104,5 +99,212 @@
       25
     ],
     "discovery_correction": "Inherited WASI three added JSON tests require 107, not 104; actual successful test exit initially failed stale harness cardinality. Failure preserved; 173 parameter cases and 49 probes unchanged."
+  },
+  "transfer_export_increment": {
+    "branch": "codex/1.3-jsonhtml-transfer",
+    "base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
+    "upstream_main": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+    "status": "four-format implementation; full T0-T6 qualification incomplete",
+    "new_swift_testing_functions": 16,
+    "expected_apple_root_functions": 236,
+    "expected_parameter_cases": 173,
+    "preserved_metrics": 49,
+    "conformance": "single conditional JSON: Transferable in JSONHTML; compiler-owned package exception, no retroactive annotation",
+    "shared_preparation": "one root admission, one cumulative noncopyable meter, selected-format closure guards",
+    "pdf_probe": "offscreen WebPage region: one 595 x 3500 point page, final sentinel; not A4/Letter pagination",
+    "incomplete": [
+      "styled RTF",
+      "qualified paginated PDF and lifecycle cancellation",
+      "Mac/mobile receiving-app UI and simulator/device runtime",
+      "final five-product portable qualification"
+    ],
+    "evidence": [
+      "../JSONHTMLExport.md",
+      "TransferExportIncrement.md",
+      "Scripts/ci.py --lane export",
+      "Tools/JSONHTMLExport"
+    ]
+  },
+  "styled_rtf_increment": {
+    "branch": "codex/1.3-jsonhtml-transfer",
+    "parent": "6f1c6ebe442bd51119ca0486b78bf9d90da561ba",
+    "status": "Implemented; exact-source receipts required before qualification claim",
+    "new_swift_testing_functions": 6,
+    "expected_export_functions": 22,
+    "expected_apple_root_functions": 242,
+    "expected_linux_root_functions": 239,
+    "expected_parameter_cases": 173,
+    "preserved_metrics": 49,
+    "public_consumer_outcomes": 45,
+    "artifacts": 5,
+    "remaining": [
+      "PDF backend/pagination/lifecycle",
+      "RTF rich-editor and physical-device integration",
+      "Final five-product portable release qualification"
+    ],
+    "evidence": [
+      "RTFIncrement.md",
+      "Scripts/ci.py --lane export",
+      "Scripts/qualify_rtf_runtime.py",
+      "native/safety/docs receipts in materialized return"
+    ]
+  },
+  "pdf_increment": {
+    "branch": "codex/1.3-jsonhtml-transfer",
+    "parent": "703b117c34703292dab26a0420da85d259ba22e2",
+    "status": "T5 software/SDK/simulator increment qualified; final 1.3 release/recipient/device gates remain separate",
+    "public_shape": "Explicit async MainActor preparation returning an immutable document or successful operation report",
+    "backend": "WebPage static syntax + CoreText visible-range pagination + CoreGraphics; explicit WebPage continuous region",
+    "new_apple_functions": 15,
+    "new_linux_functions": 5,
+    "expected_apple_root_functions": 257,
+    "expected_linux_root_functions": 244,
+    "expected_export_functions": 37,
+    "expected_mac_shared_functions": 9,
+    "preserved_parameter_cases": 173,
+    "preserved_metrics": 49,
+    "public_consumer_outcomes": 63,
+    "artifacts": 8,
+    "evidence": [
+      "PDFIncrement.md",
+      "Scripts/ci.py --lane export",
+      "Scripts/qualify_rtf_runtime.py",
+      "Materialized final-source native/safety/docs receipts and independent PDF inspection"
+    ],
+    "remaining": [
+      "RTF/PDF receiving-app UI and physical-device integration",
+      "Final five-product portable release qualification"
+    ],
+    "initial_runtime_code": "3fa8c734c20f3eb6440e7b4d204a80ff570a4d89",
+    "simulator_outcomes": {
+      "iPhone": 63,
+      "iPad": 63
+    },
+    "review_dispositions": [
+      "Cumulative artifact-table reservations and layout-state release corrected",
+      "Owned syntax-run admission/cancellation and bounded navigation corrected",
+      "Two audited C pointer calls; typed safe rectangle path",
+      "Disproven iOS line-grid assumption removed; measured geometry retained"
+    ],
+    "qualified_code_commit": "1b4c96186d00ef97f9c6ce4eaeb281a0978493ca",
+    "source_archive_sha256": "b0de3414b0beefe94802358073161c31e74d9735a5b3cf8792de70c26e4c9236",
+    "passed_lanes": [
+      "native: 257 functions / 173 parameters / 49 probes",
+      "safety: ASAN 257 / 173; TSAN 9; strict memory warnings-as-errors",
+      "docs: 754 authored declarations / 13 executable fences / five catalogues",
+      "export: 37 debug and release / 63 consumer outcomes / 8 artifacts / three SDKs"
+    ],
+    "closure_policy": "This documentation-only successor reuses verified unchanged implementation/test/consumer evidence; actual final archive, source binding and clean reconstruction remain in the materialized return."
+  },
+  "receiving_export_qualification": {
+    "implementation_head": "1e0b86d2580bb9678039597523aa3b99d2905abf",
+    "branch": "codex/1.3-jsonhtml-transfer",
+    "pr": 22,
+    "status": "Seven hosted checks and native/safety/docs/export/browser/WASI source88 passed; provider filename regression discovered and corrected; affected successor qualification required",
+    "native_consumer": {
+      "mac": 63,
+      "physical_iPhone": 63,
+      "artifacts": 8
+    },
+    "physical_ui": "Maintainer reported all four representative PDF/local Files/JSON/Markdown checks passed; automated button receipts are separate.",
+    "mac_receivers": "ShareLink PDF/Copy exact; plain TextEdit saved bytes exact; RTF styles retained but rich save canonicalizes decomposed key; HTML rich paste observed.",
+    "wasi": "Inner complete five-product runtime passed; both stale inner/outer product/count tables repaired, final lane refresh required.",
+    "unimplemented_renderer_gates": [
+      "JH20 typed diagnostic annotations",
+      "JH21 coherent JSONDocument source locations"
+    ],
+    "physical_iPad": "Existing maintainer deferral retained; simulator scope explicit.",
+    "evidence": "ReceivingQualification.md; actual source-bound materialized private receipts",
+    "release_actions": "No merge/tag/publication/protection or parallel checkout edits",
+    "provider_filename_regression": {
+      "initial_source": "88abf5c4be75035b0b6571ffa623a891b32aa864",
+      "before": "NSItemProvider selected non-JSON formats suggested .json; new regression failed1 function/5 issues",
+      "correction": "Hidden filename metadata follows first advertised preference; typed requests keep their own format name",
+      "native_functions": 258,
+      "export_functions": 38,
+      "consumer_outcomes": 65,
+      "portable_functions": 244,
+      "remaining": "Fresh recipient/device filename and successor native qualification; JH20/JH21 still open"
+    }
+  },
+  "diagnostic_annotation_increment": {
+    "status": "implemented_targeted_qualified",
+    "parent": "43bdb456b29d416253ffbfdaf158ccc25ce4dee4",
+    "acceptance": [
+      "JH20",
+      "JH21"
+    ],
+    "new_behavior_functions": 12,
+    "root_functions": {
+      "mac": 270,
+      "linux_wasi": 256
+    },
+    "html_functions": {
+      "mac": 75,
+      "linux_wasi": 61
+    },
+    "browser_cases": 46,
+    "public_api": "JSONHTMLAnnotation; options.annotations; limits.maxAnnotations; statistics.annotations; four JSONDocument renderer overloads",
+    "targeted_results": "12 native functions and 46 browser cases passed; final source lane refresh required after integration metadata edits",
+    "remaining": "Receiver drag/drop and fresh physical filename/UI checks; full final candidate review and qualification. Original receiving/renderer history retained."
+  },
+  "historical_progress_header": {
+    "status": "Formatted and interactive increments implemented; browser/platform/final 1.3 gates remain partial",
+    "feature_branch": "codex/1.3-jsonhtml",
+    "pr": null,
+    "release_train_dependency": "WASI main 25fb04f integrated; final five-product portable release qualification remains a later gate",
+    "qualified_scope": [
+      "Briefing integrity only",
+      "Source/worktree/ruleset orientation",
+      "Three supported Apple SDK declaration probes only",
+      "Formatted exact Data/String rendering and cumulative reports",
+      "16 new behavior functions; complete local native/safety/docs lanes",
+      "Five-product public consumer and 628 documented declarations",
+      "JSON/JSONHTML iPhoneOS and iPhoneSimulator module/public-interface typechecks only",
+      "12 interactive behavior functions; initial native debug/release 217 functions and 173 parameter cases passed",
+      "Pinned browser harness: 37 required cases, exact byte downloads and explicit unexecuted engine counts",
+      "All 37 browser cases executed; native Safari exact downloads/focus and four maintainer-observed VoiceOver checks"
+    ],
+    "implementation_qualified": false,
+    "next_increment": "Complete blocked browser/accessibility/final-platform qualification; continue separately scoped annotation and transfer/export work",
+    "open_decisions": [
+      "Measured finite renderer/export/PDF presets",
+      "Executed PDF backend/pagination/defaults",
+      "Qualified RTF strategy",
+      "Exact final declaration shapes"
+    ],
+    "notes": [
+      "No raw private briefing packs or source-clone records enter Git",
+      "No empty product or passing placeholder tests",
+      "Existing core defaults and 49 metric meanings retained",
+      "No messages, merge, release or protection changes"
+    ],
+    "updated_utc": "2026-10-14T13:48:05.774840+00:00",
+    "final_source_refresh": "The final-source lane receipts are materialized privately after committing this source; initial full lanes already passed. Any final failure keeps that lane open."
+  },
+  "current_qualification": {
+    "guide": "ReviewAndQualification.md",
+    "reviewed_implementation_head": "2872afee29ba65905a16653eee8ea4f3807e14e5",
+    "receiver_closure_sha256": "cc9720209057ed6e8d6aa5cf979f97b5853d541f37f8377f942df6d699b9d586",
+    "browser_measurements": {
+      "observations": 54,
+      "engines": 3,
+      "workloads": 6,
+      "source_head": "2872afee29ba65905a16653eee8ea4f3807e14e5"
+    },
+    "required_checks": [
+      "Native / native",
+      "Native / safety",
+      "Native / docs"
+    ],
+    "github_approvals_required": 0,
+    "unresolved_review_threads": 0,
+    "no_independent_reviewer_claim": true,
+    "retained_limits": [
+      "Physical iPad simulator policy",
+      "TextEdit rich-save Unicode normalization",
+      "Representative calibration only; no maximum-workload/RSS/opaque SDK instruction guarantees",
+      "Formatted audible speech not part of the new interactive annotation check"
+    ]
   }
 }

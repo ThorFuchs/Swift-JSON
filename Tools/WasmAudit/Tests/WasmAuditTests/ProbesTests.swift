@@ -15,3 +15,5 @@ import WasmAuditKit
 @Test func streamCompletionAndStrictNDJSON() async throws { try await Probes.streams() }
 @Test func awaitedSink() async throws { try await Probes.awaitedSink() }
 @Test func terminalCancellation() async throws { try await Probes.cancellation() }
+
+@Test func exactPortableHTMLAndPreparedExports() async throws { try await Probes.htmlRenderingAndExports() }

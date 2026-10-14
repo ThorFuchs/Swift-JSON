@@ -2,7 +2,7 @@
 import JSON
 
 extension JSONHTMLRenderer {
-    package func renderInteractive(_ value: JSON, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
+    package func renderInteractive(_ value: JSON, annotations: [JSONHTMLBoundAnnotation], meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         let writing = JSONWritingOptions(limits: options.limits.core, indentation: options.indentation,
                                          numberStyle: .preserved, indentationUnit: options.indentationUnit)
         var copy = try nativeBytes(value, options: writing, meter: &meter)
@@ -75,6 +75,7 @@ extension JSONHTMLRenderer {
                 try meter.release(UInt64(pointer.count)); pointer = []
                 try output.append("\"", meter: &meter)
                 if container && level < options.initiallyExpandedDepth { try output.append(" open", meter: &meter) }
+                try annotationDescription(at: id, in: annotations, output: &output, meter: &meter)
                 try output.append(container ? "><summary>" : ">", meter: &meter)
                 try label(component, output: &output, meter: &meter, searchable: true)
                 switch node {
@@ -137,7 +138,9 @@ extension JSONHTMLRenderer {
             outline = []
             try output.append("</ul></nav>", meter: &meter)
         }
-        try output.append("</div><section class=\"print-json\" aria-label=\"Complete formatted JSON for printing\"><pre><code>", meter: &meter)
+        try output.append("</div>", meter: &meter)
+        try annotationSection(annotations, output: &output, meter: &meter)
+        try output.append("<section class=\"print-json\" aria-label=\"Complete formatted JSON for printing\"><pre><code>", meter: &meter)
         try highlighted(value, options: writing, output: &output, meter: &meter)
         try output.append("</code></pre></section></main><script>", meter: &meter)
         try output.append(JSONHTMLInteractiveAssets.script, meter: &meter)
