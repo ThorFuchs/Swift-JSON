@@ -153,9 +153,12 @@ package actor JSONPDFCompositor {
               let data = CFDataCreateMutable(nil, 0), let consumer = CGDataConsumer(data: data) else {
             throw JSONPDFFailure.captureFailed
         }
+        // Safety: the SDK initializer reads one live, initialized CGRect during
+        // this synchronous call. No pointer is retained in Swift or crosses actors.
         var box = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-        guard let pageContext = CGContext(consumer: consumer, mediaBox: &box, nil) else { throw JSONPDFFailure.captureFailed }
-        let frame = CTFramesetterCreateFrame(setter, CFRange(location: textOffset, length: 0), CGPath(rect: box, transform: nil), nil)
+        guard let pageContext = unsafe CGContext(consumer: consumer, mediaBox: &box, nil) else { throw JSONPDFFailure.captureFailed }
+        let path = CGMutablePath(); path.addRect(box)
+        let frame = CTFramesetterCreateFrame(setter, CFRange(location: textOffset, length: 0), path, nil)
         let range = CTFrameGetVisibleStringRange(frame)
         guard range.location == textOffset, range.length > 0, range.length <= textLength - textOffset else {
             pageContext.closePDF(); throw JSONPDFFailure.layoutFailed
@@ -175,8 +178,10 @@ package actor JSONPDFCompositor {
         guard let buffer = CFDataCreateMutable(nil, 0), let consumer = CGDataConsumer(data: buffer) else {
             throw JSONPDFFailure.captureFailed
         }
+        // Safety: the SDK initializer reads one live, initialized CGRect during
+        // this synchronous call. No pointer is retained in Swift or crosses actors.
         var box = CGRect(x: 0, y: 0, width: width, height: height)
-        guard let context = CGContext(consumer: consumer, mediaBox: &box, nil) else {
+        guard let context = unsafe CGContext(consumer: consumer, mediaBox: &box, nil) else {
             throw JSONPDFFailure.captureFailed
         }
         self.buffer = buffer; self.context = context
