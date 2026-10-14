@@ -193,6 +193,22 @@
       "after": "frame.outcome.valid = true\n        if options.output",
       "family": "ordinary-invalidity",
       "filter": "qaE2E"
+    },
+    {
+      "id": "M25",
+      "path": "Sources/JSONRegexRuntime/RegexVM.swift",
+      "before": "case .end: success = position == input.count;",
+      "after": "case .end: success = true;",
+      "family": "regex-end-anchor",
+      "filter": "deterministicIndependentRegexDifferentialCases"
+    },
+    {
+      "id": "M26",
+      "path": "Sources/JSONRegexRuntime/RegexBudget.swift",
+      "before": "try meter.charge(.aggregateRegexWorkUnits, amount)",
+      "after": "/* dropped aggregate regex charge */",
+      "family": "regex-cumulative-budget",
+      "filter": "regexSearchLimitResetsButAggregateLimitNeverResets"
     }
   ]
 }

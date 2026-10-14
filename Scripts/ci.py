@@ -132,7 +132,7 @@ def check_result(command, code, log):
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
         passed = passed and all(line in log.splitlines() for line in ['PUBLIC_BEHAVIOR passed fixtures=8', 'STREAM_CANCELLATION passed', 'DISK_PERSISTENCE passed containers=3 rows=8', 'MOBILE_QUALIFICATION passed cases=3'])
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=10' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=12' in log.splitlines()
     return passed, counts
 
 def main():
