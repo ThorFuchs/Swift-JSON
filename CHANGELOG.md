@@ -7,6 +7,12 @@
   terminal. Add 31 behavior and precise failure tests across all five modules,
   plus reproducible five-module Linux coverage exports on ARM64 and x86_64.
 
+- Extend Codable, exact value, streaming, Patch, schema/regex and public workflow
+  assertions to 318 Swift Testing functions. Preserve precise errors, complete
+  five-module coverage and finite cumulative accounting; add seeded replays and
+  a bounded native mutation pilot. Report a wholly missing native schema bundle
+  as structured metaSchema failure while retaining all resource integrity pins.
+
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.

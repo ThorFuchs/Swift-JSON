@@ -54,3 +54,7 @@ The [public acceptance and mutation wave](AcceptanceWave.md) closes T05/T06:
 missing native schema-bundle failure and qualifies actual installed resources.
 [Current outcomes](AcceptanceWaveOutcomes.json) retain every earlier wave and
 separate native, Linux, WASI, archive and outstanding calibration evidence.
+
+The [review closeout](ReviewReadiness.md) preserves those results and records the
+third quiet-host readiness attempt. Review proceeds as a draft; diagnostic
+recalibration remains blocked and is required before a release decision.
