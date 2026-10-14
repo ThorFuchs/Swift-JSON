@@ -4,7 +4,7 @@
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "branch": "codex/1.4-json-cli-integration",
-  "status": "Resource-fix successor: native/safety/WASI/mobile passed; final archive/hosted closure belongs to immutable return records",
+  "status": "Reconciled onto main9517233; local native/safety/docs passed; final hosted receipts tracked separately",
   "gates": {
     "C0": "partial",
     "C1": "passed",
@@ -21,18 +21,17 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 298,
+  "root_test_functions": 348,
   "root_parameter_cases": 199,
-  "native_source_manifest_sha256": "c81e1eb3526a2f67546af9a1d906638ef1b506721390876d4bab8da5343619f8",
+  "native_source_manifest_sha256": "792ade5810b9d8d2a43c3cd66fdebbe2895640fd1cea52ff19fef05cc36b0475",
   "qualified_lanes": [
     "native",
     "safety",
-    "wasm"
+    "docs"
   ],
   "remaining_foundation_requirements": [
-    "final-head hosted Linux/native checks",
-    "successor clean-source reproduction",
-    "materialized final return bundle",
+    "final restacked-head native/Linux hosted checks",
+    "main-aligned archive/reproduction binding",
     "qualified schema-provider prerequisite",
     "full WASI CLI host/signal qualification (limited disposition retained)"
   ],
@@ -97,6 +96,14 @@
       "root_test_functions": 297,
       "integration_subprocess_cases": 36,
       "source_archive_sha256": "cf72bb6c31976fc2c6020f66264d57f53f54adf7b873e048e23cabbaded97411"
+    },
+    {
+      "branch": "codex/1.4-json-cli-integration",
+      "head": "7a1334378493a72c08d428d475c26ccb7120c607",
+      "status": "Renderer-pinned immutable candidate; native/Linux passed, main merge probe28 conflicts",
+      "root_test_functions": 298,
+      "root_parameter_cases": 199,
+      "archive_sha256": "d7789117654d298bc9fe5157d71fe525761b7122ba4b5c59d311220d8c5e2be5"
     }
   ],
   "query_functions": 24,
@@ -122,5 +129,8 @@
   "new_cases_passed": 109,
   "new_cases_blocked": 2,
   "release_ready": false,
-  "freeze_closure": "Final source/archive and hosted receipts are recorded in the materialized return pack without rewriting this frozen source."
+  "freeze_closure": "Final source/archive and hosted receipts are recorded in the materialized return pack without rewriting this frozen source.",
+  "main_reconciled": "9517233ef0a3c1b961b738df58fe3ee4081d780c",
+  "linux_root_test_functions": 334,
+  "main_conflicts_resolved": true
 }

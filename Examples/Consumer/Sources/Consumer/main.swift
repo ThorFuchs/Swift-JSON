@@ -62,3 +62,20 @@ do { _ = try JSONHTMLRenderer(options: .init(limits: interactiveLimits, presenta
 catch let failure as JSONFailure { precondition(failure.category == .resource); refusedInteractive = true }
 precondition(refusedInteractive)
 print("JSONHTML_INTERACTIVE_PUBLIC_CONSUMER passed exact_metadata=1 cumulative_refusal=1")
+
+var diagnosticOptions = JSONHTMLRenderingOptions(presentation: .interactive)
+diagnosticOptions.annotations = [
+    .init(path: [.key("count")], severity: .information, message: "Caller selected the exact value"),
+    .init(path: [.key("missing"), .index(0)], severity: .error, message: "Missing instance value")]
+requireSendable(diagnosticOptions.annotations)
+let mappedDocument = try JSONParser().parseDocument(JSONWriter(options: .init(numberStyle: .preserved)).write(value))
+let diagnosticRenderer = JSONHTMLRenderer(options: diagnosticOptions)
+let diagnosticReport = try diagnosticRenderer.renderStringWithReport(mappedDocument)
+requireSendable(diagnosticReport)
+precondition(diagnosticReport.statistics.annotations == 2)
+precondition(diagnosticReport.statistics.operation[.nodes] == 3)
+precondition(diagnosticReport.result.contains("Value source span:") && diagnosticReport.result.contains("Parent source span:"))
+precondition(diagnosticReport.result.contains("Missing target; nearest existing parent"))
+let unmappedDiagnosticHTML = try diagnosticRenderer.renderString(mappedDocument.replacingRoot(value))
+precondition(!unmappedDiagnosticHTML.contains("source span:"))
+print("JSONHTML_ANNOTATION_PUBLIC_CONSUMER passed typed_targets=2 coherent_spans=2 replaced_spans=0")
