@@ -202,21 +202,21 @@
       "id": "JH20",
       "gate": "H2",
       "requirement": "Annotations attach by exact typed path or identify missing targets at their parent; no empty list asserts schema validity.",
-      "status": "not_run",
+      "status": "passed",
       "evidence": [
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "DiagnosticAnnotations.md; AnnotationTests.swift (12 native behavior functions); Examples/Consumer public document API; 46-case browser receipt in successor return"
       ],
-      "limitation": "No annotation/document-input implementation exists; final integrated audit keeps this release requirement open."
+      "limitation": "Targeted semantic/budget/cancellation and file/served three-engine behavior passed. Final source native/safety/DocC/platform refresh and receiver readiness remain separate gates."
     },
     {
       "id": "JH21",
       "gate": "H2",
       "requirement": "JSONDocument locations remain coherent, unmapped/replaced roots invent none, and annotation messages/paths are bounded and escaped.",
-      "status": "not_run",
+      "status": "passed",
       "evidence": [
-        "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
+        "DiagnosticAnnotations.md; AnnotationTests.swift (12 native behavior functions); Examples/Consumer public document API; 46-case browser receipt in successor return"
       ],
-      "limitation": "No annotation/document-input implementation exists; final integrated audit keeps this release requirement open."
+      "limitation": "Targeted semantic/budget/cancellation and file/served three-engine behavior passed. Final source native/safety/DocC/platform refresh and receiver readiness remain separate gates."
     },
     {
       "id": "JH22",
@@ -774,11 +774,11 @@
       "id": "TX51",
       "gate": "T6",
       "requirement": "Existing renderer JH requirements qualified with explicit JH25 dependency amendment; no hidden weakened baseline.",
-      "status": "not_run",
+      "status": "partial",
       "evidence": [
         "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
-      "limitation": "JH20/JH21 annotation/document-input APIs remain unimplemented; dependent complete renderer/release qualification cannot pass."
+      "limitation": "JH20/JH21 are now implemented and targeted-qualified; full final-source renderer/platform/receiver integration remains open."
     },
     {
       "id": "TX52",

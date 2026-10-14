@@ -195,7 +195,8 @@
     "Native codec, Codable, Pointer, Patch and streaming are original implementations from the integrated contract, not automatically attributed to candidates.",
     "Schema graph, explicit evaluator, exact sets/assertions and scalar format recognizers are original implementations from Draft 2020-12, RFC3986/3987/3339/3492/5321/5891/5892/5893/6531/6570/6901 and fixed Unicode13 data.",
     "Private FIPS 180-4 SHA-256 is an original Swift implementation with checked cumulative production accounting, bounded scratch and inner cancellation. The separate trusted fixture tool mirrors its primitive core byte-for-byte; public_check verifies parity. No CryptoKit fallback or runtime dependency is introduced.",
-    "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted."
+    "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted.",
+    "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted."
   ],
   "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
   "jsonhtml_export_original_contributions": {

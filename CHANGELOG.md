@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add typed caller diagnostics and coherent JSONDocument byte-span rendering to
+  JSONHTML, with exact target identity, explicitly missing-parent attachment and
+  finite cumulative annotation/path/message accounting. Rendering never asserts
+  schema validity or archives source bytes; replaced roots invent no locations.
+
 - Add explicit main-actor PDF preparation from immutable static HTML, with genuine
   A4/Letter text-range pagination, an explicit continuous mode, cumulative finite
   accounting, cancellation/deadline lifecycle and prepared-byte-only transfer.
@@ -24,7 +29,6 @@
 - Develop JSONHTML as the fifth product for 1.3: exact formatted standalone HTML,
   shared strict-writer token formatting, literal tab indentation, cumulative
   finite reports, bounded script-free output and a fifth native DocC catalogue.
-  Annotations remain deferred.
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.

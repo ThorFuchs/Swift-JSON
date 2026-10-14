@@ -13,7 +13,7 @@ navigation, literal search, exact JSON/Pointer copy and UTF-8 downloads. A separ
 complete formatted block serves printing independently of collapsed state.
 Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML are
 available in this development increment, with opt-in styled RTF for prepared items.
-Explicit main-actor PDF preparation uses the item’s own static HTML. Annotations remain deferred. See <doc:PreparedExport> for format
+Explicit main-actor PDF preparation uses the item’s own static HTML. Typed caller annotations attach to exact values or explicitly missing targets at their nearest existing parent. Coherent JSONDocument input adds original byte spans. See <doc:PreparedExport> for format
 selection, native text fidelity and finite RTF capacities.
 
 Every call owns one cumulative finite core budget through admission, token
@@ -27,6 +27,7 @@ browser heap, browser instruction quotas, process RSS or printing behavior.
 
 - <doc:FormattedRendering>
 - <doc:InteractiveRendering>
+- <doc:DiagnosticAnnotations>
 - <doc:PreparedExport>
 - <doc:PDFPreparation>
 
@@ -36,6 +37,7 @@ browser heap, browser instruction quotas, process RSS or printing behavior.
 - ``JSONHTMLRenderingOptions``
 - ``JSONHTMLTheme``
 - ``JSONHTMLPresentation``
+- ``JSONHTMLAnnotation``
 
 ### Limits and reports
 

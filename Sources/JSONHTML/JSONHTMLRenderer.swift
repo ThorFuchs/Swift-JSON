@@ -61,13 +61,51 @@ public struct JSONHTMLRenderer: Sendable {
         return .init(result: result, statistics: document.statistics(meter.statistics()))
     }
 
+    /// Renders a coherent source document as complete HTML bytes.
+    /// - Parameter document: Immutable root and optional parser-owned source mapping.
+    /// - Returns: Owned UTF-8 HTML; annotations use coherent value spans only.
+    /// - Throws: Resource/configuration failure or cancellation.
+    public func render(_ document: JSONDocument) throws -> Data { try renderWithReport(document).result }
+
+    /// Renders a coherent source document as complete HTML text.
+    /// - Parameter document: Immutable root and optional parser-owned source mapping.
+    /// - Returns: Owned complete HTML text.
+    /// - Throws: Resource/configuration failure or cancellation.
+    public func renderString(_ document: JSONDocument) throws -> String { try renderStringWithReport(document).result }
+
+    /// Renders document bytes with one cumulative invocation report.
+    /// - Parameter document: Immutable root and optional coherent mapping; source bytes are not archived.
+    /// - Returns: Complete HTML and successful accounting including its Data copy.
+    /// - Throws: Resource/configuration failure or cancellation.
+    public func renderWithReport(_ document: JSONDocument) throws -> JSONHTMLRenderReport<Data> {
+        var meter = try JSONWorkMeter(limits: options.limits.core, domain: .writing)
+        let buffer = try render(document.root, document: document, meter: &meter)
+        try chargeCopy(buffer.bytes, meter: &meter)
+        let result = Data(buffer.bytes)
+        try meter.release(UInt64(buffer.bytes.count)); try meter.checkpoint()
+        return .init(result: result, statistics: buffer.statistics(meter.statistics()))
+    }
+
+    /// Renders document text with one cumulative invocation report.
+    /// - Parameter document: Immutable root and optional coherent mapping; replaced roots have none.
+    /// - Returns: Complete HTML and successful accounting including its String copy.
+    /// - Throws: Resource/configuration failure or cancellation.
+    public func renderStringWithReport(_ document: JSONDocument) throws -> JSONHTMLRenderReport<String> {
+        var meter = try JSONWorkMeter(limits: options.limits.core, domain: .writing)
+        let buffer = try render(document.root, document: document, meter: &meter)
+        try chargeCopy(buffer.bytes, meter: &meter)
+        let result = String(decoding: buffer.bytes, as: UTF8.self)
+        try meter.release(UInt64(buffer.bytes.count)); try meter.checkpoint()
+        return .init(result: result, statistics: buffer.statistics(meter.statistics()))
+    }
+
     private func chargeCopy(_ bytes: [UInt8], meter: inout JSONWorkMeter) throws {
         for _ in bytes { try meter.work(); try meter.retain(1) }
     }
 
-    package func render(_ value: JSON, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
+    package func render(_ value: JSON, document: JSONDocument? = nil, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         let retainedAtEntry = meter.used(.retainedBytes)
-        do { return try renderBody(value, meter: &meter) }
+        do { return try renderBody(value, document: document, meter: &meter) }
         catch {
             meter.recordFailure(error)
             // Invocation-owned scratch is gone on failure; preserve an enclosing reservation.
@@ -79,7 +117,7 @@ public struct JSONHTMLRenderer: Sendable {
     package func renderAdmitted(_ value: JSON, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         try renderBody(value, admitted: true, meter: &meter)
     }
-    private func renderBody(_ value: JSON, admitted: Bool = false, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
+    private func renderBody(_ value: JSON, admitted: Bool = false, document: JSONDocument? = nil, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         try meter.checkpoint()
         try options.limits.validate()
         guard (0...8).contains(options.indentation), (1...8).contains(options.tabWidth),
@@ -94,7 +132,12 @@ public struct JSONHTMLRenderer: Sendable {
         // One admission and one ledger; the cursor never calls a public writer facade.
         if !admitted { try JSONAdmission.value(value, meter: &meter) }
         try JSONHTMLDocumentBuffer.require(.renderedJSONNodes, meter.used(.nodes), options.limits.maxRenderedJSONNodes)
-        if options.presentation == .interactive { return try renderInteractive(value, meter: &meter) }
+        let annotations = try bindAnnotations(value, document: document, meter: &meter)
+        if options.presentation == .interactive {
+            let result = try renderInteractive(value, annotations: annotations, meter: &meter)
+            try meter.release(UInt64(annotations.count) * 64)
+            return result
+        }
         var output = JSONHTMLDocumentBuffer(limits: options.limits)
         try output.addDOM(24, meter: &meter) // Includes fixed tags, text and optional parser-created nodes.
         try output.append("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'none'; style-src 'sha256-", meter: &meter)
@@ -114,8 +157,22 @@ public struct JSONHTMLRenderer: Sendable {
                                          numberStyle: .preserved, indentationUnit: options.indentationUnit)
         var cursor = JSONWritingCursor(value: value, options: writing)
         var active: JSONWritingTokenKind?
+        var ordinal: UInt64 = 0
         while let token = try cursor.nextToken(meter: &meter) {
-            if token.beginsValue { try output.addNode(meter: &meter) }
+            if token.beginsValue {
+                try output.addNode(meter: &meter)
+                if try hasAnnotations(at: ordinal, in: annotations, meter: &meter) {
+                    if let active, active != .whitespace { try output.append("</span>", meter: &meter) }
+                    active = nil
+                    try output.addDOM(4, meter: &meter)
+                    try output.append("<span tabindex=\"-1\" id=\"jh-n-", meter: &meter)
+                    try output.decimal(ordinal, meter: &meter)
+                    try output.append("\"", meter: &meter)
+                    try annotationDescription(at: ordinal, in: annotations, output: &output, meter: &meter)
+                    try output.append("></span>", meter: &meter)
+                }
+                ordinal = try JSONHTMLDocumentBuffer.adding(.renderedJSONNodes, ordinal, 1, options.limits.maxRenderedJSONNodes)
+            }
             if token.kind != active {
                 if let active, active != .whitespace { try output.append("</span>", meter: &meter) }
                 // Four is a conservative upper bound for one span/text run or whitespace run.
@@ -130,7 +187,10 @@ public struct JSONHTMLRenderer: Sendable {
             try output.escaped(token.byte, meter: &meter)
         }
         if let active, active != .whitespace { try output.append("</span>", meter: &meter) }
-        try output.append("</code></pre></main></body></html>\n", meter: &meter)
+        try output.append("</code></pre>", meter: &meter)
+        try annotationSection(annotations, output: &output, meter: &meter)
+        try meter.release(UInt64(annotations.count) * 64)
+        try output.append("</main></body></html>\n", meter: &meter)
         try meter.checkpoint()
         return output
     }
@@ -142,6 +202,7 @@ package struct JSONHTMLDocumentBuffer {
     private var dom: UInt64 = 0
     private var outline: UInt64 = 0
     private var metadata: UInt64 = 0
+    private var annotations: UInt64 = 0
     private var copyBytes: UInt64 = 0
     private let limits: JSONHTMLLimits
     package init(limits: JSONHTMLLimits) { self.limits = limits }
@@ -162,6 +223,7 @@ package struct JSONHTMLDocumentBuffer {
         try meter.work()
         nodes = try Self.adding(.renderedJSONNodes, nodes, 1, limits.maxRenderedJSONNodes)
     }
+    package mutating func setAnnotations(_ count: UInt64) { annotations = count }
     package mutating func setCopyBytes(_ count: UInt64) { copyBytes = count }
     package mutating func addOutline(meter: inout JSONWorkMeter) throws {
         try meter.work(); outline = try Self.adding(.outlineEntries, outline, 1, limits.maxOutlineEntries)
@@ -194,6 +256,6 @@ package struct JSONHTMLDocumentBuffer {
         }
     }
     package func statistics(_ operation: JSONOperationStatistics) -> JSONHTMLStatistics {
-        .init(operation: operation, nodes: nodes, dom: dom, bytes: UInt64(bytes.count), outline: outline, metadata: metadata, copyBytes: copyBytes)
+        .init(operation: operation, nodes: nodes, dom: dom, bytes: UInt64(bytes.count), outline: outline, metadata: metadata, copyBytes: copyBytes, annotations: annotations)
     }
 }

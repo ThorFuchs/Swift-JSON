@@ -95,3 +95,10 @@ Markdown copy/paste readers passing. Desktop and iPad drag attempts delivered no
 validated drop event; those gestures remain open, not passing library tests.
 The Mac UI tool also experienced a long locked-host wait. Such automation/SDK
 observations are not an owned-instruction or responsiveness guarantee.
+
+## Diagnostic successor
+
+The parent receiving snapshot above remains historical. The subsequent
+[diagnostic increment](DiagnosticAnnotations.md) implements JH20/JH21 with 12
+behavior functions and an expanded 46-case browser harness. Receiver filename,
+actual drag/drop and final source qualification are separate remaining gates.

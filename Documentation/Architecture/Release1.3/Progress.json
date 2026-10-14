@@ -231,5 +231,26 @@
       "portable_functions": 244,
       "remaining": "Fresh recipient/device filename and successor native qualification; JH20/JH21 still open"
     }
+  },
+  "diagnostic_annotation_increment": {
+    "status": "implemented_targeted_qualified",
+    "parent": "43bdb456b29d416253ffbfdaf158ccc25ce4dee4",
+    "acceptance": [
+      "JH20",
+      "JH21"
+    ],
+    "new_behavior_functions": 12,
+    "root_functions": {
+      "mac": 270,
+      "linux_wasi": 256
+    },
+    "html_functions": {
+      "mac": 75,
+      "linux_wasi": 61
+    },
+    "browser_cases": 46,
+    "public_api": "JSONHTMLAnnotation; options.annotations; limits.maxAnnotations; statistics.annotations; four JSONDocument renderer overloads",
+    "targeted_results": "12 native functions and 46 browser cases passed; final source lane refresh required after integration metadata edits",
+    "remaining": "Receiver drag/drop and fresh physical filename/UI checks; full final candidate review and qualification. Original receiving/renderer history retained."
   }
 }

@@ -12,7 +12,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
-| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONExportDocument, JSONExportOptions, JSONExportReport | Exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
+| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch and HTML depend on JSON. There are five public
@@ -197,3 +197,8 @@ restore the documented strict/native contracts; they do not add a permissive mod
 See the [export contract](JSONHTMLExport.md) for compiler-proven declarations,
 finite limits, selected-format transfer guards and the remaining RTF/PDF and
 receiving-app qualification boundaries.
+
+JSONHTMLRenderer also accepts JSONDocument in its four rendering/report methods.
+Caller annotations use exact typed paths, explicit missing-parent attachment and
+coherent value byte spans without schema execution or source-byte archival.
+See [diagnostic rendering](Release1.3/DiagnosticAnnotations.md).

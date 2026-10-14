@@ -13,7 +13,7 @@ def main():
     result = subprocess.run([node, str(ROOT / 'Tools/JSONHTMLBrowser/browser.cjs'), str(ROOT / args.fixtures), str(output)], cwd=ROOT / 'Tools/JSONHTMLBrowser')
     if result.returncode: return result.returncode
     receipt = json.loads((output / 'browser.json').read_text())
-    if receipt['status'] != 'passed' or len(receipt['engines']) != 3 or len(receipt['cases']) != 37 or any(c['status'] != 'passed' for c in receipt['cases']) or receipt['unexpectedSkips']:
+    if receipt['status'] != 'passed' or len(receipt['engines']) != 3 or len(receipt['cases']) != 46 or any(c['status'] != 'passed' for c in receipt['cases']) or receipt['unexpectedSkips']:
         return 1
     return 0
 if __name__ == '__main__': sys.exit(main())

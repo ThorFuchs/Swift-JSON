@@ -7,7 +7,7 @@ from archive_candidate import files
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
 COUNTS = {'JSONTests': 107, 'JSONSchemaTests': 51, 'JSONRegexRuntimeTests': 12,
-          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 49}
+          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 61}
 GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
 
 def main():

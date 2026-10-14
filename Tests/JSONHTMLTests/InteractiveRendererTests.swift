@@ -81,6 +81,7 @@ private func exact(_ root: JSON) throws -> [UInt8] {
         switch metric {
         case .outlineEntries: boundary = report.statistics.outlineEntries
         case .metadataBytes: boundary = report.statistics.metadataBytes
+        case .annotations: boundary = report.statistics.annotations
         case .documentBytes: boundary = report.statistics.documentBytes
         case .domNodes: boundary = report.statistics.domNodeUpperBound
         case .renderedJSONNodes: boundary = report.statistics.renderedJSONNodes
@@ -90,6 +91,7 @@ private func exact(_ root: JSON) throws -> [UInt8] {
             switch metric {
             case .outlineEntries: limits.maxOutlineEntries = cap
             case .metadataBytes: limits.maxMetadataBytes = cap
+            case .annotations: limits.maxAnnotations = cap
             case .documentBytes: limits.maxDocumentBytes = cap
             case .domNodes: limits.maxDOMNodes = cap
             case .renderedJSONNodes: limits.maxRenderedJSONNodes = cap
