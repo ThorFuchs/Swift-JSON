@@ -1,0 +1,2050 @@
+{
+  "schema": "swift-json-cli-cases/1",
+  "status": "not_run",
+  "executable": "swift-json",
+  "default_query_options": [
+    "--compact"
+  ],
+  "comparison_policy": "Parse expected JSON texts with native exact parser; compare stdout bytes only where stated. Preserve order/cardinality/scalar identity. Never float-coerce expected values.",
+  "cases": [
+    {
+      "id": "format-preserved-lexemes",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL011"
+      ],
+      "command": "format",
+      "options": [
+        "--compact"
+      ],
+      "operands": [],
+      "stdin_utf8": "[1.2300e+2,9007199254740993,-0]\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "expected_stdout_utf8": "[1.2300e+2,9007199254740993,-0]\n"
+    },
+    {
+      "id": "reject-duplicate-key",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL011"
+      ],
+      "command": "format",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"x\":1,\"x\":2}\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run"
+    },
+    {
+      "id": "reject-trailing-root",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL011"
+      ],
+      "command": "format",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{} []\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run"
+    },
+    {
+      "id": "reject-trailing-comma",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL011"
+      ],
+      "command": "format",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,]\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run"
+    },
+    {
+      "id": "pointer-present-null",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL015"
+      ],
+      "command": "pointer",
+      "options": [],
+      "operands": [
+        "/x"
+      ],
+      "stdin_utf8": "{\"x\":null}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "expected_json_values": [
+        "null"
+      ]
+    },
+    {
+      "id": "pointer-missing-allowed",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL015"
+      ],
+      "command": "pointer",
+      "options": [
+        "--allow-missing"
+      ],
+      "operands": [
+        "/x"
+      ],
+      "stdin_utf8": "{}\n",
+      "expected_exit": 4,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "expected_stdout_utf8": ""
+    },
+    {
+      "id": "pointer-escaped-key",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL015"
+      ],
+      "command": "pointer",
+      "options": [],
+      "operands": [
+        "/a~1b/~0"
+      ],
+      "stdin_utf8": "{\"a/b\":{\"~\":42}}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "expected_json_values": [
+        "42"
+      ]
+    },
+    {
+      "id": "patch-success",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL016"
+      ],
+      "command": "patch",
+      "options": [
+        "--patch",
+        "fixtures/new/patch-success.json"
+      ],
+      "operands": [],
+      "stdin_utf8": "{\"a\":1}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "expected_json_values": [
+        "{\"a\":2}"
+      ]
+    },
+    {
+      "id": "patch-failed-test",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL016"
+      ],
+      "command": "patch",
+      "options": [
+        "--patch",
+        "fixtures/new/patch-failed-test.json"
+      ],
+      "operands": [],
+      "stdin_utf8": "{\"a\":1}\n",
+      "expected_exit": 5,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "expected_stdout_utf8": ""
+    },
+    {
+      "id": "validate-instance-invalid",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL014"
+      ],
+      "command": "validate",
+      "options": [
+        "--schema",
+        "fixtures/new/schema-integer.json"
+      ],
+      "operands": [],
+      "stdin_utf8": "\"no\"\n",
+      "expected_exit": 1,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "probe": {
+        "assert_result_valid": false,
+        "assert_operational_error": false
+      }
+    },
+    {
+      "id": "unknown-option",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL009"
+      ],
+      "command": "format",
+      "options": [
+        "--unknown"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 2,
+      "comparison": "process-contract",
+      "status": "not_run"
+    },
+    {
+      "id": "conflicting-style-options",
+      "gate": "C1",
+      "requirement_ids": [
+        "CL012"
+      ],
+      "command": "format",
+      "options": [
+        "--compact",
+        "--tab"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 2,
+      "comparison": "process-contract",
+      "status": "not_run"
+    },
+    {
+      "id": "values-framing",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL040"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"x\":1}\n[2]\ttrue\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".",
+      "expected_json_values": [
+        "{\"x\":1}",
+        "[2]",
+        "true"
+      ]
+    },
+    {
+      "id": "adjacent-roots-rejected",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL040"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{}{}",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "."
+    },
+    {
+      "id": "ndjson-blank-line-rejected",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL040"
+      ],
+      "command": "query",
+      "options": [
+        "--input-framing",
+        "ndjson"
+      ],
+      "operands": [],
+      "stdin_utf8": "{}\n\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "."
+    },
+    {
+      "id": "raw-line-crlf",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL040"
+      ],
+      "command": "query",
+      "options": [
+        "-R"
+      ],
+      "operands": [],
+      "stdin_utf8": "a\r\n\nβ",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".",
+      "expected_json_values": [
+        "\"a\"",
+        "\"\"",
+        "\"β\""
+      ]
+    },
+    {
+      "id": "null-input-once",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL039"
+      ],
+      "command": "query",
+      "options": [
+        "-n"
+      ],
+      "operands": [],
+      "stdin_utf8": "",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".",
+      "expected_json_values": [
+        "null"
+      ]
+    },
+    {
+      "id": "shared-inputs",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL039"
+      ],
+      "command": "query",
+      "options": [
+        "-n"
+      ],
+      "operands": [],
+      "stdin_utf8": "1\n2\n3\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "[input,inputs]",
+      "expected_json_values": [
+        "[1,2,3]"
+      ]
+    },
+    {
+      "id": "input-eof-catch",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL059"
+      ],
+      "command": "query",
+      "options": [
+        "-n"
+      ],
+      "operands": [],
+      "stdin_utf8": "",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "try input catch \"done\"",
+      "expected_json_values": [
+        "\"done\""
+      ]
+    },
+    {
+      "id": "malformed-input-cannot-catch",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL059"
+      ],
+      "command": "query",
+      "options": [
+        "-n"
+      ],
+      "operands": [],
+      "stdin_utf8": "[1,]\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "try inputs catch \"hidden\""
+    },
+    {
+      "id": "missing-field-null",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL032"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".x",
+      "expected_json_values": [
+        "null"
+      ]
+    },
+    {
+      "id": "wrong-type-field",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL032"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "true\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": ".a"
+    },
+    {
+      "id": "optional-wrong-type-empty",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL032"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "true\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "filter": ".a?",
+      "expected_json_values": [],
+      "expected_stdout_utf8": ""
+    },
+    {
+      "id": "has-present-null",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL032"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"x\":null}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "has(\"x\")",
+      "expected_json_values": [
+        "true"
+      ]
+    },
+    {
+      "id": "negative-index",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL032"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2,3]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".[-1]",
+      "expected_json_values": [
+        "3"
+      ]
+    },
+    {
+      "id": "scalar-key-lookup",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL033"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"é\":1,\"e\\u0301\":2}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".[\"é\"], .[\"e\\u0301\"]",
+      "expected_json_values": [
+        "1",
+        "2"
+      ]
+    },
+    {
+      "id": "scalar-string-inequality",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL033"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "\"é\" == \"e\\u0301\"",
+      "expected_json_values": [
+        "false"
+      ]
+    },
+    {
+      "id": "scalar-length",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL033"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"e\\u0301\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "length",
+      "expected_json_values": [
+        "2"
+      ]
+    },
+    {
+      "id": "utf8-length",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL033"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"e\\u0301\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "utf8bytelength",
+      "expected_json_values": [
+        "3"
+      ]
+    },
+    {
+      "id": "scalar-slice",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL033"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"e\\u0301\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".[1:2]",
+      "expected_json_values": [
+        "\"\\u0301\""
+      ]
+    },
+    {
+      "id": "truthiness",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL034"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[0,\"\",[],{},false,null]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "map(if . then true else false end)",
+      "expected_json_values": [
+        "[true,true,true,true,false,false]"
+      ]
+    },
+    {
+      "id": "fallback-whole-generator",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL034"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "(false,null,1,2) // 42",
+      "expected_json_values": [
+        "1",
+        "2"
+      ]
+    },
+    {
+      "id": "fallback-empty",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL034"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "empty // 42",
+      "expected_json_values": [
+        "42"
+      ]
+    },
+    {
+      "id": "Boolean-short-circuit",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL034"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "(false,true) and (false,true)",
+      "expected_json_values": [
+        "false",
+        "false",
+        "true"
+      ]
+    },
+    {
+      "id": "if-condition-stream",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL034"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "if (true,false) then 1 else 2 end",
+      "expected_json_values": [
+        "1",
+        "2"
+      ]
+    },
+    {
+      "id": "empty-array-collector",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL037"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "[empty]",
+      "expected_json_values": [
+        "[]"
+      ]
+    },
+    {
+      "id": "map-all-results",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL037"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "map(.,.)",
+      "expected_json_values": [
+        "[1,1,2,2]"
+      ]
+    },
+    {
+      "id": "map-values-first",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL037"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "map_values((10,20))",
+      "expected_json_values": [
+        "[10,10]"
+      ]
+    },
+    {
+      "id": "map-values-delete",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL037"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "map_values(empty)",
+      "expected_json_values": [
+        "[]"
+      ]
+    },
+    {
+      "id": "object-product-order",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL031"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "{a:(1,2),b:(10,20)}",
+      "expected_json_values": [
+        "{\"a\":1,\"b\":10}",
+        "{\"a\":1,\"b\":20}",
+        "{\"a\":2,\"b\":10}",
+        "{\"a\":2,\"b\":20}"
+      ]
+    },
+    {
+      "id": "constructed-key-replacement",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL035"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "{a:1,a:2,b:3}",
+      "expected_json_values": [
+        "{\"a\":2,\"b\":3}"
+      ],
+      "probe": {
+        "assert_member_order": [
+          "a",
+          "b"
+        ]
+      }
+    },
+    {
+      "id": "binding-original-input",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL038"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"a\":1,\"b\":2}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".a as $x | [.b,$x]",
+      "expected_json_values": [
+        "[2,1]"
+      ]
+    },
+    {
+      "id": "argjson-exact",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL038"
+      ],
+      "command": "query",
+      "options": [
+        "--argjson",
+        "x",
+        "9007199254740993"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "$x",
+      "expected_json_values": [
+        "9007199254740993"
+      ]
+    },
+    {
+      "id": "exit-status-truthy-zero",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL043"
+      ],
+      "command": "query",
+      "options": [
+        "-e"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "0",
+      "expected_json_values": [
+        "0"
+      ]
+    },
+    {
+      "id": "exit-status-false",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL043"
+      ],
+      "command": "query",
+      "options": [
+        "-e"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 1,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "false",
+      "expected_json_values": [
+        "false"
+      ]
+    },
+    {
+      "id": "exit-status-empty",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL043"
+      ],
+      "command": "query",
+      "options": [
+        "-e"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 4,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "empty",
+      "expected_json_values": []
+    },
+    {
+      "id": "raw-lf",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL041"
+      ],
+      "command": "query",
+      "options": [
+        "-r"
+      ],
+      "operands": [],
+      "stdin_utf8": "\"a\\nb\"\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "filter": ".",
+      "expected_stdout_utf8": "a\nb\n"
+    },
+    {
+      "id": "raw-nul-delimiter",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL041"
+      ],
+      "command": "query",
+      "options": [
+        "--raw-output0"
+      ],
+      "operands": [],
+      "stdin_utf8": "\"a\\nb\"\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "filter": ".",
+      "expected_stdout_utf8": "a\nb\u0000"
+    },
+    {
+      "id": "raw-nul-value-rejected",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL041"
+      ],
+      "command": "query",
+      "options": [
+        "--raw-output0"
+      ],
+      "operands": [],
+      "stdin_utf8": "\"a\\u0000b\"\n",
+      "expected_exit": 5,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "filter": ".",
+      "expected_stdout_utf8": ""
+    },
+    {
+      "id": "join-no-delimiter",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL041"
+      ],
+      "command": "query",
+      "options": [
+        "-j"
+      ],
+      "operands": [],
+      "stdin_utf8": "\"a\"\n\"b\"\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "filter": ".",
+      "expected_stdout_utf8": "ab"
+    },
+    {
+      "id": "ascii-surrogate-pair",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL042"
+      ],
+      "command": "query",
+      "options": [
+        "-a"
+      ],
+      "operands": [],
+      "stdin_utf8": "\"😀\"\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "filter": ".",
+      "expected_stdout_utf8": "\"\\ud83d\\ude00\"\n"
+    },
+    {
+      "id": "Cartesian-add-order",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL045"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "(1,2)+(10,20)",
+      "expected_json_values": [
+        "11",
+        "12",
+        "21",
+        "22"
+      ]
+    },
+    {
+      "id": "pipeline-comma-precedence",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL028"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "1,2 | .+10",
+      "expected_json_values": [
+        "11",
+        "12"
+      ]
+    },
+    {
+      "id": "exact-large-integer",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL045"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "9007199254740993+1",
+      "expected_json_values": [
+        "9007199254740994"
+      ]
+    },
+    {
+      "id": "exact-decimal-add",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL045"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "0.1+0.2",
+      "expected_json_values": [
+        "0.3"
+      ]
+    },
+    {
+      "id": "exact-borrow",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL045"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "1000000000000000000000000-1",
+      "expected_json_values": [
+        "999999999999999999999999"
+      ]
+    },
+    {
+      "id": "exact-multiply",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL045"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "123456789*987654321",
+      "expected_json_values": [
+        "121932631112635269"
+      ]
+    },
+    {
+      "id": "terminating-division",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL047"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "1/8",
+      "expected_json_values": [
+        "0.125"
+      ]
+    },
+    {
+      "id": "repeating-division-error",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL048"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "1/3",
+      "expected_diagnostic_code": "inexactDivision"
+    },
+    {
+      "id": "repeating-division-caught",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL059"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "try (1/3) catch \"rejected\"",
+      "expected_json_values": [
+        "\"rejected\""
+      ]
+    },
+    {
+      "id": "division-zero-caught",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL059"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "try (1/0) catch \"zero\"",
+      "expected_json_values": [
+        "\"zero\""
+      ]
+    },
+    {
+      "id": "rounded-third",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL049"
+      ],
+      "command": "query",
+      "options": [
+        "--division-scale",
+        "4",
+        "--rounding",
+        "half-even"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "1/3",
+      "expected_json_values": [
+        "0.3333"
+      ]
+    },
+    {
+      "id": "half-even-ties",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL049"
+      ],
+      "command": "query",
+      "options": [
+        "--division-scale",
+        "2",
+        "--rounding",
+        "half-even"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "1/8,3/8,-1/8",
+      "expected_json_values": [
+        "0.12",
+        "0.38",
+        "-0.12"
+      ]
+    },
+    {
+      "id": "scale-pair-required",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL049"
+      ],
+      "command": "query",
+      "options": [
+        "--division-scale",
+        "4"
+      ],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 2,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "1/3"
+    },
+    {
+      "id": "negative-remainder",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL050"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "-7%3",
+      "expected_json_values": [
+        "-1"
+      ]
+    },
+    {
+      "id": "fractional-remainder-rejected",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL050"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "1.5%1"
+    },
+    {
+      "id": "round-away-from-zero",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL051"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "-1.5|round",
+      "expected_json_values": [
+        "-2"
+      ]
+    },
+    {
+      "id": "range-negative-step",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL051"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "[range(5;0;-2)]",
+      "expected_json_values": [
+        "[5,3,1]"
+      ]
+    },
+    {
+      "id": "range-zero-step",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL051"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "range(0;10;0)"
+    },
+    {
+      "id": "exponent-gap-cap",
+      "gate": "C3",
+      "requirement_ids": [
+        "CL052"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 6,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "1e1000000+1",
+      "probe": {
+        "assert_no_dense_preallocation": true
+      }
+    },
+    {
+      "id": "numeric-transcendental-deferred",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL072"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 3,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "sqrt"
+    },
+    {
+      "id": "reduce-last-update",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL056"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "reduce (1,2) as $x (0; .+$x,.+10)",
+      "expected_json_values": [
+        "20"
+      ]
+    },
+    {
+      "id": "reduce-empty-update",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL056"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "reduce (1,2) as $x (0; empty)",
+      "expected_json_values": [
+        "null"
+      ]
+    },
+    {
+      "id": "foreach-every-update",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL056"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "foreach (1,2) as $x (0; ., .+$x; .)",
+      "expected_json_values": [
+        "0",
+        "1",
+        "1",
+        "3"
+      ]
+    },
+    {
+      "id": "reduce-multiple-inits",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL056"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "reduce (1,2) as $x ((0,10); .+$x)",
+      "expected_json_values": [
+        "3",
+        "13"
+      ]
+    },
+    {
+      "id": "filter-parameter-code",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL057"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "def twice(f): f,f; twice((1,2))",
+      "expected_json_values": [
+        "1",
+        "2",
+        "1",
+        "2"
+      ]
+    },
+    {
+      "id": "forward-definition-rejected",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL057"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 3,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "def a: b; def b: 1; a"
+    },
+    {
+      "id": "recursive-definition",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL057"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "def down: if .>0 then ., (.-1|down) else . end; 3|down",
+      "expected_json_values": [
+        "3",
+        "2",
+        "1",
+        "0"
+      ]
+    },
+    {
+      "id": "walk-child-before-parent",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL058"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"a\":[1,2]}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "walk(if type==\"number\" then .+1 else . end)",
+      "expected_json_values": [
+        "{\"a\":[2,3]}"
+      ]
+    },
+    {
+      "id": "recurse-null-leaves",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL058"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"a\":null}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "[recurse]",
+      "expected_json_values": [
+        "[{\"a\":null},null]"
+      ]
+    },
+    {
+      "id": "normals-nonzero-native",
+      "gate": "C2",
+      "requirement_ids": [
+        "CL037"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "0\n1e-999\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "normals",
+      "expected_json_values": [
+        "1e-999"
+      ]
+    },
+    {
+      "id": "split-empty-scalars",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL063"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"e\\u0301\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "split(\"\")",
+      "expected_json_values": [
+        "[\"e\",\"\\u0301\"]"
+      ]
+    },
+    {
+      "id": "index-empty-pattern",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL063"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"abc\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "index(\"\")",
+      "expected_json_values": [
+        "null"
+      ]
+    },
+    {
+      "id": "try-prior-yield",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL059"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "try (1,error(\"x\"),2) catch \"caught\"",
+      "expected_json_values": [
+        "1",
+        "\"caught\""
+      ]
+    },
+    {
+      "id": "sort-exact-integers",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL060"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[9007199254740993,9007199254740992]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "sort",
+      "expected_json_values": [
+        "[9007199254740992,9007199254740993]"
+      ]
+    },
+    {
+      "id": "total-order",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL060"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[{},[],\"a\",1,true,false,null]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "sort",
+      "expected_json_values": [
+        "[null,false,true,1,\"a\",[],{}]"
+      ]
+    },
+    {
+      "id": "group-scalar-distinct",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL060"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[\"é\",\"e\\u0301\",\"é\"]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "group_by(.)",
+      "expected_json_values": [
+        "[[\"e\\u0301\"],[\"é\",\"é\"]]"
+      ]
+    },
+    {
+      "id": "first-generator",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL061"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "first(1,2,3)",
+      "expected_json_values": [
+        "1"
+      ]
+    },
+    {
+      "id": "all-any-empty",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL062"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "[any,all]",
+      "expected_json_values": [
+        "[false,true]"
+      ]
+    },
+    {
+      "id": "explode-non-BMP",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL064"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"😀\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "explode",
+      "expected_json_values": [
+        "[128512]"
+      ]
+    },
+    {
+      "id": "implode-surrogate-rejected",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL064"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[55296]\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "implode"
+    },
+    {
+      "id": "tonumber-exact",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL064"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"9007199254740993\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "tonumber",
+      "expected_json_values": [
+        "9007199254740993"
+      ]
+    },
+    {
+      "id": "tonumber-whitespace-rejected",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL064"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\" \"\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "tonumber"
+    },
+    {
+      "id": "setpath-created-array",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL065"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{}\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "setpath([\"a\",2];7)",
+      "expected_json_values": [
+        "{\"a\":[null,null,7]}"
+      ]
+    },
+    {
+      "id": "assignment-set-generator",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL066"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".[]=(10,20)",
+      "expected_json_values": [
+        "[10,10]",
+        "[20,20]"
+      ]
+    },
+    {
+      "id": "assignment-update-first",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL066"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".[]|=(10,20)",
+      "expected_json_values": [
+        "[10,10]"
+      ]
+    },
+    {
+      "id": "assignment-update-delete",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL066"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[1,2]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": ".[]|=empty",
+      "expected_json_values": [
+        "[]"
+      ]
+    },
+    {
+      "id": "assignment-overlap-rejected",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL067"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "{\"a\":0}\n",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "(.,.a)=1",
+      "expected_diagnostic_code": "overlappingPaths"
+    },
+    {
+      "id": "sparse-growth-fails",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL068"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "[]\n",
+      "expected_exit": 6,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "setpath([1000000000];1)",
+      "probe": {
+        "assert_preallocation_admission": true
+      }
+    },
+    {
+      "id": "interpolation-generators",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL069"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "\"x\\((1,2))\"",
+      "expected_json_values": [
+        "\"x1\"",
+        "\"x2\""
+      ]
+    },
+    {
+      "id": "interpolation-empty",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL069"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "\"x\\(empty)\"",
+      "expected_json_values": []
+    },
+    {
+      "id": "format-html",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL070"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"<&>\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "@html",
+      "expected_json_values": [
+        "\"&lt;&amp;&gt;\""
+      ]
+    },
+    {
+      "id": "format-base64",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL070"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"hello\"\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "filter": "@base64",
+      "expected_json_values": [
+        "\"aGVsbG8=\""
+      ]
+    },
+    {
+      "id": "regex-not-advertised",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL071"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "\"a\"\n",
+      "expected_exit": 3,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "test(\"a\")"
+    },
+    {
+      "id": "env-not-available",
+      "gate": "C4",
+      "requirement_ids": [
+        "CL072"
+      ],
+      "command": "query",
+      "options": [],
+      "operands": [],
+      "stdin_utf8": "null\n",
+      "expected_exit": 3,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "filter": "env"
+    },
+    {
+      "id": "stream-root-array",
+      "gate": "C5",
+      "requirement_ids": [
+        "CL074"
+      ],
+      "command": "stream",
+      "options": [],
+      "operands": [
+        "array"
+      ],
+      "stdin_utf8": "[1,{\"a\":2},null]\n",
+      "expected_exit": 0,
+      "comparison": "native-exact-value-stream",
+      "status": "not_run",
+      "expected_json_values": [
+        "1",
+        "{\"a\":2}",
+        "null"
+      ]
+    },
+    {
+      "id": "stream-root-array-bad-tail",
+      "gate": "C5",
+      "requirement_ids": [
+        "CL074"
+      ],
+      "command": "stream",
+      "options": [],
+      "operands": [
+        "array"
+      ],
+      "stdin_utf8": "[1,2] nope",
+      "expected_exit": 5,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "probe": {
+        "assert_final_completed": false,
+        "stdout_may_be_valid_prefix": true
+      }
+    },
+    {
+      "id": "schema-provider-object-envelope",
+      "gate": "C5",
+      "requirement_ids": [
+        "CL078"
+      ],
+      "command": "schema",
+      "options": [
+        "--name",
+        "sample"
+      ],
+      "operands": [
+        "provider",
+        "openai-format",
+        "fixtures/new/schema-provider.json"
+      ],
+      "stdin_utf8": "",
+      "expected_exit": 0,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "probe": {
+        "assert_path_types": {
+          "/schema": "object"
+        },
+        "assert_no_network": true
+      }
+    },
+    {
+      "id": "schema-provider-optionality-reject",
+      "gate": "C5",
+      "requirement_ids": [
+        "CL079"
+      ],
+      "command": "schema",
+      "options": [
+        "--name",
+        "sample"
+      ],
+      "operands": [
+        "provider",
+        "openai-format",
+        "fixtures/new/schema-provider-optional.json"
+      ],
+      "stdin_utf8": "",
+      "expected_exit": 1,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "probe": {
+        "assert_no_lowering": true
+      }
+    },
+    {
+      "id": "render-static-inert",
+      "gate": "C5",
+      "requirement_ids": [
+        "CL075"
+      ],
+      "command": "render",
+      "options": [
+        "--format",
+        "html"
+      ],
+      "operands": [],
+      "stdin_utf8": "{\"x\":\"</script><script>alert(1)</script>\",\"n\":9007199254740993}\n",
+      "expected_exit": 0,
+      "comparison": "process-contract",
+      "status": "not_run",
+      "probe": {
+        "assert_no_script_element": true,
+        "assert_exact_value": true,
+        "assert_no_external_assets": true
+      }
+    },
+    {
+      "id": "render-markdown",
+      "gate": "C5",
+      "requirement_ids": [
+        "CL077"
+      ],
+      "command": "render",
+      "options": [
+        "--format",
+        "markdown"
+      ],
+      "operands": [],
+      "stdin_utf8": "{\"a\":[1.2300e+2]}\n",
+      "expected_exit": 0,
+      "comparison": "stdout-byte-exact",
+      "status": "not_run",
+      "expected_stdout_utf8": "```json\n{\n\t\"a\": [\n\t\t1.2300e+2\n\t]\n}\n```\n"
+    }
+  ]
+}

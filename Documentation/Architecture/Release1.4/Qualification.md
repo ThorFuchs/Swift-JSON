@@ -48,3 +48,34 @@ performed by this boundary.
 Materialized receipts and their exact source-input records are in the local
 foundation evidence bundle. Run the listed commands to regenerate evidence; local
 build outputs and private input packets are excluded from public Git/source archives.
+
+## Pull query-core milestone
+
+Base foundation f469f1d (draft PR #23), stacked query branch
+`codex/1.4-json-cli-query-core`. Native Swift 6.4/Xcode 27.2/SDK 27.2/macOS 27
+qualification ran through Scripts/ci.py on source manifest
+`c8f09d2eaa6cf14f3efb11e8a2645796075c54274fa6b8af9db464fe27b173aa`.
+Native: 20 commands, exits 0; debug/release each 256 root functions and 199 parameter
+invocations. Safety: ASan same full counts; TSan eight shared-state functions;
+strict memory safety/warnings as errors compiled cleanly. DocC: five catalogs.
+All three receipts record unchanged source inputs. Receipts/logs/event streams:
+`.build/ci/cli-c2-native-serial`, `cli-c2-final-safety`, `cli-c2-final-docs`.
+
+Foundation subprocess cases remain 53/53; authored C2 cases 38/38, policy 0.
+The public exact comparator uses JSON/JSONStreaming. Original 49 cap probes,
+318 JSON cases (287 evaluated, 31 policy) and 2,337 schema cases (2,300 evaluated,
+37 policy), authored 82/9/4,396 and the 20 rooted downstream cases are preserved.
+
+Additional review tests verify quota failure cleanup during keys/slices/maps,
+objects and catch-message construction. Cancellation after a first yield checks
+terminal behavior plus zero live frames/collections/input storage. A first test
+retained a second optional alias; it was corrected to release that reference.
+An initial parallel native/docs invocation failed because SwiftPM's lock-wait
+banner preceded dump-package JSON. The complete serial native rerun passed;
+the failed receipt is retained and is not a package qualification pass.
+
+These receipts precede only the milestone ledger/prose update. Runtime/test/harness
+source remains identical; final C5 qualification will use the integration head.
+The inherited 168 corpus rows and auxiliary binding modes still need their complete
+mode-specific dispositions. Arithmetic and advanced filters have separate gates.
+No simulator/device, Linux or WASI CLI success is inferred from this local run.
