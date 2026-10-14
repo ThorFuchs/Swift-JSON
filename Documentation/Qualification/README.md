@@ -102,3 +102,9 @@ The [second 1.2.1 wave](Release1.2.1/Wave2.md) adds 29 behavior functions:
 173 parameterized invocations retained. QA expects 51/3/15/2 functions. Safety's
 targeted TSan subset adds the 12 controlled streaming functions to the existing
 six cases, with exact 4/1/1/12 module counts. Historical receipts remain unchanged.
+
+The 1.2.1 [portability follow-up](Release1.2.1/Portability.md) has 245/173 roots,
+72 QA and 19 shared-state functions. ARM64/x86_64 Linux full lanes and scoped
+WASI debug/release QA passed. Atomic native profiling reports 97.46% authored
+lines / 93.04% regions and rejects saturated LLVM counters; earlier percentages
+remain historical measurements, not directly comparable corrected coverage.

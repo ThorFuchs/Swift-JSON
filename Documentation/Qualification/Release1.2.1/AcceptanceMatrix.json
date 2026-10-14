@@ -3,14 +3,14 @@
   "source_version": "1.2.0",
   "source_commit": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "target_version": "1.2.1",
-  "status": "second_wave_native_qualified_remaining_plan",
+  "status": "native_linux_and_scoped_wasi_qualified_remaining_1_2_1_plan",
   "rows": [
     {
       "id": "HAR-01",
       "work_package": "T00",
       "module": "All",
       "topic": "Complete coverage export",
-      "status": "native_qualified_linux_execution_pending",
+      "status": "atomic_native_coverage_qualified_linux_export_execution_pending",
       "existing_evidence": [
         "fresh 192/173 root coverage run",
         "default export omitted schema/regex/streaming mappings"
@@ -22,7 +22,8 @@
         "all exact discoveries retained",
         "branch/MC/DC marked unavailable"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     },
     {
       "id": "HAR-02",
@@ -46,7 +47,7 @@
       "work_package": "T01",
       "module": "JSON",
       "topic": "Numeric and primitive type matrix",
-      "status": "partially_native_qualified_128_bit_projection_and_typed_refusal",
+      "status": "partially_qualified_128_bit_projection_and_typed_refusal_mac_linux_wasi",
       "existing_evidence": [
         "machineIntegerBoundaries",
         "boundedBinaryBridgePreservesLongHalfwayAndSubnormalTails",
@@ -60,7 +61,8 @@
         "native Int/WASI32 scope separate"
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
-      "second_wave_evidence": "Wave2Outcomes.json"
+      "second_wave_evidence": "Wave2Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     },
     {
       "id": "CORE-02",
@@ -87,7 +89,7 @@
       "work_package": "T01",
       "module": "JSON",
       "topic": "Explicit native container paths",
-      "status": "native_qualified_explicit_container_subset",
+      "status": "portable_qualified_explicit_container_subset",
       "existing_evidence": [
         "nativeCodingUsesValuesAndComposedBytes",
         "superCodingAndNonSendableModelsWorkSynchronously"
@@ -99,7 +101,8 @@
         "EOF/wrong-kind coding paths",
         "successful roundtrip plus independent expected representation"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     },
     {
       "id": "COD-02",
@@ -127,7 +130,7 @@
       "work_package": "T01",
       "module": "JSON",
       "topic": "Foreign coder fidelity and fallback",
-      "status": "native_qualified_controlled_foreign_coders",
+      "status": "portable_qualified_controlled_foreign_bridge_subset",
       "existing_evidence": [
         "qaGeneratedExactRoundTripsAcrossNativeAndForeignPayloads",
         "stringDictionaryProjectionRejectsScalarCollisions"
@@ -140,7 +143,8 @@
         "Version1 wrapper remains exact",
         "all six kinds represented"
       ],
-      "second_wave_evidence": "Wave2Outcomes.json"
+      "second_wave_evidence": "Wave2Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     },
     {
       "id": "COD-04",
@@ -345,7 +349,7 @@
       "work_package": "T04",
       "module": "JSONStreaming",
       "topic": "Held source/sink backpressure",
-      "status": "native_qualified_controlled_pull_and_handoff_subset",
+      "status": "portable_qualified_causal_completion_and_backpressure_subset",
       "existing_evidence": [
         "earlyStopDoesNotPullAheadAndChunkAdmissionIsImmediate",
         "awaitedSinkProducesIdenticalBytesAndStatistics",
@@ -359,14 +363,15 @@
         "accepted bytes cannot be recalled",
         "source producer cancellation not invented"
       ],
-      "second_wave_evidence": "Wave2Outcomes.json"
+      "second_wave_evidence": "Wave2Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     },
     {
       "id": "STR-02",
       "work_package": "T04",
       "module": "JSONStreaming",
       "topic": "Framing, partitions and terminal behavior",
-      "status": "partially_native_qualified_held_completion_and_terminal_behavior",
+      "status": "partially_portable_qualified_framing_terminal_behavior_and_reviewed_unreachable_completion",
       "existing_evidence": [
         "streamEverySplitAgreesWithNativeParser",
         "strictNDJSONPreservesPhysicalBoundariesAndLocations",
@@ -380,7 +385,8 @@
         "exactly once completion",
         "no further pull after terminal error"
       ],
-      "second_wave_evidence": "Wave2Outcomes.json"
+      "second_wave_evidence": "Wave2Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     },
     {
       "id": "PAT-01",
@@ -486,7 +492,7 @@
       "work_package": "T07",
       "module": "All",
       "topic": "Actual platform/safety/consumer closure",
-      "status": "second_wave_native_qualified_other_platform_execution_pending",
+      "status": "native_linux_and_scoped_wasi_qualified_broader_plan_pending",
       "existing_evidence": [
         "1.2.0 Native/Linux seven passed jobs",
         "65 WASI commands with explicit per-host scopes"
@@ -501,7 +507,8 @@
         "no 1.3 features in patch"
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
-      "second_wave_evidence": "Wave2Outcomes.json"
+      "second_wave_evidence": "Wave2Outcomes.json",
+      "portability_evidence": "PortabilityOutcomes.json"
     }
   ],
   "proposed_targets": {
@@ -523,5 +530,6 @@
     "T07"
   ],
   "first_wave_evidence": "Wave1Outcomes.json",
-  "second_wave_evidence": "Wave2Outcomes.json"
+  "second_wave_evidence": "Wave2Outcomes.json",
+  "portability_evidence": "PortabilityOutcomes.json"
 }

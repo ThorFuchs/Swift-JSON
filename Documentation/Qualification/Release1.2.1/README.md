@@ -35,3 +35,7 @@ The [portability/completion follow-up](Portability.md) adds a 566-case public
 completion matrix and narrowly scoped Linux/WASI QA lanes. Its current
 discovery is 245/173 roots, 72 QA and 19 shared-state functions; actual platform
 results remain separate from the historical native waves.
+
+The portability follow-up is [qualified within its declared scopes](PortabilityOutcomes.json).
+Atomic coverage corrects saturated async counters to 97.46% lines / 93.04% regions;
+the structural completion gap is reviewed with its denominator retained.

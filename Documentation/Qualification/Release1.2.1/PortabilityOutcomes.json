@@ -1,0 +1,460 @@
+{
+  "schema_version": 1,
+  "status": "native_linux_and_scoped_wasi_qualified_remaining_1_2_1_plan",
+  "runtime_tested_head": "bbc36070502554286a45fe4c49e8d3dde802c470",
+  "measurement_tested_head": "b2bd704dc4d7a82cfde8c0f2b5886b0fe2c0b01f",
+  "parent_wave": "Wave2Outcomes.json",
+  "public_runtime_source_changed": false,
+  "root_functions": 245,
+  "parameterized_invocations": 173,
+  "qa_functions": 72,
+  "shared_state_functions": 19,
+  "completion_matrix": {
+    "functions": 1,
+    "inner_cases": 566,
+    "root_spellings": 11,
+    "framing_modes": 2,
+    "byte_splits": "every two-chunk split including empty chunks"
+  },
+  "native": {
+    "qa": {
+      "path": "qa-requalified/receipt.json",
+      "sha256": "29427d374a464fbdc2e0b9c6b80be99fc7abe195d19daff79eacc8d8ea27736b",
+      "source_commit": "bbc36070502554286a45fe4c49e8d3dde802c470",
+      "source_manifest_sha256": "449efd90c6f212d83acb0e4cb7ba1dbf3776f5a3c35e62c01d1f6285b93fd0e6",
+      "commands": 3
+    },
+    "affected_tsan": {
+      "path": "affected-safety.json",
+      "sha256": "40c10b4c5b62d7537fcde675d0faa8dcc50e83d62e0b2481ef4325f21d3ab54f",
+      "source_commit": "bbc36070502554286a45fe4c49e8d3dde802c470",
+      "source_manifest_sha256": null,
+      "commands": 1
+    },
+    "qa_counts_each_configuration": [
+      51,
+      16,
+      3,
+      2
+    ],
+    "tsan_counts": [
+      4,
+      13,
+      1,
+      1
+    ],
+    "qa_cli_exit": 0,
+    "affected_safety_wrapper_exit": 0,
+    "reuse": "Unchanged production source: previous full ASan, strict library compilation, public consumers and 582/582 authored DocC symbols. New tests have refreshed QA ASan/TSan."
+  },
+  "linux": {
+    "workflow": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38547364795",
+    "head": "bbc36070502554286a45fe4c49e8d3dde802c470",
+    "jobs": 4,
+    "status": "success",
+    "platform": "Swift 6.4 / Ubuntu 24.04 / glibc 2.39",
+    "architectures": [
+      "aarch64",
+      "x86_64"
+    ],
+    "root_functions_each_debug_release_asan": 245,
+    "parameterized_each": 173,
+    "tsan_functions_each": 19,
+    "cap_probes_each": 49,
+    "rooted_vectors_each": 20,
+    "operational_errors_separate": 2,
+    "clean_source_reproduction_each": "passed",
+    "source_identity": "Local git_commit fields are null. GitHub head SHA/run ID plus byte-equal complete source manifests and verified log hashes establish identity."
+  },
+  "wasi": {
+    "lane": {
+      "path": "wasm-requalified/receipt.json",
+      "sha256": "27dddc82f5cf6e2b509569b9dac2e31d7566515a9200b051111dab338a222df6",
+      "source_commit": "bbc36070502554286a45fe4c49e8d3dde802c470",
+      "source_manifest_sha256": "449efd90c6f212d83acb0e4cb7ba1dbf3776f5a3c35e62c01d1f6285b93fd0e6",
+      "commands": 2
+    },
+    "commands": 34,
+    "sdk": "swift-6.4.0-RELEASE_wasm",
+    "hosts": [
+      "Node 26.5.0",
+      "WasmKit 0.3.1"
+    ],
+    "node_scope": "245 root functions / 173 invocations in debug and release; 72 affected QA functions each configuration",
+    "wasmkit_scope": "72 affected QA functions in debug and release; no full-root/independent-suite refresh claim",
+    "strict_memory": "passed",
+    "sanitizers": "unavailable, not passes",
+    "streaming_host_watchdog_seconds": 120
+  },
+  "coverage": {
+    "receipt": {
+      "path": "coverage-atomic/receipt.json",
+      "sha256": "5fd163a3d533a747363da8b7b739ae11bf51f4e4527f85912c34d8d459432d4b",
+      "source_commit": "b2bd704dc4d7a82cfde8c0f2b5886b0fe2c0b01f",
+      "source_manifest_sha256": "8399bc1c5bf12edc2d73960523a2ccf006f3d246a7e63cb3b6d85dfa644dfa0b",
+      "commands": 2
+    },
+    "measurement": "atomic profiling increments; saturated library segment counts rejected",
+    "authored": {
+      "lines": {
+        "count": 6929,
+        "covered": 6753,
+        "percent": 97.45995093087025
+      },
+      "regions": {
+        "count": 7691,
+        "covered": 7156,
+        "percent": 93.04381744896632
+      },
+      "functions": {
+        "count": 1143,
+        "covered": 1100,
+        "percent": 96.23797025371829
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    },
+    "modules": {
+      "JSON": {
+        "mapped_files": 50,
+        "authored": {
+          "lines": {
+            "count": 3443,
+            "covered": 3340,
+            "percent": 97.00842288701713
+          },
+          "regions": {
+            "count": 3427,
+            "covered": 3177,
+            "percent": 92.7049897869857
+          },
+          "functions": {
+            "count": 595,
+            "covered": 578,
+            "percent": 97.14285714285714
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONSchema": {
+        "mapped_files": 32,
+        "authored": {
+          "lines": {
+            "count": 2410,
+            "covered": 2360,
+            "percent": 97.9253112033195
+          },
+          "regions": {
+            "count": 3088,
+            "covered": 2888,
+            "percent": 93.52331606217616
+          },
+          "functions": {
+            "count": 384,
+            "covered": 365,
+            "percent": 95.05208333333333
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONRegexRuntime": {
+        "mapped_files": 6,
+        "authored": {
+          "lines": {
+            "count": 659,
+            "covered": 648,
+            "percent": 98.33080424886191
+          },
+          "regions": {
+            "count": 695,
+            "covered": 646,
+            "percent": 92.94964028776978
+          },
+          "functions": {
+            "count": 88,
+            "covered": 85,
+            "percent": 96.5909090909091
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 30,
+            "covered": 30,
+            "percent": 100.0
+          },
+          "regions": {
+            "count": 44,
+            "covered": 44,
+            "percent": 100.0
+          },
+          "functions": {
+            "count": 3,
+            "covered": 3,
+            "percent": 100.0
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONStreaming": {
+        "mapped_files": 10,
+        "authored": {
+          "lines": {
+            "count": 232,
+            "covered": 226,
+            "percent": 97.41379310344827
+          },
+          "regions": {
+            "count": 269,
+            "covered": 253,
+            "percent": 94.05204460966543
+          },
+          "functions": {
+            "count": 60,
+            "covered": 57,
+            "percent": 95.0
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONPatch": {
+        "mapped_files": 4,
+        "authored": {
+          "lines": {
+            "count": 185,
+            "covered": 179,
+            "percent": 96.75675675675676
+          },
+          "regions": {
+            "count": 212,
+            "covered": 192,
+            "percent": 90.56603773584905
+          },
+          "functions": {
+            "count": 16,
+            "covered": 15,
+            "percent": 93.75
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      }
+    },
+    "unreachable_completion_alternative_counter": 0,
+    "denominator_adjusted": false,
+    "previous_followup_export": "Rejected saturated derived counter; apparent one-region gain is not accepted. Earlier historical percentages remain preserved but are not directly comparable to corrected measurement.",
+    "branch_mcdc": "unavailable"
+  },
+  "independent_policies": {
+    "syntax": {
+      "observed": 318,
+      "evaluated": 287,
+      "policy": 31
+    },
+    "schema": {
+      "observed": 2337,
+      "evaluated": 2300,
+      "policy": 37
+    },
+    "authored": 82,
+    "budget_reports": 9,
+    "malformed_replay": 4396,
+    "regex_cases": 31824,
+    "normalization_cases": 18853,
+    "normalization_comparisons": 94265
+  },
+  "failures_preserved": [
+    "Initial completion-oracle initializer compile failure (exit 1), corrected to fixed integer oracle",
+    "WASI inferred-Int overflow (exit 1), fixed explicit Int64",
+    "Pinned SDK time-limit traits: 13 WASI streaming failures (exit 1), SDK-only reproduction fails on both hosts, native controls pass",
+    "Native release QA interrupted by ENOSPC; wrapper exit 120, unfinished receipt, followed by complete fresh passing QA",
+    "Superseded Linux run 38545711422 cancelled by existing concurrency policy; not counted as final qualification",
+    "Initial non-atomic coverage export rejected by new real saturation check (exit 1)"
+  ],
+  "remaining": [
+    "Broader T01/T02/T03/T04/T05/T06/T07 acceptance rows and proposed per-module 98% line / 95% region targets",
+    "Actual Linux LLVM coverage export execution",
+    "Unused private-helper review; denominator unchanged",
+    "Existing platform limits: physical iPad deferred; no new mobile/device execution",
+    "Pinned WASI Swift Testing timer issue: preserve reproduction and revisit on SDK upgrade"
+  ],
+  "empty_root_dependencies": true,
+  "public_products": [
+    "JSON",
+    "JSONSchema",
+    "JSONStreaming",
+    "JSONPatch"
+  ],
+  "private_target": "JSONRegexRuntime",
+  "sibling_1_3_changed": false,
+  "tag_or_release_created": false
+}

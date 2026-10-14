@@ -86,3 +86,25 @@ record the structural explanation rather than fabricate a private state or
 remove code to improve percentages. This closes semantic investigation of this
 region, not a claim of 100% region/branch or exhaustive race coverage. Revisit
 the invariant if framing or token-machine transitions change.
+
+## Actual closure
+
+All four Linux jobs passed at the runtime-tested head, with full debug/release
+roots, full ASan, 19 TSan functions, strict memory compilation, all 49 cap
+probes, rooted consumers, independent policies and clean-source reproduction.
+Both WASI configurations passed the declared per-host scopes; native QA passed
+in debug/release/ASan and all 19 shared-state TSan functions passed.
+
+The corrected atomic export reports **97.46% authored lines / 93.04% regions**
+(6753/6929, 7156/7691). Streaming is 226/232 lines and 253/269 regions.
+The reviewed alternative has counter zero; no denominator adjustment was made.
+The earlier apparent gain was a saturated counter artifact. Lower corrected
+percentages do not represent removed assertions; all discoveries remain intact.
+The proposed per-module review targets and broader acceptance plan remain open.
+
+[Machine-readable outcomes](PortabilityOutcomes.json) identify tested heads,
+receipt hashes, actual scopes, retained failures and outstanding work. The later
+coverage-only commit changes measurement tooling and its notes; runtime source,
+tests, manifests, fixtures and CI workflows are byte-identical to the Linux/WASI
+qualified head. Closing documentation is a separate successor with those
+executable inputs unchanged. No tag, release or sibling implementation is changed.
