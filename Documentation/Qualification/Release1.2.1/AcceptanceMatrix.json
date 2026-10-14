@@ -3,7 +3,7 @@
   "source_version": "1.2.0",
   "source_commit": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "target_version": "1.2.1",
-  "status": "first_wave_native_qualified_remaining_plan",
+  "status": "second_wave_native_qualified_remaining_plan",
   "rows": [
     {
       "id": "HAR-01",
@@ -46,7 +46,7 @@
       "work_package": "T01",
       "module": "JSON",
       "topic": "Numeric and primitive type matrix",
-      "status": "partially_native_qualified_explicit_primitive_subset",
+      "status": "partially_native_qualified_128_bit_projection_and_typed_refusal",
       "existing_evidence": [
         "machineIntegerBoundaries",
         "boundedBinaryBridgePreservesLongHalfwayAndSubnormalTails",
@@ -59,7 +59,8 @@
         "error category/code and path",
         "native Int/WASI32 scope separate"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "second_wave_evidence": "Wave2Outcomes.json"
     },
     {
       "id": "CORE-02",
@@ -126,7 +127,7 @@
       "work_package": "T01",
       "module": "JSON",
       "topic": "Foreign coder fidelity and fallback",
-      "status": "planned_extension",
+      "status": "native_qualified_controlled_foreign_coders",
       "existing_evidence": [
         "qaGeneratedExactRoundTripsAcrossNativeAndForeignPayloads",
         "stringDictionaryProjectionRejectsScalarCollisions"
@@ -138,7 +139,8 @@
         "foreign limitations explicit",
         "Version1 wrapper remains exact",
         "all six kinds represented"
-      ]
+      ],
+      "second_wave_evidence": "Wave2Outcomes.json"
     },
     {
       "id": "COD-04",
@@ -343,7 +345,7 @@
       "work_package": "T04",
       "module": "JSONStreaming",
       "topic": "Held source/sink backpressure",
-      "status": "planned_extension",
+      "status": "native_qualified_controlled_pull_and_handoff_subset",
       "existing_evidence": [
         "earlyStopDoesNotPullAheadAndChunkAdmissionIsImmediate",
         "awaitedSinkProducesIdenticalBytesAndStatistics",
@@ -356,14 +358,15 @@
         "no generation while sink held",
         "accepted bytes cannot be recalled",
         "source producer cancellation not invented"
-      ]
+      ],
+      "second_wave_evidence": "Wave2Outcomes.json"
     },
     {
       "id": "STR-02",
       "work_package": "T04",
       "module": "JSONStreaming",
       "topic": "Framing, partitions and terminal behavior",
-      "status": "planned_extension",
+      "status": "partially_native_qualified_held_completion_and_terminal_behavior",
       "existing_evidence": [
         "streamEverySplitAgreesWithNativeParser",
         "strictNDJSONPreservesPhysicalBoundariesAndLocations",
@@ -376,7 +379,8 @@
         "no skipped malformed records",
         "exactly once completion",
         "no further pull after terminal error"
-      ]
+      ],
+      "second_wave_evidence": "Wave2Outcomes.json"
     },
     {
       "id": "PAT-01",
@@ -482,7 +486,7 @@
       "work_package": "T07",
       "module": "All",
       "topic": "Actual platform/safety/consumer closure",
-      "status": "native_first_wave_qualified_other_platform_execution_pending",
+      "status": "second_wave_native_qualified_other_platform_execution_pending",
       "existing_evidence": [
         "1.2.0 Native/Linux seven passed jobs",
         "65 WASI commands with explicit per-host scopes"
@@ -496,7 +500,8 @@
         "physical iPad deferred",
         "no 1.3 features in patch"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "second_wave_evidence": "Wave2Outcomes.json"
     }
   ],
   "proposed_targets": {
@@ -517,5 +522,6 @@
     "T06",
     "T07"
   ],
-  "first_wave_evidence": "Wave1Outcomes.json"
+  "first_wave_evidence": "Wave1Outcomes.json",
+  "second_wave_evidence": "Wave2Outcomes.json"
 }

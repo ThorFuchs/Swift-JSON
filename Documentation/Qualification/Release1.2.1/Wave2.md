@@ -75,3 +75,25 @@ outcomes remain. Native coverage/acceptance/QA/safety/docs are the affected lane
 New Linux/WASI/device runs are separate pending evidence; no runtime or package
 support expansion is implied. Broader T02/T03/T05/T06 work and global 98%/95%
 coverage targets remain open. Historical first-wave outcomes are preserved.
+
+## Actual native outcome
+
+Tested code commit: `090fffd19b40b6c9812a0add199e4ec880d24cc9`.
+[Wave2Outcomes.json](Wave2Outcomes.json) binds exact source/receipt identities,
+counts, coverage, qualified limitations and remaining scope. All five native
+lanes passed; all approved command outcomes were 0. Coverage, native, QA and docs
+CLIs exited 0. The safety CLI exited 1 when ENOSPC prevented opening the TSan log
+after full ASAN passed. Source, ASAN outcomes and log hashes were revalidated;
+the unchanged CI tail resumed with exit 0 after removing only completed task-owned
+caches. The original nonzero result remains in local evidence.
+Coverage/root debug/release/full ASAN checked 244/173; QA checked 51/3/15/2,
+71 total, in debug/release/ASAN; TSan checked 4/1/1/12, 18 total. Strict memory
+safety, 49 cap probes, public consumers, independent policies and 582/582
+DocC symbols passed. No new Linux/WASI/device result is implied.
+
+The earlier completion-alternative region counter is 0 in this run.
+Its denominator remains. Separate causal assertions qualify EOF/closing syntax,
+completion exactly once, accepted prefixes and terminal behavior; an execution
+counter alone does not certify them. No synthetic private call or branch removal
+was used to reach a percentage. Closing documentation changes are separate from
+the tested implementation identity.

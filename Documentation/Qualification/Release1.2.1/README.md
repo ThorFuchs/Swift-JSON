@@ -26,3 +26,7 @@ See [actual outcomes](Wave1Outcomes.json) for receipts and remaining scope.
 
 The [second wave](Wave2.md) adds foreign-coder and 128-bit probes plus causal
 streaming gates. Each wave retains its own source identity and native receipts.
+
+Second wave natively qualified: 29 new functions, 244/173 roots, 71 QA and 18 TSan
+functions. [Actual outcomes](Wave2Outcomes.json) retain unsupported typed 128-bit
+Codable and platform/remaining-plan limitations.

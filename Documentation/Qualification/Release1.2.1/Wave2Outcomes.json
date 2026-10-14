@@ -1,0 +1,516 @@
+{
+  "schema_version": 1,
+  "status": "second_wave_native_qualified_remaining_plan",
+  "tested_code_commit": "090fffd19b40b6c9812a0add199e4ec880d24cc9",
+  "parent": "21d5428793c4a972f3cfbe34471739784d21c2f0",
+  "source_base": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+  "tested_source_manifest_sha256": "92cd466c4efc0f8e50650e60d56ac5cf4d948f76f014dc05ef2eb7fe8a78206d",
+  "production_sources_changed": false,
+  "runtime_dependencies_added": 0,
+  "new_swift_functions": 29,
+  "foreign_functions": 12,
+  "integer128_functions": 5,
+  "streaming_functions": 12,
+  "root_function_total": 244,
+  "parameterized_invocations": 173,
+  "qa_total": 71,
+  "tsan_total": 18,
+  "root_counts": {
+    "JSONTests": 144,
+    "JSONSchemaTests": 51,
+    "JSONRegexRuntimeTests": 12,
+    "JSONStreamingTests": 26,
+    "JSONPatchTests": 11
+  },
+  "authored_coverage": {
+    "lines": {
+      "count": 6929,
+      "covered": 6757,
+      "percent": 97.51767931880502
+    },
+    "regions": {
+      "count": 7691,
+      "covered": 7163,
+      "percent": 93.13483292159667
+    },
+    "functions": {
+      "count": 1143,
+      "covered": 1100,
+      "percent": 96.23797025371829
+    },
+    "branches": {
+      "count": 0,
+      "covered": 0,
+      "percent": null
+    },
+    "mcdc": {
+      "count": 0,
+      "covered": 0,
+      "percent": null
+    }
+  },
+  "module_coverage": {
+    "JSON": {
+      "mapped_files": 50,
+      "authored": {
+        "lines": {
+          "count": 3443,
+          "covered": 3342,
+          "percent": 97.06651176299738
+        },
+        "regions": {
+          "count": 3427,
+          "covered": 3179,
+          "percent": 92.76334986868982
+        },
+        "functions": {
+          "count": 595,
+          "covered": 578,
+          "percent": 97.14285714285714
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    "JSONSchema": {
+      "mapped_files": 32,
+      "authored": {
+        "lines": {
+          "count": 2410,
+          "covered": 2361,
+          "percent": 97.96680497925311
+        },
+        "regions": {
+          "count": 3088,
+          "covered": 2891,
+          "percent": 93.62046632124353
+        },
+        "functions": {
+          "count": 384,
+          "covered": 365,
+          "percent": 95.05208333333333
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    "JSONRegexRuntime": {
+      "mapped_files": 6,
+      "authored": {
+        "lines": {
+          "count": 659,
+          "covered": 648,
+          "percent": 98.33080424886191
+        },
+        "regions": {
+          "count": 695,
+          "covered": 646,
+          "percent": 92.94964028776978
+        },
+        "functions": {
+          "count": 88,
+          "covered": 85,
+          "percent": 96.5909090909091
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "lines": {
+          "count": 30,
+          "covered": 30,
+          "percent": 100.0
+        },
+        "regions": {
+          "count": 44,
+          "covered": 44,
+          "percent": 100.0
+        },
+        "functions": {
+          "count": 3,
+          "covered": 3,
+          "percent": 100.0
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    "JSONStreaming": {
+      "mapped_files": 10,
+      "authored": {
+        "lines": {
+          "count": 232,
+          "covered": 227,
+          "percent": 97.84482758620689
+        },
+        "regions": {
+          "count": 269,
+          "covered": 255,
+          "percent": 94.79553903345725
+        },
+        "functions": {
+          "count": 60,
+          "covered": 57,
+          "percent": 95.0
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    },
+    "JSONPatch": {
+      "mapped_files": 4,
+      "authored": {
+        "lines": {
+          "count": 185,
+          "covered": 179,
+          "percent": 96.75675675675676
+        },
+        "regions": {
+          "count": 212,
+          "covered": 192,
+          "percent": 90.56603773584905
+        },
+        "functions": {
+          "count": 16,
+          "covered": 15,
+          "percent": 93.75
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      },
+      "generated": {
+        "lines": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "regions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "functions": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "branches": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        },
+        "mcdc": {
+          "count": 0,
+          "covered": 0,
+          "percent": null
+        }
+      }
+    }
+  },
+  "foreign_bridge_coverage": {
+    "branches": {
+      "count": 0,
+      "covered": 0,
+      "notcovered": 0,
+      "percent": 0
+    },
+    "functions": {
+      "count": 10,
+      "covered": 10,
+      "percent": 100
+    },
+    "instantiations": {
+      "count": 10,
+      "covered": 10,
+      "percent": 100
+    },
+    "lines": {
+      "count": 84,
+      "covered": 83,
+      "percent": 98.80952380952381
+    },
+    "mcdc": {
+      "count": 0,
+      "covered": 0,
+      "notcovered": 0,
+      "percent": 0
+    },
+    "regions": {
+      "count": 110,
+      "covered": 105,
+      "notcovered": 5,
+      "percent": 95.45454545454545
+    }
+  },
+  "compiler": "swift-driver version: 1.168.6 Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+  "language_mode": 6,
+  "os": "macOS 27.0",
+  "sdk": "27.2",
+  "architecture": "arm64",
+  "native_cli_exit": 0,
+  "safety_original_cli_exit": 1,
+  "safety_continuation_exit": 0,
+  "safety_resumption": {
+    "original_cli_exit": 1,
+    "reason": "ENOSPC; completed task caches removed",
+    "prefix_commands": 1,
+    "prior_source_and_log_hashes_verified": true,
+    "tail": [
+      1,
+      2
+    ],
+    "resumed_utc": "2026-10-14T09:25:59.286856+00:00"
+  },
+  "other_lane_cli_exits": 0,
+  "lanes": {
+    "coverage": {
+      "status": "passed",
+      "receipt_sha256": "d98063182af8ef92762eca7ec7d1bf6e519873b18710d583fd022c6840873766",
+      "command_count": 2,
+      "command_exits": [
+        0,
+        0
+      ]
+    },
+    "native": {
+      "status": "passed",
+      "receipt_sha256": "fa01e7b029834ad7ac6f8b1db3e775ef1ff0af8009318fa98c2113698de44297",
+      "command_count": 16,
+      "command_exits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "qa": {
+      "status": "passed",
+      "receipt_sha256": "bb65fae6dd8c625ad36aedb726687449945bd091d91e67a2e5e6e6b6e81f9929",
+      "command_count": 3,
+      "command_exits": [
+        0,
+        0,
+        0
+      ]
+    },
+    "safety": {
+      "status": "passed",
+      "receipt_sha256": "6176b89f3680c0d63619b0d6879b2eda3cb10ea7ee2ad032148efaac67ca735f",
+      "command_count": 3,
+      "command_exits": [
+        0,
+        0,
+        0
+      ]
+    },
+    "docs": {
+      "status": "passed",
+      "receipt_sha256": "ae190313614d455bb8141e4aac10077185d10301443a39fbc297cf9a1c9acc1d",
+      "command_count": 1,
+      "command_exits": [
+        0
+      ]
+    }
+  },
+  "finite_metrics": 49,
+  "profiles": 3,
+  "docc_symbols": 582,
+  "integer128": {
+    "exact_number_projection": "supported_boundaries_and_overflow_qualified",
+    "typed_native_codable": "SDK_defaults_refuse_even_1",
+    "encoding_error": "EncodingError.invalidValue",
+    "decoding_error": "DecodingError.typeMismatch",
+    "lossless_alternatives": [
+      "JSONNumber",
+      "JSON",
+      "JSONCodablePayload Version1"
+    ],
+    "new_support_implemented": false
+  },
+  "streaming_completion": {
+    "separated_EOF_boolean_number_object": "qualified_exactly_once",
+    "single_document_and_final_NDJSON": "held_EOF_qualified",
+    "old_unobserved_region": {
+      "path": "Sources/JSONStreaming/JSONEventSequence.swift",
+      "line": 82,
+      "columns": [
+        97,
+        124
+      ],
+      "previous_count": 0,
+      "current_count": 0,
+      "disposition": "Retained denominator; causal completion assertions are separate from compiler execution counters. No production branch removed or artificial private caller added."
+    }
+  },
+  "review_findings": [
+    {
+      "id": "W2R01",
+      "status": "qualified_limitation",
+      "note": "Exact 128-bit projections supported; typed native Codable remains unsupported SDK defaults."
+    },
+    {
+      "id": "W2R02",
+      "status": "test_expectation_corrected",
+      "note": "Initial garbage-tail assertion conflated invalidSyntax with trailingData. Final case checks both exact codes/offsets/terminal behavior; original nonzero receipt retained."
+    },
+    {
+      "id": "W2R03",
+      "status": "causal_contracts_qualified",
+      "note": "One controlled pull/handoff, held EOF, acceptance and terminal failure proven through public observations. No caller instruction/RSS/hidden-generation claim."
+    }
+  ],
+  "pending": [
+    "Global 98% line/95% region targets",
+    "T02 source/preview and wider budget cases",
+    "T03 combined schema/regex decisions",
+    "T04 remaining framing/Patch matrices",
+    "T05 public end-to-end workflows",
+    "T06 adversarial/mutation assurance",
+    "New-test Linux/WASI/device execution",
+    "Separate retained-unused-helper review"
+  ],
+  "remote_actions": [],
+  "release_actions": [],
+  "sibling_edits": 0
+}
