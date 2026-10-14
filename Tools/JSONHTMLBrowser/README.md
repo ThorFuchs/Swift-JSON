@@ -1,7 +1,7 @@
 # Browser qualification
 
-The public fixture generator imports JSON and JSONHTML only and writes eight
-10 complete HTML documents (including mapped typed diagnostics), exact native JSON bytes and cumulative resource counts.
+The public fixture generator imports JSON and JSONHTML only and writes ten
+complete HTML documents (including mapped typed diagnostics), exact native JSON bytes and cumulative resource counts.
 The root package still has no external dependencies. Playwright 1.62.1 is a pinned
 qualification tool; install it in this directory and install its Chromium,
 Firefox and WebKit browsers. Alternatively set `JSONHTML_NODE` to an available
