@@ -15,6 +15,8 @@
 - Qualify 318 root functions and 173 parameterized invocations, 20 public workflow
   functions, complete native/Linux coverage exports and a 26-mutant native pilot.
   Keep policy exclusions, platform scope and unavailable branch counters explicit.
+- Keep archive compiler-probe provenance accurate without a Git checkout: report
+  a null Git identity and retain complete source hashes and all compiler cases.
 - Record the maintainer's performance exception for this patch: the earlier
   +11.9833% diagnostic comparison remains unresolved; the later loaded-host
   -1.6871% run is not controlled-performance evidence. Keep the 10% review trigger.

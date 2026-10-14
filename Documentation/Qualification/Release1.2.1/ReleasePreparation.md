@@ -7,6 +7,12 @@ so the maintainer explicitly selected the 1.2.0-based maintenance branch.
 This documentation closeout changes no library, test, fixture, resource profile,
 product, dependency or supported-platform contract.
 
+The independent clean archive run also exposed a qualification-tool assumption:
+the ownership/reader probe required Git before executing its compiler cases.
+The release successor reports a null Git identity outside its own checkout,
+retains complete source hashes and executes every original probe. This is a
+provenance-tool repair, not a library API change or a skipped archive gate.
+
 ## Explicit performance disposition
 
 On 2026-10-14, the maintainer accepted a **1.2.1-specific performance exception**

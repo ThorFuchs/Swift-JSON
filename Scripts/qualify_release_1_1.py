@@ -8,6 +8,14 @@ from preflight import collect
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PROBES = ROOT / 'Tools/Release1_1Probes'
 
+def checkout_head(root):
+    """Identify only this checkout; unpacked/nested archives use source digests."""
+    identity = subprocess.run(['git', 'rev-parse', '--show-toplevel', 'HEAD'], cwd=root,
+                              capture_output=True, text=True)
+    lines = identity.stdout.splitlines()
+    return (lines[1] if identity.returncode == 0 and len(lines) == 2
+            and pathlib.Path(lines[0]).resolve() == root.resolve() else None)
+
 def verify_index_samples(samples):
     """Require the complete measured matrix, or an explicit finite-resource refusal."""
     algorithms = {'scalar', 'fingerprint-linear', 'array-AVL', 'controlled-hash'}
@@ -48,8 +56,10 @@ def main():
     directory = output.parent / args.mode
     directory.mkdir(parents=True, exist_ok=True)
     inputs = [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
+    # Archive consumers have no Git identity. Never attribute a parent checkout;
+    # the complete source_inputs digests remain authoritative in either context.
     receipt = {'schema_version': 1, 'mode': args.mode, 'status': 'running', 'environment': collect(),
-               'git_head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+               'git_head': checkout_head(ROOT),
                'source_inputs': inputs, 'commands': [], 'runtime_qualification': 'not_run',
                'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat()}
     def save():
