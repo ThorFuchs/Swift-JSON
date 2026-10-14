@@ -199,5 +199,8 @@
     "CLI foundation, argv parser, POSIX adapters, prepaid bounded diagnostics and shared-meter package adapters are original Apache-2.0 Swift code. No legacy filter engine or jq source is copied. See Release1.4/Foundation.md for native test-harness reuse provenance.",
     "Tests/Fixtures/CLI/NewCases.json is the byte-identical 111-case authored CLI briefing fixture, SHA-256 6f863f3e98d2dea12e59018e7cf3a074ae0ebee5f1ab950a651df72e5eb18a4c. Fixture expected JSON texts use native exact comparison, not a floating-point oracle. The query compiler/VM and lifetime ledger are original Apache-2.0 implementations; no legacy eager evaluator or jq implementation is copied."
   ],
-  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies."
+  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
+  "original_notes": [
+    "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied."
+  ]
 }

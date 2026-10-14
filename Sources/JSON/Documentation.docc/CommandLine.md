@@ -32,5 +32,26 @@ cannot be recalled. `--report json` writes cumulative accounting to stderr, leav
 stdout for result bytes. All profiles are finite. Logical retained bytes describe
 owned package state, not process RSS or kernel work.
 
-The foundation increment advertises only its qualified commands. Query, advanced
-adapters and provider-specific functionality have separate qualification gates.
+Query uses a pull generator over strict whitespace-separated values by default:
+
+```sh
+.build/release/swift-json query --compact -- '.items[] | select(.active) | .name' input.json
+.build/release/swift-json query --null-input -- '0.1 + 0.2' </dev/null
+.build/release/swift-json query --null-input --division-scale 4 --rounding half-even -- '1 / 3' </dev/null
+```
+
+Use `--` before filters or filenames beginning with a dash. Missing query fields
+produce null; wrong types raise catchable language errors. Native Pointer presence
+remains explicit. Driver and `input`/`inputs` share one cursor. An earlier yield
+never certifies the remaining syntax: successful execution drains malformed tails.
+Null-input jobs still finish the shared source; use an empty source such as
+`/dev/null` for standalone calculations.
+
+Arithmetic uses exact bounded decimals. `1 / 8` terminates exactly; default `1 / 3`
+raises `inexactDivision`. The explicit scale/half-even pair quantizes divisions and
+counts nonzero discarded remainders in the cumulative stderr report. Builtin round
+uses ties away from zero. Constructed objects replace duplicate names at their first
+position; parsed duplicate keys remain errors. Scalar-distinct keys stay distinct.
+
+Advanced filters, platform distribution and provider-specific adapters retain their
+separate qualification gates. This feature checkout is not a released 1.4 candidate.

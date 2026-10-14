@@ -443,8 +443,11 @@ This feature train adds `swift-json` beside the five libraries. Its compiling
 foundation provides strict formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
-for command semantics, cumulative budgets and qualification boundaries. Query and
-provider commands are advertised only after their separate gates pass.
+for command semantics, cumulative budgets and qualification boundaries. The pull
+query increment adds navigation, generators, control, bindings and exact decimal
+arithmetic; see the [query](Documentation/Architecture/Release1.4/QueryCore.md) and
+[arithmetic](Documentation/Architecture/Release1.4/Arithmetic.md) contracts. Complete
+advanced-filter/platform/provider qualification remains open before a 1.4 release.
 
 ```sh
 swift build -c release --product swift-json

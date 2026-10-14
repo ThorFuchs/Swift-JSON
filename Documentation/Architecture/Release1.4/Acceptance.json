@@ -1,7 +1,7 @@
 {
   "schema": "swift-json-cli-acceptance/1",
   "prepared": "2026-10-14",
-  "implementation_status": "Foundation and pull query-core milestones; complete C0-C5 integration remains unqualified",
+  "implementation_status": "Foundation, query core and exact arithmetic milestones; C4/C5 integration remains unqualified",
   "requirements": [
     {
       "id": "CL001",
@@ -666,7 +666,7 @@
       "title": "Exact add/subtract/multiply",
       "verification": "Carry/borrow/sign/zero/large integer cases against independent exact expectations.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "Cartesian-add-order",
@@ -674,6 +674,10 @@
         "exact-decimal-add",
         "exact-borrow",
         "exact-multiply"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -682,9 +686,13 @@
       "title": "Numeric admission and lexemes",
       "verification": "Computed values normalized with no false originalLexeme; untouched inputs preserve spelling.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL047",
@@ -692,10 +700,14 @@
       "title": "Terminating exact division",
       "verification": "Reduced denominators containing only2/5, large common factors and mixed signs.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "terminating-division"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -704,10 +716,14 @@
       "title": "Repeating division default",
       "verification": "1/3 and repeating values give language inexactDivision; no floating fallback.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "repeating-division-error"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -716,12 +732,16 @@
       "title": "Explicit scale/half-even",
       "verification": "Required option pair, decimal places, finite caps, signed ties and report rounding counts.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "rounded-third",
         "half-even-ties",
         "scale-pair-required"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -730,11 +750,15 @@
       "title": "Zero division and integral remainder",
       "verification": "Typed catchable domain errors; signed truncated remainder; fractional remainder rejected.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "negative-remainder",
         "fractional-remainder-rejected"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -743,12 +767,16 @@
       "title": "Exact numeric builtins",
       "verification": "abs/floor/ceil/trunc/round/range/add with negative and empty/domain cases; round ties away from zero.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "round-away-from-zero",
         "range-negative-step",
         "range-zero-step"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -757,10 +785,14 @@
       "title": "Exponent/growth preflight",
       "verification": "Large sparse exponent operations fail finite caps before dense allocation; exact zero shortcut allowed.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "exponent-gap-cap"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -769,9 +801,13 @@
       "title": "Numeric work and cancellation",
       "verification": "Charged GCD/division/carry inner loops; boundaries and checkpoint cancellation; terminal errors not catchable.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL054",
@@ -779,9 +815,13 @@
       "title": "32-bit arithmetic safety",
       "verification": "No Int/UInt64 negation/narrowing/product overflow traps; wasm32 kernel tests or explicit gate blocker.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL055",
@@ -789,9 +829,13 @@
       "title": "No Decimal/Double authority",
       "verification": "Source audit plus precision cases prove no foreign arithmetic/fallback authority.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Arithmetic.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL056",

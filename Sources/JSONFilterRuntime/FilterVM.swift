@@ -24,6 +24,7 @@ package struct FilterVM {
         var bindingSlots: UInt64 = 0
         var scopeBytes: UInt64 = 0
         var index = 0
+        var range: FilterRangeState?
         var current: FilterYield?
         var flag = false
         var groups: [[FilterYield]] = []
@@ -272,10 +273,8 @@ package struct FilterVM {
                 switch incoming {
                 case .end: return .emit(.end)
                 case .value(let value):
-                    guard op == "-", case .number(let n) = value.value else { throw FilterLanguageFailure("expectedNumber") }
-                    let c = n.components, negative = !c.isZero && !c.negative
-                    let result = JSON.number(JSONNumber(components: .init(negative: negative, digits: c.digits, exponent: c.exponent)))
-                    return .emit(.value(try FilterValues.produced(result, context: &context)))
+                    guard case .number(let n) = value.value else { throw FilterLanguageFailure("expectedNumber") }
+                    return .emit(.value(try ExactDecimal.unary(op == "-" ? "negate" : "positive", n, context: &context)))
                 case .failure(let failure): throw failure
                 }
             }
@@ -322,8 +321,9 @@ package struct FilterVM {
                     let lhs = frame.values[frame.index], rhs = frame.current!; frame.index += 1
                     if case .index = node { return .emit(.value(lhs.selecting(try FilterValues.index(lhs.value, key: rhs.value, context: &context)))) }
                     guard case .binary(let op, _, _) = node else { throw FilterLanguageFailure("invalidState") }
+                    if ["+","-","*","/","%"].contains(op) { return .emit(.value(try FilterOperators.apply(op, lhs.value, rhs.value, context: &context))) }
                     let result: Bool
-                    if op == "==" || op == "!=" { let equal = try JSONComparison.equals(lhs.value, rhs.value, meter: &context.meter); result = op == "==" ? equal : !equal }
+                    if op == "==" || op == "!=" { let equal = try FilterValues.equals(lhs.value, rhs.value, context: &context); result = op == "==" ? equal : !equal }
                     else {
                         let order = try FilterValues.compare(lhs.value, rhs.value, context: &context)
                         switch op { case "<": result = order < 0; case ">": result = order > 0; case "<=": result = order <= 0; case ">=": result = order >= 0; default: throw FilterCompileFailure("arithmeticNotYetQualified", at: program.sourceRanges[frame.node].lowerBound) }
@@ -447,6 +447,7 @@ package struct FilterVM {
         return .emit(.value(result))
     }
     private mutating func call<Input: FilterInput>(_ name: String, arguments: [Int], frame: inout Frame, incoming: Event?, input: inout Input, context: inout CLIJobContext) throws -> Action {
+        if name == "range" { return try range(arguments, frame: &frame, incoming: incoming, context: &context) }
         if name == "input" || name == "inputs" {
             if name == "input" && frame.phase > 0 { return .emit(.end) }
             frame.phase += 1
@@ -456,6 +457,16 @@ package struct FilterVM {
         }
         if arguments.isEmpty {
             if frame.phase > 0 { return .emit(.end) }; frame.phase = 1
+            if ["abs","floor","ceil","trunc","round"].contains(name) {
+                guard case .number(let number) = frame.input.value else { throw FilterLanguageFailure("expectedNumber") }
+                return .emit(.value(try ExactDecimal.unary(name, number, context: &context)))
+            }
+            if name == "add" {
+                guard case .array(let values) = frame.input.value else { throw FilterLanguageFailure("expectedArray") }
+                var result = FilterYield(value: .null)
+                for value in values { try context.work(); result = try FilterOperators.apply("+", result.value, value, context: &context) }
+                return .emit(.value(result))
+            }
             if name == "error" { throw try languageError(frame.input.value, frame: &frame, context: &context) }
             if let value = try FilterPrimitiveBuiltins.apply(name, value: frame.input.value, context: &context) {
                 // Selectors borrow the original input's lifetime; constructed values
@@ -533,6 +544,42 @@ package struct FilterVM {
             return .pull(frame.children.last!)
         }
         throw FilterCompileFailure("unsupportedBuiltin", at: program.sourceRanges[frame.node].lowerBound)
+    }
+    private mutating func range(_ arguments: [Int], frame: inout Frame, incoming: Event?, context: inout CLIJobContext) throws -> Action {
+        if frame.phase == 0 {
+            let bytes = UInt64(arguments.count) * 32
+            try context.meter.retain(bytes); frame.slots += bytes
+            frame.groups = Array(repeating: [], count: arguments.count)
+            frame.selections = Array(repeating: 0, count: arguments.count); frame.phase = 1
+        }
+        if let incoming {
+            switch incoming {
+            case .value(let value): try captureGroup(value, group: frame.index, frame: &frame, context: &context); return .pull(frame.children.last!)
+            case .end: try dispose(frame.children.removeLast(), context: &context); frame.index += 1
+            case .failure(let failure): throw failure
+            }
+        }
+        if frame.phase == 1 {
+            if frame.index < arguments.count { return .pull(try child(arguments[frame.index], frame: &frame, context: &context)) }
+            if frame.groups.contains(where: { $0.isEmpty }) { frame.phase = 99; return .emit(.end) }
+            frame.phase = 2
+        }
+        while true {
+            try context.work()
+            if frame.range == nil {
+                if frame.flag { frame.phase = 99; return .emit(.end) }
+                func number(_ index: Int) throws -> JSONNumber {
+                    guard case .number(let n) = frame.groups[index][frame.selections[index]].value else { throw FilterLanguageFailure("expectedNumber") }; return n
+                }
+                let start = arguments.count == 1 ? JSONNumber(integer: 0) : try number(0)
+                let end = try number(arguments.count == 1 ? 0 : 1)
+                let step = arguments.count == 3 ? try number(2) : JSONNumber(integer: 1)
+                frame.range = try FilterRangeState(start: start, end: end, step: step, context: &context)
+            }
+            if let value = try frame.range!.next(context: &context) { return .emit(.value(value)) }
+            frame.range = nil
+            frame.flag = try !advance(&frame.selections, counts: frame.groups.map(\.count), context: &context)
+        }
     }
     private func languageError(_ value: JSON, frame: inout Frame, context: inout CLIJobContext) throws -> FilterLanguageFailure {
         try context.checkpoint()
