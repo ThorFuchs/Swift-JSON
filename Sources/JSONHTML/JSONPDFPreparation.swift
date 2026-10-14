@@ -138,7 +138,8 @@ private final class JSONPDFCancellationState: Sendable {
         try pdfRequire(.preparedBytes, input.bytes - input.previousPDFBytes,
                        min(options.limits.maxPreparedBytes, input.preparedLimit))
         try meter.retain(input.bytes)
-        try meter.retain(UInt64(document.filenameStem.utf8.count) + 16)
+        let inputMetadata = UInt64(document.filenameStem.utf8.count) + 16 + UInt64(document.availableFormats.count) * 48
+        try meter.retain(inputMetadata)
         for _ in input.html { try work(); try meter.charge(.inputBytes); try meter.retain(1) }
         let html = String(decoding: input.html, as: UTF8.self)
         let width = floor(options.paper.width - 2 * options.marginPoints)
@@ -217,11 +218,12 @@ private final class JSONPDFCancellationState: Sendable {
         // Shared immutable Data still receives a separate logical result reservation.
         try meter.retain(input.bytes - input.previousPDFBytes)
         try retainBytes(pdf, output: false)
-        try meter.retain(UInt64(document.filenameStem.utf8.count) + 16 + 48)
+        let resultCount = document.availableFormats.count + (document.availableFormats.contains(.pdf) ? 0 : 1)
+        try meter.retain(UInt64(document.filenameStem.utf8.count) + 16 + UInt64(resultCount) * 48)
         try work()
         let result = document.addingPDF(pdf)
         try meter.release(input.bytes + UInt64(input.html.count) + UInt64(pdf.count) + textReservation
-                          + UInt64(document.filenameStem.utf8.count) + 16)
+                          + inputMetadata)
         try check()
         return .init(result: result, operation: meter.statistics(), inputHTMLBytes: UInt64(input.html.count),
                      existingPreparedBytes: input.bytes, capturedPDFBytes: captured,

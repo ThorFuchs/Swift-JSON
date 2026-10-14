@@ -152,6 +152,8 @@ import PDFKit
     let item = try JSONExportDocument.prepare(.string("é e\u{301} 😀 exact 9007199254740993"))
     let baseline = try await item.preparingPDFWithReport()
     #expect(baseline.operation[.workUnits] > baseline.inputHTMLBytes + baseline.outputPDFBytes)
+    let resultBytes = baseline.existingPreparedBytes + baseline.outputPDFBytes
+    #expect(baseline.operation[.retainedBytes] == resultBytes + UInt64(item.filenameStem.utf8.count) + 16 + UInt64(baseline.result.availableFormats.count) * 48)
     for metric in [JSONResourceMetric.inputBytes, .workUnits, .outputBytes, .retainedBytes] {
         var core = JSONLimits.balanced
         let ceiling = metric == .retainedBytes ? baseline.operation.peakLogicalRetainedBytes : baseline.operation[metric]

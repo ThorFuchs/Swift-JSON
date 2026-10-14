@@ -132,7 +132,7 @@ def check_result(command, code, log, events=None):
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
         passed = passed and all(line in log.splitlines() for line in ['PUBLIC_BEHAVIOR passed fixtures=8', 'STREAM_CANCELLATION passed', 'DISK_PERSISTENCE passed containers=3 rows=8', 'MOBILE_QUALIFICATION passed cases=3'])
     if command[:3] == ['python3', '-B', 'Scripts/verify_testing_events.py']:
-        passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=11' in log.splitlines()
+        passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=19' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/verify_html_assets.py']:
         passed = passed and 'JSONHTML_ASSETS passed count=2' in log.splitlines()
     if 'BrowserFixtures' in command:

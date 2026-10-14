@@ -195,7 +195,7 @@ package actor JSONPDFCompositor {
     package func finish(maximumBytes: UInt64, expectedPages: UInt64) throws -> Data {
         try Task.checkCancellation()
         guard let context, let buffer, pages == expectedPages else { throw JSONPDFFailure.captureFailed }
-        context.closePDF(); self.context = nil; self.buffer = nil
+        context.closePDF(); self.context = nil; self.buffer = nil; self.setter = nil
         let count = UInt64(CFDataGetLength(buffer))
         try pdfRequire(.pdfBytes, count, maximumBytes)
         // Opaque native buffer materialization; the caller charges accepted bytes

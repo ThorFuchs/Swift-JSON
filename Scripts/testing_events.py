@@ -23,6 +23,7 @@ ROOT_PARAMETER_CASES = {
 
 def read_events(text):
     tests = {}
+    suites = {}
     started = collections.Counter()
     ended = collections.Counter()
     case_started = collections.Counter()
@@ -38,11 +39,11 @@ def read_events(text):
         payload = row['payload']
         kind = payload['kind']
         if row['kind'] == 'test':
-            if kind == 'function':
+            if kind in ('function', 'suite'):
                 identifier = payload['id']
-                if identifier in tests:
+                if identifier in tests or identifier in suites:
                     raise ValueError('Duplicate test discovery')
-                tests[identifier] = payload
+                (tests if kind == 'function' else suites)[identifier] = payload
         elif row['kind'] == 'event':
             if kind in ('issueRecorded', 'testSkipped'):
                 raise ValueError('Issue or skipped test in event stream')
@@ -56,10 +57,13 @@ def read_events(text):
                          'testCaseStarted': case_started, 'testCaseEnded': case_ended}[kind]
                 table[identifier] += 1
     identifiers = set(tests)
-    if not identifiers or set(started) != identifiers or set(ended) != identifiers:
+    all_identifiers = identifiers | set(suites)
+    if not identifiers or set(started) != all_identifiers or set(ended) != all_identifiers:
         raise ValueError('Missing discovered/start/completed function identity')
-    if any(started[k] != 1 or ended[k] != 1 for k in identifiers):
-        raise ValueError('Duplicate function execution')
+    if any(started[k] != 1 or ended[k] != 1 for k in all_identifiers):
+        raise ValueError('Duplicate function or suite execution')
+    if any(not any(k.startswith(s + '/') or k.startswith(s + '.') for k in identifiers) for s in suites):
+        raise ValueError('Suite contains no discovered function')
     if runs['runStarted'] == 0 or runs['runStarted'] != runs['runEnded']:
         raise ValueError('Incomplete test run')
     if case_started != case_ended:
@@ -72,6 +76,6 @@ def read_events(text):
     if len(parameters) != len(parameter_ids):
         raise ValueError('Ambiguous parameterized function name')
     return {'event_records': records, 'module_function_counts': dict(sorted(modules.items())),
-            'bundle_counts': sorted(modules.values()), 'function_count': len(identifiers),
+            'bundle_counts': sorted(modules.values()), 'function_count': len(identifiers), 'suite_count': len(suites),
             'parameter_case_invocations': sum(case_ended.values()),
             'parameterized_functions': dict(sorted(parameters.items()))}

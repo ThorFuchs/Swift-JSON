@@ -48,6 +48,31 @@ def main():
         cases += 1
     else:
         raise AssertionError('Malformed event stream accepted')
+    suite = 'ProbeTests.Scope'
+    nested = json.loads(json.dumps(original))
+    for row in nested:
+        payload = row['payload']
+        for key in ('id', 'testID'):
+            if key in payload: payload[key] = suite + '/' + payload[key].split('.', 1)[1]
+    declaration = {'kind': 'test', 'payload': {'kind': 'suite', 'id': suite, 'name': 'Scope'}}
+    start = {'kind': 'event', 'payload': {'kind': 'testStarted', 'testID': suite}}
+    end = {'kind': 'event', 'payload': {'kind': 'testEnded', 'testID': suite}}
+    nested = nested[:1] + [declaration, start] + nested[1:-1] + [end] + nested[-1:]
+    report = read_events(encode(nested))
+    assert report['function_count'] == 1 and report['suite_count'] == 1 and report['bundle_counts'] == [1]
+    cases += 1
+    malformed = [
+        [r for r in nested if r != start], [r for r in nested if r != end],
+        [r for r in nested if r != declaration], nested + [declaration], nested + [start],
+        nested + [{'kind': 'event', 'payload': {'kind': 'testCaseEnded', 'testID': suite}}],
+        nested + [{'kind': 'test', 'payload': {'kind': 'suite', 'id': 'ProbeTests.Empty', 'name': 'Empty'}},
+                  {'kind': 'event', 'payload': {'kind': 'testStarted', 'testID': 'ProbeTests.Empty'}},
+                  {'kind': 'event', 'payload': {'kind': 'testEnded', 'testID': 'ProbeTests.Empty'}}],
+    ]
+    for mutant in malformed:
+        try: read_events(encode(mutant))
+        except ValueError: cases += 1
+        else: raise AssertionError('Malformed suite discovery/completion accepted')
     print('TESTING_EVENT_RECEIPTS passed cases=' + str(cases))
     return 0
 
