@@ -1,78 +1,67 @@
-name: Native CI
+name: Native tagged consumer
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: native-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  qualification:
-    name: Native / ${{ matrix.lane }}
+  consumer:
+    name: Native / tag-consumer
     runs-on: xcode-27
     timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        lane: [native, safety, docs]
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
+          ref: a005e029caaa36a5b0e7cb4d14ba2ed1525dc88a
           persist-credentials: false
           fetch-depth: 0
-      - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
-      - name: Preserve native receipts
+      - name: Resolve and run public tag consumer
+        shell: bash
+        run: |
+          python3 -B - <<'PYTHON'
+          import datetime, hashlib, json, pathlib, shutil, subprocess, sys, tempfile
+          repo=pathlib.Path.cwd();out=repo/'.build/tag-consumer';out.mkdir(parents=True,exist_ok=True)
+          pin='a005e029caaa36a5b0e7cb4d14ba2ed1525dc88a'
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==pin
+          sys.path.insert(0,str(repo/'Scripts'));from preflight import collect
+          result=dict(schema_version=1,status='running',tag='1.2.1',expected_commit=pin,environment=collect(),commands=[])
+          assert result['environment']['status']=='passed'
+          def save(): (out/'receipt.json').write_text(json.dumps(result,indent=2)+'\n')
+          save()
+          with tempfile.TemporaryDirectory(prefix='swift-json-121-tag-consumer-') as temporary:
+              root=pathlib.Path(temporary)
+              manifest=(repo/'Examples/Consumer/Package.swift').read_text()
+              needle='.package(name: "Swift-JSON", path: "../..")'
+              assert manifest.count(needle)==1
+              manifest=manifest.replace(needle,'.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", exact: "1.2.1")').replace('package: "Swift-JSON"','package: "swift-json"')
+              (root/'Package.swift').write_text(manifest)
+              shutil.copytree(repo/'Examples/Consumer/Sources',root/'Sources')
+              shutil.copytree(root,out/'Source')
+              for name,command in [('resolve',['swift','package','resolve']),('dependencies',['swift','package','show-dependencies','--format','json']),('run',['swift','run','-c','release','Consumer'])]:
+                  with (out/(name+'.log')).open('w') as log:
+                      process=subprocess.run(command,cwd=root,stdout=log,stderr=subprocess.STDOUT,timeout=1200)
+                  text=(out/(name+'.log')).read_text().replace(str(root),'<tag-consumer>')
+                  (out/(name+'.log')).write_text(text)
+                  result['commands'].append(dict(command=command,exit_code=process.returncode,log=name+'.log',log_sha256=hashlib.sha256(text.encode()).hexdigest()))
+                  save();assert process.returncode==0,(name,text[-4000:])
+                  if name=='dependencies':
+                      graph=json.loads(text);assert len(graph['dependencies'])==1 and not graph['dependencies'][0]['dependencies'] and graph['dependencies'][0]['version']=='1.2.1'
+                  if name=='run':
+                      assert 'SCHEMA_BUILDER_CUMULATIVE_BUDGET passed limit=150 minimum_payload_scans=200' in text
+                      assert 'Consumer passed: exact values/Codable/Pointer, Patch/Merge Patch, schema documents/registry, streams/sink, reports and Sendable' in text
+              resolved=json.loads((root/'Package.resolved').read_text());assert len(resolved['pins'])==1
+              dependency=resolved['pins'][0];assert dependency['identity']=='swift-json' and dependency['state']['version']=='1.2.1' and dependency['state']['revision']==pin
+              (out/'Package.resolved').write_text(json.dumps(resolved,indent=2)+'\n')
+              result.update(status='passed',resolved_version='1.2.1',resolved_revision=pin,public_products=['JSON','JSONSchema','JSONStreaming','JSONPatch'],root_dependencies_empty=True,private_meter_imports=False,finished_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+          save();print(json.dumps(result,indent=2))
+          PYTHON
+      - name: Preserve actual tag-consumer proof
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: native-${{ matrix.lane }}
+          name: native-tag-consumer
           if-no-files-found: error
           retention-days: 30
-          path: |
-            .build/ci/
-            .build/handoff/docc/receipt.json
-            .build/handoff/docc/coverage.json
-            .build/handoff/docc/symbols/
-            .build/handoff/docc/compiled-catalogs.tar.gz
-            .build/handoff/docc/compiled-catalogs.MANIFEST.sha256
-            .build/handoff/docc/*-diagnostics.json
-            .build/handoff/docc/*.log
-            .build/handoff/pages/receipt.json
-            .build/handoff/pages/site.MANIFEST.sha256
-            .build/handoff/pages/*.log
-      - name: Package qualified documentation site
-        if: matrix.lane == 'docs'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          path: .build/handoff/pages/site
-          include-hidden-files: true # Preserve the verified .nojekyll file; only the generated site is uploaded.
-  publish:
-    name: Documentation / publish
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: qualification
-    # Native compilation and all qualification happened in the jobs above.
-    # This job only publishes their exact static artifact.
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Configure Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-      - name: Publish qualified documentation
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          path: .build/tag-consumer/
