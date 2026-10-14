@@ -43,6 +43,12 @@ def shared_objects(bin_directory):
             result[target] = found[0]
     return result
 
+def without_schema_objects(objects):
+    # Integration imports schema too, including the private regex implementation.
+    omitted = {'JSONSchemaTests/runner', 'JSONSchemaTests', 'JSONSchema',
+               'JSONIntegrationTests/runner', 'JSONIntegrationTests'}
+    return {name:path for name,path in objects.items() if name not in omitted}
+
 def validate_export(export, root=ROOT, policy=DISCOVERY):
     """Validate the executable source denominator before calculating percentages."""
     expected = {p.relative_to(root).as_posix() for p in (root / 'Sources').rglob('*.swift')}
@@ -193,9 +199,9 @@ def main():
                 receipt['default_export'] = dict(status='complete')
             except ValueError as error:
                 receipt['default_export'] = dict(status='incomplete', error=str(error))
-            # This actual exporter probe must omit the schema runner and its DSOs;
+            # This actual exporter probe must omit schema and integration object families;
             # regex code alone is also linked in schema tests and is not a useful omission.
-            omitted = [p for name,p in materialized_objects.items() if name not in ('JSONSchemaTests/runner', 'JSONSchemaTests', 'JSONSchema')]
+            omitted = list(without_schema_objects(materialized_objects).values())
             negative_command = llvm + ['export', str(omitted[0]), '-instr-profile=' + str(profile)]
             for other in omitted[1:]:
                 negative_command.extend(['-object', str(other)])
@@ -205,7 +211,7 @@ def main():
             except ValueError as error:
                 if 'Incomplete library export:' not in str(error):
                     raise
-                receipt['omitted_binary_probe'] = dict(status='rejected', omitted='JSONSchemaTests runner and schema/test shared objects when present', reason=str(error))
+                receipt['omitted_binary_probe'] = dict(status='rejected', omitted='JSONSchemaTests and JSONIntegrationTests runners, test DSOs and schema DSO when present', reason=str(error))
             else:
                 raise ValueError('Harness accepted export missing the schema executable')
             # Public summaries and normalized export contain no local source path.

@@ -6,7 +6,7 @@ import json
 import pathlib
 import tempfile
 import unittest
-from coverage import executable_objects, shared_objects, validate_export
+from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root
 from ci import check_result, commands
 
@@ -37,6 +37,9 @@ class HarnessTests(unittest.TestCase):
         self.policy['coverage_modules'] = ['JSON', 'JSONPatch']
         result = validate_export(self.export, self.root, self.policy)
         self.assertEqual(set(result['modules']), {'JSON', 'JSONPatch'})
+        objects = {name:object() for name in ['JSONSchemaTests/runner', 'JSONIntegrationTests/runner',
+            'JSONSchemaTests', 'JSONIntegrationTests', 'JSONSchema', 'JSONTests/runner']}
+        self.assertEqual(set(without_schema_objects(objects)), {'JSONTests/runner'})
         self.export['data'][0]['files'].pop()
         with self.assertRaisesRegex(ValueError, 'Incomplete library export'):
             validate_export(self.export, self.root, self.policy)
