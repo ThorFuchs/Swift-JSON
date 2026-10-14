@@ -24,13 +24,15 @@ GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONSchema': ('Offline schema validation', 'offlinevalidation'),
           'JSONStreaming': ('Completion and backpressure', 'completionandbackpressure'),
           'JSONPatch': ('Choosing and applying patches', 'applyingpatches'),
-          'JSONHTML': ('Exact interactive HTML', 'interactiverendering')}
+          'JSONHTML': ('Exact interactive HTML', 'interactiverendering'),
+          'JSONBridges': ('Opt-in native conversions', 'numericfidelity')}
 DESCRIPTIONS = {
     'JSON': 'Exact values, strict UTF-8, native Codable, Pointer, presence and finite resource reports.',
     'JSONSchema': 'Draft 2020-12, explicit offline registries, immutable plans, annotations and bounded regex.',
     'JSONStreaming': 'Pull events and values, strict NDJSON, root-array completion and awaited output chunks.',
     'JSONPatch': 'Transactional RFC 6902 JSON Patch and RFC 7396 Merge Patch with exact value semantics.',
-    'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.'}
+    'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
+    'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.'}
 
 
 class Links(HTMLParser):

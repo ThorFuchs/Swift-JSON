@@ -64,6 +64,7 @@ Internal mutable meters remain private.
 ### Guides
 
 - <doc:OfflineValidation>
+- <doc:CompiledPlanConvenience>
 
 ### Documents and plans
 - ``JSONSchemaDocument``
