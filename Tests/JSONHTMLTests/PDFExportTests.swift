@@ -190,6 +190,12 @@ import PDFKit
     let item = try JSONExportDocument.prepare(.null)
     do { _ = try await item.preparingPDF(options: .init(timeoutMilliseconds: 0)); Issue.record("Expired deadline accepted PDF") }
     catch { #expect(error as? JSONPDFFailure == .timedOut) }
+    // Real iOS emoji fallback produced height 162 with nominal 16-point lines.
+    // Pagination uses CoreText visible ranges, not a WebKit line-grid assumption.
+    let nonGrid = SuspendedPDFBackend(ready: {})
+    nonGrid.geometryHeight = 18.25
+    let complete = try await item.preparingPDFWithReport(options: .init(), factory: { nonGrid }, observer: nil)
+    #expect(complete.pageCount == 1 && nonGrid.stopped)
     let broken = SuspendedPDFBackend(ready: {})
     broken.failure = .captureFailed
     do { _ = try await item.preparingPDFWithReport(options: .init(layout: .continuous), factory: { broken }, observer: nil); Issue.record("Failed capture accepted PDF") }
@@ -214,10 +220,11 @@ import PDFKit
     var pending: CheckedContinuation<Data, any Error>?
     var stopped = false
     var failure: JSONPDFFailure?
+    var geometryHeight: Double = 16
     let ready: @MainActor () -> Void
     init(ready: @escaping @MainActor () -> Void) { self.ready = ready }
     func load(_ html: String) async throws {}
-    func layout(width: Double) async throws -> JSONPDFGeometry { .init(width: width, height: 16, lineHeight: 16) }
+    func layout(width: Double) async throws -> JSONPDFGeometry { .init(width: width, height: geometryHeight, lineHeight: 16) }
     func textInfo() async throws -> JSONPDFTextInfo { .init(count: 1, tabWidth: 4) }
     func textRun(at index: Int) async throws -> JSONPDFTextRun { .init(kind: "null", text: "null") }
     func capture(_ rectangle: JSONPDFRectangle) async throws -> Data {

@@ -151,8 +151,7 @@ private final class JSONPDFCancellationState: Sendable {
         try check()
         guard geometry.width.isFinite, geometry.height.isFinite, geometry.lineHeight.isFinite,
               abs(geometry.width - width) < 0.1, geometry.height > 0,
-              abs(geometry.lineHeight - 16) < 0.01,
-              abs(geometry.height / 16 - (geometry.height / 16).rounded()) < 0.01 else {
+              abs(geometry.lineHeight - 16) < 0.01 else {
             throw JSONPDFFailure.layoutFailed
         }
         let maximumHeight = options.layout == .continuous
