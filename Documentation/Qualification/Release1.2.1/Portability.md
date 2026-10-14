@@ -72,6 +72,15 @@ The new public matrix covers numeric EOF finalization, all scalar root kinds,
 empty/nested containers and closing-delimiter transitions under both modes.
 The existing held-EOF tests separately establish causal completion/backpressure.
 
+The initial follow-up export reported the alternative as covered with an
+Int64.max derived counter, while the preceding condition and true branch differed
+by one execution. It therefore did not establish execution of the alternative.
+Earlier exports also contain saturated async/throwing segment counts. The
+installed compiler accepts the profiling-only LLVM atomic-counter option; a
+minimal emitted-IR probe confirms `atomicrmw` increments. Coverage now uses this
+option for its concurrent tests and rejects saturated library segment counts.
+Ordinary builds, package settings and safety/behavior assertions are unchanged.
+
 Disposition: retain the defensive expression and its unadjusted denominator;
 record the structural explanation rather than fabricate a private state or
 remove code to improve percentages. This closes semantic investigation of this

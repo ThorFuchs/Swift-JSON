@@ -60,6 +60,10 @@ class HarnessTests(unittest.TestCase):
             broken['data'][0]['files'][0]['summary']['lines'].update(count=count,covered=covered)
             with self.assertRaisesRegex(ValueError, 'Invalid coverage counter'):
                 validate_export(broken, self.root, self.policy)
+        broken = copy.deepcopy(self.export)
+        broken['data'][0]['files'][0]['segments'] = [[1,1,2**63-1,True,True,False]]
+        with self.assertRaisesRegex(ValueError, 'Saturated LLVM coverage counter'):
+            validate_export(broken, self.root, self.policy)
 
     def test_stale_classification_cannot_exclude_a_missing_file(self):
         (self.root/'Sources/JSON/Declaration.swift').unlink()

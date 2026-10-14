@@ -48,6 +48,11 @@ def validate_export(export, root=ROOT, policy=DISCOVERY):
                 continue
             if name not in expected or name in mapped:
                 raise ValueError('Unexpected or duplicate library mapping: ' + name)
+            # LLVM saturates negative derived counts at Int64.max. Such a
+            # segment is not evidence of trillions of executions or coverage.
+            # Concurrent Swift invocations need atomic instrumentation counters.
+            if any(segment[3] and segment[2] >= 2**63 - 1 for segment in record.get('segments', [])):
+                raise ValueError('Saturated LLVM coverage counter: ' + name)
             for kind in ['lines', 'regions', 'functions', 'branches', 'mcdc']:
                 count = record['summary'][kind]['count']
                 covered = record['summary'][kind]['covered']
@@ -122,7 +127,9 @@ def main():
                     raise ValueError('Swift toolchain llvm-cov required')
                 llvm = [str(tool)]
             receipt['llvm'] = run(llvm + ['--version'], 'llvm.log').strip()
-            tests = run(['swift', 'test', '--enable-code-coverage', '--disable-xctest'], 'tests.log')
+            profile_flags = ['-Xswiftc', '-Xllvm', '-Xswiftc', '-instrprof-atomic-counter-update-all']
+            receipt['counter_policy'] = 'Atomic profiling increments for concurrent tests. Reject saturated LLVM segment counts rather than count them as executed paths. Profiling flags do not alter package manifests or ordinary product builds.'
+            tests = run(['swift', 'test', '--enable-code-coverage', '--disable-xctest', *profile_flags], 'tests.log')
             if not check_root(tests):
                 raise ValueError('Exact root discovery/parameterized cardinality changed')
             receipt.update(root_counts=ROOT_COUNTS, parameterized_invocations=PARAMETER_INVOCATIONS)
