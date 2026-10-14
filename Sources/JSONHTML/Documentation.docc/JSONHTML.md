@@ -12,7 +12,9 @@ Interactive documents use native disclosures plus fixed offline controls for out
 navigation, literal search, exact JSON/Pointer copy and UTF-8 downloads. A separate
 complete formatted block serves printing independently of collapsed state.
 Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML are
-available in this development increment. RTF, PDF and annotations remain later increments.
+available in this development increment, with opt-in styled RTF for prepared items.
+PDF and annotations remain later increments. See <doc:PreparedExport> for format
+selection, native text fidelity and finite RTF capacities.
 
 Every call owns one cumulative finite core budget through admission, token
 formatting, escaping, fixed assets and metadata emission and final Data or String copying. The
