@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add opt-in JSONHTML interactive disclosure, container outline, literal search,
+  native-byte JSON/Pointer copy and downloads, and complete print content; qualify
+  three browser engines separately from Safari/device/accessibility release gates.
+- Develop JSONHTML as the fifth product for 1.3: exact formatted standalone HTML,
+  shared strict-writer token formatting, literal tab indentation, cumulative
+  finite reports, bounded script-free output and a fifth native DocC catalogue.
+  Annotations and transfer/RTF/PDF export remain later increments.
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.

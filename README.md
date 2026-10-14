@@ -63,9 +63,10 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
+| **JSONHTML** | Exact highlighted HTML, offline disclosures/search and native-byte copy/download (1.3 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
-`JSONSchema`, `JSONStreaming` and `JSONPatch` build on `JSON`. The package-private
+`JSONSchema`, `JSONStreaming`, `JSONPatch` and `JSONHTML` build on `JSON`. The package-private
 `JSONRegexRuntime` is an implementation detail and has no public product. The root
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
@@ -96,9 +97,9 @@ Then add products to your target dependencies:
 .product(name: "JSONSchema", package: "swift-json")
 ```
 
-Add `JSONStreaming` and `JSONPatch` in the same way when needed. A local checkout can
+Add `JSONStreaming`, `JSONPatch` and the 1.3 development product `JSONHTML` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [four-product consumer](Examples/Consumer) for a complete buildable
+releases. See the [five-product consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 
@@ -345,6 +346,33 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
+## Standalone HTML (1.3 development)
+
+The additive `JSONHTML` product renders complete highlighted HTML from the same
+exact writer cursor. Formatted mode is script-free. Opt into interactive mode for
+native disclosures, a container outline, case-sensitive literal search and exact
+JSON/Pointer copy and downloads. All assets are embedded and hash-authorized;
+no network access or browser JSON number conversion is needed.
+
+```swift
+import JSONHTML
+
+let interactiveHTML = try JSONHTMLRenderer(options: .init(
+    title: "Exact values", presentation: .interactive,
+    initiallyExpandedDepth: 2, outlineDepth: 3
+)).renderWithReport(value)
+precondition(interactiveHTML.statistics.copyJSONBytes > 0)
+```
+
+Every call shares one finite budget through admission, metadata, formatting and
+final copying. Downloads use native UTF-8 bytes, preserving numeric lexemes and
+scalar identity. Clipboard acceptance and manual copying depend on the browser;
+printing includes the full formatted JSON independently of disclosure state.
+Read the [formatted guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
+and [interactive guide](Sources/JSONHTML/Documentation.docc/InteractiveRendering.md)
+for limits and browser qualifications. Annotations, transfer formats, RTF and PDF
+preparation remain later increments. Published 1.2 versions do not include JSONHTML.
+
 ## Documentation and examples
 
 Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
@@ -354,11 +382,11 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The four DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The five DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all four catalogs on a supported native host:
+Build all five catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs

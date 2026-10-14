@@ -1,0 +1,6 @@
+{
+  "name": "swift-json-html-browser-qualification",
+  "private": true,
+  "license": "Apache-2.0",
+  "devDependencies": {"playwright": "1.62.1"}
+}

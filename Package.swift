@@ -9,7 +9,8 @@ let package = Package(
         .library(name: "JSON", targets: ["JSON"]),
         .library(name: "JSONSchema", targets: ["JSONSchema"]),
         .library(name: "JSONStreaming", targets: ["JSONStreaming"]),
-        .library(name: "JSONPatch", targets: ["JSONPatch"])
+        .library(name: "JSONPatch", targets: ["JSONPatch"]),
+        .library(name: "JSONHTML", targets: ["JSONHTML"])
     ],
     targets: [
         .target(name: "JSON"),
@@ -17,6 +18,8 @@ let package = Package(
         .target(name: "JSONSchema", dependencies: ["JSON", "JSONRegexRuntime"], resources: [.copy("Resources/Draft2020-12")]),
         .target(name: "JSONStreaming", dependencies: ["JSON"]),
         .target(name: "JSONPatch", dependencies: ["JSON"]),
+        .target(name: "JSONHTML", dependencies: ["JSON"], exclude: ["Assets"]),
+        .testTarget(name: "JSONHTMLTests", dependencies: ["JSONHTML", "JSON"]),
         .testTarget(name: "JSONTests", dependencies: ["JSON"], exclude: ["ImplementationPlan.md"]),
         .testTarget(name: "JSONSchemaTests", dependencies: ["JSONSchema"], exclude: ["ImplementationPlan.md"]),
         .testTarget(name: "JSONStreamingTests", dependencies: ["JSONStreaming"], exclude: ["ImplementationPlan.md"]),

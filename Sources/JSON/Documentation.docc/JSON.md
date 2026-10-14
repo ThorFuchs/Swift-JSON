@@ -67,6 +67,8 @@ belongs exclusively to each invocation.
 ### Codec and native coding
 - ``JSONParser``
 - ``JSONWriter``
+- ``JSONWritingOptions``
+- ``JSONIndentationUnit``
 - ``JSONValueEncoder``
 - ``JSONValueDecoder``
 - ``JSONCodingOptions``

@@ -52,6 +52,15 @@ and six shared-state safety functions. Both Linux architectures and the three
 Apple lanes qualify this combined source; historical counts above remain tied to
 their original snapshots.
 
+The first 1.3 formatted HTML increment adds three shared-formatting functions and
+13 JSONHTML functions: exactly 205 across six bundles (JSON 104, JSONSchema 51,
+JSONRegexRuntime 12, JSONStreaming 14, JSONPatch 11, JSONHTML 13). All 173
+parameterized invocations, 49 core cap probes and prior corpus policies remain.
+Thread Sanitizer checks seven shared-state functions. New HTML capacities have
+separate inclusive boundary/overflow tests; they do not change the original 49.
+See the [increment record](../Architecture/Release1.3/Increment.md) for scope and
+remaining browser/platform/export qualification.
+
 | Independent input | Observed policy |
 | --- | --- |
 | JSONTestSuite, pinned in FixtureRegistry.json | 318 discovered: 101 accepted, 186 rejected, 31 strict/finite-policy rejections |

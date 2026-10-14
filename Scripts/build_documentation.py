@@ -60,7 +60,7 @@ def package_catalogs(output):
             'bytes': archive.stat().st_size, 'verified_files': len(records),
             'manifest': str(manifest.relative_to(ROOT)),
             'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(),
-            'policy': 'Four native DocC archives; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
+            'policy': 'Five native DocC archives; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
 
 
 def main():

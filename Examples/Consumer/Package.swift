@@ -11,7 +11,8 @@ let package = Package(
         .product(name: "JSON", package: "Swift-JSON"),
         .product(name: "JSONSchema", package: "Swift-JSON"),
         .product(name: "JSONStreaming", package: "Swift-JSON"),
-        .product(name: "JSONPatch", package: "Swift-JSON")
+        .product(name: "JSONPatch", package: "Swift-JSON"),
+        .product(name: "JSONHTML", package: "Swift-JSON")
     ])],
     swiftLanguageModes: [.v6]
 )

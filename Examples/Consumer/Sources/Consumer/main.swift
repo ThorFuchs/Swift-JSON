@@ -4,6 +4,7 @@ import JSON
 import JSONSchema
 import JSONStreaming
 import JSONPatch
+import JSONHTML
 
 func requireSendable<T: Sendable>(_ value: T) {}
 let exact = try JSONNumber(parsing: "9007199254740993")
@@ -29,6 +30,35 @@ do {
 precondition(builderFailure?.resource?.metric == .workUnits)
 precondition(builderFailure?.resource?.domain == .schemaCompilation)
 print("SCHEMA_BUILDER_CUMULATIVE_BUDGET passed limit=150 minimum_payload_scans=200")
+let originalWriterOptions: (JSONLimits, Int?, JSONWritingOptions.KeyOrder, JSONNumberTextStyle) -> JSONWritingOptions = JSONWritingOptions.init
+precondition(originalWriterOptions(.balanced, nil, .insertion, .normalized).indentationUnit == .spaces)
+let htmlRenderer = JSONHTMLRenderer(options: .init(title: "Public exact values", indentation: 1, indentationUnit: .tabs))
+requireSendable(htmlRenderer)
+let htmlReport = try htmlRenderer.renderWithReport(value)
+requireSendable(htmlReport)
+precondition(htmlReport.statistics.renderedJSONNodes == 3)
+precondition(htmlReport.statistics.operation[.nodes] == 3)
+precondition(htmlReport.statistics.documentBytes == UInt64(htmlReport.result.count))
+precondition(String(decoding: htmlReport.result, as: UTF8.self).contains("9007199254740993"))
+var htmlLimits = JSONHTMLLimits()
+htmlLimits.core[.workUnits] = htmlReport.statistics.operation[.workUnits] - 1
+do {
+    _ = try JSONHTMLRenderer(options: .init(title: "Public exact values", indentation: 1, indentationUnit: .tabs, limits: htmlLimits)).render(value)
+    fatalError("HTML cumulative budget reset")
+} catch let error as JSONFailure { precondition(error.resource?.metric == .workUnits) }
+print("JSONHTML_PUBLIC_CONSUMER passed roots=1 exact_number=1 cumulative_refusal=1")
 try runREADMEExamples()
 try await runProductExamples()
 print("Consumer passed: exact values/Codable/Pointer, Patch/Merge Patch, schema documents/registry, streams/sink, reports and Sendable; immutable schema compilation/evaluation/output/inspection")
+
+let interactiveReport = try JSONHTMLRenderer(options: .init(presentation: .interactive)).renderWithReport(value)
+requireSendable(interactiveReport)
+precondition(interactiveReport.statistics.operation[.nodes] == htmlReport.statistics.operation[.nodes])
+precondition(interactiveReport.statistics.copyJSONBytes > 0 && interactiveReport.statistics.metadataBytes > 0)
+var interactiveLimits = JSONHTMLLimits()
+interactiveLimits.core[.workUnits] = interactiveReport.statistics.operation[.workUnits] - 1
+var refusedInteractive = false
+do { _ = try JSONHTMLRenderer(options: .init(limits: interactiveLimits, presentation: .interactive)).render(value) }
+catch let failure as JSONFailure { precondition(failure.category == .resource); refusedInteractive = true }
+precondition(refusedInteractive)
+print("JSONHTML_INTERACTIVE_PUBLIC_CONSUMER passed exact_metadata=1 cumulative_refusal=1")

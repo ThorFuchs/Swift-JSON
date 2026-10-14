@@ -15,3 +15,6 @@ Run `swift run --package-path Examples/Consumer Consumer` from the repo root.
 Each scenario must assert observable results and fail on an error. Compile-time
 visibility and runtime assertions together qualify public ergonomics. Examples
 use the public APIs documented in README and the product DocC catalogs.
+
+The fifth product, JSONHTML, additionally checks exact highlighted output, checked
+Sendable reports, one admission and a cumulative work refusal using public APIs.
