@@ -1,8 +1,8 @@
 # JSONHTML native transfer and prepared export
 
 This additive 1.3 development increment provides JSON, UTF-8 text, Markdown and
-static HTML, plus explicitly requested styled RTF. PDF remains a separate
-qualification milestone; requesting it fails atomically and never advertises it. Published 1.2 versions do not
+static HTML, plus explicitly requested styled RTF and separately prepared Apple PDF.
+Synchronous preparation rejects PDF; only successful explicit async preparation advertises it. Published 1.2 versions do not
 provide this API.
 
 `JSONExportDocument.prepare(_:options:)` and
@@ -40,7 +40,7 @@ warnings as errors and an independent consumer qualify this placement.
 
 Direct representations are JSON, static HTML, UTF-8 plain text, Markdown in that
 order. Only JSON imports. Every direct request gets fixed finite defaults and its
-own invocation. The prepared wrapper is export-only in JSON, HTML, RTF, text, Markdown order, with
+own invocation. The prepared wrapper is export-only in JSON, HTML, RTF, text, Markdown, PDF order, with
 conditions for available/selected artifacts and matching filename extensions.
 Closures additionally guard selection: the SDK's generic-text helper can try a
 hidden statically declared representation before reaching the selected subtype.
@@ -56,8 +56,8 @@ duplicate keys, trailing syntax and trailing commas under balanced finite limits
 The initial module links CoreTransferable and UniformTypeIdentifiers conditionally.
 Pure preparation is actor-independent and remains available without those modules.
 The approved future PDF amendment permits narrow WebKit/platform-print support in
-JSONHTML, while core JSON must never import those frameworks. WebKit/AppKit/PDFKit
-currently occur only in the T0 probe tool, not in shipped targets. JH25's old
+JSONHTML, while core JSON must never import those frameworks. WebKit/CoreText/CoreGraphics and AppKit/UIKit paragraph styles
+are confined to explicit PDF generation. PDFKit remains independent qualification only. JH25's old
 module-wide UI dependency exclusion is superseded by this explicit boundary.
 
 ## Finite accounting
@@ -118,13 +118,13 @@ The T0 offscreen WebPage probe uses nonpersistent per-job state, disables conten
 JavaScript/subresources, denies external navigation, awaits finished navigation,
 sets print media and captures an explicit region. Independent PDFKit inspection
 finds the final sentinel on one tall page. This is region capture, not paginated
-A4/Letter output or a qualified cancellation/timeout backend. No PDF public
-preparation method or default paper policy is frozen from that result. An external
+A4/Letter output or a qualified cancellation/timeout backend. The current paginated backend is qualified separately; neither its public API
+nor paper policy is inferred from the historical T0 result. An external
 probe watchdog is not a production timeout guarantee.
 
-Remaining milestones: RTF rich-editor and physical-device evidence; an explicit MainActor PDF operation with genuine paginated
-A4/Letter output, lifecycle cancellation and finite PDF limits; real Mac/mobile
-receiving apps and simulator/device integration. The existing physical iPad
+Remaining milestones: RTF/PDF real receiving-app UI and physical-device evidence;
+final five-product release qualification. Actual SDK and simulator evidence must be
+reported separately from those gates. The existing physical iPad
 deferral is preserved. These incomplete gates must remain explicit in returns.
 
 The synthetic fixture bytes originate in the JSONHTML Transfer/Export briefing
@@ -165,3 +165,15 @@ The initial finite policies are boundary-tested rather than hard RSS/throughput
 claims. Small exact fixtures and generated deep/wide/cancellation inputs support
 this increment; maximum-workload calibration and receiving-app qualification
 remain distinct release evidence. See [RTF increment](Release1.3/RTFIncrement.md).
+
+## Explicit PDF increment
+
+See the [PDF decisions and acceptance map](Release1.3/PDFIncrement.md) and
+[DocC guide](../../Sources/JSONHTML/Documentation.docc/PDFPreparation.md).
+The new public async MainActor methods use only the document-owned static HTML.
+Paginated CoreText visible ranges avoid duplicated text from clipped WebPage regions;
+continuous WebPage capture is explicit. One cumulative PDF-phase core meter and
+six finite PDF caps cover owned admission, adapter work, captures and copies.
+Opaque platform work/allocation and the soft lifecycle deadline are distinct.
+Only completed immutable PDF bytes can be selected for transfer. Missing HTML,
+failures and cancellation preserve the original item and install no artifact.

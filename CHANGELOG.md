@@ -2,17 +2,21 @@
 
 ## Unreleased
 
+- Add explicit main-actor PDF preparation from immutable static HTML, with genuine
+  A4/Letter text-range pagination, an explicit continuous mode, cumulative finite
+  accounting, cancellation/deadline lifecycle and prepared-byte-only transfer.
+
 - Add opt-in styled RTF to immutable JSONHTML prepared exports. An owned bounded
   strict-token emitter preserves pretty JSON text, Unicode scalar sequences and
   number spellings; native decoding checks font, colors and actual tab positions.
   Finite style/UTF-16 ceilings complement cumulative work/output/retention limits.
-  Direct JSON defaults remain JSON, HTML, plain text and Markdown; PDF remains open.
+  Direct JSON defaults remain JSON, HTML, plain text and Markdown.
 
 - Add immutable prepared JSON, UTF-8 text, Markdown and expanded static HTML in
   JSONHTML, plus Apple native JSON Transferable conformance with strict import.
   Preparation preserves exact lexemes/scalars/order under one cumulative meter;
   selected-format closure guards prevent transport from exposing hidden artifacts.
-  PDF and real receiving-app/device qualification remain separate.
+  Real receiving-app/device qualification remains separate.
 
 - Add opt-in JSONHTML interactive disclosure, container outline, literal search,
   native-byte JSON/Pointer copy and downloads, and complete print content; qualify
@@ -20,7 +24,7 @@
 - Develop JSONHTML as the fifth product for 1.3: exact formatted standalone HTML,
   shared strict-writer token formatting, literal tab indentation, cumulative
   finite reports, bounded script-free output and a fifth native DocC catalogue.
-  Annotations and explicit PDF remain later increments.
+  Annotations remain deferred.
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.

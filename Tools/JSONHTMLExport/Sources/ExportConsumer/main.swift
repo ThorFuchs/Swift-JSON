@@ -7,8 +7,10 @@ import JSONStreaming
 import JSONPatch
 #if canImport(AppKit)
 import AppKit
+import PDFKit
 #elseif canImport(UIKit)
 import UIKit
+import PDFKit
 #endif
 #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
 import CoreTransferable
@@ -31,7 +33,20 @@ struct Receipt: Codable {
     let rtfPreparedBytes: UInt64
     let rtfWorkUnits: UInt64
     let rtfPeakLogicalRetainedBytes: UInt64
+    let pdfReports: [PDFObservation]
     let limitations: [String]
+}
+
+struct PDFObservation: Codable {
+    let layout: String
+    let paper: String
+    let pages: UInt64
+    let bytes: UInt64
+    let capturedBytes: UInt64
+    let work: UInt64
+    let peakLogicalBytes: UInt64
+    let elapsedMilliseconds: Double
+    let backend: String
 }
 
 @main struct ExportConsumer {
@@ -119,6 +134,57 @@ struct Receipt: Codable {
         let richPath = try await richOnly.export(to: fileDirectory, contentType: .rtf)
         try check("rtf-system-filename", richPath.lastPathComponent == "Exact-JSON.rtf" && Data(contentsOf: richPath) == rtfBytes)
         #endif
+        var pdfReports: [PDFObservation] = []
+        #if canImport(WebKit) && canImport(PDFKit)
+        #if canImport(AppKit)
+        _ = NSApplication.shared
+        #endif
+        let pdfReport = try await rich.result.preparingPDFWithReport()
+        try check("pdf-explicit-six", pdfReport.result.availableFormats.count == 6 && !rich.result.availableFormats.contains(.pdf))
+        try check("pdf-native-unchanged", try pdfReport.result.data(for: .json) == rich.result.data(for: .json))
+        try check("pdf-no-root-readmission", pdfReport.operation[.nodes] == 0)
+        try check("pdf-input-html", try pdfReport.inputHTMLBytes == UInt64(rich.result.data(for: .html).count))
+        try check("pdf-cumulative-output", pdfReport.operation[.outputBytes] == pdfReport.capturedPDFBytes + pdfReport.outputPDFBytes)
+        let pdfOnly = try pdfReport.result.selecting([.pdf])
+        #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
+        try check("pdf-content-type", pdfOnly.exportedContentTypes() == [.pdf])
+        try check("pdf-transfer-bytes", try await pdfOnly.exported(as: .pdf) == pdfReport.result.data(for: .pdf))
+        let pdfPath = try await pdfOnly.export(to: fileDirectory, contentType: .pdf)
+        try check("pdf-system-filename", try pdfPath.lastPathComponent == "Exact-JSON.pdf" && Data(contentsOf: pdfPath) == pdfReport.result.data(for: .pdf))
+        #endif
+        try check("pdf-original-unavailable", !rich.result.advertisedFormats.contains(.pdf))
+        let rows = (0..<150).map { JSON.string("ROW-\($0)-END 9007199254740993 é e\u{301} 😀 العربية https://example.test/wide/long/value") }
+        let pageItem = try JSONExportDocument.prepare(.array(rows + [.string("LAST-CONTENT-SENTINEL")]), options: .init(formats: [.html]))
+        for options in [JSONPDFOptions(), .init(paper: .usLetter), .init(layout: .continuous)] {
+            let rendered = try await pageItem.preparingPDFWithReport(options: options)
+            let bytes = try rendered.result.data(for: .pdf)
+            let pdf = try PDFDocument(data: bytes).unwrap()
+            let name = options.layout == .continuous ? "Continuous.pdf" : options.paper == .a4 ? "A4.pdf" : "Letter.pdf"
+            try bytes.write(to: output.appendingPathComponent(name)); samples[name] = bytes.count
+            if options.layout == .paginated {
+                let width = options.paper == .a4 ? 595.275590551 : 612.0
+                let height = options.paper == .a4 ? 841.889763780 : 792.0
+                try check("pdf-geometry-" + name, pdf.pageCount >= 3 && (0..<pdf.pageCount).allSatisfy { i in
+                    guard let p = pdf.page(at: i) else { return false }; let b = p.bounds(for: .mediaBox)
+                    return abs(b.width - width) < 0.1 && abs(b.height - height) < 0.1
+                })
+                try check("pdf-once-" + name, (0..<150).allSatisfy { (pdf.string ?? "").components(separatedBy: "ROW-\($0)-END").count == 2 })
+            } else {
+                try check("pdf-continuous-explicit", pdf.pageCount == 1 && (pdf.page(at: 0)?.bounds(for: .mediaBox).height ?? 0) > 2_000)
+            }
+            try check("pdf-last-page-" + name, pdf.page(at: pdf.pageCount - 1)?.string?.contains("LAST-CONTENT-SENTINEL") == true)
+            let elapsed = rendered.elapsed.components
+            pdfReports.append(.init(layout: options.layout.rawValue, paper: options.paper.rawValue,
+                pages: rendered.pageCount, bytes: rendered.outputPDFBytes, capturedBytes: rendered.capturedPDFBytes,
+                work: rendered.operation[.workUnits], peakLogicalBytes: rendered.operation.peakLogicalRetainedBytes,
+                elapsedMilliseconds: Double(elapsed.seconds) * 1_000 + Double(elapsed.attoseconds) / 1e15, backend: rendered.backend))
+        }
+        let cancelled = Task { @MainActor in try await rich.result.preparingPDF() }
+        cancelled.cancel()
+        var cancellationRejected = false
+        do { _ = try await cancelled.value } catch is CancellationError { cancellationRejected = true }
+        try check("pdf-pre-cancellation", cancellationRejected && !rich.result.availableFormats.contains(.pdf))
+        #endif
         var times: [Double] = []
         let clock = ContinuousClock()
         for _ in 0..<7 {
@@ -133,10 +199,14 @@ struct Receipt: Codable {
             peakLogicalRetainedBytes: report.operation.peakLogicalRetainedBytes,
             rtfPreparedBytes: rich.preparedBytes, rtfWorkUnits: rich.operation[.workUnits],
             rtfPeakLogicalRetainedBytes: rich.operation.peakLogicalRetainedBytes,
-            limitations: ["API/file transport consumer, not share-sheet, drag/drop or recipient UI qualification.",
-                "PDF is unavailable; receiving-app UI and physical mobile RTF behavior remain separate.", "Logical retention is not RSS; tiny sample timing does not prove throughput ceilings."])
+            pdfReports: pdfReports, limitations: ["API/file transport consumer, not share-sheet, drag/drop or recipient UI qualification.",
+                "PDF native generation/text/geometry is independent of receiving-app UI and physical-device integration.", "Logical retention is not RSS; tiny sample timing does not prove throughput ceilings."])
         let encoder = JSONEncoder(); encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         try encoder.encode(receipt).write(to: output.appendingPathComponent("consumer.json"))
         print("JSONHTML_EXPORT_CONSUMER passed cases=\(cases.count) artifacts=\(samples.count) measurements=\(times.count)")
     }
+}
+
+private extension Optional {
+    func unwrap() throws -> Wrapped { guard let value = self else { throw CocoaError(.fileReadCorruptFile) }; return value }
 }

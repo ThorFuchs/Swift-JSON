@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Native export and Apple compiler/API qualification; receiver/PDF gates remain separate."""
+"""Native export and Apple compiler/API qualification; receiver/device gates remain separate."""
 import argparse, hashlib, json, os, pathlib, subprocess, sys
 from archive_candidate import files
 from preflight import collect
@@ -16,11 +16,11 @@ def main():
     inputs = [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
     receipt = {'status': 'blocked', 'environment': collect(), 'source_inputs': inputs,
         'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(),
-        'commands': [], 'capability': 'four default formats plus opt-in styled RTF and Apple API/file transport',
+        'commands': [], 'capability': 'four defaults, opt-in styled RTF and explicit paginated/continuous Apple PDF; API/file transport',
         'limitations': ['SDK builds are not simulator/device execution.',
             'No share-sheet, drag/drop or receiving-editor UI success is inferred.',
-            'WebPage region probe is not paginated A4/Letter or production PDF qualification.',
-            'PDF artifacts are not offered; RTF recipient UI is not inferred from native decoding.']}
+            'Opaque SDK allocation/work is not owned instruction or process RSS accounting.',
+            'Native PDF text/geometry and RTF decoding do not establish recipient UI or physical-device behavior.']}
     def run(name, command, timeout=900):
         log = output / (name + '.log')
         with log.open('w') as stream:
@@ -45,12 +45,13 @@ def main():
         receipt['fixtures_verified'] = registry['fixtures']
         text = run('native-consumer', ['swift', 'run', '-c', 'release', '--package-path', 'Tools/JSONHTMLExport',
             'ExportConsumer', str(output / 'samples')])
-        if 'JSONHTML_EXPORT_CONSUMER passed cases=45 artifacts=5 measurements=7' not in text.splitlines():
+        if 'JSONHTML_EXPORT_CONSUMER passed cases=63 artifacts=8 measurements=7' not in text.splitlines():
             raise ValueError('Changed native consumer cardinality')
         consumer = json.loads((output / 'samples/consumer.json').read_text())
-        if consumer['status'] != 'passed' or len(consumer['cases']) != 45 or not all(row['passed'] for row in consumer['cases']):
+        if consumer['status'] != 'passed' or len(consumer['cases']) != 63 or not all(row['passed'] for row in consumer['cases']):
             raise ValueError('Missing consumer outcomes')
         receipt['consumer'] = consumer
+        if len(consumer['pdfReports']) != 3 or len(consumer['samples']) != 8: raise ValueError('Missing PDF artifacts/reports')
         probe = ROOT / 'Tools/JSONHTMLExport/Probes/WebPageBackend.swift'
         for sdk, target in [('macosx', 'arm64-apple-macos27.0'), ('iphoneos', 'arm64-apple-ios27.0'),
                             ('iphonesimulator', 'arm64-apple-ios27.0-simulator')]:

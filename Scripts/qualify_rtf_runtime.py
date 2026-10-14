@@ -45,20 +45,21 @@ def main():
         for family in ['iPhone', 'iPad']:
             model = next((d for d in inventory.get(runtime, []) if d['name'].startswith(family) and d['isAvailable']), None)
             if model is None: raise FileNotFoundError('No supported ' + family + ' simulator model/runtime')
-            device = run(family + '-create', ['xcrun', 'simctl', 'create', 'Swift-JSON-RTF-' + family, model['deviceTypeIdentifier'], runtime]).strip()
+            device = run(family + '-create', ['xcrun', 'simctl', 'create', 'Swift-JSON-Export-' + family, model['deviceTypeIdentifier'], runtime]).strip()
             try:
                 run(family + '-boot', ['xcrun', 'simctl', 'boot', device])
                 run(family + '-bootstatus', ['xcrun', 'simctl', 'bootstatus', device, '-b'])
                 samples = output / family
                 text = run(family + '-consumer', ['xcrun', 'simctl', 'spawn', device, str(binary), str(samples)])
-                if 'JSONHTML_EXPORT_CONSUMER passed cases=45 artifacts=5 measurements=7' not in text.splitlines():
+                if 'JSONHTML_EXPORT_CONSUMER passed cases=63 artifacts=8 measurements=7' not in text.splitlines():
                     raise RuntimeError('Changed consumer discovery/cardinality')
                 consumer = json.loads((samples / 'consumer.json').read_text())
-                if consumer['status'] != 'passed' or len(consumer['cases']) != 45 or not all(c['passed'] for c in consumer['cases']):
+                if consumer['status'] != 'passed' or len(consumer['cases']) != 63 or not all(c['passed'] for c in consumer['cases']):
                     raise RuntimeError('Incomplete or failing consumer outcomes')
                 rtf = samples / 'Exact-JSON.rtf'
                 receipt['simulators'].append({'family': family, 'model': model['name'], 'runtime': runtime,
-                    'status': 'passed', 'cases': 45, 'artifacts': 5, 'rtf_sha256': hashlib.sha256(rtf.read_bytes()).hexdigest(),
+                    'status': 'passed', 'cases': 63, 'artifacts': 8, 'rtf_sha256': hashlib.sha256(rtf.read_bytes()).hexdigest(),
+                    'pdf_sha256': {name: hashlib.sha256((samples / name).read_bytes()).hexdigest() for name in ['A4.pdf', 'Letter.pdf', 'Continuous.pdf']},
                     'consumer': consumer})
                 save()
             finally:
@@ -72,7 +73,7 @@ def main():
     receipt['source_inputs_unchanged'] = inputs == [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
     if not receipt['source_inputs_unchanged']: receipt['status'] = 'failed'
     receipt['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
-    save(); print('RTF_SIMULATORS ' + receipt['status'])
+    save(); print('EXPORT_SIMULATORS ' + receipt['status'])
     return 0 if receipt['status'] == 'passed' else 2 if receipt['status'] == 'blocked' else 1
 
 if __name__ == '__main__': sys.exit(main())

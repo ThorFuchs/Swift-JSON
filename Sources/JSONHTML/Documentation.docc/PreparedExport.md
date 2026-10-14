@@ -2,7 +2,7 @@
 
 Prepare exact JSON, pretty UTF-8 text, safely fenced Markdown and expanded static
 HTML without executing a browser. Add `.rtf` explicitly for styled monospaced
-rich text; PDF still requires a future qualified explicit preparation operation.
+rich text. Prepare PDF separately with the explicit main-actor operation in <doc:PDFPreparation>.
 
 ```swift
 import JSON
@@ -64,8 +64,7 @@ policy values are not process or recipient memory/CPU guarantees. Each generated
 artifact, overlapping construction buffer and owned copy is charged. Filename
 components reject controls, separators, dot components and bidi controls.
 
-The public export consumer and SDK builds qualify API/file transport separately
-from real receiving-app, simulator and device behavior. WebPage's T0 region probe
-produces one tall page and establishes no A4/Letter pagination, public PDF API or
-production timeout claim. Explicit MainActor PDF and actual receiving-app behavior remain separate
-milestones; failed requests install no artifact and advertise no capability.
+The public export consumer exercises API/file transport, native decoding and PDF
+geometry/text independently of receiving-app and physical-device behavior. Failed
+explicit PDF requests install no artifact and advertise no capability. The original
+T0 tall-region probe is historical evidence; it never established pagination.

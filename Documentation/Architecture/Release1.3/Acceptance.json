@@ -608,72 +608,102 @@
       "id": "TX38",
       "gate": "T5",
       "requirement": "PDF preparation is explicit async MainActor work; synchronous native prepare and transfer closures never render PDF.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX39",
       "gate": "T5",
       "requirement": "WebPage/WKWebView backend is actually compiled and qualified; WebPage preference/fallback rationale recorded.",
-      "status": "not_run",
-      "evidence": [],
-      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open."
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open.",
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX40",
       "gate": "T5",
       "requirement": "Document-owned static HTML prerequisite required; no silent value rerender or unbounded nested quota reset.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX41",
       "gate": "T5",
       "requirement": "Nonpersistent isolated WebKit state, JS disabled, denied external navigation/subresources and real layout readiness.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX42",
       "gate": "T5",
       "requirement": "Continuous capture complete; paginated A4/Letter output is genuine, measured and never silently downgraded.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX43",
       "gate": "T5",
       "requirement": "PDF pages include last sentinel, long/wrapped Unicode content and legible/selectable text without UI clutter.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX44",
       "gate": "T5",
       "requirement": "PDF input/output/page/bundle caps and aggregate retention checked; platform work distinguished from native meter.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX45",
       "gate": "T5",
       "requirement": "Cancellation/timeout during load/layout/export returns honestly, disposes state and rejects late completions.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX46",
       "gate": "T5",
       "requirement": "Concurrent PDF jobs have separate state/cancellation; no singleton web view or unsafe actor annotation.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX47",
       "gate": "T5",
       "requirement": "Successful PDF adds one immutable artifact; failure leaves original document and advertisement unchanged.",
-      "status": "not_run",
-      "evidence": []
+      "status": "partial",
+      "evidence": [
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+      ],
+      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
     },
     {
       "id": "TX48",
@@ -768,7 +798,7 @@
     "T2": "partial",
     "T3": "partial",
     "T4": "not_run",
-    "T5": "not_run",
+    "T5": "partial",
     "T6": "partial"
   }
 }

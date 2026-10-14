@@ -22,6 +22,8 @@ extension JSONExportReport: Sendable where Result: Sendable {}
 /// uses one cumulative meter. Transport and receiving-app work are outside it.
 public struct JSONExportDocument: Sendable {
     private let artifacts: [JSONExportFormat: Data]
+    private let maximumRepresentationBytes: UInt64
+    private let maximumPreparedBytes: UInt64
     /// Exact artifact identifiers retained by this item, including hidden artifacts.
     public let availableFormats: Set<JSONExportFormat>
     /// Exact artifact identifiers offered for this item; subtype matching is system policy.
@@ -29,7 +31,8 @@ public struct JSONExportDocument: Sendable {
     /// Validated filename component; extensions are added per representation.
     public let filenameStem: String
 
-    private init(artifacts: [JSONExportFormat: Data], advertised: Set<JSONExportFormat>, filename: String) {
+    private init(artifacts: [JSONExportFormat: Data], advertised: Set<JSONExportFormat>, filename: String, representationLimit: UInt64, preparedLimit: UInt64) {
+        maximumRepresentationBytes = representationLimit; maximumPreparedBytes = preparedLimit
         self.artifacts = artifacts; availableFormats = Set(artifacts.keys)
         advertisedFormats = advertised; filenameStem = filename
     }
@@ -85,7 +88,7 @@ public struct JSONExportDocument: Sendable {
         for format in JSONExportFormat.allCases where formats.contains(format) && !availableFormats.contains(format) {
             throw JSONExportFailure.unavailableFormat(format)
         }
-        return .init(artifacts: artifacts, advertised: formats, filename: filenameStem)
+        return .init(artifacts: artifacts, advertised: formats, filename: filenameStem, representationLimit: maximumRepresentationBytes, preparedLimit: maximumPreparedBytes)
     }
 
     package static func prepare(_ value: JSON, options: JSONExportOptions, meter: inout JSONWorkMeter) throws -> JSONExportReport<Self> {
@@ -163,10 +166,24 @@ public struct JSONExportDocument: Sendable {
             let rtf = try JSONRTFWriter.write(value, options: options, meter: &meter)
             try install(rtf, as: .rtf, meter: &meter); try meter.release(UInt64(rtf.count))
         }
+        try meter.retain(16); try meter.work()
         try meter.release(titleBytes)
         try meter.checkpoint()
-        return .init(result: .init(artifacts: artifacts, advertised: options.formats, filename: options.filenameStem),
+        return .init(result: .init(artifacts: artifacts, advertised: options.formats, filename: options.filenameStem, representationLimit: options.limits.maxRepresentationBytes, preparedLimit: options.limits.maxPreparedBytes),
                      operation: meter.statistics(), representationBytes: counts, preparedBytes: aggregate)
+    }
+
+    package func pdfInput() throws -> (html: Data, bytes: UInt64, previousPDFBytes: UInt64, representationLimit: UInt64, preparedLimit: UInt64) {
+        guard let html = artifacts[.html] else { throw JSONPDFFailure.missingHTML }
+        var total: UInt64 = 0
+        for data in artifacts.values { total = try pdfAdd(.preparedBytes, total, UInt64(data.count), UInt64(Int.max) - 1) }
+        return (html, total, UInt64(artifacts[.pdf]?.count ?? 0), maximumRepresentationBytes, maximumPreparedBytes)
+    }
+    // Package-only installation of a qualified artifact; no public injection API.
+    package func addingPDF(_ pdf: Data) -> Self {
+        var copy = artifacts; copy[.pdf] = pdf
+        return .init(artifacts: copy, advertised: advertisedFormats.union([.pdf]), filename: filenameStem,
+                     representationLimit: maximumRepresentationBytes, preparedLimit: maximumPreparedBytes)
     }
 
     private static func writing(_ value: JSON, indentation: Int?, options: JSONExportOptions, meter: inout JSONWorkMeter) throws -> [UInt8] {

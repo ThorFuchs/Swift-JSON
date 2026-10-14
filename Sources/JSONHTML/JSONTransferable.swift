@@ -50,6 +50,9 @@ extension JSONExportDocument: Transferable {
         DataRepresentation(exportedContentType: .markdown) { try $0.transferData(for: .markdown) }
             .exportingCondition { $0.advertisedFormats.contains(.markdown) }
             .suggestedFileName { $0.filenameStem + ".md" }
+        DataRepresentation(exportedContentType: .pdf) { try $0.transferData(for: .pdf) }
+            .exportingCondition { $0.advertisedFormats.contains(.pdf) }
+            .suggestedFileName { $0.filenameStem + ".pdf" }
     }
 }
 #endif
