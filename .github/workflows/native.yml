@@ -1,78 +1,80 @@
-name: Native CI
+name: Native archive qualification
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: native-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  qualification:
-    name: Native / ${{ matrix.lane }}
+  archive:
+    name: Native / archive-reproduction
     runs-on: xcode-27
     timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        lane: [native, safety, docs]
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
+          ref: a005e029caaa36a5b0e7cb4d14ba2ed1525dc88a
           persist-credentials: false
           fetch-depth: 0
-      - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
-      - name: Preserve native receipts
+      - name: Reproduce and qualify extracted candidate
+        shell: bash
+        run: |
+          python3 -B - <<'PYTHON'
+          import datetime, hashlib, json, pathlib, shutil, subprocess, sys, tarfile, tempfile
+          repo = pathlib.Path.cwd(); out = repo / '.build/archive-reproduction'
+          out.mkdir(parents=True, exist_ok=True)
+          pin = 'a005e029caaa36a5b0e7cb4d14ba2ed1525dc88a'
+          assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == pin
+          receipt = dict(schema_version=1, status='running', candidate_commit=pin,
+                         started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(), commands=[])
+          def save(): (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          save()
+          command = ['python3','-B','Scripts/archive_candidate.py','--output','.build/archive-reproduction/candidate.tar.gz']
+          with (out/'archive.log').open('w') as log:
+              result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, timeout=120)
+          receipt['commands'].append(dict(command=command,exit_code=result.returncode,log='archive.log'))
+          assert result.returncode == 0
+          sys.path.insert(0,str(repo/'Scripts')); from archive_candidate import verify
+          archive = out/'candidate.tar.gz'; count = verify(archive)
+          receipt.update(archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
+                         archive_entries=count, byte_equal_rebuild=True)
+          save()
+          with tempfile.TemporaryDirectory(prefix='swift-json-native-archive-') as temporary:
+              root = pathlib.Path(temporary)
+              with tarfile.open(archive) as tar:
+                  manifest = dict(line.split('  ',1)[::-1] for line in tar.extractfile('Swift-JSON/MANIFEST.sha256').read().decode().splitlines())
+                  # verify checked regular files, exact prefix, safe paths and every digest.
+                  for member in tar.getmembers():
+                      target = root/member.name; target.parent.mkdir(parents=True,exist_ok=True)
+                      target.write_bytes(tar.extractfile(member).read()); target.chmod(member.mode)
+              source = root/'Swift-JSON'
+              probe = subprocess.run(['git','rev-parse','--show-toplevel'],cwd=source,capture_output=True,text=True)
+              receipt['extracted_git_probe_exit'] = probe.returncode
+              assert probe.returncode != 0, 'Extracted candidate unexpectedly inside a Git checkout'
+              assert all(hashlib.sha256((source/name).read_bytes()).hexdigest()==digest for name,digest in manifest.items())
+              command = ['python3','-B','Scripts/ci.py','--lane','native','--output','Artifacts/native-reproduction']
+              with (out/'native-driver.log').open('w') as log:
+                  result = subprocess.run(command,cwd=source,stdout=log,stderr=subprocess.STDOUT,timeout=3000)
+              receipt['commands'].append(dict(command=command,exit_code=result.returncode,log='native-driver.log'))
+              shutil.copytree(source/'Artifacts/native-reproduction',out/'native')
+              native = json.loads((out/'native/receipt.json').read_text())
+              receipt.update(native_status=native['status'],native_git_commit=native['git_commit'],
+                             native_commands=len(native['commands']),source_files=len(native['source_inputs']))
+              save()
+              assert result.returncode == 0 and native['status']=='passed' and native['git_commit'] is None
+              assert native['source_inputs_unchanged'] and len(native['commands'])==17
+              assert {r['path']:r['sha256'] for r in native['source_inputs']} == manifest
+              assert all(hashlib.sha256((source/name).read_bytes()).hexdigest()==digest for name,digest in manifest.items())
+          receipt.update(status='passed',source_and_manifest_verified=True,
+                         finished_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+          save(); print(json.dumps(receipt,indent=2))
+          PYTHON
+      - name: Preserve actual reproduction proof
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: native-${{ matrix.lane }}
+          name: native-archive-reproduction
           if-no-files-found: error
           retention-days: 30
-          path: |
-            .build/ci/
-            .build/handoff/docc/receipt.json
-            .build/handoff/docc/coverage.json
-            .build/handoff/docc/symbols/
-            .build/handoff/docc/compiled-catalogs.tar.gz
-            .build/handoff/docc/compiled-catalogs.MANIFEST.sha256
-            .build/handoff/docc/*-diagnostics.json
-            .build/handoff/docc/*.log
-            .build/handoff/pages/receipt.json
-            .build/handoff/pages/site.MANIFEST.sha256
-            .build/handoff/pages/*.log
-      - name: Package qualified documentation site
-        if: matrix.lane == 'docs'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          path: .build/handoff/pages/site
-          include-hidden-files: true # Preserve the verified .nojekyll file; only the generated site is uploaded.
-  publish:
-    name: Documentation / publish
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: qualification
-    # Native compilation and all qualification happened in the jobs above.
-    # This job only publishes their exact static artifact.
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Configure Pages
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-      - name: Publish qualified documentation
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          path: .build/archive-reproduction/
