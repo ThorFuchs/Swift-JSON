@@ -306,5 +306,42 @@
       "Representative calibration only; no maximum-workload/RSS/opaque SDK instruction guarantees",
       "Formatted audible speech not part of the new interactive annotation check"
     ]
+  },
+  "structured_preview_increment": {
+    "briefing_revision": "0.2",
+    "release_assignment": null,
+    "branch": "codex/jsonhtml-structured-previews",
+    "status": "Implementation reviewable; complete L5/P5 qualification remains open",
+    "native_library_head": "76e4b262c4247ca3784b62b97bc21321e43d4044",
+    "source_preserving_cli_base": "aded3c9930f580bd4fb902bba002ab75ed199a7b",
+    "native_functions": 372,
+    "native_parameter_cases": 325,
+    "core_metric_count": 49,
+    "browser_cases": 76,
+    "supplemental_browser_contexts": 48,
+    "ipad_simulator_cases": 73,
+    "preview_policy_ceilings": 22,
+    "requirements": 110,
+    "scenarios": 88,
+    "calibration_configurations": 96,
+    "remaining": [
+      "Actual Linux runtime",
+      "Locked Mac native Safari/VoiceOver",
+      "Locked physical iPhone execution",
+      "Native touch and exact unexecuted scenario observations"
+    ],
+    "qualification_contract": "StructuredPreviews/Qualification.md",
+    "history_preserved": true,
+    "publication_performed": false,
+    "wasi": {
+      "source_head": "7fe0226",
+      "status": "passed",
+      "probes": 71,
+      "functions_per_configuration": 277,
+      "parameters_per_configuration": 288,
+      "public_consumer_functions": 14,
+      "cap_metrics": 49,
+      "mcp_server_claim": false
+    }
   }
 }

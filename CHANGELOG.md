@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add structured JSONHTML layouts with finite string, color, declared raster, inline
+  and atomic MathML previews; preserve exact source, complete export/print and shared
+  CLI policy. Native, browser and WASI evidence is recorded with remaining assistive
+  and host qualification boundaries.
+
 - Add typed caller diagnostics and coherent JSONDocument byte-span rendering to
   JSONHTML, with exact target identity, explicitly missing-parent attachment and
   finite cumulative annotation/path/message accounting. Rendering never asserts

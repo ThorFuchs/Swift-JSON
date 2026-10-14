@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "status": "proposed_until_P0_P5_qualification",
+  "status": "frozen_native_measured_candidate; complete_P5_qualification_pending",
   "core_limits_unchanged": true,
   "defaults": {
     "rendererStructuredProfile": "inspection",
@@ -81,5 +81,13 @@
     "hexOrder": "CSS_RGB_RGBA",
     "namedColors": false
   },
-  "accounting": "Eligibility policies supplement the one cumulative core/HTML meter; real global exhaustion is terminal. All finite values require checked representability and calibration."
+  "accounting": "Eligibility policies supplement the one cumulative core/HTML meter; real global exhaustion is terminal. All finite values require checked representability and calibration.",
+  "native_calibration": {
+    "configurations": 96,
+    "repeated_renders": 672,
+    "behavior_checks": 674,
+    "finite_boundary_parameters": 22,
+    "core_metric_meanings_unchanged": 49,
+    "rss_guarantee": false
+  }
 }
