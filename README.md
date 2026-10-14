@@ -70,12 +70,12 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The Linux development increment adds portable schema integrity for all four products
-without runtime dependencies. Its initial qualification scope is Swift 6.4+,
+Linux support provides portable schema integrity for all four products
+without runtime dependencies. Its qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
 
-The local WASI support increment targets full-language Swift 6.4
+WASI support targets full-language Swift 6.4
 `wasm32-unknown-wasip1`, with finite defaults and exact persistence. Its
 [platform contract](Documentation/Architecture/WebAssembly.md) documents resource
 packaging, execution hosts, qualification scope and safety limitations. Browser
@@ -101,6 +101,12 @@ use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 
 releases. See the [four-product consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
+
+The 1.2 maintenance line is prepared from `release/1.2`; `main` can contain later
+features. The 1.2.1 patch preserves these four public products and their API while
+expanding tests and correcting schema diagnostic/resource failures. Its
+[qualification and performance decision](Documentation/Qualification/Release1.2.1/ReleasePreparation.md)
+distinguishes measured results from the accepted performance exception.
 
 ## Parse, inspect and write exact values
 

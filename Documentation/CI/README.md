@@ -41,13 +41,21 @@ Timing qualification runs separately on an idle native host; shared hosted jobs
 cannot establish a controlled performance comparison. The existing reviewed
 streaming regression is documented in ../Performance/README.md.
 
+Maintenance branches use manual dispatch because the push trigger is main-only.
+For `release/1.2`, run Native CI and Linux CI with `scope=full` on the exact candidate
+ref and inspect all three Native and six Linux jobs. Maintenance runs verify four
+DocC catalogs without deploying over main's documentation. Existing main protection
+is unchanged; maintenance checks must be explicitly verified before tagging.
+
 Run locally with `python3 Scripts/ci.py --lane native`, `--lane safety` or `--lane docs`.
 The first hosted result must be inspected before marking CI qualified.
 
 ## Coverage and test discovery
 
 `python3 Scripts/ci.py --lane coverage` runs the full instrumented native Swift
-Testing suite and exports all five test executables against its merged profile.
+Testing suite and exports all six test executables against its merged profile.
+The integration target adds no implementation denominator: there are five
+library modules, including the private regex target.
 SwiftPM's default export can contain only a subset of executable modules on the
 supported Xcode backend. The lane rejects missing/duplicate source mappings,
 stale unmapped classifications, impossible counters and changed discovery. An
@@ -57,17 +65,17 @@ Unicode data and executable lookup regions remain separate.
 
 [TestDiscovery.json](../Qualification/TestDiscovery.json) is the exact root,
 parameterized, QA and shared-state discovery contract. Native, safety and WASI
-read that same contract. Native and coverage also run ten Python harness behavior
+read that same contract. Native and coverage also run twelve Python harness behavior
 tests; these check qualification tooling and do not count as Swift library tests.
 The existing required Native check names/settings and all 49 cap probes remain.
-The coverage lane is available locally; this increment does not activate a new
-hosted check or claim a Linux/WASI coverage run.
+The native coverage lane is available locally; both Linux architectures also run
+the explicit `linux-coverage` hosted lane. WASI coverage is not claimed.
 
 ## Linux development lanes
 
 The additive Linux workflow selects the pinned official Swift 6.4.0 Ubuntu 24.04
-multi-architecture image on ARM64 and x86_64 hosted runners. It runs `linux` and
-`linux-safety` with separate runtime preflight, source receipts and exact test,
+multi-architecture image on ARM64 and x86_64 hosted runners. It runs `linux`,
+`linux-safety` and `linux-coverage` with separate runtime preflight, source receipts and exact test,
 consumer, corpus and 49-cap discovery checks. SwiftData/Apple compiler probes
 remain in Native CI. The existing required `Native / native`, `Native / safety`
 and `Native / docs` names and protection settings are preserved. This workflow

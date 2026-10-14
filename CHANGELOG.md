@@ -1,11 +1,10 @@
 # Changelog
 
-## Unreleased
+## 1.2.1 — 2026-10-14
 
 - Preserve ordinary invalidity when best-effort schema diagnostics omit an issue
   that exceeds the byte ceiling. Required work and annotation failures remain
-  terminal. Add 31 behavior and precise failure tests across all five modules,
-  plus reproducible five-module Linux coverage exports on ARM64 and x86_64.
+  terminal. Public signatures and finite default profiles remain unchanged.
 
 - Extend Codable, exact value, streaming, Patch, schema/regex and public workflow
   assertions to 318 Swift Testing functions. Preserve precise errors, complete
@@ -13,12 +12,26 @@
   a bounded native mutation pilot. Report a wholly missing native schema bundle
   as structured metaSchema failure while retaining all resource integrity pins.
 
+- Qualify 318 root functions and 173 parameterized invocations, 20 public workflow
+  functions, complete native/Linux coverage exports and a 26-mutant native pilot.
+  Keep policy exclusions, platform scope and unavailable branch counters explicit.
+- Record the maintainer's performance exception for this patch: the earlier
+  +11.9833% diagnostic comparison remains unresolved; the later loaded-host
+  -1.6871% run is not controlled-performance evidence. Keep the 10% review trigger.
+
+## 1.2.0 — 2026-10-14
+
+- Add qualified ARM64/x86_64 Ubuntu 24.04/glibc support and portable, metered
+  schema-resource SHA-256 without adding a root package dependency.
+
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.
   Check retired work overflow before admission. Load integrity-pinned schema
   resources beside the WASI command and throw structured missing-resource errors.
   Add exact portable qualification with explicit host/safety scope.
+
+## 1.1.1 — 2026-10-13
 
 - Keep object-schema construction and document admission within one cumulative
   budget, including live retention and terminal owned failures/cancellation.
