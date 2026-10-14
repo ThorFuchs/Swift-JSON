@@ -3,15 +3,15 @@
   "target_release": "1.4.0",
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
-  "branch": "codex/1.4-json-cli-query-advanced",
-  "status": "Advanced native behavior milestone; C5 integration and final distribution/platform closure open",
+  "branch": "codex/1.4-json-cli-integration",
+  "status": "Portable C5 implemented/tested; final head/distribution checks pending and provider prerequisites blocked",
   "gates": {
     "C0": "partial",
-    "C1": "partial",
-    "C2": "partial",
-    "C3": "partial",
-    "C4": "partial",
-    "C5": "not_run"
+    "C1": "passed",
+    "C2": "passed",
+    "C3": "passed",
+    "C4": "passed",
+    "C5": "blocked"
   },
   "foundation_functions": 12,
   "foundation_parameter_cases": 4,
@@ -21,22 +21,20 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 291,
+  "root_test_functions": 297,
   "root_parameter_cases": 199,
-  "native_source_manifest_sha256": "aa742411f3d22bc82c681b03944c12772ad52e41b3773269b0d84b9d4e3a2cbc",
+  "native_source_manifest_sha256": "68463696a494417a6509e7330cec0343a9199cb10f806cadfe4ff4d7506c9964",
   "qualified_lanes": [
     "native",
     "safety",
     "docs"
   ],
   "remaining_foundation_requirements": [
-    "clean-source reproduction",
-    "selected mobile SDK consumers",
-    "slow/partial/no-progress sink probes",
-    "query compile exit 3 and full exit precedence",
-    "actual operation-site coverage for all 16 CLI caps",
-    "inherited corpus/oracle compatibility dispositions",
-    "complete query grammar with C3/C4 and auxiliary binding subprocess coverage"
+    "final-head hosted Linux/native checks",
+    "successor clean-source reproduction",
+    "materialized final return bundle",
+    "qualified schema-provider prerequisite",
+    "full WASI CLI host/signal qualification (limited disposition retained)"
   ],
   "history": [
     {
@@ -83,6 +81,14 @@
       "root_test_functions": 266,
       "root_parameter_cases": 199,
       "native_source_manifest_sha256": "33439f5716ac7e33e01e477db4cb018547618fa7b74885867bb2b290ba43d7e0"
+    },
+    {
+      "branch": "codex/1.4-json-cli-query-advanced",
+      "status": "Advanced native behavior milestone; C5 integration and final distribution/platform closure open",
+      "root_test_functions": 291,
+      "root_parameter_cases": 199,
+      "head": "8d00757022a753adc57a359be6bb4fd5307b0e8d",
+      "pr": 26
     }
   ],
   "query_functions": 24,
@@ -94,12 +100,18 @@
   "arithmetic_oracle_sha256": "57b2affc52c872fdbc9e6cb25168bdd8b5999db6d8e5d8a988ff99cbf2c7accb",
   "arithmetic_vectors": 17,
   "arithmetic_vectors_passed": 17,
-  "cli_site_checks": 18,
+  "cli_site_checks": 33,
   "cli_site_metrics": 16,
   "advanced_functions": 25,
   "advanced_vectors": 38,
   "inherited_observed": 168,
   "inherited_evaluated": 154,
   "inherited_passed": 154,
-  "inherited_policy": 14
+  "inherited_policy": 14,
+  "integration_functions": 6,
+  "integration_subprocess_cases": 36,
+  "new_cases_observed": 111,
+  "new_cases_passed": 109,
+  "new_cases_blocked": 2,
+  "release_ready": false
 }

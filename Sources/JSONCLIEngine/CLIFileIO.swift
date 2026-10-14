@@ -6,6 +6,8 @@ import JSONFilterRuntime
 import Darwin
 #elseif canImport(Glibc)
 import Glibc
+#elseif canImport(WASILibc)
+import WASILibc
 #endif
 
 /// POSIX adapters poll and use nonblocking descriptors so cancellation can be observed
@@ -114,17 +116,15 @@ package final class CLIOutput {
         try context.charge(.totalOutputBytes, UInt64(bytes.count))
         if destination != nil { try context.charge(.diskStagingBytes, UInt64(bytes.count)) }
         try context.work(UInt64(bytes.count))
-        var offset = 0
-        while offset < bytes.count {
-            try context.work()
+        try CLISinkTransfer.writeAll(count: bytes.count, context: &context) { range, context in
             var state = pollfd(fd: fd, events: Int16(POLLOUT), revents: 0)
             let ready = unsafe poll(&state, 1, 100)
-            if ready < 0 { if errno == EINTR { continue }; throw CLIError(.io, "pollOutput") }
-            if ready == 0 { continue }
-            let count = bytes.withUnsafeBytes { unsafe writeDescriptor(fd, $0.baseAddress!.advanced(by: offset), min(16384, bytes.count - offset)) }
-            if count < 0 { if errno == EINTR || errno == EAGAIN { continue }; throw CLIError(.io, "writeOutput") }
-            guard count > 0 else { throw CLIError(.io, "noProgress") }
-            offset += count
+            if ready < 0 { if errno == EINTR { return nil }; throw CLIError(.io, "pollOutput") }
+            if ready == 0 { return nil }
+            try context.checkpoint()
+            let count = bytes.withUnsafeBytes { unsafe writeDescriptor(fd, $0.baseAddress!.advanced(by: range.lowerBound), range.count) }
+            if count < 0 { if errno == EINTR || errno == EAGAIN { return nil }; throw CLIError(.io, "writeOutput") }
+            return count
         }
     }
     package func resultAccepted(context: inout CLIJobContext) {
@@ -148,7 +148,9 @@ package final class CLIOutput {
 private func writeDescriptor(_ fd: Int32, _ bytes: UnsafeRawPointer, _ count: Int) -> Int {
     #if canImport(Darwin)
     unsafe Darwin.write(fd, bytes, count)
-    #else
+    #elseif canImport(Glibc)
     unsafe Glibc.write(fd, bytes, count)
+    #elseif canImport(WASILibc)
+    unsafe WASILibc.write(fd, bytes, count)
     #endif
 }

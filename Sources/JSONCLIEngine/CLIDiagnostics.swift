@@ -5,8 +5,10 @@ import JSONSchema
 import JSONFilterRuntime
 #if canImport(Darwin)
 import Darwin
-#else
+#elseif canImport(Glibc)
 import Glibc
+#elseif canImport(WASILibc)
+import WASILibc
 #endif
 
 /// Failure diagnostics use prepaid, finite work and ownership. A terminal native
@@ -115,8 +117,10 @@ package struct CLIDiagnostics {
             let count = bytes.withUnsafeBytes {
                 #if canImport(Darwin)
                 unsafe Darwin.write(STDERR_FILENO, $0.baseAddress!.advanced(by: offset), bytes.count - offset)
-                #else
+                #elseif canImport(Glibc)
                 unsafe Glibc.write(STDERR_FILENO, $0.baseAddress!.advanced(by: offset), bytes.count - offset)
+                #elseif canImport(WASILibc)
+                unsafe WASILibc.write(STDERR_FILENO, $0.baseAddress!.advanced(by: offset), bytes.count - offset)
                 #endif
             }
             guard count > 0 else { break }; offset += count
