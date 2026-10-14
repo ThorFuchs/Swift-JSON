@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "root_functions": {
+    "JSONTests": 127,
+    "JSONSchemaTests": 51,
+    "JSONRegexRuntimeTests": 12,
+    "JSONStreamingTests": 14,
+    "JSONPatchTests": 11
+  },
+  "parameterized_invocations": 173,
+  "qa_functions": {
+    "JSONTests": 34,
+    "JSONSchemaTests": 3,
+    "JSONStreamingTests": 3,
+    "JSONPatchTests": 2
+  },
+  "shared_state_functions": {"JSONTests": 4, "JSONSchemaTests": 1, "JSONRegexRuntimeTests": 1},
+  "coverage_unmapped": {
+    "Sources/JSON/Pointer/JSONLocationComponent.swift": "declaration-only enum",
+    "Sources/JSONSchema/Output/JSONValidationOutput.swift": "declaration-only enum",
+    "Sources/JSONSchema/Formats/JSONIDNAData.swift": "generated data, no executable mapping",
+    "Sources/JSONStreaming/JSONFraming.swift": "declaration-only enum",
+    "Sources/JSONStreaming/JSONTopLevelArrayEvent.swift": "declaration-only enum",
+    "Sources/JSONPatch/JSONPatchResult.swift": "declaration-only enum"
+  },
+  "coverage_generated": [
+    "Sources/JSONSchema/Formats/JSONIDNAData.swift",
+    "Sources/JSONRegexRuntime/RegexUnicodeTables.swift"
+  ]
+}

@@ -2,8 +2,8 @@
 
 Build on the audited `1.2.0` snapshot without changing its public API, products,
 finite profiles, dialect or supported-platform scope. The release focus is tests,
-qualification harnesses and accurate evidence. This document proposes work; the
-new suites are not implemented or qualified yet. See [audit](Audit.md),
+qualification harnesses and accurate evidence. The [first wave](Wave1.md) implements
+T00 and a focused T01 subset; the remaining work below is still proposed. See [audit](Audit.md),
 [measured baseline](CoverageBaseline.json) and [acceptance matrix](AcceptanceMatrix.json).
 
 ## Definition of completion

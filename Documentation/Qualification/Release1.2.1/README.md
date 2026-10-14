@@ -7,6 +7,7 @@ This proposed patch-release work extends tests and qualification on the publishe
 - [Native five-module coverage baseline](CoverageBaseline.json)
 - [Eight-work-package test expansion plan](Plan.md)
 - [Machine-readable acceptance groups](AcceptanceMatrix.json)
+- [Implemented first wave and remaining scope](Wave1.md)
 
 Source baseline: `25fb04f747e583209b4c4511abf39e11ef5b4f80` (`1.2.0`).
 Native baseline: 192 root functions, 173 parameterized invocations; 96.06% authored

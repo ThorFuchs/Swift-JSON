@@ -4,6 +4,7 @@
 import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
+from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent'
@@ -19,6 +20,11 @@ def commands(lane, output):
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
             ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')],
+        ]
+    if lane == 'coverage':
+        return [
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+            ['python3', '-B', 'Scripts/coverage.py', '--output', str(output / 'export')],
         ]
     if lane == 'linux':
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
@@ -41,6 +47,7 @@ def commands(lane, output):
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
             ['swift', 'package', 'dump-package'],
             ['swift', 'package', 'show-dependencies', '--format', 'json'],
             ['swift', 'build', '-c', 'release'],
@@ -94,10 +101,10 @@ def check_result(command, code, log):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:2] == ['swift', 'test']:
-        expected = [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 4] if 'thread' in command else [11, 12, 14, 51, 104]
+        expected = [13] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(DISCOVERY['shared_state_functions'].values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
-            passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
+            passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == PARAMETER_INVOCATIONS
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
             matrix = json.loads((ROOT / 'Documentation/Qualification/LimitsMatrix.json').read_text())
@@ -110,11 +117,13 @@ def check_result(command, code, log):
         passed = json.loads(log)['dependencies'] == []
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
         passed = passed and all(line in log.splitlines() for line in ['PUBLIC_BEHAVIOR passed fixtures=8', 'STREAM_CANCELLATION passed', 'DISK_PERSISTENCE passed containers=3 rows=8', 'MOBILE_QUALIFICATION passed cases=3'])
+    if 'Scripts/test_qualification_harness.py' in command:
+        passed = passed and 'HARNESS_TESTS passed cases=10' in log.splitlines()
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'coverage', 'linux', 'linux-safety', 'wasm'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -165,9 +174,20 @@ def main():
     if receipt['status'] == 'passed' and args.lane == 'wasm':
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
-            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':104,'JSONSchemaTests':51,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11}:
+            if wasi['status'] != 'passed' or wasi['root_counts'] != ROOT_COUNTS:
                 raise ValueError('Missing WASI qualification boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
+        except (OSError,KeyError,ValueError,TypeError) as error:
+            receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
+    if receipt['status'] == 'passed' and args.lane == 'coverage':
+        try:
+            coverage = json.loads((output / 'export/coverage.json').read_text())
+            if (coverage['status'] != 'passed' or coverage['root_counts'] != ROOT_COUNTS
+                    or coverage['parameterized_invocations'] != PARAMETER_INVOCATIONS
+                    or coverage['omitted_binary_probe']['status'] != 'rejected'
+                    or set(coverage['modules']) != {name.removesuffix('Tests') for name in ROOT_COUNTS}):
+                raise ValueError('Missing complete native coverage boundary')
+            receipt['materialized_coverage'] = {'path':'export/coverage.json', 'sha256':hashlib.sha256((output / 'export/coverage.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
             receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
     receipt['source_inputs_unchanged'] = snapshot() == inputs

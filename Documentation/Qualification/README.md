@@ -89,3 +89,10 @@ The WASI increment adds three boundary/accounting functions: 192 root functions
 invocations and all 49 public metric outcomes. Native 64-bit overflow/rendezvous
 cases remain; wasm32 uses UInt64 ledgers and cooperative checkpoint cancellation.
 Run the [WASI lane](../Architecture/WebAssembly.md) for its explicit per-host scope.
+
+The first [1.2.1 test wave](Release1.2.1/Wave1.md) adds 23 public Codable behavior
+functions: exactly 215 root functions (JSON 127, schema 51, regex 12, streaming 14,
+Patch 11), retaining all 173 parameterized invocations and all 49 cap outcomes.
+The focused QA lane now expects 34/3/3/2 functions in JSON/schema/streaming/Patch.
+Historical counts above stay tied to their original receipts. The exact current
+[discovery contract](TestDiscovery.json) is shared by native/safety/WASI harnesses.

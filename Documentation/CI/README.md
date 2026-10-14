@@ -44,6 +44,25 @@ streaming regression is documented in ../Performance/README.md.
 Run locally with `python3 Scripts/ci.py --lane native`, `--lane safety` or `--lane docs`.
 The first hosted result must be inspected before marking CI qualified.
 
+## Coverage and test discovery
+
+`python3 Scripts/ci.py --lane coverage` runs the full instrumented native Swift
+Testing suite and exports all five test executables against its merged profile.
+SwiftPM's default export can contain only a subset of executable modules on the
+supported Xcode backend. The lane rejects missing/duplicate source mappings,
+stale unmapped classifications, impossible counters and changed discovery. An
+actual LLVM export omitting the schema executable must be rejected. Branch/MC/DC
+counters are reported as unavailable when the compiler emits none; generated
+Unicode data and executable lookup regions remain separate.
+
+[TestDiscovery.json](../Qualification/TestDiscovery.json) is the exact root,
+parameterized, QA and shared-state discovery contract. Native, safety and WASI
+read that same contract. Native and coverage also run ten Python harness behavior
+tests; these check qualification tooling and do not count as Swift library tests.
+The existing required Native check names/settings and all 49 cap probes remain.
+The coverage lane is available locally; this increment does not activate a new
+hosted check or claim a Linux/WASI coverage run.
+
 ## Linux development lanes
 
 The additive Linux workflow selects the pinned official Swift 6.4.0 Ubuntu 24.04
@@ -63,7 +82,7 @@ distribution, architecture or libc claims.
 
 `python3 Scripts/ci.py --lane wasm` requires the matching Swift.org 6.4.0 compiler,
 SDK and WasmKit plus Node. It records cross-build and runtime outcomes separately.
-It preserves all 192/173 root discoveries, independent corpus policies and 49 cap
+It preserves the exact root discoveries in TestDiscovery.json, independent corpus policies and 49 cap
 outcomes; both hosts also execute the frozen public consumer. The
 [WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
 This local lane neither activates hosted CI nor substitutes for Apple/Linux gates.
