@@ -1,0 +1,110 @@
+# 1.2.1 portability and completion review
+
+This increment preserves the published 1.2.0 implementation and both earlier
+test waves. It adds one Swift Testing function with 566 fixed completion cases:
+eleven root spellings, both framing modes, three trailing-whitespace forms and
+every two-chunk byte split, including empty chunks and a split within UTF-8.
+The fixed syntax oracles assert the complete event sequence, exactly one selected
+completion kind, cumulative record count and repeated terminal nil.
+
+Current discovery is 245 root functions and 173 parameterized invocations,
+72 QA functions and 19 shared-state functions. The 566 inner iterations are
+reported separately; they are not 566 discovered Swift Testing functions.
+
+## Scoped platform lanes
+
+`Scripts/ci.py --lane wasm-qa` uses the existing pinned Swift 6.4.0 WASI SDK,
+Node 26.5.0 and WasmKit 0.3.1. Node executes complete debug/release roots.
+Both hosts execute the exact affected QA functions in both configurations.
+Strict memory safety compilation remains required. The scoped lane does not
+claim fresh independent-suite, cap-consumer, resource-deployment or performance
+qualification. The existing full `wasm` lane retains those gates unchanged.
+
+`Scripts/ci.py --lane linux-qa` requires actual Swift 6.4+ Ubuntu 24.04/glibc.
+It executes complete debug/release roots, affected ASan and shared-state TSan
+cases plus strict memory safety. It starts Swift Testing only, preserving the
+documented upstream empty-XCTest-runner leak policy without suppressions.
+The full Linux lanes and their independent inputs remain unchanged.
+
+Actual results and any local staging blockers are recorded separately; a
+prepared lane or a Mac-host Linux preflight rejection is not Linux execution.
+The root dependency graph, four products, private regex target, Apple baselines,
+finite profiles, notices and fixture policies are unchanged.
+
+The first actual WASI build rejected an untyped large integer oracle inferred
+as 32-bit Int. Its explicit Int64 replacement preserves the same exact expected
+value. The next run exposed a pinned Swift Testing timer issue: thirteen async
+cases with a one-minute trait timed out together before other async work
+progressed. A two-case SDK-only package, with no JSON imports, reproduced this
+on both hosts: an immediately returning timed body failed after 60 seconds;
+the untimed body passed immediately.
+
+`StreamingTestPolicy.deadline` therefore preserves the one-minute Swift Testing
+trait on native/Linux, and supplies an empty tag trait on WASI. No case or
+assertion is disabled. WASI streaming root and affected-QA runners instead have
+an interruptible 120-second host process-group watchdog, recorded per command.
+The host enforces a real termination deadline even if guest cooperative tasks
+stop yielding; it does not grant library operations an elapsed-time budget.
+Keep the SDK-only failing/passing receipts and revisit this adjustment with a
+new Swift Testing/SDK pin.
+
+## Completion coverage disposition
+
+The zero-count alternative is the final `.recordCompleted(summary())` expression
+in `Sources/JSONStreaming/JSONEventSequence.swift`, line 82. Source inspection
+establishes why that alternative is unreachable for successful current inputs:
+
+1. `JSONTokenMachine.hasCompleteRoot` is `rootComplete && lexer.idle`.
+   Every transition setting `rootComplete` returns an event to the driver.
+2. At the next loop entry, whitespace-separated framing with a complete root
+   takes the earlier framing branch. It certifies a whitespace boundary or EOF
+   and returns record completion there.
+3. If the final EOF branch is entered with an incomplete root, `finish()` either
+   throws or returns the EOF-finalized numeric scalar. The scalar is returned;
+   the next invocation takes the earlier framing branch. The lexer can return
+   nil at EOF only in its idle state; token-machine finish then requires an
+   already complete root, which would have been handled by step 2.
+4. Byte-source pulls do not modify token-machine state. After a record reset,
+   `betweenRecords` permits terminal nil, not a second completion.
+
+Thus the successful final completion expression serves single-document framing.
+The new public matrix covers numeric EOF finalization, all scalar root kinds,
+empty/nested containers and closing-delimiter transitions under both modes.
+The existing held-EOF tests separately establish causal completion/backpressure.
+
+The initial follow-up export reported the alternative as covered with an
+Int64.max derived counter, while the preceding condition and true branch differed
+by one execution. It therefore did not establish execution of the alternative.
+Earlier exports also contain saturated async/throwing segment counts. The
+installed compiler accepts the profiling-only LLVM atomic-counter option; a
+minimal emitted-IR probe confirms `atomicrmw` increments. Coverage now uses this
+option for its concurrent tests and rejects saturated library segment counts.
+Ordinary builds, package settings and safety/behavior assertions are unchanged.
+
+Disposition: retain the defensive expression and its unadjusted denominator;
+record the structural explanation rather than fabricate a private state or
+remove code to improve percentages. This closes semantic investigation of this
+region, not a claim of 100% region/branch or exhaustive race coverage. Revisit
+the invariant if framing or token-machine transitions change.
+
+## Actual closure
+
+All four Linux jobs passed at the runtime-tested head, with full debug/release
+roots, full ASan, 19 TSan functions, strict memory compilation, all 49 cap
+probes, rooted consumers, independent policies and clean-source reproduction.
+Both WASI configurations passed the declared per-host scopes; native QA passed
+in debug/release/ASan and all 19 shared-state TSan functions passed.
+
+The corrected atomic export reports **97.46% authored lines / 93.04% regions**
+(6753/6929, 7156/7691). Streaming is 226/232 lines and 253/269 regions.
+The reviewed alternative has counter zero; no denominator adjustment was made.
+The earlier apparent gain was a saturated counter artifact. Lower corrected
+percentages do not represent removed assertions; all discoveries remain intact.
+The proposed per-module review targets and broader acceptance plan remain open.
+
+[Machine-readable outcomes](PortabilityOutcomes.json) identify tested heads,
+receipt hashes, actual scopes, retained failures and outstanding work. The later
+coverage-only commit changes measurement tooling and its notes; runtime source,
+tests, manifests, fixtures and CI workflows are byte-identical to the Linux/WASI
+qualified head. Closing documentation is a separate successor with those
+executable inputs unchanged. No tag, release or sibling implementation is changed.

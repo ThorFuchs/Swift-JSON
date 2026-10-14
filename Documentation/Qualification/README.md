@@ -89,3 +89,28 @@ The WASI increment adds three boundary/accounting functions: 192 root functions
 invocations and all 49 public metric outcomes. Native 64-bit overflow/rendezvous
 cases remain; wasm32 uses UInt64 ledgers and cooperative checkpoint cancellation.
 Run the [WASI lane](../Architecture/WebAssembly.md) for its explicit per-host scope.
+
+The first [1.2.1 test wave](Release1.2.1/Wave1.md) adds 23 public Codable behavior
+functions: exactly 215 root functions (JSON 127, schema 51, regex 12, streaming 14,
+Patch 11), retaining all 173 parameterized invocations and all 49 cap outcomes.
+The focused QA lane now expects 34/3/3/2 functions in JSON/schema/streaming/Patch.
+Historical counts above stay tied to their original receipts. The exact current
+[discovery contract](TestDiscovery.json) is shared by native/safety/WASI harnesses.
+
+The [second 1.2.1 wave](Release1.2.1/Wave2.md) adds 29 behavior functions:
+244 root functions (JSON 144, schema 51, regex 12, streaming 26, Patch 11), with
+173 parameterized invocations retained. QA expects 51/3/15/2 functions. Safety's
+targeted TSan subset adds the 12 controlled streaming functions to the existing
+six cases, with exact 4/1/1/12 module counts. Historical receipts remain unchanged.
+
+The 1.2.1 [portability follow-up](Release1.2.1/Portability.md) has 245/173 roots,
+72 QA and 19 shared-state functions. ARM64/x86_64 Linux full lanes and scoped
+WASI debug/release QA passed. Atomic native profiling reports 97.46% authored
+lines / 93.04% regions and rejects saturated LLVM counters; earlier percentages
+remain historical measurements, not directly comparable corrected coverage.
+
+The [public workflow/mutation acceptance wave](Release1.2.1/AcceptanceWave.md)
+adds a sixth test-only target while preserving five implementation modules and four
+products. Native, both Linux architectures, scoped WASI and clean source extraction
+are qualified with exact discoveries and materialized evidence. Mutation survivors
+led to real final-chunk cancellation and failed-branch annotation assertions.

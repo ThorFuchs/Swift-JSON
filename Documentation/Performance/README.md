@@ -29,3 +29,9 @@ Logical retained bytes differ from process RSS. Darwin ru_maxrss is cumulative;
 allocator end observations are not isolated workload allocations. These results
 make no cross-machine throughput or OS-enforced memory guarantee. Projection and
 JSON text-sequence framing remain deferred.
+
+The proposed 1.2.1 diagnostic repair has a separate
+[matched comparison and disposition](../Qualification/Release1.2.1/ReviewReadiness.md).
+The earlier +11.9833% median remains unresolved; a subsequently authorized
+loaded-host run measured −1.6871%, with competing activity recorded. It establishes
+no intrinsic improvement and does not replace qualifying quiet-host evidence.

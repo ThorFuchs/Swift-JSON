@@ -1,0 +1,513 @@
+{
+  "schema_version": 1,
+  "status": "acceptance_and_mutation_qualified_diagnostic_calibration_still_blocked",
+  "baseline_head": "c11d96ff8197362537e8353e1ad3199d4f95df3f",
+  "qualified_code_head": "e9aa82b759b17c518fea8c3d98c05c10e1bc57c7",
+  "new_test_target": "JSONIntegrationTests",
+  "new_functions": 20,
+  "root_functions": 318,
+  "parameterized_invocations": 173,
+  "qa_functions": 145,
+  "tsan_functions": 32,
+  "python_harness_tests": 12,
+  "public_products": [
+    "JSON",
+    "JSONSchema",
+    "JSONStreaming",
+    "JSONPatch"
+  ],
+  "private_implementation": "JSONRegexRuntime",
+  "root_dependencies": [],
+  "replay": {
+    "seed": "0x53574a313231",
+    "valid_models": 128,
+    "invalid_leading_zero_mutations": 128,
+    "minimized_cases": 9,
+    "registry": "AcceptanceReplays.json",
+    "registry_sha256": "599c094ca6fa18be18b6b42f7a522a837a0d38b980bebe068692d30ef4690413"
+  },
+  "mutation": {
+    "selected": 26,
+    "killed": 26,
+    "survived": 0,
+    "equivalent": 0,
+    "unbuildable": 0,
+    "timed_out": 0,
+    "execution_error": 0,
+    "initial_selected": 24,
+    "initial_killed": 22,
+    "initial_survived": [
+      "M17",
+      "M20"
+    ],
+    "specification": "MutationPilot.json",
+    "specification_sha256": "bdb3dc1df8d8dc2820a60290192aa0bf2419f32be7b25e14268aea6998d56c57",
+    "policy": "Behavioral pilot, not exhaustive correctness or decision coverage"
+  },
+  "defect": {
+    "source": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+    "before": "Missing whole native resource bundle traps in SwiftPM generated Bundle.module",
+    "after": "Finite installed-location lookup throws structured metaSchema failure; integrity pins unchanged"
+  },
+  "native": {
+    "commands": 17,
+    "preflight": {
+      "schema_version": 1,
+      "time_utc": "2026-10-14T19:09:13.944930+00:00",
+      "os": "Darwin",
+      "architecture": "arm64",
+      "status": "passed",
+      "commands": [
+        {
+          "command": [
+            "sw_vers",
+            "-productVersion"
+          ],
+          "exit_code": 0,
+          "stdout": "27.0",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "xcrun",
+            "swift",
+            "--version"
+          ],
+          "exit_code": 0,
+          "stdout": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+          "stderr": "swift-driver version: 1.168.6"
+        },
+        {
+          "command": [
+            "xcrun",
+            "--sdk",
+            "macosx",
+            "--show-sdk-version"
+          ],
+          "exit_code": 0,
+          "stdout": "27.2",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "xcode-select",
+            "-p"
+          ],
+          "exit_code": 0,
+          "stdout": "/Applications/Xcode-beta.app/Contents/Developer",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "xcodebuild",
+            "-version"
+          ],
+          "exit_code": 0,
+          "stdout": "Xcode 27.2\nBuild version 27B5019j",
+          "stderr": ""
+        }
+      ],
+      "errors": [],
+      "swift_language_mode_required": "6",
+      "manifest_compiled": false,
+      "macos": "27.0",
+      "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)",
+      "sdk": "27.2"
+    },
+    "safety_commands": 3,
+    "docs_commands": 1,
+    "independent": {
+      "json_test_suite": {
+        "observed": 318,
+        "evaluated_pass": 287,
+        "policy_exclusions": 31
+      },
+      "schema_suite": {
+        "observed": 2337,
+        "evaluated_pass": 2300,
+        "policy_exclusions": 37
+      },
+      "malformed_replays": 4396
+    },
+    "cap_probes": 49,
+    "rooted_consumer": {
+      "cases": 20,
+      "valid": 8,
+      "invalid": 12,
+      "operational_refusals": 2
+    },
+    "disk_consumer": {
+      "containers": 3,
+      "rows": 8
+    }
+  },
+  "remote": {
+    "native_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38621245405",
+    "native_source": "9210f2fc717da6744149b78d259cd11598eb2360",
+    "native_jobs": 3,
+    "linux_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38623417029",
+    "linux_source": "e9aa82b759b17c518fea8c3d98c05c10e1bc57c7",
+    "linux_jobs": 6,
+    "initial_linux_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38621239738",
+    "receipt_identity_note": "Linux receipt git_commit is null; source identity verified through GitHub head SHA and every source input digest"
+  },
+  "coverage": {
+    "native": {
+      "JSON": {
+        "mapped_files": 50,
+        "authored": {
+          "lines": {
+            "count": 3443,
+            "covered": 3381,
+            "percent": 98.19924484461225
+          },
+          "regions": {
+            "count": 3427,
+            "covered": 3316,
+            "percent": 96.76101546542165
+          },
+          "functions": {
+            "count": 595,
+            "covered": 589,
+            "percent": 98.99159663865547
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONSchema": {
+        "mapped_files": 32,
+        "authored": {
+          "lines": {
+            "count": 2437,
+            "covered": 2408,
+            "percent": 98.81001231021747
+          },
+          "regions": {
+            "count": 3103,
+            "covered": 2966,
+            "percent": 95.5849178214631
+          },
+          "functions": {
+            "count": 385,
+            "covered": 376,
+            "percent": 97.66233766233766
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONRegexRuntime": {
+        "mapped_files": 6,
+        "authored": {
+          "lines": {
+            "count": 659,
+            "covered": 650,
+            "percent": 98.63429438543247
+          },
+          "regions": {
+            "count": 695,
+            "covered": 668,
+            "percent": 96.11510791366906
+          },
+          "functions": {
+            "count": 88,
+            "covered": 86,
+            "percent": 97.72727272727273
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 30,
+            "covered": 30,
+            "percent": 100.0
+          },
+          "regions": {
+            "count": 44,
+            "covered": 44,
+            "percent": 100.0
+          },
+          "functions": {
+            "count": 3,
+            "covered": 3,
+            "percent": 100.0
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONStreaming": {
+        "mapped_files": 10,
+        "authored": {
+          "lines": {
+            "count": 232,
+            "covered": 229,
+            "percent": 98.70689655172414
+          },
+          "regions": {
+            "count": 269,
+            "covered": 259,
+            "percent": 96.28252788104089
+          },
+          "functions": {
+            "count": 60,
+            "covered": 59,
+            "percent": 98.33333333333333
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONPatch": {
+        "mapped_files": 4,
+        "authored": {
+          "lines": {
+            "count": 185,
+            "covered": 184,
+            "percent": 99.45945945945945
+          },
+          "regions": {
+            "count": 212,
+            "covered": 210,
+            "percent": 99.05660377358491
+          },
+          "functions": {
+            "count": 16,
+            "covered": 16,
+            "percent": 100.0
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      }
+    },
+    "all_five_denominators": true,
+    "six_root_binaries": true,
+    "omission": "Schema and integration runners/DSOs omitted together; actual incomplete-schema export rejected",
+    "branch_counters_available": false,
+    "mcdc_counters_available": false,
+    "platform_denominators": "Native Apple lookup branches differ from Linux; both Linux architectures agree"
+  },
+  "wasi": {
+    "commands": 44,
+    "node_root_functions_per_configuration": 318,
+    "parameterized_invocations_per_configuration": 173,
+    "node_and_wasmkit_qa_per_configuration": 145,
+    "scope": "Node full roots; Node and WasmKit exact affected QA; strict-memory-safety. No separate WASI corpora refresh or sanitizer claim"
+  },
+  "clean_code_archive": {
+    "sha256": "33117803bf485ecb8cbe62a75bebe74ad99f76d0f34f9cc34c31f6a8d5281e26",
+    "bytes": 1251634,
+    "entries": 861,
+    "byte_equal_rebuild": true,
+    "build_exit": 0,
+    "integration_test_exit": 0,
+    "integration_functions": 20,
+    "distribution_exit": 0
+  },
+  "receipts": {
+    "native": {
+      "path": "Artifacts/AcceptanceWave/Accepted-native/receipt.json",
+      "sha256": "ac280dd0fcac9976d7714b633848d8b003e92f58481decbac3a312fc66df54dd"
+    },
+    "safety": {
+      "path": "Artifacts/AcceptanceWave/Final-safety/receipt.json",
+      "sha256": "a8982430b26a3fb14596fb4db64b4bb8426b60870444fa9ed859cc1b080f9127"
+    },
+    "docs": {
+      "path": "Artifacts/AcceptanceWave/Final-docs/receipt.json",
+      "sha256": "229a3d34247a6ba64b9b684f82cb53e00d666245a68b978871a20b54db4cc06d"
+    },
+    "coverage": {
+      "path": "Artifacts/AcceptanceWave/Accepted-coverage/receipt.json",
+      "sha256": "26540ecbe3a6db0267033979b3a9e9a79daaf1e30a49fbb54db937444bd6e4d6"
+    },
+    "wasi": {
+      "path": "Artifacts/AcceptanceWave/Accepted-wasi/receipt.json",
+      "sha256": "11d47b389c2cbefd754fcc31412e6dbff8d09af3fd73a3101847bc987af8ab8e"
+    },
+    "clean_code_rebuild": {
+      "path": "Artifacts/AcceptanceWave/CleanCodeRebuild/receipt.json",
+      "sha256": "f7ef0239180cceb62659ca1b5036165c8c1085567ea00ea7e5c9e6770da2e600"
+    },
+    "initial_mutation": {
+      "path": "Artifacts/AcceptanceWave/MutationInitial/mutation.json",
+      "sha256": "dd9350be29584e0ee22179876ec1eab525529353c716d398b95cd7e709afc5fa"
+    },
+    "repeated_mutation": {
+      "path": "Artifacts/AcceptanceWave/MutationFinal/mutation.json",
+      "sha256": "beb325d1189d7864d5c080dbf7df120eb14ec46bc16e00e74dbe5fb7b1aab2a3"
+    },
+    "regex_mutation": {
+      "path": "Artifacts/AcceptanceWave/RegexMutation/mutation.json",
+      "sha256": "ca16fb2fe2485a3aa75b270eb0675a38acc3c7dd3d3f27840f7fc72b2f680742"
+    }
+  },
+  "history_preserved": true,
+  "source_changes_since_safety": "Only harness/spec/documentation changed after 617c057; Sources, Package.swift and behavior tests are identical",
+  "remaining": [
+    "Quiet-host diagnostic recalibration remains blocked; existing +11.983% long-run median exceeds unchanged 10% review trigger",
+    "Broader matrix rows retain their specific existing scope/dispositions; this closes T05/T06, not a claim of exhaustive tests",
+    "Physical iPad deferred; WASI sanitizers unavailable under existing policy"
+  ],
+  "no_merge_tag_release": true,
+  "sibling_1_3_untouched": true
+}

@@ -1,0 +1,941 @@
+{
+  "schema_version": 1,
+  "status": "core_public_paths_qualified_quiet_diagnostic_calibration_blocked_broader_plan_open",
+  "baseline_head": "288dc626d7a44240ffca2fa4e12ea4ce68662c66",
+  "test_head": "9184481e30e4f7faf262f335f775f8732c634040",
+  "commits": [
+    "df3e382526d799963806ef9c73ecbb237981e9bc",
+    "2b4ab659050b7d20917db0de1bf7d29bb1d6dfb4",
+    "9184481e30e4f7faf262f335f775f8732c634040"
+  ],
+  "new_functions": {
+    "JSONTests": 21,
+    "JSONPatchTests": 1
+  },
+  "discovery": {
+    "schema_version": 1,
+    "root_functions": {
+      "JSONTests": 175,
+      "JSONSchemaTests": 61,
+      "JSONRegexRuntimeTests": 16,
+      "JSONStreamingTests": 30,
+      "JSONPatchTests": 16
+    },
+    "parameterized_invocations": 173,
+    "qa_functions": {
+      "JSONTests": 82,
+      "JSONSchemaTests": 13,
+      "JSONStreamingTests": 19,
+      "JSONPatchTests": 7,
+      "JSONRegexRuntimeTests": 4
+    },
+    "shared_state_functions": {
+      "JSONTests": 4,
+      "JSONSchemaTests": 1,
+      "JSONRegexRuntimeTests": 1,
+      "JSONStreamingTests": 16
+    },
+    "coverage_unmapped": {
+      "Sources/JSON/Pointer/JSONLocationComponent.swift": "declaration-only enum",
+      "Sources/JSONSchema/Output/JSONValidationOutput.swift": "declaration-only enum",
+      "Sources/JSONSchema/Formats/JSONIDNAData.swift": "generated data, no executable mapping",
+      "Sources/JSONStreaming/JSONFraming.swift": "declaration-only enum",
+      "Sources/JSONStreaming/JSONTopLevelArrayEvent.swift": "declaration-only enum",
+      "Sources/JSONPatch/JSONPatchResult.swift": "declaration-only enum"
+    },
+    "coverage_generated": [
+      "Sources/JSONSchema/Formats/JSONIDNAData.swift",
+      "Sources/JSONRegexRuntime/RegexUnicodeTables.swift"
+    ]
+  },
+  "coverage": {
+    "JSON": {
+      "lines": {
+        "count": 3443,
+        "covered": 3381,
+        "percent": 98.19924484461225
+      },
+      "regions": {
+        "count": 3427,
+        "covered": 3316,
+        "percent": 96.76101546542165
+      },
+      "functions": {
+        "count": 595,
+        "covered": 589,
+        "percent": 98.99159663865547
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    },
+    "JSONSchema": {
+      "lines": {
+        "count": 2417,
+        "covered": 2389,
+        "percent": 98.84153909805543
+      },
+      "regions": {
+        "count": 3091,
+        "covered": 2954,
+        "percent": 95.56777741831122
+      },
+      "functions": {
+        "count": 384,
+        "covered": 375,
+        "percent": 97.65625
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    },
+    "JSONRegexRuntime": {
+      "lines": {
+        "count": 659,
+        "covered": 650,
+        "percent": 98.63429438543247
+      },
+      "regions": {
+        "count": 695,
+        "covered": 668,
+        "percent": 96.11510791366906
+      },
+      "functions": {
+        "count": 88,
+        "covered": 86,
+        "percent": 97.72727272727273
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    },
+    "JSONStreaming": {
+      "lines": {
+        "count": 232,
+        "covered": 228,
+        "percent": 98.27586206896552
+      },
+      "regions": {
+        "count": 269,
+        "covered": 256,
+        "percent": 95.16728624535315
+      },
+      "functions": {
+        "count": 60,
+        "covered": 58,
+        "percent": 96.66666666666667
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    },
+    "JSONPatch": {
+      "lines": {
+        "count": 185,
+        "covered": 184,
+        "percent": 99.45945945945945
+      },
+      "regions": {
+        "count": 212,
+        "covered": 210,
+        "percent": 99.05660377358491
+      },
+      "functions": {
+        "count": 16,
+        "covered": 16,
+        "percent": 100.0
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    }
+  },
+  "native_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38572760920",
+  "linux_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38572755403",
+  "wasi_commands": 38,
+  "wasi_scope": {
+    "Node": "full roots debug/release 298 functions, 173 parameterized invocations; QA 125 each configuration",
+    "WasmKit": "QA 125 each configuration; no full independent/cap/consumer refresh; no sanitizer claim"
+  },
+  "receipts": [
+    {
+      "receipt": "NativeClosure/native-safety/ci/safety/receipt.json",
+      "sha256": "0fc375de64c602eeaad2526f69b3241e9b530d248a081bdad1bced72b8222bd6",
+      "lane": "safety",
+      "status": "passed",
+      "run_id": 38572760920,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": "9184481e30e4f7faf262f335f775f8732c634040",
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "NativeClosure/native-safety/ci/safety/command-00.log",
+          "sha256": "f5270941d7a738f1621cf4f629651b7e58b652a625d86d1cd6b1188fc8e3adf4",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "NativeClosure/native-safety/ci/safety/command-01.log",
+          "sha256": "3ab955904dad8d3626c2377aca7942fb57dac412b9a3bbe8647c431693402748",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            4,
+            16,
+            1,
+            1
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-safety/ci/safety/command-02.log",
+          "sha256": "55f9f31ef3525e25388f783952c30b50668a03c5afc5fc15a4d9874243c5f3a1",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "NativeClosure/native-docs/ci/docs/receipt.json",
+      "sha256": "2d9ec374cb6c775efbe97b8de4ed1c483c78685291af98543813f4d83b35f16f",
+      "lane": "docs",
+      "status": "passed",
+      "run_id": 38572760920,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": "9184481e30e4f7faf262f335f775f8732c634040",
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "NativeClosure/native-docs/ci/docs/command-00.log",
+          "sha256": "337649f4007cf99c7e5c0a0d5717d78c4bc09e5648f74a9c7de431a6bc9984f0",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "NativeClosure/native-native/ci/native/receipt.json",
+      "sha256": "4f8f60d0e8ae7284517157aafaf640b1803bdddcef653a443db7184ab4b71e47",
+      "lane": "native",
+      "status": "passed",
+      "run_id": 38572760920,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": "9184481e30e4f7faf262f335f775f8732c634040",
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "NativeClosure/native-native/ci/native/command-00.log",
+          "sha256": "251f744310f08a1ab78099cd98b604effb6aceb5fafc473c4b6533fa93cc5819",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-01.log",
+          "sha256": "9e58bd4efc46eb0dd551d9b374db5c6cb8c14cc88ed7bfa24478fbfe9efa4da6",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-02.log",
+          "sha256": "b72c0f1f6043e4de041fec96a5e9f780656e41827002ed9a1718e349c992492c",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-03.log",
+          "sha256": "e930f0d635e4616ee257bdcd0139d1f0c2f06080ea7c5765a90c247c92bf9794",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-04.log",
+          "sha256": "f2f7bff67651eed40b52dca0a00d1d7bac395c6f7dbf6a0e69dd8f36ee5ddbfe",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-05.log",
+          "sha256": "b0ffd27ae64bc25cd47715dc4619ce1922255918875f4a2236032520fb02088f",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-06.log",
+          "sha256": "5ef0b1a1539d883cdc350a525b0832e3ba70e36947e95c42bad479ce7d94e039",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-07.log",
+          "sha256": "56bd52bdd6eec22ddafa5b309538d8b03cbf76bcd12f73d392bcb271722bfc17",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-08.log",
+          "sha256": "a1cf992dbb5c583900cc8f7e6a3abe3978659842acd51c6b50b2984bb4e983cc",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-09.log",
+          "sha256": "abdb994c10d1bf2f31217a7d55cf35f6d3d7bb8497af1f832c78cee76a743e09",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-10.log",
+          "sha256": "39c0297006b694e1b63a8199fa9ff44b983af6466d2cc5e80f98b48c26466cbc",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            3
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-11.log",
+          "sha256": "cd6ec9a1a581df413ab37e6aca6aa7c21690891d138b8c40c1b311465fbe392e",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-12.log",
+          "sha256": "c24200ac2f8e8ae8ab608a22581102c506ec5f2715cd553d54d02fe80205df85",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            3
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-13.log",
+          "sha256": "457879e410b8f4b90843a7703a5dec786666174a3cc1a59b1374faca61454b8e",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-14.log",
+          "sha256": "10c3242a4ea259c62391305d7760d3895fd9506d980a9962c56c56ca981a1514",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            1
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "NativeClosure/native-native/ci/native/command-15.log",
+          "sha256": "8ce77664334abc787dcd514057378614b5a10cce619bfca463dc6357929a41e4",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "LinuxClosure/linux-x86_64-linux/linux/receipt.json",
+      "sha256": "5e603ea28bccb65f4ec760c7855d506752cbbf4885f905d0e4ab578d45299be5",
+      "lane": "linux",
+      "status": "passed",
+      "run_id": 38572755403,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": null,
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-00.log",
+          "sha256": "c6306a13a4dde0b9e0ef638e1bf83c2cb3f5b8079eb09001c3d235f74cd058e4",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-01.log",
+          "sha256": "a8b5499bbea4b95fa412bbaa0de8738297cb53bd48263b1c3c62702c72a59dd2",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-02.log",
+          "sha256": "b72c0f1f6043e4de041fec96a5e9f780656e41827002ed9a1718e349c992492c",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-03.log",
+          "sha256": "e930f0d635e4616ee257bdcd0139d1f0c2f06080ea7c5765a90c247c92bf9794",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-04.log",
+          "sha256": "c655769ce723aff613887e5be4dd07be2f1470a271e35881fd69a13c48ac68b0",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-05.log",
+          "sha256": "00039fd6eeb02f8d766e4798ca417c4755d2505d7eb97557d290e61ab5b30577",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-06.log",
+          "sha256": "b2a0204685183902cb1503b0ccdb02aa54b8040ef318a16472e15f8a9b505678",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-07.log",
+          "sha256": "f52e298d3caf54402c275a47830bf72811c1c67d0afc0a25e95cb2ad6fa7880a",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-08.log",
+          "sha256": "00f852637ccbd91b729bc2e9b2cc7e2e7d8a4fecf1724877a6f460ffa03b4e6b",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            3
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-09.log",
+          "sha256": "00d8b106fae4950bf8c4afb8d007f89f8588d997ac85d6db36dfb772a03a87ba",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-10.log",
+          "sha256": "72337f0220e371461ae1eccc1938402e9a088eaf9681dc74a5f7cb7452608e52",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            1
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-11.log",
+          "sha256": "cf4ef20402f54d9a51dbf8a0abf4cf64988271a24055de45a75877d61d293dc2",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux/linux/command-12.log",
+          "sha256": "361f0d9069dbc0ce43713ce6f83a5e366a9e1f1bd0f3f1509bf2c91d567c0165",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "LinuxClosure/linux-x86_64-linux-safety/linux-safety/receipt.json",
+      "sha256": "2ac13de0afa61f9d27bb1d795c0fd85e53809c7559e740bac0cf54d44433dc76",
+      "lane": "linux-safety",
+      "status": "passed",
+      "run_id": 38572755403,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": null,
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "LinuxClosure/linux-x86_64-linux-safety/linux-safety/command-00.log",
+          "sha256": "f70d757ff636b6c4d53ff9fd1f969b37fb63e5dd869803aa79f4b001a2f4a2a6",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux-safety/linux-safety/command-01.log",
+          "sha256": "c358c020e06099ed901ccc2a105bb79038fbefd3dcf87aa187e8ff482d314cfb",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux-safety/linux-safety/command-02.log",
+          "sha256": "9b28e5679f08a0d6010008876aebf480fbe3a8322d04f477da15d6929bb798c3",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            4,
+            16,
+            1,
+            1
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux-safety/linux-safety/command-03.log",
+          "sha256": "896daaad3a2800e2f29bb03ab3d9390211fd122c72aafbc8356729c6069a96c6",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "LinuxClosure/linux-arm64-linux-coverage/linux-coverage/receipt.json",
+      "sha256": "7c6c4b8af66c6c4f3e44c7e30f54741e3e30dd223f604a2959b0c2ba5b18e97e",
+      "lane": "linux-coverage",
+      "status": "passed",
+      "run_id": 38572755403,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": null,
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "LinuxClosure/linux-arm64-linux-coverage/linux-coverage/command-00.log",
+          "sha256": "a3321c34e484b9eaabe711057619cc12495f10ae4bbeb5fc8fb244cae6f7180b",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux-coverage/linux-coverage/command-01.log",
+          "sha256": "e3e094a6bcb9a5d9553e3fec03764d44a38b02f0a090ddccb74dad5bccc0197e",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "LinuxClosure/linux-arm64-linux-safety/linux-safety/receipt.json",
+      "sha256": "a6d1f5ce7fc0cd6c99d814ca3789a2169e0219bd1465cc3b3d3f0e707e6a2da0",
+      "lane": "linux-safety",
+      "status": "passed",
+      "run_id": 38572755403,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": null,
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "LinuxClosure/linux-arm64-linux-safety/linux-safety/command-00.log",
+          "sha256": "80dd8017ae34fd9d4b24df469013075ebb834a81037779f816dc038ca1de3ed0",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux-safety/linux-safety/command-01.log",
+          "sha256": "2a826fbd2526e689c78905d004560d0ea9b46e6bf51ccbcd71e21617988137d4",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux-safety/linux-safety/command-02.log",
+          "sha256": "5d3840afa4f0fa7126412deecdadbae3f9038f6788b8171777f94336c329b303",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            4,
+            16,
+            1,
+            1
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux-safety/linux-safety/command-03.log",
+          "sha256": "7ac24e7b875fe6b04feb3a2b6e1458e3c8cf1739ebc0647811cc213ce995e15f",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "LinuxClosure/linux-arm64-linux/linux/receipt.json",
+      "sha256": "145293e279c2aed7bf463b9517f5577ec51063dad5871c17f334ad1f111082d8",
+      "lane": "linux",
+      "status": "passed",
+      "run_id": 38572755403,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": null,
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-00.log",
+          "sha256": "c6306a13a4dde0b9e0ef638e1bf83c2cb3f5b8079eb09001c3d235f74cd058e4",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-01.log",
+          "sha256": "a3321c34e484b9eaabe711057619cc12495f10ae4bbeb5fc8fb244cae6f7180b",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-02.log",
+          "sha256": "b72c0f1f6043e4de041fec96a5e9f780656e41827002ed9a1718e349c992492c",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-03.log",
+          "sha256": "e930f0d635e4616ee257bdcd0139d1f0c2f06080ea7c5765a90c247c92bf9794",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-04.log",
+          "sha256": "22953251d63c65076c2a95677e5815a622f024a8af8d271ed6cde733aa774104",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-05.log",
+          "sha256": "faed345c850bb5321151b9565e6281fa7f3f4f56446d5fed42bd888faa5c03ba",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-06.log",
+          "sha256": "38209d6cb640bc670fb6144a12535890a8855627d0d7a02aa57c8a45b03eaf7d",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            175,
+            30,
+            61,
+            16,
+            16
+          ],
+          "parameterized_invocations": 173
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-07.log",
+          "sha256": "c5cb8b2b86686e4feb2704c80fae7928231710a92a99e7a54a311345d7436a8f",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-08.log",
+          "sha256": "4d6340863817107eba015020890731aff5c34c6fad7cff599b4809c5c7a2883d",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            3
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-09.log",
+          "sha256": "ee00f896d17bb311006c406e8174972f258f2a2fcfe16cfed958dbe97497a522",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-10.log",
+          "sha256": "89193960f96b94f5856825c5fb175bee7a06577d7e523a424582e72377b3430b",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [
+            1
+          ],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-11.log",
+          "sha256": "72f9b4854185b61f4a4dde24dc4a5abfe997564ee5e62ddd167201f24427a536",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-arm64-linux/linux/command-12.log",
+          "sha256": "339b7eb803f83f8edc22f6d685727b600ab0d1937e819f143bff738be140647d",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "LinuxClosure/linux-x86_64-linux-coverage/linux-coverage/receipt.json",
+      "sha256": "123fa95cc19cbde5fc61c2111b7aa6e88c815d114609a8de311a29d45d013a0e",
+      "lane": "linux-coverage",
+      "status": "passed",
+      "run_id": 38572755403,
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "git_commit_field": null,
+      "source_inputs_verified": 849,
+      "logs": [
+        {
+          "log": "LinuxClosure/linux-x86_64-linux-coverage/linux-coverage/command-00.log",
+          "sha256": "a253326fe856602c0bcde1236fe41bfe3c0720ca90cf17ce623e7b0b7744545b",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        },
+        {
+          "log": "LinuxClosure/linux-x86_64-linux-coverage/linux-coverage/command-01.log",
+          "sha256": "e3e094a6bcb9a5d9553e3fec03764d44a38b02f0a090ddccb74dad5bccc0197e",
+          "exit_code": 0,
+          "status": "passed",
+          "function_counts": [],
+          "parameterized_invocations": 0
+        }
+      ]
+    },
+    {
+      "receipt": "closure-native-qa/receipt.json",
+      "sha256": "b72a7bee47a9b488a3436eb73f247a43c7a090cf26b38089eb28ca43838d5414",
+      "lane": "qa",
+      "status": "passed",
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "commands": 3,
+      "command_exits": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "receipt": "closure-native-coverage/receipt.json",
+      "sha256": "8080c0e5a1ac96ab2dfda86c1eae50c325e51ecf5db389248d54d1eccef7e6a7",
+      "lane": "coverage",
+      "status": "passed",
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "commands": 2,
+      "command_exits": [
+        0,
+        0
+      ]
+    },
+    {
+      "receipt": "closure-wasi/receipt.json",
+      "sha256": "1f80f59524bf7ceec763ba0efbab8c5719ac562b1d65383c56cb2695d8fb5559",
+      "lane": "wasm-qa",
+      "status": "passed",
+      "source_sha": "9184481e30e4f7faf262f335f775f8732c634040",
+      "commands": 2,
+      "command_exits": [
+        0,
+        0
+      ]
+    }
+  ],
+  "evidence_paths_base": "Evidence/CoreClosure in the delivered local companion bundle; build artifacts are not committed to Git",
+  "independent_policy_counts": {
+    "syntax": {
+      "observed": 318,
+      "evaluated_pass": 287,
+      "policy": 31,
+      "evaluated_fail": 0
+    },
+    "schema": {
+      "observed": 2337,
+      "evaluated_pass": 2300,
+      "policy": 37,
+      "evaluated_fail": 0
+    }
+  },
+  "qualification_counts": {
+    "public_semantics": 82,
+    "budget_counter": 9,
+    "malformed_replay": 4396,
+    "seed": "0x53574946544a534f",
+    "metric_probes": 49,
+    "rooted_consumer_valid": 8,
+    "rooted_consumer_invalid": 12,
+    "rooted_consumer_operational": 2
+  },
+  "performance": {
+    "status": "blocked",
+    "readiness_exit": 2,
+    "original_long_change_percent": 11.98325099056705,
+    "review_trigger_percent": 10,
+    "disposition": "Correctness repair retained; timing attribution unresolved; no new comparison ran because quiet-host criteria failed. Historical streaming disposition unchanged. Logical retained bytes and owned work are not RSS/caller instruction caps."
+  },
+  "remaining": [
+    "Quiet native-host diagnostic recalibration before the 1.2.1 release decision",
+    "Broader E2E/mutation acceptance plan",
+    "Unused private helpers and guarded/specialized mapping regions retained; no 100% decision-coverage claim",
+    "Existing Apple device scopes and WASI sanitizer limitations unchanged"
+  ],
+  "evidence_index": [
+    "CoreResidualReview.json",
+    "RuntimeEquivalenceFinal.json",
+    "CoverageAgreement.json",
+    "WASIMaterialization.json",
+    "Calibration/Recalibration.json",
+    "Calibration/HostBefore.json",
+    "NativeClosure-verified.json",
+    "LinuxClosure-verified.json"
+  ],
+  "preserved_prior_bundles": {
+    "Swift-JSON-1.2.1-Portability-Evidence.zip": "41b2446430cc891627cc0a77d53d335eb6df01c410a9336af320a9c927d04a9c",
+    "Swift-JSON-1.2.1-Coverage-Evidence.zip": "baa386331c89d2bcdd7036f72916e72fdb2256a9054d0991b1a00bd8ce409b75"
+  }
+}

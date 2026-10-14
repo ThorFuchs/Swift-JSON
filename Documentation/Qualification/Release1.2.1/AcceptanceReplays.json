@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "seed": "0x53574a313231",
+  "valid_generated_models": 128,
+  "invalid_generated_leading_zero_mutations": 128,
+  "minimized_replays": [
+    {
+      "id": "trailing-comma",
+      "hex": "5b302c5d",
+      "sha256": "a3e9007c4356922ae64718791f03bb64b52d2c7b759d42f33a24669005e75688",
+      "category": "syntax",
+      "code": "invalidSyntax"
+    },
+    {
+      "id": "leading-zero",
+      "hex": "5b30315d",
+      "sha256": "8e955b12c5bd485a2f5ad9ec07f09bf0cd19d368b6fed043e8049f6dc17cc899",
+      "category": "syntax",
+      "code": "invalidNumber"
+    },
+    {
+      "id": "comment",
+      "hex": "5b302f2a782a2f5d",
+      "sha256": "9f0d758dd43c10cce32f4e8398de5ef438ec2250bb56615133b3110fcbe4b108",
+      "category": "syntax",
+      "code": "invalidSyntax"
+    },
+    {
+      "id": "raw-control",
+      "hex": "220a22",
+      "sha256": "71f6bb6ee37cb1df013db8d8a675a947b8b5253d571b6533a30671ddd37243fc",
+      "category": "syntax",
+      "code": "invalidSyntax"
+    },
+    {
+      "id": "invalid-utf8",
+      "hex": "22c0af22",
+      "sha256": "bfc25cfd85c49686ec04294e6de47c5dd57651e75084d1c08d3d124cd1dd471d",
+      "category": "syntax",
+      "code": "invalidUTF8"
+    },
+    {
+      "id": "decoded-duplicate",
+      "hex": "7b2261223a302c225c7530303631223a317d",
+      "sha256": "961266c2e42a000802c6eb1d325e7455ece518e0228ced748990ea6d586b7277",
+      "category": "syntax",
+      "code": "duplicateKey"
+    },
+    {
+      "id": "unpaired-surrogate",
+      "hex": "225c754438303022",
+      "sha256": "e2abb8b90faadf0e98d5e6382fa5f354e814aaa72ce1155de80231de88c7724d",
+      "category": "syntax",
+      "code": "invalidSyntax"
+    },
+    {
+      "id": "truncated-escape",
+      "hex": "225c753030",
+      "sha256": "cbc010641b736066c61900cfd7c61f6213341f567864b7c6f46ad832ec484144",
+      "category": "syntax",
+      "code": "unexpectedEOF"
+    },
+    {
+      "id": "second-root",
+      "hex": "302031",
+      "sha256": "5cc3a6551605a0b4e9c3334f5eb5554c404973daf0b1a58655fa29c0ba3d47b0",
+      "category": "syntax",
+      "code": "trailingData"
+    }
+  ]
+}

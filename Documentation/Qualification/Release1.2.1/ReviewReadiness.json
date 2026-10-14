@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "status": "draft_review_ready_quiet_calibration_unqualified",
+  "date": "2026-10-14",
+  "baseline": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+  "implementation_head": "7907333dcf5f31c7999dc4681bba91e38169c030",
+  "changes": "Closeout documentation only; implementation/test/harness inputs unchanged",
+  "native": {
+    "os": "macOS 27.0",
+    "architecture": "arm64",
+    "swift": "6.4 swiftlang-6.4.0.34.1",
+    "xcode": "27.2 27B5019j",
+    "sdk": "27.2",
+    "preflight_exit": 0
+  },
+  "quiet_attempt": {
+    "exit_code": 2,
+    "status": "blocked",
+    "logical_cores": 10,
+    "samples": 5,
+    "idle_percent": [
+      14.84,
+      30.72
+    ],
+    "load1": [
+      17.560546875,
+      19.29443359375
+    ],
+    "timings_executed": false,
+    "criteria": "Every sample: >=80% CPU idle, load1 <= half logical cores, no Swift compiler/test or WasmKit process, thermal query with no warning. Five samples. No processes stopped or priorities changed."
+  },
+  "loaded_measurement": {
+    "status": "measured_under_load",
+    "parent_source": "5fcc87bef006a5d7791f0dba049f3a43ac3faaec",
+    "current_runtime_source": "20476dace4626528aba36649df2686b2158c7f9f",
+    "parent_binary_sha256": "a6219b1a2b6f519c43ad2479b97e1a4d68e1f5eff96daecc13f51f029d674731",
+    "current_binary_sha256": "9700ff4a92a5fb13b90a320db4166b7d372ebd46bb97fcdb99fbd5fda75bbc86",
+    "parent_median_seconds": 0.000576132609375,
+    "current_median_seconds": 0.000566412515625,
+    "change_percent": -1.6871278576896631,
+    "paired_changes_percent": [
+      -10.731164270025884,
+      3.6820517761657845,
+      0.37760520240457396,
+      0.37873241241175304,
+      -2.181057318314905
+    ],
+    "quiet_before": false,
+    "quiet_during": false,
+    "quiet_after": false,
+    "execution_policy": "User explicitly requested execution despite competing CPU load. Host gate remains unchanged; this run cannot close quiet-host qualification.",
+    "exit_code": 0,
+    "processes": 10,
+    "alternating_pairs": 5,
+    "warmups_per_process": 3,
+    "samples_per_process": 9,
+    "invocations_per_sample": 1024,
+    "issues_per_invocation": 32,
+    "diagnostic_bytes": 7726,
+    "evaluation_work_units": 23833,
+    "peak_logical_retained_bytes": 7152,
+    "all_counter_pairs_equal": true,
+    "host_observations": 50,
+    "host_idle_percent": [
+      2.61,
+      58.56
+    ],
+    "host_load1": [
+      21.97509765625,
+      31.68603515625
+    ],
+    "samples_discarded": 0,
+    "interpretation": "Wall timing under competing CPU load; logical retention differs from RSS and owned work from caller instructions"
+  },
+  "review": {
+    "trigger_percent": 10,
+    "trigger_unchanged": true,
+    "original_long_median_percent": 11.98325099056705,
+    "disposition": "Retain the correctness fix. Loaded-host aggregate -1.6871% does not establish intrinsic improvement or resolve original +11.9833%. Quiet-host qualification remains outstanding before release decision.",
+    "historical_streaming_percent": 10.9932,
+    "historical_streaming_disposition_unchanged": true
+  },
+  "reuse": [
+    {
+      "name": "Accepted-native",
+      "path": "Artifacts/AcceptanceWave/Accepted-native/receipt.json",
+      "sha256": "ac280dd0fcac9976d7714b633848d8b003e92f58481decbac3a312fc66df54dd",
+      "source": "9210f2fc717da6744149b78d259cd11598eb2360",
+      "status": "passed",
+      "commands": 17,
+      "unchanged_compilation_test_consumer_files": 754,
+      "scripts_changed_after_receipt": [
+        "Scripts/coverage.py",
+        "Scripts/qualify_distribution.py",
+        "Scripts/test_qualification_harness.py"
+      ]
+    },
+    {
+      "name": "Final-safety",
+      "path": "Artifacts/AcceptanceWave/Final-safety/receipt.json",
+      "sha256": "a8982430b26a3fb14596fb4db64b4bb8426b60870444fa9ed859cc1b080f9127",
+      "source": "617c0577713c35bc25d0b0565c1dd5b787976405",
+      "status": "passed",
+      "commands": 3,
+      "unchanged_compilation_test_consumer_files": 754,
+      "scripts_changed_after_receipt": [
+        "Scripts/ci.py",
+        "Scripts/coverage.py",
+        "Scripts/qualify_distribution.py",
+        "Scripts/test_qualification_harness.py"
+      ]
+    },
+    {
+      "name": "FinalClosureDocs",
+      "path": "Artifacts/AcceptanceWave/FinalClosureDocs/receipt.json",
+      "sha256": "72ebc75aa748a1811aa56f92fd8e32beeaf69d4055b357c9b7ef87bb7525db7a",
+      "source": "7907333dcf5f31c7999dc4681bba91e38169c030",
+      "status": "passed",
+      "commands": 1,
+      "unchanged_compilation_test_consumer_files": 754,
+      "scripts_changed_after_receipt": []
+    },
+    {
+      "name": "Accepted-coverage",
+      "path": "Artifacts/AcceptanceWave/Accepted-coverage/receipt.json",
+      "sha256": "26540ecbe3a6db0267033979b3a9e9a79daaf1e30a49fbb54db937444bd6e4d6",
+      "source": "e9aa82b759b17c518fea8c3d98c05c10e1bc57c7",
+      "status": "passed",
+      "commands": 2,
+      "unchanged_compilation_test_consumer_files": 754,
+      "scripts_changed_after_receipt": []
+    },
+    {
+      "name": "Accepted-wasi",
+      "path": "Artifacts/AcceptanceWave/Accepted-wasi/receipt.json",
+      "sha256": "11d47b389c2cbefd754fcc31412e6dbff8d09af3fd73a3101847bc987af8ab8e",
+      "source": "e9aa82b759b17c518fea8c3d98c05c10e1bc57c7",
+      "status": "passed",
+      "commands": 2,
+      "unchanged_compilation_test_consumer_files": 754,
+      "scripts_changed_after_receipt": []
+    }
+  ],
+  "fresh_checks": {
+    "harness_cases": 12,
+    "public_distribution_privacy": "passed",
+    "whitespace": "passed",
+    "required_pr_checks": [
+      "Native / native",
+      "Native / safety",
+      "Native / docs"
+    ],
+    "current_pr_checks": "rerun on PR; status recorded separately"
+  },
+  "receipts": {
+    "Preflight.json": {
+      "path": "Artifacts/DiagnosticReview/Preflight.json",
+      "sha256": "7e7c048814c0bc34e2a4eaa59bebd5453caf95421cb7cf381954e25af181d623"
+    },
+    "Command.json": {
+      "path": "Artifacts/DiagnosticReview/Command.json",
+      "sha256": "014a38a64ccd52dce091fe7e68f6e0019910022ced39f74307b2c241739306b5"
+    },
+    "HostBefore.json": {
+      "path": "Artifacts/DiagnosticReview/HostBefore.json",
+      "sha256": "e98e5675cef197649edfe9f6ddd92aa5452bc94b8c31ff1a5d6c9498dd3d23e5"
+    },
+    "Recalibration.json": {
+      "path": "Artifacts/DiagnosticReview/Recalibration.json",
+      "sha256": "901737d36596fd967246b3a265ba8f0777edcb2edcf56935c5cb5603bc18db1c"
+    },
+    "SourceBinding.json": {
+      "path": "Artifacts/DiagnosticReview/SourceBinding.json",
+      "sha256": "4077b71c4264ea318292b78608f207d7c663956e1adf3fd023f8c9271205caeb"
+    },
+    "EvidenceReuse.json": {
+      "path": "Artifacts/DiagnosticReview/EvidenceReuse.json",
+      "sha256": "d5ac7b0f30a2d0217786d88f83690ece8a10fc62c36698621d8f3cd2f11a417f"
+    },
+    "LoadedRun/Command.json": {
+      "path": "Artifacts/DiagnosticReview/LoadedRun/Command.json",
+      "sha256": "cda4b26aa9eeb1fb4e4fef767926f918c075d4f825f6a97bbb7f84ab7b35f9e2"
+    },
+    "LoadedRun/Recalibration.json": {
+      "path": "Artifacts/DiagnosticReview/LoadedRun/Recalibration.json",
+      "sha256": "c7cd178cb015de0a34349e194e69d00cc6d90c4dcca0dae0c62a29d72afa6c35"
+    },
+    "LoadedRun/HostBefore.json": {
+      "path": "Artifacts/DiagnosticReview/LoadedRun/HostBefore.json",
+      "sha256": "b0084e0e39fc708fbc0fdb2ac47fe5534293b18588de8a37e4c3f5c27746a1c3"
+    },
+    "LoadedRun/HostDuring.json": {
+      "path": "Artifacts/DiagnosticReview/LoadedRun/HostDuring.json",
+      "sha256": "f25a002b1603b6d6f2fdf9f0aa6153073c1e00739d863590ec9245581582e8e6"
+    },
+    "LoadedRun/HostAfter.json": {
+      "path": "Artifacts/DiagnosticReview/LoadedRun/HostAfter.json",
+      "sha256": "6d6d5d32b753a845fb9a894b33311dafb869317a517b12c461c2b9bb5c56150a"
+    },
+    "LoadedRun/loaded_calibration.py": {
+      "path": "Artifacts/DiagnosticReview/LoadedRun/loaded_calibration.py",
+      "sha256": "e1563912a7805c1c1b935d18386d4acd672766c5ad52fab55561e43c90a44273"
+    },
+    "Remote/Protection.json": {
+      "path": "Artifacts/DiagnosticReview/Remote/Protection.json",
+      "sha256": "c9e9942f2e720ab7989881844c0732e7a0ea918526c7cb86c912ff2b3e349a8b"
+    }
+  },
+  "remaining": [
+    "Qualifying quiet-host diagnostic comparison",
+    "Current PR checks and maintainer review before separate merge decision",
+    "Existing physical iPad deferral and unavailable WASI sanitizers"
+  ],
+  "merge_tag_publication_performed": false
+}
