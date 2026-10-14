@@ -53,7 +53,16 @@ def main():
         run('compiler', [swift, '--version'], lambda c, t: c == 0 and 'swift-6.4-RELEASE' in t)
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version']); run('node-version', [node, '--version'])
-        manifest = json.loads(run('root-manifest', [swift, 'package', 'dump-package']))
+        manifest_text = run('root-manifest', [swift, 'package', 'dump-package'])
+        # SwiftPM can write its lock-wait diagnostic before JSON on the merged log.
+        # Accept only that precise preamble; the decoded manifest and trailing bytes
+        # remain exact. The full diagnostic is retained in the command receipt.
+        start = manifest_text.find('{')
+        if start < 0: raise ValueError('Missing dump-package JSON')
+        preamble = manifest_text[:start].strip()
+        if preamble and not re.fullmatch(r"Another instance of SwiftPM .*waiting until that process has finished execution\.\.\.", preamble):
+            raise ValueError('Unexpected manifest preamble: ' + preamble)
+        manifest = json.loads(manifest_text[start:])
         if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):

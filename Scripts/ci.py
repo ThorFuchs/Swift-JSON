@@ -132,7 +132,7 @@ def check_result(command, code, log, events=None):
         passed = data['observed'] == data['passed'] == 53 and data['failed'] == 0
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_integration.py'] and passed:
         d = json.loads(log.strip().splitlines()[-1])
-        passed = d['status'] == 'passed' and (d['observed'], d['passed'], d['failed']) == (36, 36, 0)
+        passed = d['status'] == 'passed' and (d['observed'], d['passed'], d['failed']) == (37, 37, 0)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_limits.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['observed'] == data['passed'] == 33 and data['failed'] == 0 and data['metrics'] == 16

@@ -22,6 +22,7 @@ package enum JSONHTMLInteractiveAssets {
 .rich .color-swatch{max-width:100%;height:auto;aspect-ratio:5/2}.rich .view-tabs{flex-wrap:wrap}.rich .pointer-actions{max-width:100%;min-width:0}.rich button,.rich input,.rich select{max-width:100%;min-width:0;box-sizing:border-box}.rich button{white-space:normal;overflow-wrap:anywhere}
 
 @media print{.rich .source-download{display:none!important}}
+.rich .scalar-item{display:flex;align-items:flex-start;gap:.55rem;min-width:0;padding:.3rem 0;border-top:1px solid var(--line)}.rich .scalar-item>.index-label{flex:none;min-width:2.5rem;margin:0;padding-top:.2rem}.rich .scalar-item>.node{min-width:0;flex:1}
 """#
     package static let script = #"""
 // SPDX-License-Identifier: Apache-2.0
@@ -230,6 +231,6 @@ package enum JSONHTMLInteractiveAssets {
   say('Interactive controls ready. Search scope: selected displayed previews or exact JSON source.');
 })();
 """#
-    package static let styleHash = "f+TaCOj0W3wyCPnJkJlaJPTkXaxYdsglIBjynmeClbg="
+    package static let styleHash = "i9/4be/W5I4qf52IUKpWqBrCgmLKllGtm6fH0XgpMrI="
     package static let scriptHash = "0E/zm4efMpR/ae2G76+pX+c/zABUnOf3Bmlbu8CFcDc="
 }

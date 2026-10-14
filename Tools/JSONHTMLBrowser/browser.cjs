@@ -62,7 +62,7 @@ async function main() {
         if (message.type() !== 'error') return;
         const text = message.text();
         if (engine === 'firefox' && text.includes('resource:///modules/FaviconLoader.sys.mjs') &&
-            text.includes(origin + '/favicon.ico') && text.includes('(img-src)') && text.includes("default-src 'none'")) {
+            text.includes(origin + '/favicon.ico') && text.includes('(img-src)') && (text.includes("default-src 'none'") || text.includes("img-src data:"))) {
           browserPolicyEvents.push({kind: 'browser_automatic_favicon_denied', message: text});
         } else errors.push(text);
       });
