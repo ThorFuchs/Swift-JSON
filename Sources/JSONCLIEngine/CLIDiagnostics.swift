@@ -22,6 +22,8 @@ package struct CLIDiagnostics {
     }
     package static func classify(_ error: any Error) -> CLIError {
         if let error = error as? CLIError { return error }
+        if let failure = error as? FilterCompileFailure { return .init(.compile, failure.code) }
+        if let failure = error as? FilterLanguageFailure { return .init(.language, failure.code) }
         if error is CancellationError { return .init(.cancelled, "cancelled") }
         if let error = error as? JSONFailure {
             let category: CLIError.Category = error.category == .resource ? .resource : (error.category == .configuration ? .usage : .input)

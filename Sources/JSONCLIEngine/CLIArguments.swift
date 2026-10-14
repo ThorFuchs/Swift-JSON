@@ -8,12 +8,14 @@ package struct CLIArguments: Sendable {
     package var options: [String: String] = [:]
     package var repeated: [(String, String)] = []
     package var hasHelp = false
+    package var capturedArguments: [String]?
+    package var captureJSONArguments = false
     private static let commonValues: Set<String> = ["limits", "limits-file", "output", "diagnostics", "report"]
     private static let values: [String: Set<String>] = [
         "format": ["indent", "number-style"], "validate": ["schema", "resource", "max-issues"],
         "pointer": [], "patch": ["patch"], "stream": [], "schema": ["resource"],
         "render": ["format", "presentation", "theme", "title", "html"],
-        "query": ["filter-file", "input-mode", "indent", "number-style", "arg", "argjson", "rawfile", "slurpfile", "division-scale", "rounding"]
+        "query": ["filter-file", "input-framing", "indent", "number-style", "arg", "argjson", "rawfile", "slurpfile", "division-scale", "rounding"]
     ]
     private static let booleans: [String: Set<String>] = [
         "format": ["compact", "tab", "sort-keys"], "validate": [], "pointer": ["allow-missing"], "patch": [],
@@ -47,10 +49,14 @@ package struct CLIArguments: Sendable {
             if argument == "--" { terminated = true; continue }
             if argument.hasPrefix("--") {
                 let pair = argument.dropFirst(2).split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
-                let name = String(pair[0]); let inline = pair.count == 2 ? String(pair[1]) : nil
+                let name = String(pair[0]) == "compact-output" ? "compact" : String(pair[0]); let inline = pair.count == 2 ? String(pair[1]) : nil
                 if name == "help" || name == "overwrite" || Self.booleans[first]!.contains(name) {
                     guard inline == nil else { throw CLIError(.usage, "booleanValue") }
-                    try install(name, "true"); continue
+                    try install(name, "true")
+                    if name == "args" || name == "jsonargs" {
+                        capturedArguments = Array(argv[i...]); captureJSONArguments = name == "jsonargs"; i = argv.count
+                    }
+                    continue
                 }
                 guard Self.commonValues.contains(name) || Self.values[first]!.contains(name) else { throw CLIError(.usage, "unknownOption") }
                 let value: String
@@ -76,6 +82,13 @@ package struct CLIArguments: Sendable {
         if options["compact"] != nil && (options["indent"] != nil || options["tab"] != nil) || options["indent"] != nil && options["tab"] != nil { throw CLIError(.usage, "conflictingIndentation") }
         if let indent = options["indent"], Int(indent).map({ (0...8).contains($0) }) != true { throw CLIError(.usage, "invalidIndentation") }
         if let style = options["number-style"], !["preserved", "normalized"].contains(style) { throw CLIError(.usage, "invalidNumberStyle") }
+        if command == "query" {
+            if options["null-input"] != nil && options["slurp"] != nil { throw CLIError(.usage, "nullSlurpConflict") }
+            if options["raw-input"] != nil && options["input-framing"] != nil { throw CLIError(.usage, "rawFramingConflict") }
+            let raw = ["raw-output", "raw-output0", "join-output"].filter { options[$0] != nil }
+            if raw.count > 1 || !raw.isEmpty && options["ascii-output"] != nil { throw CLIError(.usage, "outputModeConflict") }
+            if (options["division-scale"] == nil) != (options["rounding"] == nil) { throw CLIError(.usage, "divisionPolicyPairRequired") }
+        }
         if positionals.filter({ $0 == "-" }).count > 1 { throw CLIError(.usage, "repeatedStdin") }
     }
     package var overwrite: Bool { options["overwrite"] != nil }

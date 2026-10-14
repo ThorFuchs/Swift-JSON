@@ -81,10 +81,11 @@ package enum CLIEngine {
         }
         if arguments.command == "--version" {
             guard arguments.positionals.isEmpty || arguments.positionals == ["--json"] else { throw CLIError(.usage, "invalidVersionOption") }
-            let version = arguments.positionals.isEmpty ? "swift-json 1.4.0-dev\n" : "{\"version\":\"1.4.0-dev\",\"revision\":\"unknown\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"render\"]}\n"
+            let version = arguments.positionals.isEmpty ? "swift-json 1.4.0-dev\n" : "{\"version\":\"1.4.0-dev\",\"revision\":\"unknown\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"render\",\"query\"],\"dialect\":\"swift-json-filter/1\"}\n"
             return try text(version, arguments: arguments, context: &context)
         }
-        if arguments.command == "query" || arguments.command == "stream" || arguments.command == "schema" { throw CLIError(.usage, "capabilityUnavailable") }
+        if arguments.command == "query" { return try CLIQueryCommand.run(arguments, context: &context) }
+        if arguments.command == "stream" || arguments.command == "schema" { throw CLIError(.usage, "capabilityUnavailable") }
         let inputPath: String
         let pointerText: String?
         if arguments.command == "pointer" {
@@ -212,6 +213,7 @@ package enum CLIEngine {
     pointer      Select an RFC 6901 Pointer; null and absence remain distinct.
     patch        Apply a staged RFC 6902 patch supplied with --patch PATH.
     render       Produce qualified static HTML, tab-indented text or Markdown.
+    query FILTER Pull exact filter results with strict file/stdin completion.
 
     INPUT defaults to stdin (-). Root JSON is strict UTF-8; duplicate keys fail.
     --limits conservative|balanced|offline    finite resource profile
@@ -219,7 +221,8 @@ package enum CLIEngine {
     --output PATH [--overwrite]              atomic file installation after completion
     --diagnostics human|json --report none|json   stderr only
     No online references, shell execution, server or remote providers.
-    Query/stream/schema adapters are not yet advertised by this foundation build.
+    Query core: paths, generators, conditions, bindings, map, presence and exact comparison.
+    Arithmetic, richer filters and provider/stream/schema adapters have separate gates.
 
     """
 }
