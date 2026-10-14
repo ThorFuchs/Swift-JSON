@@ -75,8 +75,13 @@ archive/file hashes and isolated Git discovery.
 WASI now has narrow WASILibc/entry guards, with native signal behavior unchanged.
 The CLI module compiles with matched Swift6.4.0 SDK. WasmKit0.3.1 executes exact
 format, Cartesian query, completed root-array stream, offline schema and static
-HTML commands. Node26.5.0 version execution fails IO exit7: actual poll_oneoff
-returns WASI errno28; tracing is qualification-only. No blocking fallback is used.
+HTML commands. The first Node26.5.0 version execution with file-backed output failed IO exit7:
+actual poll_oneoff returned WASI errno28; tracing is qualification-only. The
+corrected module passes version/format/query/root-array/static HTML with pipe
+stdio. Explicit schema-file reading and regular-file stdout still fail poll
+with errno28 and exit7. Descriptor layout is recorded in the return matrix;
+these partial successes do not qualify all file/stdin/stdout adapters. No
+blocking fallback is used.
 CLI POSIX SIGINT bridging is absent on WASI, so these five command outcomes are
 a limited disposition, not full CLI qualification.
 
