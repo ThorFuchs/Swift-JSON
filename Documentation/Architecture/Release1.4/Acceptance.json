@@ -1,0 +1,1186 @@
+{
+  "schema": "swift-json-cli-acceptance/1",
+  "prepared": "2026-10-14",
+  "implementation_status": "foundation boundary only; integration unqualified",
+  "requirements": [
+    {
+      "id": "CL001",
+      "gate": "C0",
+      "title": "Live source/prerequisite reconciliation",
+      "verification": "Record actual main/base/HTML/provider heads and compare pins; preserve active work and dirty state.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL002",
+      "gate": "C0",
+      "title": "Six public products with correct kinds",
+      "verification": "Package dump contains five libraries plus swift-json executable; private targets have no products.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL003",
+      "gate": "C0",
+      "title": "Empty root dependency set",
+      "verification": "Dump/package resolution and clean-source build prove no external dependency was introduced.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL004",
+      "gate": "C0",
+      "title": "Dependency direction and mobile consumers",
+      "verification": "Selected library consumers have no CLI/filter dependencies; core has no HTML/provider/UI imports.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL005",
+      "gate": "C0",
+      "title": "Forward policy and historical records",
+      "verification": "Update AGENTS/README/CI prospective inventory; historical releases remain accurate.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL006",
+      "gate": "C0",
+      "title": "Private compiler/IR ownership",
+      "verification": "Compiler probes prove immutable checked-Sendable plans and invocation-owned noncopyable context.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL007",
+      "gate": "C0",
+      "title": "Attribution and extraction manifest",
+      "verification": "Every actual adaptation has pinned origin/status/notices; inherited files retain identity.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL008",
+      "gate": "C0",
+      "title": "Prior brief conflict resolution",
+      "verification": "Record reused HTML/tab/provider APIs and authoritative amendments; no duplicate conformance or restarted portability.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL009",
+      "gate": "C1",
+      "title": "Argv parsing and limits",
+      "verification": "Exercise long equals, grouped Boolean flags, leading-dash filenames, --, duplicates, unknown/conflicting options and bounded args.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [
+        "unknown-option"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL010",
+      "gate": "C1",
+      "title": "Truthful help/version",
+      "verification": "Only available qualified commands appear; missing command/config/capability is 2; help/version is 0.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL011",
+      "gate": "C1",
+      "title": "Strict native format",
+      "verification": "Single root, full EOF, native UTF-8/duplicate-key grammar, exact lexemes and default two-space formatting.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [
+        "format-preserved-lexemes",
+        "reject-duplicate-key",
+        "reject-trailing-root",
+        "reject-trailing-comma"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL012",
+      "gate": "C1",
+      "title": "Explicit presentation options",
+      "verification": "Compact/indent/tab/sort/number-style options preserve library defaults and scalar key order.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [
+        "conflicting-style-options"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL013",
+      "gate": "C1",
+      "title": "Syntax validation outcomes",
+      "verification": "Completed valid/invalid result and issues; malformed input 5, resource 6, IO 7 are separate.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL014",
+      "gate": "C1",
+      "title": "Offline schema validation",
+      "verification": "Compile once per job; explicit immutable resources; instance invalid 1; no fetch/default insertion.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [
+        "validate-instance-invalid"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL015",
+      "gate": "C1",
+      "title": "Pointer presence",
+      "verification": "Present null versus missing, escaped tokens, root pointer, allow-missing exit4 and type/domain errors.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [
+        "pointer-present-null",
+        "pointer-missing-allowed",
+        "pointer-escaped-key"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL016",
+      "gate": "C1",
+      "title": "Patch transactional candidate",
+      "verification": "Successful operations emit full result; failed test/path never emits staged mutation or changes source.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [
+        "patch-success",
+        "patch-failed-test"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL017",
+      "gate": "C1",
+      "title": "Incremental local IO",
+      "verification": "Owned chunk reads, explicit closure, split UTF-8 and partial/no-progress writes; no read-to-end job arrays.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL018",
+      "gate": "C1",
+      "title": "Stdout/stderr separation",
+      "verification": "All data is clean; JSON diagnostics/reports are tagged stderr lines with no ANSI/banner.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL019",
+      "gate": "C1",
+      "title": "Shared compound accounting",
+      "verification": "Nested parse/validate/patch/write and multiple records cannot reset work or retained overlap; failure latches.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL020",
+      "gate": "C1",
+      "title": "Every CLI cap boundary",
+      "verification": "Inclusive-cap and cap+1 sweeps for all 16 CLI caps; checked counters and conversion overflow.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL021",
+      "gate": "C1",
+      "title": "Existing native limits preserved",
+      "verification": "49 metric inventory/meaning and existing independent boundary tests remain intact.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL022",
+      "gate": "C1",
+      "title": "Actual in-loop cancellation",
+      "verification": "Checkpoint rendezvous inside long owned work and source/sink suspend; no further output after terminal failure.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL023",
+      "gate": "C1",
+      "title": "Atomic file success",
+      "verification": "Owned same-directory stage installed only after EOF/flush/close; report committed completion.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL024",
+      "gate": "C1",
+      "title": "Atomic file failure",
+      "verification": "Late invalid tail/resource/cancel/IO preserves destination and removes only owned stage.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL025",
+      "gate": "C1",
+      "title": "Overwrite/path policy",
+      "verification": "Existing file requires --overwrite; input/output alias and output symlink reject; no silent cross-FS fallback.",
+      "obligation": "mandatory",
+      "status": "passed",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL026",
+      "gate": "C1",
+      "title": "Exit precedence",
+      "verification": "Codes0/1/2/3/4/5/6/7/130 and completed-result precedence verified in actual subprocesses.",
+      "obligation": "mandatory",
+      "status": "partial",
+      "evidence_required": true,
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
+    },
+    {
+      "id": "CL027",
+      "gate": "C2",
+      "title": "Native query lexer/literals",
+      "verification": "Exact numbers and scalar text/keys with source byte ranges; malformed source compiles to exit3.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL028",
+      "gate": "C2",
+      "title": "Grammar precedence",
+      "verification": "Pipeline/comma/default/assignment/operator precedence and delimiters tested beyond old parser goldens.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "pipeline-comma-precedence"
+      ]
+    },
+    {
+      "id": "CL029",
+      "gate": "C2",
+      "title": "Pull VM cardinality",
+      "verification": "Empty/one/many outputs without whole-job array; next() demand limits observable reads/retention.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL030",
+      "gate": "C2",
+      "title": "Pipeline and comma order",
+      "verification": "Every upstream result is evaluated and ordered; late errors do not resume a failed branch.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL031",
+      "gate": "C2",
+      "title": "Cartesian operators/constructors",
+      "verification": "No .first collapse; object versus arithmetic nesting orders and shared input effects are tested.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "object-product-order"
+      ]
+    },
+    {
+      "id": "CL032",
+      "gate": "C2",
+      "title": "Navigation and wrong-type",
+      "verification": "Missing/null convention, has, wrong-type error, optional catch and checked indices/slices.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "missing-field-null",
+        "wrong-type-field",
+        "optional-wrong-type-empty",
+        "has-present-null",
+        "negative-index"
+      ]
+    },
+    {
+      "id": "CL033",
+      "gate": "C2",
+      "title": "Exact Unicode identity",
+      "verification": "Scalar-distinct strings/keys, scalar length/slicing/order and non-BMP behavior.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "scalar-key-lookup",
+        "scalar-string-inequality",
+        "scalar-length",
+        "utf8-length",
+        "scalar-slice"
+      ]
+    },
+    {
+      "id": "CL034",
+      "gate": "C2",
+      "title": "Truth/default/Boolean generators",
+      "verification": "Only false/null falsey; // handles full streams; left-driven short-circuit and if generators.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "truthiness",
+        "fallback-whole-generator",
+        "fallback-empty",
+        "Boolean-short-circuit",
+        "if-condition-stream"
+      ]
+    },
+    {
+      "id": "CL035",
+      "gate": "C2",
+      "title": "Constructed duplicate keys",
+      "verification": "Explicit replace-preserve-position policy; parsed exact duplicate keys still reject.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "constructed-key-replacement"
+      ]
+    },
+    {
+      "id": "CL036",
+      "gate": "C2",
+      "title": "Exact comparison/order",
+      "verification": "Metered decimal/string/array/object equality and total order with stable ties.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL037",
+      "gate": "C2",
+      "title": "Common builtin inventory",
+      "verification": "All C2 builtins and type/domain/empty cases; map collects and map_values updates/deletes correctly.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "empty-array-collector",
+        "map-all-results",
+        "map-values-first",
+        "map-values-delete",
+        "normals-nonzero-native"
+      ]
+    },
+    {
+      "id": "CL038",
+      "gate": "C2",
+      "title": "Lexical bindings/arguments",
+      "verification": "as, --arg/argjson/rawfile/slurpfile, $ARGS, duplicate/reserved names, strict auxiliary-file admission.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "binding-original-input",
+        "argjson-exact"
+      ]
+    },
+    {
+      "id": "CL039",
+      "gate": "C2",
+      "title": "Shared input cursor",
+      "verification": "Driver/input/inputs share consumption; EOF catchable only for input; malformed tails/IO remain fatal.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "null-input-once",
+        "shared-inputs"
+      ]
+    },
+    {
+      "id": "CL040",
+      "gate": "C2",
+      "title": "JSON/raw framing",
+      "verification": "values/document/NDJSON and strict raw UTF-8 lines/slurp; files have independent boundaries.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "values-framing",
+        "adjacent-roots-rejected",
+        "ndjson-blank-line-rejected",
+        "raw-line-crlf"
+      ]
+    },
+    {
+      "id": "CL041",
+      "gate": "C2",
+      "title": "Raw output/NUL/join",
+      "verification": "Correct string bytes and nonstring JSON; embedded NUL rejected; delimiters/errors/counts tested.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "raw-lf",
+        "raw-nul-delimiter",
+        "raw-nul-value-rejected",
+        "join-no-delimiter"
+      ]
+    },
+    {
+      "id": "CL042",
+      "gate": "C2",
+      "title": "ASCII output and sort keys",
+      "verification": "Owned escaping, surrogate pairs and exact scalar order; option conflicts tested.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "ascii-surrogate-pair"
+      ]
+    },
+    {
+      "id": "CL043",
+      "gate": "C2",
+      "title": "Query exit-status",
+      "verification": "Final semantic value only after completion; truthy0/empty string/collections; false/null1 and noresult4.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "exit-status-truthy-zero",
+        "exit-status-false",
+        "exit-status-empty"
+      ]
+    },
+    {
+      "id": "CL044",
+      "gate": "C2",
+      "title": "Plan reuse and isolation",
+      "verification": "Concurrent independent invocations share immutable plan only; mutable iterator not concurrently accessed.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL045",
+      "gate": "C3",
+      "title": "Exact add/subtract/multiply",
+      "verification": "Carry/borrow/sign/zero/large integer cases against independent exact expectations.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "Cartesian-add-order",
+        "exact-large-integer",
+        "exact-decimal-add",
+        "exact-borrow",
+        "exact-multiply"
+      ]
+    },
+    {
+      "id": "CL046",
+      "gate": "C3",
+      "title": "Numeric admission and lexemes",
+      "verification": "Computed values normalized with no false originalLexeme; untouched inputs preserve spelling.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL047",
+      "gate": "C3",
+      "title": "Terminating exact division",
+      "verification": "Reduced denominators containing only2/5, large common factors and mixed signs.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "terminating-division"
+      ]
+    },
+    {
+      "id": "CL048",
+      "gate": "C3",
+      "title": "Repeating division default",
+      "verification": "1/3 and repeating values give language inexactDivision; no floating fallback.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "repeating-division-error"
+      ]
+    },
+    {
+      "id": "CL049",
+      "gate": "C3",
+      "title": "Explicit scale/half-even",
+      "verification": "Required option pair, decimal places, finite caps, signed ties and report rounding counts.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "rounded-third",
+        "half-even-ties",
+        "scale-pair-required"
+      ]
+    },
+    {
+      "id": "CL050",
+      "gate": "C3",
+      "title": "Zero division and integral remainder",
+      "verification": "Typed catchable domain errors; signed truncated remainder; fractional remainder rejected.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "negative-remainder",
+        "fractional-remainder-rejected"
+      ]
+    },
+    {
+      "id": "CL051",
+      "gate": "C3",
+      "title": "Exact numeric builtins",
+      "verification": "abs/floor/ceil/trunc/round/range/add with negative and empty/domain cases; round ties away from zero.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "round-away-from-zero",
+        "range-negative-step",
+        "range-zero-step"
+      ]
+    },
+    {
+      "id": "CL052",
+      "gate": "C3",
+      "title": "Exponent/growth preflight",
+      "verification": "Large sparse exponent operations fail finite caps before dense allocation; exact zero shortcut allowed.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "exponent-gap-cap"
+      ]
+    },
+    {
+      "id": "CL053",
+      "gate": "C3",
+      "title": "Numeric work and cancellation",
+      "verification": "Charged GCD/division/carry inner loops; boundaries and checkpoint cancellation; terminal errors not catchable.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL054",
+      "gate": "C3",
+      "title": "32-bit arithmetic safety",
+      "verification": "No Int/UInt64 negation/narrowing/product overflow traps; wasm32 kernel tests or explicit gate blocker.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL055",
+      "gate": "C3",
+      "title": "No Decimal/Double authority",
+      "verification": "Source audit plus precision cases prove no foreign arithmetic/fallback authority.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL056",
+      "gate": "C4",
+      "title": "Reduce/foreach streams",
+      "verification": "Last-update state, every foreach extraction, multiple inits, empty updates and actual evaluation order.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "reduce-last-update",
+        "reduce-empty-update",
+        "foreach-every-update",
+        "reduce-multiple-inits"
+      ]
+    },
+    {
+      "id": "CL057",
+      "gate": "C4",
+      "title": "Lexical filter functions",
+      "verification": "Filter/value parameters, arity/scopes, self-recursion, no forward refs and finite explicit frames.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "filter-parameter-code",
+        "forward-definition-rejected",
+        "recursive-definition"
+      ]
+    },
+    {
+      "id": "CL058",
+      "gate": "C4",
+      "title": "Loops/recurse/walk",
+      "verification": "Correct order/null handling/parent-after-child behavior with bounded frames/work and no fixed hidden10k cap.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "walk-child-before-parent",
+        "recurse-null-leaves"
+      ]
+    },
+    {
+      "id": "CL059",
+      "gate": "C4",
+      "title": "Typed try/catch/optional",
+      "verification": "Catch only language errors; prior yields/handler streams correct; syntax/resource/cancel/IO never suppressed.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "input-eof-catch",
+        "malformed-input-cannot-catch",
+        "repeating-division-caught",
+        "division-zero-caught",
+        "try-prior-yield"
+      ]
+    },
+    {
+      "id": "CL060",
+      "gate": "C4",
+      "title": "Collection builtin inventory",
+      "verification": "sort/group/unique/min/max/by forms, stable ties, multi-key generator lists, finite materialization.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "sort-exact-integers",
+        "total-order",
+        "group-scalar-distinct"
+      ]
+    },
+    {
+      "id": "CL061",
+      "gate": "C4",
+      "title": "Generator first/last/nth",
+      "verification": "Correct pull/empty behavior and completion of remaining input; no hidden job early success.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "first-generator"
+      ]
+    },
+    {
+      "id": "CL062",
+      "gate": "C4",
+      "title": "Flatten/any/all",
+      "verification": "Depth bounds, empty identities, short circuit and explicit deep traversal.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "all-any-empty"
+      ]
+    },
+    {
+      "id": "CL063",
+      "gate": "C4",
+      "title": "Literal string helpers",
+      "verification": "Scalar contains/search/split/join/ASCII trim/case; empty patterns/type errors and bounded scan.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "split-empty-scalars",
+        "index-empty-pattern"
+      ]
+    },
+    {
+      "id": "CL064",
+      "gate": "C4",
+      "title": "Conversions/explode/implode",
+      "verification": "Strict tonumber, preserved tostring, non-BMP scalar ints, invalid surrogate/range/type rejection.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "explode-non-BMP",
+        "implode-surrogate-rejected",
+        "tonumber-exact",
+        "tonumber-whitespace-rejected"
+      ]
+    },
+    {
+      "id": "CL065",
+      "gate": "C4",
+      "title": "Path enumeration/admission",
+      "verification": "Exact segments, missing paths, generated paths, shape/domain restrictions and no Pointer conflation.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "setpath-created-array"
+      ]
+    },
+    {
+      "id": "CL066",
+      "gate": "C4",
+      "title": "Assignment = versus |=",
+      "verification": "Original versus current-value RHS input; generator output, first update/empty delete semantics.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "assignment-set-generator",
+        "assignment-update-first",
+        "assignment-update-delete"
+      ]
+    },
+    {
+      "id": "CL067",
+      "gate": "C4",
+      "title": "Transactional mutation/deletion",
+      "verification": "Stable array removals, deduplicated targets, overlap rejection and input unchanged on failure.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "assignment-overlap-rejected"
+      ]
+    },
+    {
+      "id": "CL068",
+      "gate": "C4",
+      "title": "Sparse path growth",
+      "verification": "setpath container creation/null fill bounded before allocation and overflow.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "sparse-growth-fails"
+      ]
+    },
+    {
+      "id": "CL069",
+      "gate": "C4",
+      "title": "String interpolation streams",
+      "verification": "Cartesian holes/literal identity/empty hole; formatter holes only with no eager unbounded strings.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "interpolation-generators",
+        "interpolation-empty"
+      ]
+    },
+    {
+      "id": "CL070",
+      "gate": "C4",
+      "title": "Bounded format encoders",
+      "verification": "All C4 formatters, strict base64/UTF8, flat CSV/TSV, percent/HTML/POSIX quoting; no shell execution.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "format-html",
+        "format-base64"
+      ]
+    },
+    {
+      "id": "CL071",
+      "gate": "C4",
+      "title": "Regex deferral",
+      "verification": "Compile-time unavailable diagnostics; no ICU/ECMA substitutions or compatibility claim.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "regex-not-advertised"
+      ]
+    },
+    {
+      "id": "CL072",
+      "gate": "C4",
+      "title": "Other exclusions",
+      "verification": "Modules/seq/jq-stream/dates/env/halt/remote/server/converters rejected or absent from truthful help.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "numeric-transcendental-deferred",
+        "env-not-available"
+      ]
+    },
+    {
+      "id": "CL073",
+      "gate": "C4",
+      "title": "Every inherited fixture disposition",
+      "verification": "119+49 originals retained, actual per-row status/reason/gate/claim, exclusions separated from successes.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL074",
+      "gate": "C5",
+      "title": "Stream completion commands",
+      "verification": "Check/cat/root-array reader, strict line/tail behavior and completed summary exactly once.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "stream-root-array",
+        "stream-root-array-bad-tail"
+      ]
+    },
+    {
+      "id": "CL075",
+      "gate": "C5",
+      "title": "Static HTML rendering",
+      "verification": "JSONHTML integration with no script, expanded nodes, exact values/keys, escaping and finite shared accounting.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "render-static-inert"
+      ]
+    },
+    {
+      "id": "CL076",
+      "gate": "C5",
+      "title": "Interactive HTML rendering",
+      "verification": "Approved fixed CSS/JS self-contained document with inert payloads; no server or external assets.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL077",
+      "gate": "C5",
+      "title": "Text/Markdown output",
+      "verification": "Tab pretty body, safe JSON fence and exact tokens; shared qualified writer options/defaults unchanged.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "render-markdown"
+      ]
+    },
+    {
+      "id": "CL078",
+      "gate": "C5",
+      "title": "Offline schema/provider commands",
+      "verification": "Native schema check plus qualified local OpenAI helpers; schema object not quoted string, no network/key.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "schema-provider-object-envelope"
+      ]
+    },
+    {
+      "id": "CL079",
+      "gate": "C5",
+      "title": "Provider incompatibility and availability",
+      "verification": "No constraint loss/lowering; compatibility false exit1; Apple signatures guarded and advertised only when qualified.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": [
+        "schema-provider-optionality-reject"
+      ]
+    },
+    {
+      "id": "CL080",
+      "gate": "C5",
+      "title": "Native macOS executable qualification",
+      "verification": "Actual SDK27/Swift6.4 build/run/subprocess tests at final head.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL081",
+      "gate": "C5",
+      "title": "Linux x86_64 executable qualification",
+      "verification": "Actual Ubuntu24.04 x86_64 runtime and Linux/linux-safety receipts; not crosscompile-only.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL082",
+      "gate": "C5",
+      "title": "Linux ARM64 executable qualification",
+      "verification": "Actual Ubuntu24.04 ARM64 runtime and Linux/linux-safety receipts.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL083",
+      "gate": "C5",
+      "title": "Mobile library compatibility",
+      "verification": "Selected-product iOS/iPadOS consumers and existing mobile qualification preserved; no CLI process support claim.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL084",
+      "gate": "C5",
+      "title": "WASI CLI disposition",
+      "verification": "Explicit final supported/blocked/limited evidence with resources/argv/preopen/counters; no inherited CLI pass.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL085",
+      "gate": "C5",
+      "title": "Baseline WASI/core preservation",
+      "verification": "Existing all-four-product resource/integrity/49metrics/platform lanes retain exact truthful evidence.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL086",
+      "gate": "C5",
+      "title": "Installed resources/clean extraction",
+      "verification": "Source archive rebuilt, executable run outside repo cwd, sibling schema bundle and missing/tampered resource tests.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL087",
+      "gate": "C5",
+      "title": "Fresh oracle and comparisons",
+      "verification": "Pinned jq1.8.2 build/hash; native exact comparison plus byte/exit modes; missing oracle blocks that lane.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL088",
+      "gate": "C5",
+      "title": "Independent exact expectations",
+      "verification": "Integer/rational/Unicode/cardinality expectations separate from native self-comparison and jq floats.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL089",
+      "gate": "C5",
+      "title": "Streaming retention/performance",
+      "verification": "Generated chunks/slow sink/large record counts and bounded collectors; release-mode identities/variance, no blanket speedup.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL090",
+      "gate": "C5",
+      "title": "Six-product CI/documentation",
+      "verification": "Existing native/safety/docs plus affected Linux lanes, exact product kinds and public CLI help/docs/examples.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL091",
+      "gate": "C5",
+      "title": "Final-head review/return evidence",
+      "verification": "Actual PR/base/head topology, nonzero counts, immutable IDs/log hashes/fixture results, blockers and release recommendation.",
+      "obligation": "mandatory",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL092",
+      "gate": "C5",
+      "title": "Optional parallel evaluator",
+      "verification": "Only independent record filters; reserved bounded tasks/reorder buffers, preserved order/errors and measured material gain.",
+      "obligation": "optional-extension",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL093",
+      "gate": "C5",
+      "title": "Optional Apple PDF/RTF CLI export",
+      "verification": "Only after existing export backend qualification; actual host, explicit async preparation/page capabilities and unsupported-host errors.",
+      "obligation": "optional-extension",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    },
+    {
+      "id": "CL094",
+      "gate": "C5",
+      "title": "Optional native binary distribution",
+      "verification": "Explicit packaging policy, architecture/resource/signature receipts; no publication/tag performed by this task.",
+      "obligation": "optional-extension",
+      "status": "not_run",
+      "evidence_required": true,
+      "fixture_ids": []
+    }
+  ],
+  "notes": [
+    "Package integrity is separate from native qualification.",
+    "Optional extensions do not block the scoped candidate when not claimed.",
+    "WASI CLI supported/blocked/limited disposition is mandatory; full CLI support is separately earned."
+  ]
+}

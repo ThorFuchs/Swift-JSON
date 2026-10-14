@@ -34,9 +34,13 @@ public struct JSONSchemaValidator: Sendable {
     ///   - schema: The immutable compiled offline plan.
     public func validateWithReport(_ instance: JSON, against schema: CompiledJSONSchema) throws -> JSONOperationReport<JSONValidationResult> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .schemaEvaluation)
+        let result = try validate(instance, against: schema, meter: &meter)
+        return .init(result: result, statistics: meter.statistics())
+    }
+    package func validate(_ instance: JSON, against schema: CompiledJSONSchema, meter: inout JSONWorkMeter) throws -> JSONValidationResult {
         try JSONAdmission.value(instance, meter: &meter)
         var evaluator = JSONSchemaEvaluation(plan: schema.plan, options: options)
         let result = try evaluator.evaluate(instance, at: schema.plan.root, meter: &meter)
-        return .init(result: result, statistics: meter.statistics())
+        return result
     }
 }

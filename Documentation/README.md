@@ -33,6 +33,8 @@ Compiled archives and public symbol graphs remain available in CI artifacts.
 - [Linux platform and portable schema integrity](Architecture/Linux.md)
 - [WebAssembly audit and unresolved qualification boundary](Architecture/WebAssemblyAudit.md)
 
+- [Prospective 1.4 CLI plan](Architecture/Release1.4/Plan.md) and [foundation contract](Architecture/Release1.4/Foundation.md)
+
 ## Consumers, qualification and maintenance
 
 - [Five-product compiled example](../Examples/Consumer/README.md)

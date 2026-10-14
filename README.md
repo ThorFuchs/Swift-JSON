@@ -474,3 +474,19 @@ following [SECURITY](SECURITY.md); see [SUPPORT](SUPPORT.md) for maintenance and
 Original code is licensed under [Apache-2.0](LICENSE). Adapted code and qualification
 inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PARTY_NOTICES.md),
 [licenses](Licenses) and [extraction provenance](Documentation/Architecture/ExtractionManifest.json).
+
+## Prospective 1.4 command-line tool
+
+This feature train adds `swift-json` beside the five libraries. Its compiling
+foundation provides strict formatting, validation, Pointer selection, staged
+Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
+and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
+for command semantics, cumulative budgets and qualification boundaries. Query and
+provider commands are advertised only after their separate gates pass.
+
+```sh
+swift build -c release --product swift-json
+.build/release/swift-json format --compact input.json
+.build/release/swift-json validate --schema schema.json input.json
+.build/release/swift-json render input.json --output inspection.html
+```

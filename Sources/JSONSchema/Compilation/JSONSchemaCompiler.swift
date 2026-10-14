@@ -59,6 +59,13 @@ public struct JSONSchemaCompiler: Sendable {
         let result = try state.compile(document, registry: registry, meter: &meter)
         return .init(result: result, statistics: meter.statistics())
     }
+    /// Package composition borrows the enclosing ledger, including document admission.
+    package func compile(_ raw: JSON, retrievalURI: JSONSchemaURI? = nil,
+                         registry: JSONSchemaRegistry = .empty, meter: inout JSONWorkMeter) throws -> CompiledJSONSchema {
+        let document = try JSONSchemaDocument(raw, retrievalURI: retrievalURI, meter: &meter)
+        var state = JSONSchemaCompilation(options: options)
+        return try state.compile(document, registry: registry, meter: &meter)
+    }
 }
 
 /// Invocation-owned mutable graph builder. Every lookup remains exact and charged.

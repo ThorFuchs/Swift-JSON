@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "target_release": "1.4.0",
+  "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
+  "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
+  "branch": "codex/1.4-json-cli-foundation",
+  "status": "Compiling foundation boundary qualified on native macOS; C0/C1 complete closure and C2-C5 remain pending",
+  "gates": {
+    "C0": "partial",
+    "C1": "partial",
+    "C2": "not_run",
+    "C3": "not_run",
+    "C4": "not_run",
+    "C5": "not_run"
+  },
+  "foundation_functions": 12,
+  "foundation_parameter_cases": 4,
+  "subprocess_cases": 53,
+  "subprocess_passed": 53,
+  "baseline_parameter_cases": 173,
+  "core_metrics": 49,
+  "cli_metrics": 16,
+  "publication_performed": false,
+  "root_test_functions": 232,
+  "root_parameter_cases": 177,
+  "native_source_manifest_sha256": "864d9b3dd8e1d79a0a6cbec862476843ddca2ff8a1582471b80fba54b863459e",
+  "qualified_lanes": [
+    "native",
+    "safety",
+    "docs"
+  ],
+  "remaining_foundation_requirements": [
+    "clean-source reproduction",
+    "selected mobile SDK consumers",
+    "immutable filter-plan compiler probe and implemented IR",
+    "all 16 CLI cap boundaries",
+    "multi-record shared accounting",
+    "slow/partial/no-progress sink probes",
+    "query compile exit 3 and full exit precedence"
+  ]
+}

@@ -196,7 +196,8 @@
     "Schema graph, explicit evaluator, exact sets/assertions and scalar format recognizers are original implementations from Draft 2020-12, RFC3986/3987/3339/3492/5321/5891/5892/5893/6531/6570/6901 and fixed Unicode13 data.",
     "Private FIPS 180-4 SHA-256 is an original Swift implementation with checked cumulative production accounting, bounded scratch and inner cancellation. The separate trusted fixture tool mirrors its primitive core byte-for-byte; public_check verifies parity. No CryptoKit fallback or runtime dependency is introduced.",
     "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted.",
-    "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted."
+    "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted.",
+    "CLI foundation, argv parser, POSIX adapters, prepaid bounded diagnostics and shared-meter package adapters are original Apache-2.0 Swift code. No legacy filter engine or jq source is copied. See Release1.4/Foundation.md for native test-harness reuse provenance."
   ],
   "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
   "jsonhtml_export_original_contributions": {
