@@ -19,6 +19,32 @@ def main():
    passed=result.returncode==6 and not result.stdout and diagnostic is not None and diagnostic.get('metric')==metric and diagnostic.get('limit')==0 and (diagnostic.get('attemptedUsage',0)>0 or diagnostic.get('overflow'))
    rows.append({'metric':metric,'command':['swift-json',*command[1:]],'exit_code':result.returncode,'status':'passed' if passed else 'failed','diagnostic':diagnostic,'stdout_sha256':hashlib.sha256(result.stdout).hexdigest(),'stderr_sha256':hashlib.sha256(result.stderr).hexdigest()})
    if not passed:print(metric,result.returncode,result.stdout,result.stderr,flush=True)
+  # Preserve the zero-quota checks above, then find the actual command-site
+  # admission boundary and replay it plus one below. Regular input avoids a
+  # timing-dependent wait retry changing the measured work count.
+  for metric,argv,data in probes:
+   argv=argv or ['format']
+   if metric=='argvBytes':data=b'null'
+   source=directory/'boundary-input.json';source.write_bytes(data)
+   if metric in ('totalInputBytes','totalRecords','totalWorkUnits','retainedBytes'):
+    argv=[*argv,str(source)]
+   def execute(cap):
+    configuration.write_text(json.dumps({'cli':{metric:cap}}))
+    target=directory/'output.json';target.unlink(missing_ok=True)
+    return subprocess.run([str(binary),argv[0],'--diagnostics=json','--limits-file',str(configuration),*argv[1:]],input=data if str(source) not in argv else b'',capture_output=True,timeout=30)
+   high=1
+   while execute(high).returncode!=0 and high<268435456:high*=2
+   low=0
+   while low+1<high:
+    middle=(low+high)//2
+    if execute(middle).returncode==0:high=middle
+    else:low=middle
+   admitted=execute(high);rejected=execute(high-1);diagnostic=None
+   try:diagnostic=json.loads(rejected.stderr)
+   except ValueError:pass
+   passed=admitted.returncode==0 and rejected.returncode==6 and diagnostic is not None and diagnostic.get('metric')==metric
+   rows.append({'id':'inclusive-site-'+metric,'status':'passed' if passed else 'failed','inclusive_boundary':high,'below_exit':rejected.returncode,'at_exit':admitted.returncode,'diagnostic':diagnostic})
+   if not passed:print('boundary',metric,high,admitted.returncode,rejected.returncode,rejected.stderr,flush=True)
   # Diagnostics cannot erase the originating syntax failure. Find its exact finite
   # byte boundary, then verify one byte below suppresses a whole JSONL record.
   initial=subprocess.run([str(binary),'format','--diagnostics=json'],input=b'{',capture_output=True,timeout=30)

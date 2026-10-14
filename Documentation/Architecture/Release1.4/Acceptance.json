@@ -1,7 +1,7 @@
 {
   "schema": "swift-json-cli-acceptance/1",
   "prepared": "2026-10-14",
-  "implementation_status": "Advanced native filter milestone; complete final platform and C5 integration remain open",
+  "implementation_status": "C0-C4 behavior and portable C5 milestone tested; provider prerequisites blocked; final source/platform/reproduction closure tracked",
   "requirements": [
     {
       "id": "CL001",
@@ -48,11 +48,11 @@
       "title": "Dependency direction and mobile consumers",
       "verification": "Selected library consumers have no CLI/filter dependencies; core has no HTML/provider/UI imports.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -74,11 +74,11 @@
       "title": "Private compiler/IR ownership",
       "verification": "Compiler probes prove immutable checked-Sendable plans and invocation-owned noncopyable context.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -113,13 +113,13 @@
       "title": "Argv parsing and limits",
       "verification": "Exercise long equals, grouped Boolean flags, leading-dash filenames, --, duplicates, unknown/conflicting options and bounded args.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "unknown-option"
       ],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -128,11 +128,11 @@
       "title": "Truthful help/version",
       "verification": "Only available qualified commands appear; missing command/config/capability is 2; help/version is 0.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -187,13 +187,13 @@
       "title": "Offline schema validation",
       "verification": "Compile once per job; explicit immutable resources; instance invalid 1; no fetch/default insertion.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "validate-instance-invalid"
       ],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -235,11 +235,11 @@
       "title": "Incremental local IO",
       "verification": "Owned chunk reads, explicit closure, split UTF-8 and partial/no-progress writes; no read-to-end job arrays.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -261,11 +261,11 @@
       "title": "Shared compound accounting",
       "verification": "Nested parse/validate/patch/write and multiple records cannot reset work or retained overlap; failure latches.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -274,9 +274,12 @@
       "title": "Every CLI cap boundary",
       "verification": "Inclusive-cap and cap+1 sweeps for all 16 CLI caps; checked counters and conversion overflow.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL021",
@@ -297,11 +300,11 @@
       "title": "Actual in-loop cancellation",
       "verification": "Checkpoint rendezvous inside long owned work and source/sink suspend; no further output after terminal failure.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -349,11 +352,11 @@
       "title": "Exit precedence",
       "verification": "Codes0/1/2/3/4/5/6/7/130 and completed-result precedence verified in actual subprocesses.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -362,12 +365,11 @@
       "title": "Native query lexer/literals",
       "verification": "Exact numbers and scalar text/keys with source byte ranges; malformed source compiles to exit3.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/QueryCore.md",
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -376,14 +378,13 @@
       "title": "Grammar precedence",
       "verification": "Pipeline/comma/default/assignment/operator precedence and delimiters tested beyond old parser goldens.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "pipeline-comma-precedence"
       ],
       "evidence": [
-        "Documentation/Architecture/Release1.4/QueryCore.md",
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -420,14 +421,13 @@
       "title": "Cartesian operators/constructors",
       "verification": "No .first collapse; object versus arithmetic nesting orders and shared input effects are tested.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "object-product-order"
       ],
       "evidence": [
-        "Documentation/Architecture/Release1.4/QueryCore.md",
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -526,7 +526,7 @@
       "title": "Common builtin inventory",
       "verification": "All C2 builtins and type/domain/empty cases; map collects and map_values updates/deletes correctly.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "empty-array-collector",
@@ -536,8 +536,7 @@
         "normals-nonzero-native"
       ],
       "evidence": [
-        "Documentation/Architecture/Release1.4/QueryCore.md",
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -546,15 +545,14 @@
       "title": "Lexical bindings/arguments",
       "verification": "as, --arg/argjson/rawfile/slurpfile, $ARGS, duplicate/reserved names, strict auxiliary-file admission.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "binding-original-input",
         "argjson-exact"
       ],
       "evidence": [
-        "Documentation/Architecture/Release1.4/QueryCore.md",
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -815,12 +813,11 @@
       "title": "32-bit arithmetic safety",
       "verification": "No Int/UInt64 negation/narrowing/product overflow traps; wasm32 kernel tests or explicit gate blocker.",
       "obligation": "mandatory",
-      "status": "partial",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
-        "Documentation/Architecture/Release1.4/Arithmetic.md",
-        "Documentation/Architecture/Release1.4/Qualification.md"
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -1132,11 +1129,14 @@
       "title": "Stream completion commands",
       "verification": "Check/cat/root-array reader, strict line/tail behavior and completed summary exactly once.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "stream-root-array",
         "stream-root-array-bad-tail"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -1145,10 +1145,13 @@
       "title": "Static HTML rendering",
       "verification": "JSONHTML integration with no script, expanded nodes, exact values/keys, escaping and finite shared accounting.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "render-static-inert"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -1157,9 +1160,12 @@
       "title": "Interactive HTML rendering",
       "verification": "Approved fixed CSS/JS self-contained document with inert payloads; no server or external assets.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL077",
@@ -1167,10 +1173,13 @@
       "title": "Text/Markdown output",
       "verification": "Tab pretty body, safe JSON fence and exact tokens; shared qualified writer options/defaults unchanged.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "render-markdown"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -1179,10 +1188,14 @@
       "title": "Offline schema/provider commands",
       "verification": "Native schema check plus qualified local OpenAI helpers; schema object not quoted string, no network/key.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "blocked",
       "evidence_required": true,
       "fixture_ids": [
         "schema-provider-object-envelope"
+      ],
+      "blocker": "Qualified schema-provider helpers absent; actual authored expectations 0/1 receive capabilityUnavailable exit2",
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -1191,10 +1204,14 @@
       "title": "Provider incompatibility and availability",
       "verification": "No constraint loss/lowering; compatibility false exit1; Apple signatures guarded and advertised only when qualified.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "blocked",
       "evidence_required": true,
       "fixture_ids": [
         "schema-provider-optionality-reject"
+      ],
+      "blocker": "Qualified schema-provider helpers absent; actual authored expectations 0/1 receive capabilityUnavailable exit2",
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
       ]
     },
     {
@@ -1203,9 +1220,12 @@
       "title": "Native macOS executable qualification",
       "verification": "Actual SDK27/Swift6.4 build/run/subprocess tests at final head.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL081",
@@ -1213,9 +1233,12 @@
       "title": "Linux x86_64 executable qualification",
       "verification": "Actual Ubuntu24.04 x86_64 runtime and Linux/linux-safety receipts; not crosscompile-only.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL082",
@@ -1223,9 +1246,12 @@
       "title": "Linux ARM64 executable qualification",
       "verification": "Actual Ubuntu24.04 ARM64 runtime and Linux/linux-safety receipts.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL083",
@@ -1233,9 +1259,12 @@
       "title": "Mobile library compatibility",
       "verification": "Selected-product iOS/iPadOS consumers and existing mobile qualification preserved; no CLI process support claim.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL084",
@@ -1243,9 +1272,12 @@
       "title": "WASI CLI disposition",
       "verification": "Explicit final supported/blocked/limited evidence with resources/argv/preopen/counters; no inherited CLI pass.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL085",
@@ -1253,9 +1285,12 @@
       "title": "Baseline WASI/core preservation",
       "verification": "Existing all-four-product resource/integrity/49metrics/platform lanes retain exact truthful evidence.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL086",
@@ -1263,9 +1298,12 @@
       "title": "Installed resources/clean extraction",
       "verification": "Source archive rebuilt, executable run outside repo cwd, sibling schema bundle and missing/tampered resource tests.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL087",
@@ -1273,9 +1311,12 @@
       "title": "Fresh oracle and comparisons",
       "verification": "Pinned jq1.8.2 build/hash; native exact comparison plus byte/exit modes; missing oracle blocks that lane.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL088",
@@ -1283,9 +1324,12 @@
       "title": "Independent exact expectations",
       "verification": "Integer/rational/Unicode/cardinality expectations separate from native self-comparison and jq floats.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL089",
@@ -1293,9 +1337,12 @@
       "title": "Streaming retention/performance",
       "verification": "Generated chunks/slow sink/large record counts and bounded collectors; release-mode identities/variance, no blanket speedup.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL090",
@@ -1303,9 +1350,12 @@
       "title": "Six-product CI/documentation",
       "verification": "Existing native/safety/docs plus affected Linux lanes, exact product kinds and public CLI help/docs/examples.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL091",
@@ -1313,9 +1363,12 @@
       "title": "Final-head review/return evidence",
       "verification": "Actual PR/base/head topology, nonzero counts, immutable IDs/log hashes/fixture results, blockers and release recommendation.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Integration.md"
+      ]
     },
     {
       "id": "CL092",
@@ -1325,7 +1378,9 @@
       "obligation": "optional-extension",
       "status": "not_run",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "claim_category": "excluded",
+      "reason": "Outside this portable baseline; no parallel evaluator, Apple CLI export or native binary distribution claimed"
     },
     {
       "id": "CL093",
@@ -1335,7 +1390,9 @@
       "obligation": "optional-extension",
       "status": "not_run",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "claim_category": "excluded",
+      "reason": "Outside this portable baseline; no parallel evaluator, Apple CLI export or native binary distribution claimed"
     },
     {
       "id": "CL094",
@@ -1345,7 +1402,9 @@
       "obligation": "optional-extension",
       "status": "not_run",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "claim_category": "excluded",
+      "reason": "Outside this portable baseline; no parallel evaluator, Apple CLI export or native binary distribution claimed"
     }
   ],
   "notes": [

@@ -55,7 +55,7 @@ def commands(lane, output):
         ]
     if lane == 'cli':
         return [['swift', 'build', '-c', 'release', '--product', 'swift-json'], ['swift', 'test', '--filter', 'cli|sharedFilterPlan'], ['python3', '-B', 'Scripts/qualify_cli.py', '--binary', '.build/release/swift-json', '--output', str(output / 'subprocess.json')],
-            ['python3', '-B', 'Scripts/qualify_cli_limits.py', '--binary', '.build/release/swift-json', '--output', str(output / 'cli-limits.json')], ['swift', 'build', '-c', 'release', '--package-path', 'Tools/CLIQualification', '--product', 'CLIExactCompare'], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
+            ['python3', '-B', 'Scripts/qualify_cli_integration.py', '--binary', '.build/release/swift-json', '--output', str(output / 'integration-subprocess.json')], ['python3', '-B', 'Scripts/qualify_cli_limits.py', '--binary', '.build/release/swift-json', '--output', str(output / 'cli-limits.json')], ['swift', 'build', '-c', 'release', '--package-path', 'Tools/CLIQualification', '--product', 'CLIExactCompare'], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C1', '--output', str(output / 'foundation-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C3', '--output', str(output / 'arithmetic-vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C4', '--output', str(output / 'advanced-vectors.json')]]
     if lane == 'native':
@@ -67,9 +67,9 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/verify_testing_events.py'],
             ['swift', 'test'], ['swift', 'test', '-c', 'release'],
             ['python3', '-B', 'Scripts/qualify_cli.py', '--binary', '.build/release/swift-json', '--output', str(output / 'subprocess.json')],
-            ['python3', '-B', 'Scripts/qualify_cli_limits.py', '--binary', '.build/release/swift-json', '--output', str(output / 'cli-limits.json')],
+            ['python3', '-B', 'Scripts/qualify_cli_integration.py', '--binary', '.build/release/swift-json', '--output', str(output / 'integration-subprocess.json')], ['python3', '-B', 'Scripts/qualify_cli_limits.py', '--binary', '.build/release/swift-json', '--output', str(output / 'cli-limits.json')],
             ['swift', 'build', '-c', 'release', '--package-path', 'Tools/CLIQualification', '--product', 'CLIExactCompare'],
-            ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
+            ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C1', '--output', str(output / 'foundation-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C3', '--output', str(output / 'arithmetic-vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C4', '--output', str(output / 'advanced-vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_ownership.py', '--output', str(output / 'cli-ownership')],
@@ -124,11 +124,11 @@ def check_result(command, code, log, events=None):
     if events is not None:
         counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [71] if 'cli|sharedFilterPlan' in command else [38] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 3 if sys.platform == 'linux' else 4, 4] if 'thread' in command else sorted([11, 12, 71, 14, 61 if sys.platform == 'linux' else 75, 51, 107])
+        expected = [77] if 'cli|sharedFilterPlan' in command else [38] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 3 if sys.platform == 'linux' else 4, 4] if 'thread' in command else sorted([11, 12, 77, 14, 61 if sys.platform == 'linux' else 75, 51, 107])
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
-                passed = passed and events['module_function_counts'] == {'JSONTests':107,'JSONSchemaTests':51,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':61 if sys.platform == 'linux' else 75,'JSONCLITests':71}
+                passed = passed and events['module_function_counts'] == {'JSONTests':107,'JSONSchemaTests':51,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':61 if sys.platform == 'linux' else 75,'JSONCLITests':77}
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 199)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -138,12 +138,15 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['observed'] == data['passed'] == 53 and data['failed'] == 0
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_integration.py'] and passed:
+        d = json.loads(log.strip().splitlines()[-1])
+        passed = d['status'] == 'passed' and (d['observed'], d['passed'], d['failed']) == (36, 36, 0)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_limits.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
-        passed = data['observed'] == data['passed'] == 18 and data['failed'] == 0 and data['metrics'] == 16
+        passed = data['observed'] == data['passed'] == 33 and data['failed'] == 0 and data['metrics'] == 16
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_cases.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
-        expected = {'C2':38,'C3':17,'C4':38}[command[command.index('--gate')+1]]
+        expected = {'C1':12,'C2':38,'C3':17,'C4':38}[command[command.index('--gate')+1]]
         passed = data['observed'] == data['passed'] == expected and data['failed'] == data['policy'] == 0
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
@@ -173,9 +176,11 @@ def main():
     output = ROOT / (args.output or '.build/ci/' + args.lane)
     output.mkdir(parents=True, exist_ok=True)
     inputs = snapshot()
-    commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True)
+    repository = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
+    is_checkout = repository.returncode == 0 and pathlib.Path(repository.stdout.strip()).resolve() == ROOT.resolve()
+    commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True) if is_checkout else None
     environment = collect_linux() if args.lane.startswith('linux') else collect()
-    receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
+    receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit is not None and commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     save()

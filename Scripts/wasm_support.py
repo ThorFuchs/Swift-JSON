@@ -18,7 +18,7 @@ def main():
     result = {'schema_version': 1, 'status': 'running', 'target': 'wasm32-unknown-wasip1',
               'sdk': SDK, 'commands': [], 'modules': [], 'root_counts': COUNTS,
               'wasmkit_scope': '14 public consumer functions, 49 caps, 20 rooted vectors, debug/release command parity',
-              'node_scope': 'complete debug/release root suites, caps, public consumers and independent qualification'}
+              'node_scope': 'complete core/HTML debug/release root suites, caps, public consumers and independent qualification; CLI runtime disposition is separate'}
     def save():
         (output / 'wasi.json').write_text(json.dumps(result, indent=2) + '\n')
     def run(name, command, check=lambda c, t: c == 0, timeout=1800):
@@ -54,7 +54,7 @@ def main():
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version']); run('node-version', [node, '--version'])
         manifest = json.loads(run('root-manifest', [swift, 'package', 'dump-package']))
-        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming']:
+        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):
             if engine == 'node':

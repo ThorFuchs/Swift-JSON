@@ -57,3 +57,17 @@ Advanced filters include lexical functions, reductions, finite collections, scal
 strings, interpolation and staged path mutation. Regex and approximate math remain
 explicit compile errors. Platform distribution and provider-specific adapters retain
 their separate qualification gates. This feature checkout is not a released 1.4 candidate.
+
+## Strict stream and schema commands
+
+```sh
+swift run swift-json stream check --framing ndjson records.ndjson
+swift run swift-json stream array large-array.json
+swift run swift-json schema check schema.json --resource https://example.test/item=item.json
+```
+
+Stream success requires closing syntax and EOF. An accepted stdout prefix may
+precede a late error; named output is installed only after completion. Schema
+check compiles offline and reports metadata; it does not validate an instance.
+Provider commands require helpers that are absent in this candidate and are
+not advertised. Use `swift-json help COMMAND` for compiled command options.

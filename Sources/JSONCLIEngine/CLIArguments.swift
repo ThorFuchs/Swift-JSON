@@ -13,7 +13,7 @@ package struct CLIArguments: Sendable {
     private static let commonValues: Set<String> = ["limits", "limits-file", "output", "diagnostics", "report"]
     private static let values: [String: Set<String>] = [
         "format": ["indent", "number-style"], "validate": ["schema", "resource", "max-issues"],
-        "pointer": [], "patch": ["patch"], "stream": [], "schema": ["resource"],
+        "pointer": [], "patch": ["patch"], "stream": ["framing"], "schema": ["resource", "name", "description"],
         "render": ["format", "presentation", "theme", "title", "html"],
         "query": ["filter-file", "input-framing", "indent", "number-style", "arg", "argjson", "rawfile", "slurpfile", "division-scale", "rounding"]
     ]
@@ -82,7 +82,16 @@ package struct CLIArguments: Sendable {
         if options["compact"] != nil && (options["indent"] != nil || options["tab"] != nil) || options["indent"] != nil && options["tab"] != nil { throw CLIError(.usage, "conflictingIndentation") }
         if let indent = options["indent"], Int(indent).map({ (0...8).contains($0) }) != true { throw CLIError(.usage, "invalidIndentation") }
         if let style = options["number-style"], !["preserved", "normalized"].contains(style) { throw CLIError(.usage, "invalidNumberStyle") }
+        if command == "render" {
+            if options["html"] != nil && (options["format"] != nil || options["output"] != nil) { throw CLIError(.usage, "conflictingHTMLOutput") }
+            let format = options["format"] ?? "html"
+            guard ["html", "markdown", "text"].contains(format) else { throw CLIError(.usage, "capabilityUnavailable") }
+            if let presentation = options["presentation"], !["static", "interactive"].contains(presentation) { throw CLIError(.usage, "invalidPresentation") }
+            if let theme = options["theme"], !["system", "light", "dark"].contains(theme) { throw CLIError(.usage, "invalidTheme") }
+            if format != "html" && (options["presentation"] != nil || options["theme"] != nil || options["title"] != nil) { throw CLIError(.usage, "htmlOnlyOption") }
+        }
         if command == "query" {
+            if let framing = options["input-framing"], !["document", "values", "ndjson"].contains(framing) { throw CLIError(.usage, "invalidInputFraming") }
             if options["null-input"] != nil && options["slurp"] != nil { throw CLIError(.usage, "nullSlurpConflict") }
             if options["raw-input"] != nil && options["input-framing"] != nil { throw CLIError(.usage, "rawFramingConflict") }
             let raw = ["raw-output", "raw-output0", "join-output"].filter { options[$0] != nil }

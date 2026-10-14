@@ -76,15 +76,18 @@ package enum CLIEngine {
     }
     private static func execute(_ arguments: CLIArguments, context: inout CLIJobContext) throws -> Int32 {
         if ["help", "--help", "-h"].contains(arguments.command) || arguments.hasHelp {
-            return try text(help, arguments: arguments, context: &context)
+            let selected = arguments.hasHelp ? arguments.command : arguments.positionals.first
+            guard arguments.hasHelp || arguments.positionals.count <= 1 else { throw CLIError(.usage, "helpArity") }
+            return try text(CLIHelp.text(for: selected), arguments: arguments, context: &context)
         }
         if arguments.command == "--version" {
             guard arguments.positionals.isEmpty || arguments.positionals == ["--json"] else { throw CLIError(.usage, "invalidVersionOption") }
-            let version = arguments.positionals.isEmpty ? "swift-json 1.4.0-dev\n" : "{\"version\":\"1.4.0-dev\",\"revision\":\"unknown\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"render\",\"query\"],\"dialect\":\"swift-json-filter/1\"}\n"
+            let version = arguments.positionals.isEmpty ? "swift-json 1.4.0-dev\n" : CLIHelp.versionJSON
             return try text(version, arguments: arguments, context: &context)
         }
         if arguments.command == "query" { return try CLIQueryCommand.run(arguments, context: &context) }
-        if arguments.command == "stream" || arguments.command == "schema" { throw CLIError(.usage, "capabilityUnavailable") }
+        if arguments.command == "stream" { return try CLIStreamCommand.run(arguments, context: &context) }
+        if arguments.command == "schema" { return try CLISchemaCommand.run(arguments, context: &context) }
         let inputPath: String
         let pointerText: String?
         if arguments.command == "pointer" {
@@ -186,9 +189,10 @@ package enum CLIEngine {
         try output.finish(inputs: inputs, context: &context)
         return exit
     }
-    package static func emit(_ value: JSON, arguments: CLIArguments, output: CLIOutput, tabs: Bool = false, context: inout CLIJobContext) throws {
+    package static func emit(_ value: JSON, arguments: CLIArguments, output: CLIOutput, tabs: Bool = false, compact: Bool = false, context: inout CLIJobContext) throws {
         try context.domain(.writing); try context.meter.resetValueBounds()
-        let writer = JSONWriter(options: arguments.writingOptions(limits: context.meter.limits, tabs: tabs))
+        let options = compact ? JSONWritingOptions(limits: context.meter.limits) : arguments.writingOptions(limits: context.meter.limits, tabs: tabs)
+        let writer = JSONWriter(options: options)
         var bytes = try writer.write(value, meter: &context.meter)
         try context.meter.charge(.outputBytes); try context.meter.retain(1); bytes.append(10)
         try context.charge(.totalResults); try output.write(bytes, context: &context); output.resultAccepted(context: &context)
@@ -204,26 +208,4 @@ package enum CLIEngine {
         try context.meter.retain(UInt64(value.utf8.count)); try output.write(Array(value.utf8), context: &context)
         try output.finish(inputs: [], context: &context); return 0
     }
-    private static let help = """
-    Usage: swift-json COMMAND [OPTIONS] [INPUT]
-
-    format       Format one strict JSON document (two spaces and preserved numbers).
-    validate     Validate strict JSON, optionally against an explicit offline schema.
-    pointer      Select an RFC 6901 Pointer; null and absence remain distinct.
-    patch        Apply a staged RFC 6902 patch supplied with --patch PATH.
-    render       Produce qualified static HTML, tab-indented text or Markdown.
-    query FILTER Pull exact filter results with strict file/stdin completion.
-
-    INPUT defaults to stdin (-). Root JSON is strict UTF-8; duplicate keys fail.
-    --limits conservative|balanced|offline    finite resource profile
-    --limits-file PATH                       version 1 finite overrides
-    --output PATH [--overwrite]              atomic file installation after completion
-    --diagnostics human|json --report none|json   stderr only
-    No online references, shell execution, server or remote providers.
-    Query core: paths, generators, conditions, bindings, map, presence and exact comparison.
-    Exact arithmetic includes +, -, *, /, integral %, add and range.
-    Repeating division errors unless --division-scale N --rounding half-even is explicit.
-    Richer filters and provider/stream/schema adapters have separate gates.
-
-    """
 }

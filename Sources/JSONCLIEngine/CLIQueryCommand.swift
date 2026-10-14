@@ -7,7 +7,7 @@ package enum CLIQueryCommand {
     package static func run(_ arguments: CLIArguments, context: inout CLIJobContext) throws -> Int32 {
         let source: String, files: [String]
         if let path = arguments.options["filter-file"] {
-            source = try textFile(path, maximum: context.limits[.querySourceBytes], context: &context)
+            source = try textFile(path, maximum: context.limits[.querySourceBytes], querySource: true, context: &context)
             files = arguments.positionals
         } else {
             guard let first = arguments.positionals.first else { throw CLIError(.usage, "missingFilter") }
@@ -161,7 +161,7 @@ package enum CLIQueryCommand {
         owned += bindings["ARGS"]?.lease?.retained ?? 0
         return bindings
     }
-    private static func textFile(_ path: String, maximum: UInt64, context: inout CLIJobContext) throws -> String {
+    private static func textFile(_ path: String, maximum: UInt64, querySource: Bool = false, context: inout CLIJobContext) throws -> String {
         let source = try CLIInput(path: path)
         var bytes: [UInt8] = []
         defer { try? context.meter.release(UInt64(bytes.count)) }
@@ -171,7 +171,7 @@ package enum CLIQueryCommand {
             bytes.append(contentsOf: chunk); try context.meter.release(UInt64(chunk.count))
         }
         try context.work(UInt64(bytes.count)); try context.meter.retain(UInt64(bytes.count))
-        guard let text = String(bytes: bytes, encoding: .utf8) else { throw CLIError(.input, "invalidUTF8") }
+        guard let text = String(bytes: bytes, encoding: .utf8) else { throw CLIError(querySource ? .compile : .input, querySource ? "invalidQueryUTF8" : "invalidUTF8") }
         return text
     }
 }
