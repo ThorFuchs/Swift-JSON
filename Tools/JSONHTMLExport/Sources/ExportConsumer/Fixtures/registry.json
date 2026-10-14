@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {
+      "path": "fixtures/exact-numbers.json",
+      "sha256": "fa9946fc911c790ba089dfaeb741675462a41e510fe02098d286d95ad2c03e55",
+      "expected_native_parse": "accepted",
+      "purpose": "Lexeme preservation beyond common Foundation numeric ranges."
+    },
+    {
+      "path": "fixtures/scalar-keys.json",
+      "sha256": "527da46df8672d01f5d9dff53fcd5e2c1af952dc0bcbd2f3deb81d050509bb37",
+      "expected_native_parse": "accepted",
+      "purpose": "Exact scalar-distinct identity, controls, pointer and special keys."
+    },
+    {
+      "path": "fixtures/inert-payloads.json",
+      "sha256": "1c3ccb711c0dc9eff04dd2ac5ed56a6b175e5b1d5cce68bb97bebc1d511e53a9",
+      "expected_native_parse": "accepted",
+      "purpose": "HTML/CSP/Markdown/RTF injection resistance and Unicode fidelity."
+    },
+    {
+      "path": "fixtures/mixed-roots.json",
+      "sha256": "51db3eeed571a17ea6e0bff66a2c84a521f73e1066e90c7e973d4e4c101be785",
+      "expected_native_parse": "accepted",
+      "purpose": "Mixed values and a last-content sentinel."
+    },
+    {
+      "path": "fixtures/duplicate-key.json",
+      "sha256": "aa69fb36553abd051ee9e72200f4a6d92fc9db3e99bb95548d8b67aec744e6ad",
+      "expected_native_parse": "rejected",
+      "purpose": "Strict duplicate-key rejection after decoded key identity."
+    },
+    {
+      "path": "fixtures/trailing-comma.json",
+      "sha256": "bbdc773a1abf3ad27738d5cdfb9d662b1372540a50bb607fe721c29c1bed434f",
+      "expected_native_parse": "rejected",
+      "purpose": "Strict grammar rejection."
+    }
+  ],
+  "native_execution_status": "not_run"
+}

@@ -195,7 +195,17 @@
     "Native codec, Codable, Pointer, Patch and streaming are original implementations from the integrated contract, not automatically attributed to candidates.",
     "Schema graph, explicit evaluator, exact sets/assertions and scalar format recognizers are original implementations from Draft 2020-12, RFC3986/3987/3339/3492/5321/5891/5892/5893/6531/6570/6901 and fixed Unicode13 data.",
     "Private FIPS 180-4 SHA-256 is an original Swift implementation with checked cumulative production accounting, bounded scratch and inner cancellation. The separate trusted fixture tool mirrors its primitive core byte-for-byte; public_check verifies parity. No CryptoKit fallback or runtime dependency is introduced.",
-    "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted."
+    "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted.",
+    "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted."
   ],
-  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies."
+  "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
+  "jsonhtml_export_original_contributions": {
+    "license": "Apache-2.0",
+    "adapted_third_party_code": false,
+    "source": "Sources/JSONHTML/JSONExportDocument.swift; JSONExportOptions.swift; JSONTransferable.swift; JSONRTFWriter.swift; JSONPDFOptions.swift; JSONPDFPreparation.swift; JSONPDFBackend.swift",
+    "synthetic_fixture_pack_sha256": "5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105",
+    "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers plus a narrow explicit main-actor Apple PDF boundary using WebKit, CoreText, CoreGraphics and AppKit/UIKit paragraph styles. Core JSON imports none of these; no new root dependency.",
+    "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation.",
+    "pdf": "Original invocation-owned lifecycle, finite adapter accounting and visible-range pagination using Apple SDK APIs. PDFKit is independent qualification only; no third-party renderer adapted."
+  }
 }

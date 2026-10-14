@@ -9,7 +9,7 @@
 | Framework amendment | JSONHTML may link Apple PDF/printing frameworks. Pure HTML/native export preparation remains actor-independent and does not execute WebKit. |
 | Writer compatibility | JSONIndentationUnit defaults to spaces through the retained legacy initializer; a separate overload requires the unit explicitly, preserving typed initializer references. Export tabs/preserved lexemes are explicit. Final declaration requires compiler/behavior evidence. |
 | Asset strategy | Prefer versioned original Swift constants for fixed CSS/JS; measure and qualify hashes, CSP and full emitted bytes before selection is frozen. |
-| RTF | Prefer owned bounded token-based emission. Strategy remains provisional until independent text/style and platform evidence. |
+| RTF | Owned bounded strict-token emission selected for the styled increment; independent native decode/style evidence is required. Fixed Menlo 11/light palette, explicit per-paragraph tab stops, UTF-16 surrogate encoding; no platform generator. |
 | PDF | Prefer modern WebPage where executed behavior qualifies it. Region capture is distinct from pagination; A4/Letter/default geometry and backend remain open. |
 | Finite presets | No invented values. Freeze additional finite ceilings from native/browser/format measurements; leave core 49 metric values/meanings unchanged. |
 | Transfer selection | One Apple JSON conformance, JSON-only strict import, immutable per-item export selection. PDF must already be prepared. |
@@ -57,3 +57,15 @@ not qualify simulator/device execution, Linux/WASI runtime or transfer/PDF APIs.
 See [InteractiveIncrement.md](InteractiveIncrement.md) for the compiler-compatible
 additive options, one-meter metadata/copy path, browser policy, exact tests and
 remaining Safari/accessibility/Firefox/platform qualification.
+
+## Native transfer/export increment
+
+See [TransferExportIncrement.md](TransferExportIncrement.md) and the
+[export contract](../JSONHTMLExport.md) for actual four-format declarations,
+immutable artifacts, conditional transfer conformance, finite initial capacities
+and the explicit future PDF framework amendment. RTF/PDF and real receiving-app
+qualification remain separate. Generic type negotiation requires a selected-format
+guard in the closure, beyond `.exportingCondition`, on the observed SDK.
+
+See [RTFIncrement.md](RTFIncrement.md) for the cumulative integration, capacities and
+independent native decode checks. PDF and receiving-app qualification remain separate.

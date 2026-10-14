@@ -35,3 +35,9 @@ for qualification, and `command -- ...` passes explicit executable arguments.
 
 See the [WASI contract](../../Documentation/Architecture/WebAssembly.md) for
 cooperative cancellation, safety/measurement policy and unqualified host modes.
+
+The integrated JSONHTML consumer adds the fifth public product and a fourteenth
+Swift Testing function covering six exact HTML/export/budget/cancellation/backend
+checks. Node runs all six root test bundles (including 49 portable HTML functions);
+Node and WasmKit run the 14-function public consumer. Apple transfer and PDF are
+not portable backend claims. See [receiving qualification](../../Documentation/Architecture/Release1.3/ReceivingQualification.md).

@@ -4,6 +4,7 @@ import JSON
 import JSONSchema
 import JSONStreaming
 import JSONPatch
+import JSONHTML
 
 public enum ProbeFailure: Error { case assertion(String) }
 func require(_ value: Bool, _ message: String) throws {
@@ -237,4 +238,66 @@ extension Probes {
         try require(records == 1000, "Calibration records")
         print("WASI_CALIBRATION parse_invocations=10 input_bytes=\(bytes.count) records=\(records) parse_logical_peak=\(peak) parse_work=\(work)")
     }
+}
+
+extension Probes {
+    /// Five-product portable rendering, finite preparation and unavailable PDF boundary.
+    public static func htmlRenderingAndExports() async throws {
+        let source = #"{"é":9007199254740993,"e\u0301":-0.00e+2,"end":"LAST-CONTENT-SENTINEL</script>"}"#
+        let root = try parse(source)
+        let formatted = try JSONHTMLRenderer().renderStringWithReport(root)
+        try require(formatted.result.contains("9007199254740993") && formatted.result.contains("-0.00e+2")
+            && formatted.result.contains("&lt;/script&gt;") && formatted.statistics.operation[.workUnits] > 0, "Static exact HTML")
+        print("CASE formatted_html_exact_scalars passed")
+        let interactive = try JSONHTMLRenderer(options: .init(presentation: .interactive)).renderString(root)
+        try require(interactive.contains("Content-Security-Policy") && interactive.contains("LAST-CONTENT-SENTINEL")
+            && interactive.contains("9007199254740993"), "Interactive complete bytes")
+        print("CASE interactive_html_complete_csp passed")
+        let fence = String(repeating: String(UnicodeScalar(96)), count: 3)
+        for value in [JSON.null, true, 1, .string("😀\u{e9}e\u{301}"), .array([]), .object(try JSONObject(members: [])), root] {
+            let result = try JSONExportDocument.prepareWithReport(value, options: .init(formats: [.json,.html,.plainText,.markdown,.rtf], compactJSON: true))
+            let exact = try JSONWriter(options: .init(numberStyle: .preserved)).write(value)
+            try require(try result.result.data(for: .json) == exact, "Native artifact exact bytes")
+            try require(result.result.availableFormats.count == 5 && result.operation[.workUnits] > 0, "Five portable artifacts")
+            let markdown = String(decoding: try result.result.data(for: .markdown), as: UTF8.self)
+            try require(markdown.hasPrefix(fence+"json\n") && markdown.hasSuffix("\n"+fence+"\n"), "Markdown fence")
+            try require(String(decoding: try result.result.data(for: .rtf), as: UTF8.self).hasPrefix("{\\rtf1"), "Actual styled RTF")
+        }
+        print("CASE five_portable_prepared_formats passed")
+        var options = JSONHTMLRenderingOptions(); options.limits.maxDocumentBytes = 0
+        var exhausted = false
+        do { _ = try JSONHTMLRenderer(options: options).render(root) }
+        catch let failure as JSONHTMLFailure {
+            if case .limitExceeded(.documentBytes, limit: 0, attempted: _) = failure { exhausted = true }
+        }
+        try require(exhausted, "HTML capacity ignored")
+        print("CASE html_finite_capacity passed")
+        let gate = ExportCancellationGate()
+        let canceled = Task { await gate.wait(); return try JSONExportDocument.prepare(root) }
+        canceled.cancel(); await gate.release()
+        var canceledCorrectly = false
+        do { _ = try await canceled.value } catch is CancellationError { canceledCorrectly = true }
+        try require(canceledCorrectly, "Portable cancellation ignored")
+        print("CASE export_terminal_cancellation passed")
+        let prepared = try JSONExportDocument.prepare(root)
+        #if !canImport(WebKit)
+        var unavailable = false
+        do { _ = try await prepared.preparingPDF() }
+        catch JSONPDFFailure.backendUnavailable { unavailable = true }
+        try require(unavailable && !prepared.availableFormats.contains(.pdf), "PDF backend fallback")
+        #else
+        var rejected = false
+        do { _ = try JSONExportDocument.prepare(root, options: .init(formats: [.pdf])) }
+        catch JSONExportFailure.preparationRequired(.pdf) { rejected = true }
+        try require(rejected && !prepared.availableFormats.contains(.pdf), "Implicit PDF rendering")
+        #endif
+        print("CASE explicit_pdf_platform_boundary passed")
+    }
+}
+
+private actor ExportCancellationGate {
+    var opened = false
+    var continuation: CheckedContinuation<Void, Never>?
+    func wait() async { if !opened { await withCheckedContinuation { continuation = $0 } } }
+    func release() { opened = true; continuation?.resume(); continuation = nil }
 }

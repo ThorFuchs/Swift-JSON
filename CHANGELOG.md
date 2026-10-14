@@ -2,13 +2,33 @@
 
 ## Unreleased
 
+- Add typed caller diagnostics and coherent JSONDocument byte-span rendering to
+  JSONHTML, with exact target identity, explicitly missing-parent attachment and
+  finite cumulative annotation/path/message accounting. Rendering never asserts
+  schema validity or archives source bytes; replaced roots invent no locations.
+
+- Add explicit main-actor PDF preparation from immutable static HTML, with genuine
+  A4/Letter text-range pagination, an explicit continuous mode, cumulative finite
+  accounting, cancellation/deadline lifecycle and prepared-byte-only transfer.
+
+- Add opt-in styled RTF to immutable JSONHTML prepared exports. An owned bounded
+  strict-token emitter preserves pretty JSON text, Unicode scalar sequences and
+  number spellings; native decoding checks font, colors and actual tab positions.
+  Finite style/UTF-16 ceilings complement cumulative work/output/retention limits.
+  Direct JSON defaults remain JSON, HTML, plain text and Markdown.
+
+- Add immutable prepared JSON, UTF-8 text, Markdown and expanded static HTML in
+  JSONHTML, plus Apple native JSON Transferable conformance with strict import.
+  Preparation preserves exact lexemes/scalars/order under one cumulative meter;
+  selected-format closure guards prevent transport from exposing hidden artifacts.
+  Real receiving-app/device qualification remains separate.
+
 - Add opt-in JSONHTML interactive disclosure, container outline, literal search,
   native-byte JSON/Pointer copy and downloads, and complete print content; qualify
   three browser engines separately from Safari/device/accessibility release gates.
 - Develop JSONHTML as the fifth product for 1.3: exact formatted standalone HTML,
   shared strict-writer token formatting, literal tab indentation, cumulative
   finite reports, bounded script-free output and a fifth native DocC catalogue.
-  Annotations and transfer/RTF/PDF export remain later increments.
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.
