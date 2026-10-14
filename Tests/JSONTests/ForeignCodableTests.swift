@@ -285,3 +285,13 @@ private struct AlreadyChangedForeignNumber: Decodable {
         #expect(ObjectIdentifier(type) == ObjectIdentifier(JSONNumber.self) && context.codingPath.isEmpty)
     }
 }
+
+@Test func qaForeignPayloadFieldSinkFailurePropagatesWithoutReturningAnEnvelope() throws {
+    let payload = try JSONCodablePayload(preserving: .null)
+    let trace = ForeignTrace(reject: ["encode:String"])
+    let error = captured { _ = try JSONValueEncoder().encode(ForeignWrite(value: payload, trace: trace)) }
+    #expect(error as? ForeignError == .injected && trace.calls == ["encode:String"])
+    let fresh = try JSONValueEncoder().encode(payload)
+    #expect(try fresh.requiredMember("utf8Base64") == .string("bnVsbA=="))
+    #expect(try JSONValueDecoder().decode(JSONCodablePayload.self, from: fresh).value() == .null)
+}

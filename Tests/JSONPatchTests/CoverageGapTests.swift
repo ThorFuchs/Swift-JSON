@@ -62,3 +62,18 @@ private func patchGapFailure(_ code: JSONFailure.Code, _ body: () throws -> Void
         _ = try JSONPatch(operations:[.move(from:JSONPointer(parsing:""),path:JSONPointer(parsing:"/b"))]).applying(to:input)
     }
 }
+
+@Test func qaPatchNestedArrayEditsRebuildAncestorsAndRefuseScalarParentsTransactionally() throws {
+    let input = try JSONParser().parse(#"{"a/b":[{"~":[1,2]},null]}"#)
+    let path = try JSONPointer(parsing: "/a~1b/0/~0/1")
+    let patch = try JSONPatch(operations: [.replace(path: path, value: 17),
+        .add(path: JSONPointer(parsing: "/a~1b/0/~0/-"), value: 3), .remove(path: JSONPointer(parsing: "/a~1b/1"))])
+    let expected = try JSONParser().parse(#"{"a/b":[{"~":[1,17,3]}]}"#)
+    #expect(try patch.applying(to: input) == .document(expected))
+    for badPath in ["/a~1b/1/child", "/a~1b/1/child/deeper"] {
+        let failing = try JSONPatch(operations: [.replace(path: path, value: 17), .add(path: JSONPointer(parsing: badPath), value: 3)])
+        do { _ = try failing.applying(to: input); Issue.record("Expected scalar parent refusal") }
+        catch let failure as JSONFailure { #expect(failure.category == .typeMismatch && failure.code == .wrongKind) }
+        #expect(try input == JSONParser().parse(#"{"a/b":[{"~":[1,2]},null]}"#))
+    }
+}

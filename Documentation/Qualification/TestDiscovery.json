@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
   "root_functions": {
-    "JSONTests": 171,
+    "JSONTests": 175,
     "JSONSchemaTests": 61,
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
-    "JSONPatchTests": 15
+    "JSONPatchTests": 16
   },
   "parameterized_invocations": 173,
   "qa_functions": {
-    "JSONTests": 78,
+    "JSONTests": 82,
     "JSONSchemaTests": 13,
     "JSONStreamingTests": 19,
-    "JSONPatchTests": 6,
+    "JSONPatchTests": 7,
     "JSONRegexRuntimeTests": 4
   },
   "shared_state_functions": {

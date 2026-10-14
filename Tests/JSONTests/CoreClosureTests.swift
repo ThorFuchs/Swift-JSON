@@ -117,6 +117,15 @@ private struct NumberEnvelope: Codable { let payload: DelegatedExactNumber }
 private struct DataEnvelope: Decodable { let payload: Data }
 private struct DateEnvelope: Decodable { let payload: Date }
 private struct IntegerEnvelope: Decodable { let payload: Int }
+private struct ExplicitIntegerEnvelope: Decodable {
+    enum Key: String, CodingKey { case payload }
+    let payload: Int8
+    init(from decoder: any Decoder) throws {
+        let object = try decoder.container(keyedBy: Key.self)
+        let child = try object.superDecoder(forKey: .payload)
+        payload = try child.singleValueContainer().decode(Int8.self)
+    }
+}
 private func wrongKind<T: Decodable>(_ type: T.Type, value: JSON, options: JSONCodingOptions = .init()) throws {
     do { _ = try JSONValueDecoder(options: options).decode(type, from: value); Issue.record("Expected wrong kind") }
     catch DecodingError.typeMismatch(_, let context) {
@@ -131,6 +140,7 @@ private func wrongKind<T: Decodable>(_ type: T.Type, value: JSON, options: JSONC
     try wrongKind(DataEnvelope.self, value: value)
     try wrongKind(DateEnvelope.self, value: value, options: .init(dateStrategy: .iso8601))
     try wrongKind(IntegerEnvelope.self, value: value)
+    try wrongKind(ExplicitIntegerEnvelope.self, value: value)
 }
 
 @Test func qaCoreMalformedBase64ReportsSyntaxAtTheNestedField() throws {
@@ -281,4 +291,57 @@ private struct BoundedWideFields: Encodable {
     let accepted = try JSONValueEncoder(options: .init(limits: limits)).encodeWithReport(BoundedWideFields())
     #expect(accepted.result == baseline.result && accepted.statistics[.workUnits] == work)
     #expect(golden.count == 64 && golden["k63"] == .null)
+}
+
+@Test func qaCoreFiniteDoubleRoundTripsAndDecimalOverflowHaveExplicitFidelity() throws {
+    for value in [0.0, -12.5, 0.1, Double.greatestFiniteMagnitude] {
+        let number = try JSONNumber.fromFiniteDouble(value)
+        #expect(try number.doubleValue(policy: .rounded) == value)
+    }
+    let decimalTenth = try JSONNumber.fromFiniteDouble(0.1)
+    #expect(decimalTenth == (try JSONNumber(parsing: "0.1")))
+    closureFailure(.conversion, .inexactConversion) { _ = try decimalTenth.doubleValue(policy: .exact) }
+    for policy in [JSONNumberConversionPolicy.exact, .rounded] {
+        closureFailure(.conversion, .inexactConversion) { _ = try JSONNumber(parsing: "9e165").decimalValue(policy: policy) }
+    }
+}
+
+@Test func qaCoreMappedErrorConstructionSharesWorkAndCannotMaskQuotaFailure() throws {
+    let document = try JSONParser().parseDocument(Data(#"{"x":false}"#.utf8))
+    func probe(_ limits: JSONLimits) throws -> JSONOperationReport<Int> {
+        try document.readWithReport(limits: limits) { root in
+            do { _ = try root["x"].requiredNumber(); Issue.record("Expected wrong kind") }
+            catch let failure as JSONAccessFailure {
+                #expect(failure.path == [.key("x")] && failure.cause.code == .wrongKind)
+                #expect(failure.cause.location?.byteOffset == 5)
+            }
+            return 17
+        }
+    }
+    let baseline = try probe(.balanced); let work = baseline.statistics[.workUnits]
+    try #require(work > 0 && work <= 1024)
+    for quota in 0..<work {
+        var limits = JSONLimits.balanced; limits[.workUnits] = quota
+        closureFailure(.resource, .limitExceeded, metric: .workUnits) { _ = try probe(limits) }
+    }
+    var limits = JSONLimits.balanced; limits[.workUnits] = work
+    let boundary = try probe(limits)
+    #expect(boundary.result == 17 && boundary.statistics[.workUnits] == work && boundary.statistics[.retainedBytes] == 0)
+}
+
+@Test func qaCorePayloadFieldEncodingSharesEveryNativeWorkBoundary() throws {
+    let payload = try JSONCodablePayload(preserving: .null)
+    let baseline = try JSONValueEncoder().encodeWithReport(payload)
+    let expected = try JSONParser().parse(#"{"format":"swift-json-value","version":1,"utf8Base64":"bnVsbA=="}"#)
+    #expect(baseline.result == expected)
+    let work = baseline.statistics[.workUnits]; try #require(work > 0 && work <= 2048)
+    for quota in 0..<work {
+        var limits = JSONLimits.balanced; limits[.workUnits] = quota
+        closureFailure(.resource, .limitExceeded, metric: .workUnits) {
+            _ = try JSONValueEncoder(options: .init(limits: limits)).encode(payload)
+        }
+    }
+    var limits = JSONLimits.balanced; limits[.workUnits] = work
+    #expect(try JSONValueEncoder(options: .init(limits: limits)).encode(payload) == expected)
+    #expect(try payload.value() == .null)
 }
