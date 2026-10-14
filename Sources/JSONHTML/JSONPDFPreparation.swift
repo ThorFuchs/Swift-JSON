@@ -143,7 +143,7 @@ private final class JSONPDFCancellationState: Sendable {
         for _ in input.html { try work(); try meter.charge(.inputBytes); try meter.retain(1) }
         let html = String(decoding: input.html, as: UTF8.self)
         let width = floor(options.paper.width - 2 * options.marginPoints)
-        try advance(.loading)
+        try advance(.loading); try meter.work(8)
         let backend = factory(); self.backend = backend
         try await backend.load(html)
         try advance(.layout); try work()

@@ -41,15 +41,17 @@ private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
     }
     package func load(_ html: String) async throws {
         guard let page else { throw CancellationError() }
-        var finished = false
+        var events = 0
         do {
             for try await event in page.load(html: html) {
                 try Task.checkCancellation()
-                if event == .finished { finished = true }
+                events += 1
+                guard events <= 8 else { throw JSONPDFFailure.navigationFailed }
+                if event == .finished { return }
             }
         } catch is CancellationError { throw CancellationError() }
         catch { throw JSONPDFFailure.navigationFailed }
-        guard finished else { throw JSONPDFFailure.navigationFailed }
+        throw JSONPDFFailure.navigationFailed
     }
     package func layout(width: Double) async throws -> JSONPDFGeometry {
         guard let page else { throw CancellationError() }
