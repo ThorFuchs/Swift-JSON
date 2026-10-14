@@ -13,7 +13,8 @@ import UIKit
 @MainActor package protocol JSONPDFPageBackend: AnyObject {
     func load(_ html: String) async throws
     func layout(width: Double) async throws -> JSONPDFGeometry
-    func text(maximumBytes: UInt64) async throws -> JSONPDFText
+    func textInfo() async throws -> JSONPDFTextInfo
+    func textRun(at index: Int) async throws -> JSONPDFTextRun
     func capture(_ rectangle: JSONPDFRectangle) async throws -> Data
     func stop()
 }
@@ -64,26 +65,32 @@ private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
         } catch is CancellationError { throw CancellationError() }
         catch { throw JSONPDFFailure.layoutFailed }
     }
-    package func text(maximumBytes: UInt64) async throws -> JSONPDFText {
+    package func textInfo() async throws -> JSONPDFTextInfo {
         guard let page else { throw CancellationError() }
         do {
-            // The only accepted source is our immutable static HTML. Every child
-            // and text unit is bounded by the already admitted HTML byte ceiling.
             let result = try await page.callJavaScript(
-                "const c=document.querySelector('pre code'); let n=0,u=0,a=[]; for(const t of c.childNodes){if(++n>cap)return null;let v=t.textContent;u+=v.length;if(u>cap)return null;a.push([t.nodeType===3?'whitespace':t.className,v]);}return [getComputedStyle(document.querySelector('pre')).tabSize,a];",
-                arguments: ["cap": maximumBytes], contentWorld: .defaultClient)
+                "return [getComputedStyle(document.querySelector('pre')).tabSize,document.querySelector('pre code').childNodes.length];",
+                contentWorld: .defaultClient)
             guard let values = result as? [Any], values.count == 2,
                   let tab = values[0] as? String, let tabWidth = Double(tab), (1...8).contains(tabWidth),
-                  let rows = values[1] as? [[String]], rows.count <= maximumBytes else { throw JSONPDFFailure.layoutFailed }
-            var runs: [JSONPDFTextRun] = []
-            for row in rows {
-                try Task.checkCancellation()
-                guard row.count == 2, ["whitespace", "punctuation", "key", "string", "number", "boolean", "null"].contains(row[0]) else {
-                    throw JSONPDFFailure.layoutFailed
-                }
-                runs.append(.init(kind: row[0], text: row[1]))
+                  let count = values[1] as? Int, count > 0 else { throw JSONPDFFailure.layoutFailed }
+            return .init(count: count, tabWidth: tabWidth)
+        } catch is CancellationError { throw CancellationError() }
+        catch { throw JSONPDFFailure.layoutFailed }
+    }
+    package func textRun(at index: Int) async throws -> JSONPDFTextRun {
+        guard let page else { throw CancellationError() }
+        do {
+            // One native DOM primitive per call: no uninterruptible owned JS loop
+            // and no owned run array allocated outside the job's cumulative meter.
+            let result = try await page.callJavaScript(
+                "const t=document.querySelector('pre code').childNodes.item(index);if(!t)return null;return [t.nodeType===3?'whitespace':t.className,t.textContent];",
+                arguments: ["index": index], contentWorld: .defaultClient)
+            guard let row = result as? [String], row.count == 2,
+                  ["whitespace", "punctuation", "key", "string", "number", "boolean", "null"].contains(row[0]) else {
+                throw JSONPDFFailure.layoutFailed
             }
-            return .init(runs: runs, tabWidth: tabWidth)
+            return .init(kind: row[0], text: row[1])
         } catch is CancellationError { throw CancellationError() }
         catch { throw JSONPDFFailure.layoutFailed }
     }

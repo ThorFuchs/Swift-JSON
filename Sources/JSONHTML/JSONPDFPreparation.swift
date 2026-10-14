@@ -174,13 +174,23 @@ private final class JSONPDFCancellationState: Sendable {
             // Fixed client script and conversion loops are conservatively admitted
             // under this same meter, before native extraction/attributed layout.
             try meter.work(UInt64(input.html.count))
-            let source = try await backend.text(maximumBytes: UInt64(input.html.count))
+            try advance(.extraction)
+            let info = try await backend.textInfo()
             try check()
-            for run in source.runs {
-                try work(); try meter.retain(96); textReservation += 96
+            guard info.count > 0, UInt64(info.count) <= UInt64(input.html.count) else { throw JSONPDFFailure.layoutFailed }
+            var runs: [JSONPDFTextRun] = []
+            var textBytes: UInt64 = 0
+            for index in 0..<info.count {
+                try advance(.extraction); try work()
+                let run = try await backend.textRun(at: index)
+                try check()
+                textBytes = try pdfAdd(.htmlBytes, textBytes, UInt64(run.text.utf8.count), UInt64(input.html.count))
+                try meter.retain(96); textReservation += 96
                 for _ in run.text.utf16 { try work(); try meter.retain(4); textReservation += 4 }
+                // Admit source/attributed reservations before owned array growth.
+                runs.append(run)
             }
-            try await compositor.configure(source)
+            try await compositor.configure(.init(runs: runs, tabWidth: info.tabWidth))
             var complete = false
             var contentHeight: UInt64 = 0
             while !complete {

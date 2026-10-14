@@ -398,8 +398,8 @@ let richBytes = try richItem.data(for: .rtf)
 precondition(!richBytes.isEmpty)
 ```
 
-Prepare PDF explicitly on the main actor with `await item.preparingPDF()` or
-`await item.preparingPDFWithReport()`. This uses the item's own static HTML;
+Prepare PDF explicitly on the main actor with `try await item.preparingPDF()` or
+`try await item.preparingPDFWithReport()`. This uses the item's own static HTML;
 success returns a new immutable item whose selected PDF transfers only completed
 bytes. Defaults are paginated A4, 36-point margins and a light Menlo profile.
 US Letter and an explicit continuous page are available. Finite limits and

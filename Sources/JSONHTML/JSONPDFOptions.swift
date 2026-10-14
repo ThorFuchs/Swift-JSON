@@ -163,10 +163,12 @@ package func pdfAdd(_ metric: JSONPDFResourceMetric, _ a: UInt64, _ b: UInt64, _
     guard !overflow else { throw JSONPDFFailure.counterOverflow(metric) }
     try pdfRequire(metric, value, limit); return value
 }
-package enum JSONPDFStage: String, Sendable { case input, loading, layout, capture, composition, installation }
+package enum JSONPDFStage: String, Sendable { case input, loading, layout, extraction, capture, composition, installation }
 package struct JSONPDFGeometry: Sendable { let width: Double; let height: Double; let lineHeight: Double }
 package struct JSONPDFRectangle: Sendable { let x: Double; let y: Double; let width: Double; let height: Double }
 
 package struct JSONPDFTextRun: Sendable { let kind: String; let text: String }
 package struct JSONPDFText: Sendable { let runs: [JSONPDFTextRun]; let tabWidth: Double }
 package struct JSONPDFTextPage: Sendable { let data: Data; let isComplete: Bool; let utf16Units: UInt64; let heightPoints: UInt64 }
+
+package struct JSONPDFTextInfo: Sendable { let count: Int; let tabWidth: Double }

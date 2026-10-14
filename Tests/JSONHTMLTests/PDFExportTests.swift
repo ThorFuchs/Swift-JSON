@@ -135,11 +135,15 @@ import PDFKit
 @Test @MainActor func applePDFCancellationAtEveryStageDoesNotInstallOutput() async throws {
     pdfBootstrap()
     let item = try pdfFixture(80)
-    for stage in [JSONPDFStage.input, .loading, .layout, .capture, .composition, .installation] {
+    for stage in [JSONPDFStage.input, .loading, .layout, .extraction, .capture, .composition, .installation] {
         var task: Task<JSONPDFPreparationReport, any Error>?
+        var extractionVisits = 0
         task = Task { @MainActor in
             try await item.preparingPDFWithReport(options: .init(), factory: { JSONPDFWebPage() },
-                observer: { observed in if observed == stage { task?.cancel() } })
+                observer: { observed in
+                    if observed == .extraction { extractionVisits += 1 }
+                    if observed == stage && (stage != .extraction || extractionVisits >= 3) { task?.cancel() }
+                })
         }
         do { _ = try await task!.value; Issue.record("Cancellation accepted PDF at \(stage)") }
         catch { #expect(error is CancellationError) }
@@ -214,7 +218,8 @@ import PDFKit
     init(ready: @escaping @MainActor () -> Void) { self.ready = ready }
     func load(_ html: String) async throws {}
     func layout(width: Double) async throws -> JSONPDFGeometry { .init(width: width, height: 16, lineHeight: 16) }
-    func text(maximumBytes: UInt64) async throws -> JSONPDFText { .init(runs: [.init(kind: "null", text: "null")], tabWidth: 4) }
+    func textInfo() async throws -> JSONPDFTextInfo { .init(count: 1, tabWidth: 4) }
+    func textRun(at index: Int) async throws -> JSONPDFTextRun { .init(kind: "null", text: "null") }
     func capture(_ rectangle: JSONPDFRectangle) async throws -> Data {
         if let failure { throw failure }
         return try await withCheckedThrowingContinuation { pending = $0; ready() }
