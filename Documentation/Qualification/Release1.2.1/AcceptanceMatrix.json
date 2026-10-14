@@ -10,7 +10,7 @@
       "work_package": "T00",
       "module": "All",
       "topic": "Complete coverage export",
-      "status": "atomic_native_coverage_qualified_linux_export_execution_pending",
+      "status": "atomic_native_and_both_linux_exports_qualified",
       "existing_evidence": [
         "fresh 192/173 root coverage run",
         "default export omitted schema/regex/streaming mappings"
@@ -23,7 +23,8 @@
         "branch/MC/DC marked unavailable"
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
-      "portability_evidence": "PortabilityOutcomes.json"
+      "portability_evidence": "PortabilityOutcomes.json",
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "HAR-02",
@@ -190,7 +191,7 @@
       "work_package": "T02",
       "module": "JSON",
       "topic": "Preview/redaction/completeness",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_preview_scalar_boundaries_and_invalid_options",
       "existing_evidence": [
         "previewRedactsExactKeysBeforeTraversingValues",
         "previewCapsTotalTraversalAndOutputWithoutAdmittingWholeDocument"
@@ -202,7 +203,8 @@
         "completeness explicit",
         "no replacement-character corruption",
         "no serializer claim"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "BUD-01",
@@ -249,7 +251,7 @@
       "work_package": "T03",
       "module": "JSONSchema",
       "topic": "Applicators/evaluated locations/output",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_malformed_shapes_operational_categories",
       "existing_evidence": [
         "evaluatedLocationsFlowThroughSuccessfulReferencesAndComposition",
         "arrayContainsAndConditionalAnnotationsRespectTheirBranches",
@@ -262,14 +264,15 @@
         "no quota-as-invalidity",
         "output conversion does not reevaluate",
         "incompleteness explicit"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "SCH-02",
       "work_package": "T03",
       "module": "JSONSchema",
       "topic": "References and immutable registries",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_uri_identity_collision_and_escaped_locations",
       "existing_evidence": [
         "productiveRecursionProgressesAndNonproductiveCyclesThrow",
         "URIResolutionUsesRFC3986AndPercentFragmentsRemainEncoded",
@@ -282,14 +285,15 @@
         "cycles operational",
         "no online resolution",
         "no global mutable cache/state leak"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "SCH-03",
       "work_package": "T03",
       "module": "JSONSchema",
       "topic": "Raw/compiled inspection and compilation shapes",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_annotations_and_best_effort_terminal_controls",
       "existing_evidence": [
         "rawDeclarationInspectionNeverInfersOrNarrowsConstraints",
         "compiledInspectionExposesStaticTargetsAndDynamicAmbiguity",
@@ -302,14 +306,15 @@
         "dynamic target ambiguity preserved",
         "selected builder phases cumulative",
         "compile error versus resource/cancel distinguished"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "REG-01",
       "work_package": "T03",
       "module": "JSONRegexRuntime",
       "topic": "VM semantic decisions",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_control_hex_named_scalar_escapes",
       "existing_evidence": [
         "deterministicIndependentRegexDifferentialCases",
         "scalarBacktrackingSemantics",
@@ -322,14 +327,15 @@
         "unsupported/malformed compiled errors explicit",
         "newer engine grammar not adopted",
         "immutable program exclusive state"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "REG-02",
       "work_package": "T03",
       "module": "JSONRegexRuntime",
       "topic": "Regex budget/cleanup decisions",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_escape_compile_quota_and_cancellation",
       "existing_evidence": [
         "adversarialRegexPathsExhaustWorkInsteadOfReturningInvalidity",
         "regexSearchLimitResetsButAggregateLimitNeverResets",
@@ -342,7 +348,8 @@
         "no branch swallows resource/cancel",
         "scratch released",
         "new invocation recovers independently"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "STR-01",
@@ -393,7 +400,7 @@
       "work_package": "T04",
       "module": "JSONPatch",
       "topic": "RFC6902 operation/state matrix",
-      "status": "planned_extension",
+      "status": "partially_portable_qualified_malformed_removed_root_same_path_move_copy",
       "existing_evidence": [
         "allRFC6902OperationsAndArrayMoveOrdering",
         "rootRemovalRecreationAndNullRemainDistinct",
@@ -406,7 +413,8 @@
         "remove before target resolution",
         "input unchanged on failure",
         "irrelevant fields treated per RFC"
-      ]
+      ],
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     },
     {
       "id": "PAT-02",
@@ -492,7 +500,7 @@
       "work_package": "T07",
       "module": "All",
       "topic": "Actual platform/safety/consumer closure",
-      "status": "native_linux_and_scoped_wasi_qualified_broader_plan_pending",
+      "status": "native_linux_and_scoped_wasi_qualified_performance_variance_followup_broader_plan_pending",
       "existing_evidence": [
         "1.2.0 Native/Linux seven passed jobs",
         "65 WASI commands with explicit per-host scopes"
@@ -508,7 +516,8 @@
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
       "second_wave_evidence": "Wave2Outcomes.json",
-      "portability_evidence": "PortabilityOutcomes.json"
+      "portability_evidence": "PortabilityOutcomes.json",
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
     }
   ],
   "proposed_targets": {
@@ -531,5 +540,6 @@
   ],
   "first_wave_evidence": "Wave1Outcomes.json",
   "second_wave_evidence": "Wave2Outcomes.json",
-  "portability_evidence": "PortabilityOutcomes.json"
+  "portability_evidence": "PortabilityOutcomes.json",
+  "coverage_wave_evidence": "CoverageWaveOutcomes.json"
 }

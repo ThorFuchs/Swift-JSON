@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "status": "functional_native_linux_wasi_qualified_performance_variance_followup",
+  "parent_wave": "PortabilityOutcomes.json",
+  "runtime_tested_head": "20476dace4626528aba36649df2686b2158c7f9f",
+  "measurement_tested_head": "708c26389ff17a46e327c03d61f32947a4104415",
+  "new_functions": 31,
+  "root_functions": 276,
+  "parameterized_invocations": 173,
+  "qa_functions": 103,
+  "shared_state_functions": 22,
+  "source_changes": [
+    "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift"
+  ],
+  "preserved": [
+    "four public products",
+    "private regex runtime",
+    "empty root dependency graph",
+    "Swift tools/compiler 6.4 and language mode 6",
+    "qualified Apple/Linux/WASI platform boundaries",
+    "all 49 caps",
+    "fixture pins and policy exclusions",
+    "prior W/G/RC/release/test-wave history",
+    "sibling 1.3.0 checkout"
+  ],
+  "native": {
+    "workflow": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38555689649",
+    "status": "success",
+    "lanes": [
+      "native",
+      "safety",
+      "docs"
+    ],
+    "root_each_configuration": 276,
+    "parameterized_each_configuration": 173,
+    "full_asan": 276,
+    "tsan": 22,
+    "authored_public_docc": 582,
+    "documented_public_docc": 582,
+    "verification": {
+      "path": "NativeReceiptVerification.json",
+      "sha256": "f5be4ed3ac4802a04f15d9e7f34efe9fd67fefe78ec427b79660fcc812aa168d"
+    }
+  },
+  "linux": {
+    "qualification_workflow": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38555685386",
+    "overall_status": "failure due to initial incomplete coverage exports",
+    "passed_jobs": [
+      "arm64/linux",
+      "x86_64/linux",
+      "arm64/linux-safety",
+      "x86_64/linux-safety"
+    ],
+    "coverage_workflow": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38558125723",
+    "coverage_status": "success",
+    "coverage_jobs": 2,
+    "instrumented_objects_each_architecture": 10,
+    "qualification_verification": {
+      "path": "LinuxReceiptVerification.json",
+      "sha256": "7b39f0077bb0575061f83100d88cfa56a34b719a857944356fab532ede912c16"
+    },
+    "coverage_verification": {
+      "path": "LinuxCoverageVerification.json",
+      "sha256": "6df9c86cfa0d397bc96ad4dc9f055cb76a44598b680dd4a36ea78c931efadf2d"
+    },
+    "independent_llvm_replay": {
+      "path": "LinuxReplay.json",
+      "sha256": "55e05dec41b757dbe87a45cb6ad955637856b93c5bde2368d531cf77b938d741"
+    },
+    "reproduction": "Both qualification jobs extracted and built/tested actual byte-reproducible source archives at runtime head."
+  },
+  "wasi": {
+    "receipt": {
+      "path": "wasi/receipt.json",
+      "sha256": "ffd98420525598ce22ed03467a890cd3e6f655219519317d3b643bcbad87238d"
+    },
+    "probe_receipt": {
+      "path": "wasi/probes/wasi.json",
+      "sha256": "72a819f46238d2cfa9109fc898fa4cff2274c06e859af6ffafab476edce86682"
+    },
+    "status": "passed",
+    "commands": 38,
+    "scope": "Node full debug/release roots 276/173. Node and WasmKit affected QA 103 per configuration; strict-memory compilation. No independent consumer/cap/corpus refresh or sanitizer pass claim in scoped lane.",
+    "materialization": "WASIMaterialization.json"
+  },
+  "coverage": {
+    "accepted_baseline": {
+      "lines": {
+        "count": 6929,
+        "covered": 6753
+      },
+      "regions": {
+        "count": 7691,
+        "covered": 7156
+      }
+    },
+    "current": {
+      "lines": {
+        "count": 6936,
+        "covered": 6820,
+        "percent": 98.3275663206459
+      },
+      "regions": {
+        "count": 7694,
+        "covered": 7339,
+        "percent": 95.38601507668314
+      },
+      "functions": {
+        "count": 1143,
+        "covered": 1123,
+        "percent": 98.25021872265967
+      },
+      "branches": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      },
+      "mcdc": {
+        "count": 0,
+        "covered": 0,
+        "percent": null
+      }
+    },
+    "modules": {
+      "JSON": {
+        "mapped_files": 50,
+        "authored": {
+          "lines": {
+            "count": 3443,
+            "covered": 3369,
+            "percent": 97.85071158873076
+          },
+          "regions": {
+            "count": 3427,
+            "covered": 3252,
+            "percent": 94.89349285088998
+          },
+          "functions": {
+            "count": 595,
+            "covered": 588,
+            "percent": 98.82352941176471
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONSchema": {
+        "mapped_files": 32,
+        "authored": {
+          "lines": {
+            "count": 2417,
+            "covered": 2389,
+            "percent": 98.84153909805543
+          },
+          "regions": {
+            "count": 3091,
+            "covered": 2953,
+            "percent": 95.53542542866386
+          },
+          "functions": {
+            "count": 384,
+            "covered": 375,
+            "percent": 97.65625
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONRegexRuntime": {
+        "mapped_files": 6,
+        "authored": {
+          "lines": {
+            "count": 659,
+            "covered": 650,
+            "percent": 98.63429438543247
+          },
+          "regions": {
+            "count": 695,
+            "covered": 668,
+            "percent": 96.11510791366906
+          },
+          "functions": {
+            "count": 88,
+            "covered": 86,
+            "percent": 97.72727272727273
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 30,
+            "covered": 30,
+            "percent": 100.0
+          },
+          "regions": {
+            "count": 44,
+            "covered": 44,
+            "percent": 100.0
+          },
+          "functions": {
+            "count": 3,
+            "covered": 3,
+            "percent": 100.0
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONStreaming": {
+        "mapped_files": 10,
+        "authored": {
+          "lines": {
+            "count": 232,
+            "covered": 228,
+            "percent": 98.27586206896552
+          },
+          "regions": {
+            "count": 269,
+            "covered": 256,
+            "percent": 95.16728624535315
+          },
+          "functions": {
+            "count": 60,
+            "covered": 58,
+            "percent": 96.66666666666667
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      },
+      "JSONPatch": {
+        "mapped_files": 4,
+        "authored": {
+          "lines": {
+            "count": 185,
+            "covered": 184,
+            "percent": 99.45945945945945
+          },
+          "regions": {
+            "count": 212,
+            "covered": 210,
+            "percent": 99.05660377358491
+          },
+          "functions": {
+            "count": 16,
+            "covered": 16,
+            "percent": 100.0
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        },
+        "generated": {
+          "lines": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "regions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "functions": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "branches": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          },
+          "mcdc": {
+            "count": 0,
+            "covered": 0,
+            "percent": null
+          }
+        }
+      }
+    },
+    "native_and_both_linux_totals_equal": true,
+    "counter_policy": "Atomic increments; reject saturated segments. Actual omitted-schema negative probe.",
+    "classification_policy": "Generated tables separate; declaration-only unmapped files explicit; unused/unreachable paths retained. Branch and MC/DC unavailable, not percentages.",
+    "review_target": "Core remains below proposed per-module 98% lines / 95% regions. All other modules exceed both targets."
+  },
+  "independent_suites": {
+    "strict_json": {
+      "observed": 318,
+      "evaluated_passed": 287,
+      "policy_cases": 31,
+      "failed": 0
+    },
+    "schema": {
+      "observed": 2337,
+      "evaluated_passed": 2300,
+      "policy_cases": 37,
+      "failed": 0
+    },
+    "authored_public_semantics": 82,
+    "public_budget_counter_cases": 9,
+    "malformed_replay": 4396,
+    "malformed_seed": "0x53574946544a534f",
+    "rooted_consumer": {
+      "explicit_cases": 20,
+      "valid": 8,
+      "invalid": 12,
+      "operational_errors": 2,
+      "mcp_server_conformance_claim": false
+    }
+  },
+  "performance": {
+    "review": {
+      "path": "Calibration/Review.json",
+      "sha256": "abfb74a8e367f6580787352c69b216b6574b67dad21ef25cb941398e7393e6c9"
+    },
+    "short_median_change_percent": 1.193816893582933,
+    "long_median_change_percent": 11.98325099056705,
+    "trigger_percent": 10,
+    "disposition": "Required correctness fix retained after review; wall-clock attribution remains inconclusive amid high variance. Controlled quiet-host recalibration is pending before release. Logical retention/work equal; no quota or optimization changes."
+  },
+  "retained_failures": [
+    "Initial compile/oracle corrections in focused logs",
+    "Focused-5 ENOSPC build exit 1, followed by successful run",
+    "Initial ARM64/x86 Linux exports correctly rejected runners-only mapping",
+    "Initial independent replay needed exact path-field rebasing for validation",
+    "Short and long noisy timing windows, no sample discarded"
+  ],
+  "remaining": [
+    "Core per-module review targets not reached; unused helpers remain included",
+    "Broader T01-T07 acceptance/e2e/mutation work remains open",
+    "Performance variance followup before any 1.2.1 release decision",
+    "WASI sanitizers unavailable and physical iPad deferred under existing policy"
+  ],
+  "no_merge_tag_publication": true,
+  "evidence_paths": "Relative paths resolve within the materialized Evidence directory of the private wave bundle; hashes bind bytes, GitHub links bind executions."
+}
