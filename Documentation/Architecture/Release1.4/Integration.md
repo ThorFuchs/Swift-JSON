@@ -94,3 +94,39 @@ for2000 and3.5305s for20000 records on a heavily loaded host; logical retention
 stayed about66.5KB and process RSS about7.6MB. These distinct observations support
 bounded logical pipeline state, not quiet-host throughput or hard RSS promises.
 Final-head hosted checks/reproduction and the return manifests bind the successor.
+
+
+## Checked resource successor
+
+Clean installation of predecessor `9a773f3` reproduced a SIGTRAP when the sibling
+schema bundle and SwiftPM fallback were both absent. Its archive `cf72bb6c…`
+and failed receipt remain immutable and are not release qualification evidence.
+The successor replaces the generated trapping Bundle.module accessor with finite,
+checked app/framework/command lookup. Apple `.bundle` and Linux `.resources`
+layouts retain all nine size/SHA pins; a corrupt present bundle is not bypassed.
+Missing resources throw a schema metaSchema error. The actual installed consumer
+now requires exit5/no output for missing and tampered resources, with a positive
+sibling-resource case. One new Swift Testing function exercises missing lookup,
+shared work/retention, quota failure and in-loop cancellation.
+
+`Scripts/ci.py --lane native` passed25 commands with298 root functions/199 parameter
+cases; safety passed ASan298/199, TSan8 and strict-memory/warnings-as-errors. The
+CLI adapter boundary is now53 foundation +37 integration subprocesses,77 CLI
+functions/26 parameter cases,33 checks across16 CLI metrics, and105 C1-C4 vectors.
+The resource-fix runtime/source manifest is
+`c81e1eb3526a2f67546af9a1d906638ef1b506721390876d4bab8da5343619f8`.
+Native, resumed safety and resumed WASI receipts record unchanged source inputs.
+WASI executes221 core/HTML functions in debug/release with173 parameter cases,
+all49 cap outcomes, public/rooted consumers and the unchanged pinned independent
+suite counts. Missing-resource and strict-memory probes pass. CLI WASI runtime
+support remains the separate limited disposition above. Both selected mobile
+SDK consumers passed on27.2 without CLI contamination.
+
+Disk-full safety/WASI attempts and a SwiftPM lock-banner failure remain failed or
+incomplete records. Only completed caches owned by this CLI worktree were cleared;
+source and materialized receipts were preserved, and separate complete reruns passed.
+Resource-fix slow-sink release medians are0.0803s/2.7205s for2000/20000 records;
+peak logical retention is about66.5KB and measured RSS about7.5MB on a loaded host.
+There is no quiet-host throughput or hard RSS claim. Final-head hosted checks,
+source archive, clean extraction and acceptance closure are bound by the returned
+freeze/evidence records. Mandatory provider CL078/CL079 remain blocked.

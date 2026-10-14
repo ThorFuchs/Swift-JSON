@@ -37,7 +37,24 @@ extension JSONSchemaRegistry {
         let root = URL(fileURLWithPath: command).deletingLastPathComponent()
             .appendingPathComponent("Swift-JSON_JSONSchema.bundle", isDirectory: true)
         #else
-        guard let root = Bundle.module.resourceURL else { throw JSONSchemaCompilationFailure(.metaSchema) }
+        // The generated Bundle.module accessor traps if packaging is incomplete.
+        // Resolve the same app/framework/command layouts through checked lookup.
+        var candidates: [URL] = []
+        #if DEBUG
+        if let override = ProcessInfo.processInfo.environment["PACKAGE_RESOURCE_BUNDLE_PATH"]
+            ?? ProcessInfo.processInfo.environment["PACKAGE_RESOURCE_BUNDLE_URL"] {
+            candidates.append(URL(fileURLWithPath: override))
+        }
+        #endif
+        if let directory = Bundle.main.resourceURL { candidates.append(directory) }
+        #if canImport(ObjectiveC)
+        if let directory = Bundle(for: JSONSchemaBundleAnchor.self).resourceURL { candidates.append(directory) }
+        #endif
+        candidates.append(Bundle.main.bundleURL)
+        if let command = CommandLine.arguments.first {
+            candidates.append(URL(fileURLWithPath: command).deletingLastPathComponent())
+        }
+        let root = try builtinResourceRoot(in: candidates, meter: &meter)
         #endif
         for (path, identifier, size, expectedHash) in files {
             try meter.checkpoint(); try meter.charge(.schemaDocuments); try meter.resetValueBounds()
@@ -77,6 +94,26 @@ extension JSONSchemaRegistry {
         }
         return documents
     }
+
+    /// Fixed-layout lookup is checked; a present corrupt bundle is selected and
+    /// rejected by the existing pins rather than bypassed via another candidate.
+    package static func builtinResourceRoot(in candidates: [URL], meter: inout JSONWorkMeter) throws -> URL {
+        for candidate in candidates {
+            try meter.checkpoint()
+            let pathBytes = UInt64(candidate.path.utf8.count)
+            try meter.require(.stringBytes, pathBytes)
+            try meter.work(pathBytes + 1)
+            try meter.retain(pathBytes + 128)
+            defer { try? meter.release(pathBytes + 128) }
+            // SwiftPM's Apple/Swift Build and Linux resource directory spellings.
+            for name in ["Swift-JSON_JSONSchema.bundle", "Swift-JSON_JSONSchema.resources"] {
+                try meter.work(UInt64(name.utf8.count) + 1)
+                let url = candidate.appendingPathComponent(name, isDirectory: true)
+                if let bundle = Bundle(url: url), let root = bundle.resourceURL { return root }
+            }
+        }
+        throw JSONSchemaCompilationFailure(.metaSchema)
+    }
     package static func verifyBuiltin(_ data: Data, size: UInt64, expectedHash: String,
                                       meter: inout JSONWorkMeter) throws {
         try meter.work()
@@ -87,3 +124,7 @@ extension JSONSchemaRegistry {
         guard hash.utf8.elementsEqual(expectedHash.utf8) else { throw JSONSchemaCompilationFailure(.metaSchema) }
     }
 }
+
+#if canImport(ObjectiveC)
+private final class JSONSchemaBundleAnchor {}
+#endif

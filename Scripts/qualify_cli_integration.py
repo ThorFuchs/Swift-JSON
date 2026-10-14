@@ -44,7 +44,7 @@ def main():
         source=file('late-tail.jsons',b'{"x":"exact"}\n'*3000+b'{')
         run('long-prefix-atomic-failure',['query','--compact','.x',source,'--output',str(target),'--overwrite'],exit=5,expected=b'',check=lambda p:target.read_bytes()==b'old' and not list(directory.glob('.swift-json-*.tmp')))
         installed=directory/'installed with spaces';installed.mkdir();executable=installed/'swift-json';shutil.copy2(binary,executable)
-        bundle=next((p for p in binary.parent.iterdir() if p.name=='Swift-JSON_JSONSchema.bundle'),None)
+        bundle=next((p for p in binary.parent.iterdir() if p.name in ('Swift-JSON_JSONSchema.bundle','Swift-JSON_JSONSchema.resources')),None)
         if bundle is None:raise ValueError('Missing actual sibling schema bundle')
         installed_bundle=installed/bundle.name;shutil.copytree(bundle,installed_bundle)
         run('installed-resource-schema',['validate','--schema',resource],b'9007199254740993',check=lambda p:json.loads(p.stdout)['valid'],executable=executable,cwd=directory)
@@ -54,6 +54,14 @@ def main():
         # even on hosts with SwiftPM's build-time fallback directory still present.
         pin=next(installed_bundle.rglob('schema.json'));pin.write_bytes(b'{}')
         run('installed-tampered-resource',['validate','--schema',resource],b'1',exit=5,expected=b'',executable=executable,cwd=directory)
+        shutil.rmtree(installed_bundle)
+        held=bundle.with_name(bundle.name+'.qualification-held')
+        bundle.rename(held)
+        try:
+            run('installed-missing-resources',['validate','--schema',resource],b'1',exit=5,expected=b'',executable=executable,cwd=directory,
+                check=lambda p:b'schemaCompilation.metaSchema' in p.stderr)
+        finally:held.rename(bundle)
+
         p=subprocess.Popen([str(binary),'query','-n','--diagnostics=json','range(10000)'],stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         p.stdout.close();stderr=p.stderr.read();code=p.wait(timeout=10)
         good=code==7 and json.loads(stderr)['category']=='io'
