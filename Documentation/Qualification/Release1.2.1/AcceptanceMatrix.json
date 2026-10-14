@@ -494,7 +494,7 @@
       "work_package": "T06",
       "module": "All",
       "topic": "Seeded valid/invalid replay and mutants",
-      "status": "qualified_native_linux_and_scoped_wasi",
+      "status": "native_mutation_pilot_qualified_replays_portably_qualified",
       "existing_evidence": [
         "qaGeneratedExactRoundTripsAcrossNativeAndForeignPayloads",
         "deterministicMalformedReplayPreservesStrictProgressAndRoundTrips"
