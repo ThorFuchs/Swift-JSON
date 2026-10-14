@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
   "root_functions": {
-    "JSONTests": 127,
+    "JSONTests": 144,
     "JSONSchemaTests": 51,
     "JSONRegexRuntimeTests": 12,
-    "JSONStreamingTests": 14,
+    "JSONStreamingTests": 26,
     "JSONPatchTests": 11
   },
   "parameterized_invocations": 173,
   "qa_functions": {
-    "JSONTests": 34,
+    "JSONTests": 51,
     "JSONSchemaTests": 3,
-    "JSONStreamingTests": 3,
+    "JSONStreamingTests": 15,
     "JSONPatchTests": 2
   },
-  "shared_state_functions": {"JSONTests": 4, "JSONSchemaTests": 1, "JSONRegexRuntimeTests": 1},
+  "shared_state_functions": {"JSONTests": 4, "JSONSchemaTests": 1, "JSONRegexRuntimeTests": 1, "JSONStreamingTests": 12},
   "coverage_unmapped": {
     "Sources/JSON/Pointer/JSONLocationComponent.swift": "declaration-only enum",
     "Sources/JSONSchema/Output/JSONValidationOutput.swift": "declaration-only enum",

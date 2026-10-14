@@ -23,3 +23,6 @@ all 49 caps and platform-specific limitations remain authoritative.
 First wave implemented and natively qualified: 23 new Swift Testing functions,
 215/173 root discoveries, complete coverage export and negative omission probe.
 See [actual outcomes](Wave1Outcomes.json) for receipts and remaining scope.
+
+The [second wave](Wave2.md) adds foreign-coder and 128-bit probes plus causal
+streaming gates. Each wave retains its own source identity and native receipts.

@@ -101,6 +101,13 @@ metered Base64; Date defaults to its Codable representation. Explicit ISO-8601 u
 UTC fractional seconds, finite years 0000...9999 and at most 128 input UTF-8 bytes.
 `JSONCodingOptions.userInfo` stores checked Sendable values.
 
+The qualified 128-bit probe distinguishes exact value projection from typed
+Codable. `JSONNumber.integer(as: Int128.self)`/`UInt128.self` support exact bounded
+projection. Native typed Int128/UInt128 Codable currently uses the SDK container
+defaults and throws unsupported-type EncodingError/DecodingError, including for
+small values. Use exact JSONNumber/JSON values or JSONCodablePayload for lossless
+transport; this is no claim that typed 128-bit Codable is implemented.
+
 Foreign Codable bridges inherit the foreign coder's source fidelity. External
 numeric decoding tries Int64, UInt64 and Decimal, with no Double fallback. External
 encoding requires an exact Int64, UInt64 or Decimal representation. Neither bridge
