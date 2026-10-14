@@ -1,7 +1,7 @@
 {
   "schema": "swift-json-cli-acceptance/1",
   "prepared": "2026-10-14",
-  "implementation_status": "C0-C4 behavior and portable C5 milestone tested; provider prerequisites blocked; final source/platform/reproduction closure tracked",
+  "implementation_status": "Native resource-fix successor qualified; final immutable return records close artifact/head rows. Mandatory providers remain blocked.",
   "requirements": [
     {
       "id": "CL001",

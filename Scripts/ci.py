@@ -115,11 +115,11 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [77] if 'cli|sharedFilterPlan' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 25, 51, 77, 107]
+        expected = [77] if 'cli|sharedFilterPlan' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 25, 52, 77, 107]
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
-                passed = passed and events['module_function_counts'] == {'JSONTests':107,'JSONSchemaTests':51,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':25,'JSONCLITests':77}
+                passed = passed and events['module_function_counts'] == {'JSONTests':107,'JSONSchemaTests':52,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':25,'JSONCLITests':77}
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 199)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -131,7 +131,7 @@ def check_result(command, code, log, events=None):
         passed = data['observed'] == data['passed'] == 53 and data['failed'] == 0
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_integration.py'] and passed:
         d = json.loads(log.strip().splitlines()[-1])
-        passed = d['status'] == 'passed' and (d['observed'], d['passed'], d['failed']) == (36, 36, 0)
+        passed = d['status'] == 'passed' and (d['observed'], d['passed'], d['failed']) == (37, 37, 0)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_limits.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['observed'] == data['passed'] == 33 and data['failed'] == 0 and data['metrics'] == 16
@@ -221,7 +221,7 @@ def main():
     if receipt['status'] == 'passed' and args.lane == 'wasm':
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
-            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':107,'JSONSchemaTests':51,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':25}:
+            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':107,'JSONSchemaTests':52,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':25}:
                 raise ValueError('Missing WASI qualification boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
