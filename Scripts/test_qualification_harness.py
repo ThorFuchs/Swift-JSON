@@ -7,8 +7,8 @@ import pathlib
 import tempfile
 import unittest
 from coverage import executable_objects, validate_export
-from test_discovery import ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root
-from ci import check_result
+from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root
+from ci import check_result, commands
 
 class HarnessTests(unittest.TestCase):
     def setUp(self):
@@ -76,6 +76,17 @@ class HarnessTests(unittest.TestCase):
             self.assertFalse(check_root(broken))
             self.assertFalse(check_result(['swift','test'],0,broken)[0])
         self.assertFalse(check_result(['swift','test'],1,valid)[0])
+        # Scoped portability lanes retain exact discovery and safety rather
+        # than describing an exit-zero subset as full qualification.
+        output = pathlib.Path(__file__).resolve().parents[1] / 'Artifacts/HarnessProbe'
+        linux = commands('linux-qa', output)
+        self.assertEqual(sum(c[:2] == ['swift','test'] for c in linux), 4)
+        self.assertTrue(all('--disable-xctest' in c for c in linux if c[:2] == ['swift','test']))
+        qa = '\n'.join('Test run with '+str(n)+' tests in 0 suites passed' for n in DISCOVERY['qa_functions'].values())
+        self.assertTrue(check_result(linux[4], 0, qa)[0])
+        self.assertFalse(check_result(linux[4], 0, qa+'\nTest run with 1 test in 0 suites passed')[0])
+        self.assertIn('--scope', commands('wasm-qa', output)[1])
+        self.assertNotIn('--scope', commands('wasm', output)[1])
 
     def test_darwin_executable_membership_is_exact(self):
         for name in ROOT_COUNTS:

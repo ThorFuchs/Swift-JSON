@@ -16,15 +16,28 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
-    if lane == 'wasm':
+    if lane in ('wasm', 'wasm-qa'):
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
-            ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')],
+            ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')] +
+            (['--scope', 'root-qa'] if lane == 'wasm-qa' else []),
         ]
     if lane == 'coverage':
         return [
             ['python3', '-B', 'Scripts/test_qualification_harness.py'],
             ['python3', '-B', 'Scripts/coverage.py', '--output', str(output / 'export')],
+        ]
+    if lane == 'linux-qa':
+        # A test-only increment: complete roots in both configurations, then
+        # affected QA/shared-state safety. This is not independent-suite refresh.
+        return [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+            ['swift', 'test', '--disable-xctest'],
+            ['swift', 'test', '-c', 'release', '--disable-xctest'],
+            commands('qa', ROOT / output)[2] + ['--disable-xctest'],
+            commands('safety', ROOT / output)[1] + ['--disable-xctest'],
+            commands('safety', ROOT / output)[2],
         ]
     if lane == 'linux':
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
@@ -123,7 +136,7 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'coverage', 'linux', 'linux-safety', 'wasm'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'coverage', 'linux', 'linux-safety', 'linux-qa', 'wasm', 'wasm-qa'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -144,7 +157,7 @@ def main():
         log_path = output / ('command-%02d.log' % index)
         with log_path.open('w') as stream:
             try:
-                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane == 'wasm' else 1800)
+                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane in ('wasm', 'wasm-qa') else 1800)
                 code = result.returncode
             except (OSError, subprocess.TimeoutExpired) as error:
                 stream.write('\n' + str(error) + '\n')
@@ -171,11 +184,13 @@ def main():
             receipt['status'] = 'failed'
             receipt['evidence_error'] = str(error)
             print('Native evidence failed: ' + str(error), flush=True)
-    if receipt['status'] == 'passed' and args.lane == 'wasm':
+    if receipt['status'] == 'passed' and args.lane in ('wasm', 'wasm-qa'):
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
             if wasi['status'] != 'passed' or wasi['root_counts'] != ROOT_COUNTS:
                 raise ValueError('Missing WASI qualification boundary')
+            if args.lane == 'wasm-qa' and (wasi['scope'] != 'root-qa' or wasi['qa_counts'] != DISCOVERY['qa_functions']):
+                raise ValueError('Missing scoped WASI QA boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
             receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)

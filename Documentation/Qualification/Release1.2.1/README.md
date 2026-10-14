@@ -30,3 +30,8 @@ streaming gates. Each wave retains its own source identity and native receipts.
 Second wave natively qualified: 29 new functions, 244/173 roots, 71 QA and 18 TSan
 functions. [Actual outcomes](Wave2Outcomes.json) retain unsupported typed 128-bit
 Codable and platform/remaining-plan limitations.
+
+The [portability/completion follow-up](Portability.md) adds a 566-case public
+completion matrix and narrowly scoped Linux/WASI QA lanes. Its current
+discovery is 245/173 roots, 72 QA and 19 shared-state functions; actual platform
+results remain separate from the historical native waves.
