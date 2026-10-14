@@ -90,12 +90,12 @@ private func evaluateFilter(_ source: String, input: String = "null") throws -> 
 }
 @Test func sharedFilterPlanHasIndependentConcurrentInvocations() async throws {
     var compilation = try CLIJobContext()
-    let program = try FilterCompiler.compile(".a, .b", context: &compilation)
+    let program = try FilterCompiler.compile(#"def project(f): f|walk(if type=="number" then .+1 else . end);project(.a)|.[]|="v\(.)""#, context: &compilation)
     let outputs = try await withThrowingTaskGroup(of: [JSON].self, returning: [[JSON]].self) { group in
         for _ in 0..<8 {
             group.addTask {
                 var context = try CLIJobContext()
-                let input = try JSONParser().parse("{\"a\":1,\"b\":2}")
+                let input = try JSONParser().parse(#"{"a":[1,2]}"#)
                 var value = try FilterValues.produced(input, context: &context)
                 var vm = try FilterVM(program: program, input: value, context: &context), source = EmptyFilterInput()
                 defer { try? vm.close(context: &context) }
@@ -111,5 +111,5 @@ private func evaluateFilter(_ source: String, input: String = "null") throws -> 
         for try await value in group { values.append(value) }
         return values
     }
-    #expect(outputs.count == 8 && outputs.allSatisfy { $0 == [.number(1), .number(2)] })
+    #expect(outputs.count == 8 && outputs.allSatisfy { $0 == [.array([.string("v2"),.string("v3")])] })
 }

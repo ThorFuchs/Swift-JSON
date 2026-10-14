@@ -37,15 +37,16 @@ package final class CLIValueLease {
 package struct FilterYield {
     package var value: JSON
     package var lease: CLIValueLease?
+    package var location:FilterLocation?
     package var collectedValues: UInt64
-    package init(value: JSON, lease: CLIValueLease? = nil, collectedValues: UInt64 = 0) { self.value = value; self.lease = lease; self.collectedValues = collectedValues }
+    package init(value: JSON, lease: CLIValueLease? = nil, collectedValues: UInt64 = 0,location:FilterLocation?=nil) { self.value = value; self.lease = lease; self.collectedValues = collectedValues;self.location=location }
     package func selecting(_ value: JSON) -> Self {
         let retainedCollections: UInt64
         switch value { case .array, .object: retainedCollections = collectedValues; default: retainedCollections = 0 }
-        return .init(value: value, lease: lease, collectedValues: retainedCollections)
+        return .init(value: value, lease: lease, collectedValues: retainedCollections,location:location)
     }
     package mutating func release(context: inout CLIJobContext) throws {
-        value = .null; lease = nil; collectedValues = 0
+        value = .null; lease = nil;location=nil; collectedValues = 0
         try context.reclaimValueLeases()
     }
 }

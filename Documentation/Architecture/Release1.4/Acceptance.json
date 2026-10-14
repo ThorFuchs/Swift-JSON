@@ -1,7 +1,7 @@
 {
   "schema": "swift-json-cli-acceptance/1",
   "prepared": "2026-10-14",
-  "implementation_status": "Foundation, query core and exact arithmetic milestones; C4/C5 integration remains unqualified",
+  "implementation_status": "Advanced native filter milestone; complete final platform and C5 integration remain open",
   "requirements": [
     {
       "id": "CL001",
@@ -843,13 +843,16 @@
       "title": "Reduce/foreach streams",
       "verification": "Last-update state, every foreach extraction, multiple inits, empty updates and actual evaluation order.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "reduce-last-update",
         "reduce-empty-update",
         "foreach-every-update",
         "reduce-multiple-inits"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -858,12 +861,15 @@
       "title": "Lexical filter functions",
       "verification": "Filter/value parameters, arity/scopes, self-recursion, no forward refs and finite explicit frames.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "filter-parameter-code",
         "forward-definition-rejected",
         "recursive-definition"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -872,11 +878,14 @@
       "title": "Loops/recurse/walk",
       "verification": "Correct order/null handling/parent-after-child behavior with bounded frames/work and no fixed hidden10k cap.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "walk-child-before-parent",
         "recurse-null-leaves"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -885,7 +894,7 @@
       "title": "Typed try/catch/optional",
       "verification": "Catch only language errors; prior yields/handler streams correct; syntax/resource/cancel/IO never suppressed.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "input-eof-catch",
@@ -893,6 +902,9 @@
         "repeating-division-caught",
         "division-zero-caught",
         "try-prior-yield"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -901,12 +913,15 @@
       "title": "Collection builtin inventory",
       "verification": "sort/group/unique/min/max/by forms, stable ties, multi-key generator lists, finite materialization.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "sort-exact-integers",
         "total-order",
         "group-scalar-distinct"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -915,10 +930,13 @@
       "title": "Generator first/last/nth",
       "verification": "Correct pull/empty behavior and completion of remaining input; no hidden job early success.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "first-generator"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -927,10 +945,13 @@
       "title": "Flatten/any/all",
       "verification": "Depth bounds, empty identities, short circuit and explicit deep traversal.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "all-any-empty"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -939,11 +960,14 @@
       "title": "Literal string helpers",
       "verification": "Scalar contains/search/split/join/ASCII trim/case; empty patterns/type errors and bounded scan.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "split-empty-scalars",
         "index-empty-pattern"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -952,13 +976,16 @@
       "title": "Conversions/explode/implode",
       "verification": "Strict tonumber, preserved tostring, non-BMP scalar ints, invalid surrogate/range/type rejection.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "explode-non-BMP",
         "implode-surrogate-rejected",
         "tonumber-exact",
         "tonumber-whitespace-rejected"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -967,10 +994,13 @@
       "title": "Path enumeration/admission",
       "verification": "Exact segments, missing paths, generated paths, shape/domain restrictions and no Pointer conflation.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "setpath-created-array"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -979,12 +1009,15 @@
       "title": "Assignment = versus |=",
       "verification": "Original versus current-value RHS input; generator output, first update/empty delete semantics.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "assignment-set-generator",
         "assignment-update-first",
         "assignment-update-delete"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -993,10 +1026,13 @@
       "title": "Transactional mutation/deletion",
       "verification": "Stable array removals, deduplicated targets, overlap rejection and input unchanged on failure.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "assignment-overlap-rejected"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -1005,10 +1041,13 @@
       "title": "Sparse path growth",
       "verification": "setpath container creation/null fill bounded before allocation and overflow.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "sparse-growth-fails"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -1017,11 +1056,14 @@
       "title": "String interpolation streams",
       "verification": "Cartesian holes/literal identity/empty hole; formatter holes only with no eager unbounded strings.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "interpolation-generators",
         "interpolation-empty"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -1030,11 +1072,14 @@
       "title": "Bounded format encoders",
       "verification": "All C4 formatters, strict base64/UTF8, flat CSV/TSV, percent/HTML/POSIX quoting; no shell execution.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "format-html",
         "format-base64"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -1043,10 +1088,13 @@
       "title": "Regex deferral",
       "verification": "Compile-time unavailable diagnostics; no ICU/ECMA substitutions or compatibility claim.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "regex-not-advertised"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -1055,11 +1103,14 @@
       "title": "Other exclusions",
       "verification": "Modules/seq/jq-stream/dates/env/halt/remote/server/converters rejected or absent from truthful help.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "numeric-transcendental-deferred",
         "env-not-available"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
       ]
     },
     {
@@ -1068,9 +1119,12 @@
       "title": "Every inherited fixture disposition",
       "verification": "119+49 originals retained, actual per-row status/reason/gate/claim, exclusions separated from successes.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/Advanced.md"
+      ]
     },
     {
       "id": "CL074",

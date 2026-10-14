@@ -201,6 +201,8 @@
   ],
   "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
   "original_notes": [
-    "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied."
+    "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied.",
+    "1.4 inherited CLI qualification fixtures are copied byte-for-byte: RhoePlatform/RhoeJSON pin 51d37acc137422065b07ebeb7e4ecdb2d02b99ee, 119 golden and 49 subset rows. Apache-2.0 license retained in Licenses/RhoeJSON-CLI-Fixtures-Apache-2.0.txt. PlanningDispositions labels are provisional, not evaluated successes. New explicit-stack CLI code is original; old eager JSONValue evaluator and arithmetic were not ported.",
+    "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied."
   ]
 }
