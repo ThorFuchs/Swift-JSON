@@ -27,7 +27,7 @@ wasmkit run --dir /absolute/path /absolute/path/WasmAudit.wasm schema
 ```
 
 `missing-resources` intentionally runs without a preopen and requires a structured
-meta-schema failure, with no trap. The 13 Swift Testing functions have the same
+meta-schema failure, with no trap. The original 13 Swift Testing functions have the same
 public semantics on native and WASI. The broader root/corpus/49-cap/frozen consumer
 qualification runs through `python3 Scripts/ci.py --lane wasm`; source paths and
 private build outputs stay outside archives. `--repo` grants fixture access only
@@ -38,6 +38,6 @@ cooperative cancellation, safety/measurement policy and unqualified host modes.
 
 The integrated JSONHTML consumer adds the fifth public product and a fourteenth
 Swift Testing function covering six exact HTML/export/budget/cancellation/backend
-checks. Node runs all six root test bundles (including 49 portable HTML functions);
+checks. Node runs all six root test bundles (including 81 portable HTML functions);
 Node and WasmKit run the 14-function public consumer. Apple transfer and PDF are
 not portable backend claims. See [receiving qualification](../../Documentation/Architecture/Release1.3/ReceivingQualification.md).

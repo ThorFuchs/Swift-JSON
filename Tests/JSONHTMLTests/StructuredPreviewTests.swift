@@ -399,8 +399,16 @@ private func unwrapSingleRows(_ source: String) -> String {
 @Test func structuredHTMLSavingUsesImmutableBytesAndNoMutatedDOMSerializer() throws {
     let renderer = JSONHTMLRenderer()
     let bytes = try renderer.render(.string("**bold** $x^2$"))
-    let file = FileManager.default.temporaryDirectory.appendingPathComponent(
-        UUID().uuidString + ".html")
+    #if os(WASI)
+        // The qualification host grants only resources and the repository, not /tmp.
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+        let file = root.appendingPathComponent(
+            ".build/structured-save-" + UUID().uuidString + ".html")
+    #else
+        let file = FileManager.default.temporaryDirectory.appendingPathComponent(
+            UUID().uuidString + ".html")
+    #endif
     defer { try? FileManager.default.removeItem(at: file) }
     #if os(WASI)
         try bytes.write(to: file)  // WASI has no atomic temporary-file writer; the same immutable bytes are verified.
