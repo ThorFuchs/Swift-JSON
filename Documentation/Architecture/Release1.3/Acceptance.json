@@ -608,112 +608,122 @@
       "id": "TX38",
       "gate": "T5",
       "requirement": "PDF preparation is explicit async MainActor work; synchronous native prepare and transfer closures never render PDF.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX39",
       "gate": "T5",
       "requirement": "WebPage/WKWebView backend is actually compiled and qualified; WebPage preference/fallback rationale recorded.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
       "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open.",
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX40",
       "gate": "T5",
       "requirement": "Document-owned static HTML prerequisite required; no silent value rerender or unbounded nested quota reset.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX41",
       "gate": "T5",
       "requirement": "Nonpersistent isolated WebKit state, JS disabled, denied external navigation/subresources and real layout readiness.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX42",
       "gate": "T5",
       "requirement": "Continuous capture complete; paginated A4/Letter output is genuine, measured and never silently downgraded.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX43",
       "gate": "T5",
       "requirement": "PDF pages include last sentinel, long/wrapped Unicode content and legible/selectable text without UI clutter.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX44",
       "gate": "T5",
       "requirement": "PDF input/output/page/bundle caps and aggregate retention checked; platform work distinguished from native meter.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX45",
       "gate": "T5",
       "requirement": "Cancellation/timeout during load/layout/export returns honestly, disposes state and rejects late completions.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX46",
       "gate": "T5",
       "requirement": "Concurrent PDF jobs have separate state/cancellation; no singleton web view or unsafe actor annotation.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX47",
       "gate": "T5",
       "requirement": "Successful PDF adds one immutable artifact; failure leaves original document and advertisement unchanged.",
-      "status": "partial",
+      "status": "passed",
       "evidence": [
         "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
-        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return",
+        "Qualified code snapshot 1b4c96186d00ef97f9c6ce4eaeb281a0978493ca: passed native/safety/docs/export lanes and separately bound unchanged-source simulator/PDF inspection receipts in materialized return"
       ],
-      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
+      "limitation": "Qualified Mac software, supported Apple SDKs and iPhone/iPad simulator native API/file transport. Receiving-app UI and physical-device PDF integration remain T6 gates; native instructions/RSS/deadline latency are not hard guarantees."
     },
     {
       "id": "TX48",
@@ -808,7 +818,7 @@
     "T2": "partial",
     "T3": "partial",
     "T4": "not_run",
-    "T5": "partial",
+    "T5": "passed",
     "T6": "partial"
   }
 }
