@@ -6,7 +6,7 @@ import json
 import pathlib
 import tempfile
 import unittest
-from coverage import executable_objects, validate_export
+from coverage import executable_objects, shared_objects, validate_export
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root
 from ci import check_result, commands
 
@@ -107,6 +107,13 @@ class HarnessTests(unittest.TestCase):
         for name in ROOT_COUNTS:
             (self.root/(name+'-test-runner')).touch()
         self.assertEqual(set(executable_objects(self.root)),set(ROOT_COUNTS))
+        self.assertEqual(shared_objects(self.root), {})  # Static-linked backend remains valid.
+        targets = set(ROOT_COUNTS) | {name.removesuffix('Tests') for name in ROOT_COUNTS}
+        for target in targets: (self.root/(target+'.so')).touch()
+        self.assertEqual(set(shared_objects(self.root)), targets)
+        (self.root/'libJSON.so').touch()
+        with self.assertRaisesRegex(ValueError, 'Ambiguous instrumented library'):
+            shared_objects(self.root)
         (self.root/(name+'.xctest')).touch()
         with self.assertRaisesRegex(ValueError,'Missing or ambiguous'):
             executable_objects(self.root)

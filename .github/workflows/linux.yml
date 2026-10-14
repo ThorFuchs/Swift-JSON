@@ -4,6 +4,12 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Full qualification or coverage-only exporter refresh
+        type: choice
+        options: [full, coverage]
+        default: full
 permissions:
   contents: read
 concurrency:
@@ -17,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lane: [linux, linux-safety, linux-coverage]
+        lane: ${{ fromJSON(inputs.scope == 'coverage' && '["linux-coverage"]' || '["linux", "linux-safety", "linux-coverage"]') }}
         architecture: [x86_64, arm64]
         include:
           - architecture: x86_64

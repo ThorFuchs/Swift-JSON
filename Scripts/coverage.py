@@ -29,6 +29,20 @@ def executable_objects(bin_directory):
         result[name] = found[0]
     return result
 
+
+def shared_objects(bin_directory):
+    """Swift Build's Linux runners load instrumented product/test DSOs."""
+    result = {}
+    targets = list(ROOT_COUNTS) + [name.removesuffix('Tests') for name in ROOT_COUNTS]
+    for target in targets:
+        found = [bin_directory / name for name in [target + '.so', 'lib' + target + '.so']
+                 if (bin_directory / name).is_file()]
+        if len(found) > 1:
+            raise ValueError('Ambiguous instrumented library: ' + target)
+        if found:
+            result[target] = found[0]
+    return result
+
 def validate_export(export, root=ROOT, policy=DISCOVERY):
     """Validate the executable source denominator before calculating percentages."""
     expected = {p.relative_to(root).as_posix() for p in (root / 'Sources').rglob('*.swift')}
@@ -135,6 +149,8 @@ def main():
             receipt.update(root_counts=ROOT_COUNTS, parameterized_invocations=PARAMETER_INVOCATIONS)
             bin_directory = pathlib.Path(run(['swift', 'build', '--show-bin-path'], 'bin-path.log').strip())
             objects = executable_objects(bin_directory)
+            libraries = shared_objects(bin_directory)
+            receipt['build_product_inventory'] = sorted(p.name for p in bin_directory.iterdir() if p.is_file())
             coverage_path = pathlib.Path(run(['swift', 'test', '--show-codecov-path'], 'profile-path.log').strip())
             profile = coverage_path.parent / 'default.profdata'
             if not profile.is_file():
@@ -153,7 +169,16 @@ def main():
                     materialized_path=materialized.relative_to(output).as_posix(), sha256=digest(materialized))
                 if digest(path) != digest(materialized):
                     raise ValueError('Instrumented executable copy changed: ' + name)
-            materialized_objects = {name:output / record['materialized_path'] for name,record in receipt['binaries'].items()}
+            receipt['libraries'] = {}
+            for name, path in libraries.items():
+                materialized = binary_output / path.name
+                shutil.copy2(path, materialized)
+                receipt['libraries'][name] = dict(path=path.relative_to(ROOT).as_posix(),
+                    materialized_path=materialized.relative_to(output).as_posix(), sha256=digest(materialized))
+                if digest(path) != digest(materialized):
+                    raise ValueError('Instrumented library copy changed: ' + name)
+            materialized_objects = {name + '/runner':output / record['materialized_path'] for name,record in receipt['binaries'].items()}
+            materialized_objects.update({name:output / record['materialized_path'] for name,record in receipt['libraries'].items()})
             first, *others = materialized_objects.values()
             command = llvm + ['export', str(first), '-instr-profile=' + str(profile)]
             for other in others:
@@ -166,9 +191,9 @@ def main():
                 receipt['default_export'] = dict(status='complete')
             except ValueError as error:
                 receipt['default_export'] = dict(status='incomplete', error=str(error))
-            # This actual exporter probe must omit the schema-only executable;
+            # This actual exporter probe must omit the schema runner and its DSOs;
             # regex code alone is also linked in schema tests and is not a useful omission.
-            omitted = [p for name,p in materialized_objects.items() if name != 'JSONSchemaTests']
+            omitted = [p for name,p in materialized_objects.items() if name not in ('JSONSchemaTests/runner', 'JSONSchemaTests', 'JSONSchema')]
             negative_command = llvm + ['export', str(omitted[0]), '-instr-profile=' + str(profile)]
             for other in omitted[1:]:
                 negative_command.extend(['-object', str(other)])
@@ -178,7 +203,7 @@ def main():
             except ValueError as error:
                 if 'Incomplete library export:' not in str(error):
                     raise
-                receipt['omitted_binary_probe'] = dict(status='rejected', omitted='JSONSchemaTests', reason=str(error))
+                receipt['omitted_binary_probe'] = dict(status='rejected', omitted='JSONSchemaTests runner and schema/test shared objects when present', reason=str(error))
             else:
                 raise ValueError('Harness accepted export missing the schema executable')
             # Public summaries and normalized export contain no local source path.
