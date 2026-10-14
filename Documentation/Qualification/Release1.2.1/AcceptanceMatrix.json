@@ -3,7 +3,7 @@
   "source_version": "1.2.0",
   "source_commit": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "target_version": "1.2.1",
-  "status": "core_public_paths_qualified_quiet_diagnostic_calibration_blocked_broader_plan_open",
+  "status": "public_e2e_mutation_qualified_quiet_diagnostic_calibration_blocked",
   "rows": [
     {
       "id": "HAR-01",
@@ -452,7 +452,7 @@
       "work_package": "T05",
       "module": "Public products",
       "topic": "Portable public workflow",
-      "status": "planned_extension",
+      "status": "qualified_native_linux_and_scoped_wasi",
       "existing_evidence": [
         "Examples/Consumer ProductExamples",
         "20 rooted public consumer vectors",
@@ -465,14 +465,15 @@
         "regex through public schema",
         "exact scalar/number/presence preserved",
         "positive/invalid/operational separate"
-      ]
+      ],
+      "acceptance_wave_evidence": "AcceptanceWaveOutcomes.json"
     },
     {
       "id": "E2E-02",
       "work_package": "T05",
       "module": "Public products",
       "topic": "Transactional import and error injection",
-      "status": "planned_extension",
+      "status": "qualified_native_linux_and_scoped_wasi",
       "existing_evidence": [
         "provisionalEventsNeverCertifyMalformedTail",
         "failedStagePermanentlyTerminatesTheCallerAccount",
@@ -485,14 +486,15 @@
         "no fabricated failure report",
         "no retry with full allowance",
         "actual disk phases remain separate"
-      ]
+      ],
+      "acceptance_wave_evidence": "AcceptanceWaveOutcomes.json"
     },
     {
       "id": "ASS-01",
       "work_package": "T06",
       "module": "All",
       "topic": "Seeded valid/invalid replay and mutants",
-      "status": "planned_extension",
+      "status": "qualified_native_linux_and_scoped_wasi",
       "existing_evidence": [
         "qaGeneratedExactRoundTripsAcrossNativeAndForeignPayloads",
         "deterministicMalformedReplayPreservesStrictProgressAndRoundTrips"
@@ -504,7 +506,8 @@
         "survived/equivalent/unbuildable/timeout separate",
         "no blanket nonzero tests",
         "no conditional optimization selected"
-      ]
+      ],
+      "acceptance_wave_evidence": "AcceptanceWaveOutcomes.json"
     },
     {
       "id": "QUAL-01",
@@ -529,7 +532,8 @@
       "second_wave_evidence": "Wave2Outcomes.json",
       "portability_evidence": "PortabilityOutcomes.json",
       "coverage_wave_evidence": "CoverageWaveOutcomes.json",
-      "core_closure_evidence": "CoreClosureOutcomes.json"
+      "core_closure_evidence": "CoreClosureOutcomes.json",
+      "acceptance_wave_evidence": "AcceptanceWaveOutcomes.json"
     }
   ],
   "proposed_targets": {
@@ -554,5 +558,6 @@
   "second_wave_evidence": "Wave2Outcomes.json",
   "portability_evidence": "PortabilityOutcomes.json",
   "coverage_wave_evidence": "CoverageWaveOutcomes.json",
-  "core_closure_evidence": "CoreClosureOutcomes.json"
+  "core_closure_evidence": "CoreClosureOutcomes.json",
+  "acceptance_wave_evidence": "AcceptanceWaveOutcomes.json"
 }

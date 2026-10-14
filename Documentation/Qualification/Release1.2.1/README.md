@@ -47,3 +47,10 @@ qualification is recorded separately from the earlier unchanged-source receipts.
 The [reachable core follow-up](CoreClosure.md) adds 22 public behavior functions
 and extends escaped schema-output/presence assertions. Unadjusted coverage meets
 the five-module review targets; quiet-host diagnostic recalibration stays blocked.
+
+The [public acceptance and mutation wave](AcceptanceWave.md) closes T05/T06:
+20 public integration functions, 318/173 roots, 145 QA and 32 targeted TSan;
+26 behavioral mutant kills after two minimized assertion repairs. It also repairs
+missing native schema-bundle failure and qualifies actual installed resources.
+[Current outcomes](AcceptanceWaveOutcomes.json) retain every earlier wave and
+separate native, Linux, WASI, archive and outstanding calibration evidence.

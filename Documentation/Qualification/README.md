@@ -108,3 +108,9 @@ The 1.2.1 [portability follow-up](Release1.2.1/Portability.md) has 245/173 roots
 WASI debug/release QA passed. Atomic native profiling reports 97.46% authored
 lines / 93.04% regions and rejects saturated LLVM counters; earlier percentages
 remain historical measurements, not directly comparable corrected coverage.
+
+The [public workflow/mutation acceptance wave](Release1.2.1/AcceptanceWave.md)
+adds a sixth test-only target while preserving five implementation modules and four
+products. Native, both Linux architectures, scoped WASI and clean source extraction
+are qualified with exact discoveries and materialized evidence. Mutation survivors
+led to real final-chunk cancellation and failed-branch annotation assertions.
