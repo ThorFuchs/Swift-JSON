@@ -4,6 +4,7 @@
 import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
+from testing_events import read_events, ROOT_PARAMETER_CASES
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations'
@@ -24,7 +25,7 @@ def commands(lane, output):
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
         # probes are separate Apple acceptance; they never become Linux passes.
         return [c for c in commands('native', ROOT / output)
-                if not any(x in c for x in ['Tools/MobileQualification', '--mode'])] + [
+                if not any(x in c for x in ['Tools/MobileQualification', '--mode', 'Scripts/qualify_cli_ownership.py'])] + [
             ['python3', '-B', 'Scripts/qualify_linux_reproduction.py', '--output', str(output / 'reproduction')]]
     if lane == 'linux-safety':
         # Every behavior case uses Swift Testing. Do not start the generated
@@ -44,13 +45,18 @@ def commands(lane, output):
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/JSONHTMLBrowser', 'BrowserFixtures', str(output / 'fixtures')],
             ['python3', '-B', 'Scripts/qualify_html_browser.py', '--fixtures', str(output / 'fixtures'), '--output', str(output / 'browser')],
         ]
+    if lane == 'cli':
+        return [['swift', 'build', '-c', 'release', '--product', 'swift-json'], ['swift', 'test', '--filter', 'cli'], ['python3', '-B', 'Scripts/qualify_cli.py', '--binary', '.build/release/swift-json', '--output', str(output / 'subprocess.json')]]
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
             ['swift', 'package', 'dump-package'],
             ['swift', 'package', 'show-dependencies', '--format', 'json'],
             ['swift', 'build', '-c', 'release'],
+            ['python3', '-B', 'Scripts/verify_testing_events.py'],
             ['swift', 'test'], ['swift', 'test', '-c', 'release'],
+            ['python3', '-B', 'Scripts/qualify_cli.py', '--binary', '.build/release/swift-json', '--output', str(output / 'subprocess.json')],
+            ['python3', '-B', 'Scripts/qualify_cli_ownership.py', '--output', str(output / 'cli-ownership')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
@@ -96,14 +102,17 @@ def materialized_outcomes(output):
         raise ValueError('Missing or failing rooted consumer outcomes')
     return {name: {'sha256': hashlib.sha256((output / name).read_bytes()).hexdigest()} for name in ['qualification.json', 'consumer.json', 'watchdog.json']}
 
-def check_result(command, code, log):
+def check_result(command, code, log, events=None):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
+    if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4] if 'thread' in command else [11, 12, 14, 25, 51, 107]
+        expected = [12] if 'cli' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4] if 'thread' in command else [11, 12, 12, 14, 25, 51, 107]
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
-            passed = passed and sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173
+            if events is not None:
+                passed = passed and events['module_function_counts'] == {'JSONTests':107,'JSONSchemaTests':51,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':25,'JSONCLITests':12}
+            passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 177)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
             matrix = json.loads((ROOT / 'Documentation/Qualification/LimitsMatrix.json').read_text())
@@ -111,10 +120,10 @@ def check_result(command, code, log):
             passed = passed and len(probes) == 49 and dict(probes) == expected_probes
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
-        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
-        passed = passed and {p['name']: p['targets'] for p in d['products']} == {name: [name] for name in ['JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML']}
+        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
+        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML']}, **{'swift-json': ['JSONCLI']})
         targets = {t['name']: t for t in d['targets']}
-        passed = passed and set(targets) == {'JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}]
+        passed = passed and set(targets) == {'JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
@@ -129,7 +138,7 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'cli'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -146,6 +155,10 @@ def main():
         return 2
     receipt['status'] = 'running'
     for index, command in enumerate(commands(args.lane, output)):
+        event_path = output / ('command-%02d.events.jsonl' % index) if command[:2] == ['swift', 'test'] else None
+        if event_path is not None:
+            event_path.unlink(missing_ok=True)
+            command = command + ['--event-stream-output-path', str(event_path.relative_to(ROOT))]
         print('Running ' + ' '.join(command), flush=True)
         log_path = output / ('command-%02d.log' % index)
         with log_path.open('w') as stream:
@@ -157,11 +170,16 @@ def main():
                 code = None
         log = log_path.read_text(errors='replace').replace(str(ROOT), '.')
         log_path.write_text(log)
+        events = None
         try:
-            passed, counts = check_result(command, code, log)
+            events = read_events(event_path.read_text()) if event_path is not None else None
+            passed, counts = check_result(command, code, log, events=events)
         except (KeyError, ValueError, TypeError):
             passed, counts = False, []
         entry = {'command': [x.replace(str(ROOT), '.') for x in command], 'exit_code': code, 'status': 'passed' if passed else 'failed', 'log': log_path.relative_to(ROOT).as_posix(), 'log_sha256': hashlib.sha256(log_path.read_bytes()).hexdigest(), 'swift_testing_function_counts': counts, 'parameterized_case_invocations': sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log))}
+        if events is not None:
+            entry['swift_testing_events'] = dict(events, path=event_path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(event_path.read_bytes()).hexdigest())
+            entry['parameterized_case_invocations'] = events['parameter_case_invocations']
         receipt['commands'].append(entry)
         print(json.dumps(entry), flush=True)
         if not passed:
