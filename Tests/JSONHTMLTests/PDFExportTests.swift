@@ -121,6 +121,13 @@ import PDFKit
     pdfBootstrap()
     let item = try pdfFixture()
     let originalJSON = try item.data(for: .json)
+    let small = try JSONExportDocument.prepare(.null)
+    let accepted = try await small.preparingPDFWithReport()
+    let inclusive = [JSONPDFLimits(maxHTMLBytes: accepted.inputHTMLBytes),
+        .init(maxCaptureBytes: accepted.capturedPDFBytes), .init(maxPDFBytes: accepted.outputPDFBytes),
+        .init(maxPreparedBytes: accepted.existingPreparedBytes + accepted.outputPDFBytes),
+        .init(maxPages: 1), .init(maxContentHeightPoints: 16)]
+    for limit in inclusive { #expect(try await small.preparingPDFWithReport(options: .init(limits: limit)).pageCount == 1) }
     let cases = [
         JSONPDFLimits(maxHTMLBytes: 0), .init(maxCaptureBytes: 1), .init(maxPDFBytes: 1),
         .init(maxPreparedBytes: 1), .init(maxPages: 1), .init(maxContentHeightPoints: 1)
@@ -221,22 +228,30 @@ import PDFKit
     var stopped = false
     var failure: JSONPDFFailure?
     var geometryHeight: Double = 16
+    var waitAt: JSONPDFStage = .capture
     let ready: @MainActor () -> Void
     init(ready: @escaping @MainActor () -> Void) { self.ready = ready }
-    func load(_ html: String) async throws {}
-    func layout(width: Double) async throws -> JSONPDFGeometry { .init(width: width, height: geometryHeight, lineHeight: 16) }
+    func load(_ html: String) async throws { if waitAt == .loading { _ = try await suspend() } }
+    func layout(width: Double) async throws -> JSONPDFGeometry {
+        if waitAt == .layout { _ = try await suspend() }
+        return .init(width: width, height: geometryHeight, lineHeight: 16)
+    }
     func textInfo() async throws -> JSONPDFTextInfo { .init(count: 1, tabWidth: 4) }
     func textRun(at index: Int) async throws -> JSONPDFTextRun { .init(kind: "null", text: "null") }
     func capture(_ rectangle: JSONPDFRectangle) async throws -> Data {
         if let failure { throw failure }
-        return try await withCheckedThrowingContinuation { pending = $0; ready() }
+        return try await suspend()
+    }
+    private func suspend() async throws -> Data {
+        try await withCheckedThrowingContinuation { pending = $0; ready() }
     }
     func stop() { stopped = true }
 }
 @Test @MainActor func applePDFTimeoutReturnsWithoutWaitingForUncooperativeCapture() async throws {
     pdfBootstrap()
     let item = try JSONExportDocument.prepare(.null)
-    let backend = SuspendedPDFBackend(ready: {})
+    for stage in [JSONPDFStage.loading, .layout, .capture] {
+    let backend = SuspendedPDFBackend(ready: {}); backend.waitAt = stage
     let start = ContinuousClock.now
     do {
         _ = try await item.preparingPDFWithReport(options: .init(layout: .continuous, timeoutMilliseconds: 100),
@@ -248,6 +263,7 @@ import PDFKit
     backend.pending?.resume(returning: Data()); backend.pending = nil
     await Task.yield()
     #expect(!item.availableFormats.contains(.pdf))
+    }
 }
 
 @Test @MainActor func applePDFSimultaneousJobsHaveIndependentStateAndCancellation() async throws {

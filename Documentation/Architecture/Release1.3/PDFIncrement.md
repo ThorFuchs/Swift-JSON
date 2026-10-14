@@ -80,3 +80,31 @@ Final exact-source receipts, source archive/digest, clean reconstruction and rev
 findings are supplied in the private manifest-backed increment return. Failed
 experiments and their outputs/logs are retained there, outside public Git/source.
 This document is an implementation/acceptance map, not a substitute for receipts.
+
+## Review corrections and runtime closure
+
+The separate review pass corrected artifact-table reservations, released completed
+CoreText state before retiring logical text reservations, and moved owned run-array
+growth into the job's meter. Client DOM extraction has no owned JavaScript loop;
+Swift checks cancellation between individual native reads. Navigation consumes an
+admitted finite maximum of eight events and completes at the actual finished event.
+Strict memory compilation required two narrowly marked C-interop initializers with
+one live CGRect each; a typed `CGMutablePath.addRect` avoids the optional unsafe
+transform-pointer initializer. No unsafe actor annotation or weakened flag is used.
+
+The iOS runtime probe returned a valid 162-point block with nominal 16-point lines.
+The old whole-line-grid height guard was disproven by native emoji fallback and
+removed; actual finite measured height and real CoreText visible ranges remain
+checked. A non-grid geometry regression proves the corrected contract. The final
+public consumer passed 63 outcomes on both iPhone and iPad simulators. iPad's first
+attempt exhausted disk before its log could be materialized; an independent retry
+passed. Neither that failure nor an excluded stale-binary cross-build attempt counts
+as success. All failed receipts/probes stay in the private evidence return.
+
+Final software gates refresh on the closing source commit. Their receipts preserve
+257 Mac functions, 173 parameter cases, nine shared-state functions, 49 baseline
+caps, 37 export functions, 63 public consumer outcomes and 754 authored declarations.
+Caps include actual inclusive native boundaries; uncooperative load/layout/capture
+stages separately exercise timeout and late-result disposal. Receiving-app UI and
+physical-device PDF integration remain separate open gates. The physical iPad
+policy deferral stays in effect; no release action is performed.

@@ -25,7 +25,11 @@ Success returns a new immutable item; failure leaves the original unchanged.
 The supported Apple backend uses per-job nonpersistent WebPage state with content
 JavaScript and subresources disabled, sensors denied and external navigation refused.
 Fixed client-world code awaits `document.fonts.ready`, applies the trusted print
-profile and reads only bounded syntax runs. Paginated output uses CoreText visible
+profile and reads only bounded syntax runs. The job admits each owned run before
+array growth and checks cancellation between individual DOM reads. Navigation
+processing is bounded to eight events admitted under the same meter. Native emoji
+fallback can produce a measured height outside a whole 16-point line grid; neither
+mode assumes such a grid. Paginated output uses CoreText visible
 text ranges and CoreGraphics page composition. It never clips one long inline span
 across multiple regions: that prototype duplicated searchable text at page edges.
 

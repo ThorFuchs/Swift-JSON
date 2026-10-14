@@ -610,9 +610,10 @@
       "requirement": "PDF preparation is explicit async MainActor work; synchronous native prepare and transfer closures never render PDF.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX39",
@@ -620,10 +621,11 @@
       "requirement": "WebPage/WKWebView backend is actually compiled and qualified; WebPage preference/fallback rationale recorded.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
       "preliminary_observation": "SDK declarations typecheck on macOS/iPhoneOS/iPhoneSimulator 27.2; complete public API/conformance/backend/runtime requirement remains open.",
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX40",
@@ -631,9 +633,10 @@
       "requirement": "Document-owned static HTML prerequisite required; no silent value rerender or unbounded nested quota reset.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX41",
@@ -641,9 +644,10 @@
       "requirement": "Nonpersistent isolated WebKit state, JS disabled, denied external navigation/subresources and real layout readiness.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX42",
@@ -651,9 +655,10 @@
       "requirement": "Continuous capture complete; paginated A4/Letter output is genuine, measured and never silently downgraded.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX43",
@@ -661,9 +666,10 @@
       "requirement": "PDF pages include last sentinel, long/wrapped Unicode content and legible/selectable text without UI clutter.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX44",
@@ -671,9 +677,10 @@
       "requirement": "PDF input/output/page/bundle caps and aggregate retention checked; platform work distinguished from native meter.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX45",
@@ -681,9 +688,10 @@
       "requirement": "Cancellation/timeout during load/layout/export returns honestly, disposes state and rejects late completions.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX46",
@@ -691,9 +699,10 @@
       "requirement": "Concurrent PDF jobs have separate state/cancellation; no singleton web view or unsafe actor annotation.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX47",
@@ -701,9 +710,10 @@
       "requirement": "Successful PDF adds one immutable artifact; failure leaves original document and advertisement unchanged.",
       "status": "partial",
       "evidence": [
-        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts"
+        "PDFIncrement.md; PDFExportTests.swift; Tools/JSONHTMLExport; materialized final-source receipts",
+        "Mac native/ASAN/TSAN/export/DocC receipts; SDK 27.2 compiler checks; iPhone/iPad simulator 63 outcomes each; final source binding in materialized return"
       ],
-      "limitation": "Implemented and initial Mac behavior/public-consumer checks passed; final exact-source native/safety/docs/export and SDK/runtime receipts determine qualified scope. Receiving-app/device gates remain separate."
+      "limitation": "Native software/SDK/simulator scope exercised. Closing-source receipts and archive binding determine final lane closure; receiving-app/physical-device gates remain separate."
     },
     {
       "id": "TX48",
