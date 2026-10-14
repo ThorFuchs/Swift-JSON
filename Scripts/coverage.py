@@ -141,8 +141,20 @@ def main():
                 raise ValueError('Merged coverage profile missing')
             shutil.copy2(profile, output / 'default.profdata')
             receipt['profile_sha256'] = digest(profile)
-            receipt['binaries'] = {name:dict(path=p.relative_to(ROOT).as_posix(), sha256=digest(p)) for name,p in objects.items()}
-            first, *others = objects.values()
+            # Preserve the actual five objects, not just paths into a discarded CI build.
+            # Together with the merged profile these allow independent LLVM replay.
+            binary_output = output / 'objects'
+            binary_output.mkdir(exist_ok=True)
+            receipt['binaries'] = {}
+            for name, path in objects.items():
+                materialized = binary_output / name
+                shutil.copy2(path, materialized)
+                receipt['binaries'][name] = dict(path=path.relative_to(ROOT).as_posix(),
+                    materialized_path=materialized.relative_to(output).as_posix(), sha256=digest(materialized))
+                if digest(path) != digest(materialized):
+                    raise ValueError('Instrumented executable copy changed: ' + name)
+            materialized_objects = {name:output / record['materialized_path'] for name,record in receipt['binaries'].items()}
+            first, *others = materialized_objects.values()
             command = llvm + ['export', str(first), '-instr-profile=' + str(profile)]
             for other in others:
                 command.extend(['-object', str(other)])
@@ -156,7 +168,7 @@ def main():
                 receipt['default_export'] = dict(status='incomplete', error=str(error))
             # This actual exporter probe must omit the schema-only executable;
             # regex code alone is also linked in schema tests and is not a useful omission.
-            omitted = [p for name,p in objects.items() if name != 'JSONSchemaTests']
+            omitted = [p for name,p in materialized_objects.items() if name != 'JSONSchemaTests']
             negative_command = llvm + ['export', str(omitted[0]), '-instr-profile=' + str(profile)]
             for other in omitted[1:]:
                 negative_command.extend(['-object', str(other)])

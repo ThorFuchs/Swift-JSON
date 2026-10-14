@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lane: [linux, linux-safety]
+        lane: [linux, linux-safety, linux-coverage]
         architecture: [x86_64, arm64]
         include:
           - architecture: x86_64

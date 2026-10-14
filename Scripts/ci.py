@@ -22,7 +22,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')] +
             (['--scope', 'root-qa'] if lane == 'wasm-qa' else []),
         ]
-    if lane == 'coverage':
+    if lane in ('coverage', 'linux-coverage'):
         return [
             ['python3', '-B', 'Scripts/test_qualification_harness.py'],
             ['python3', '-B', 'Scripts/coverage.py', '--output', str(output / 'export')],
@@ -136,7 +136,7 @@ def check_result(command, code, log):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'coverage', 'linux', 'linux-safety', 'linux-qa', 'wasm', 'wasm-qa'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'coverage', 'linux', 'linux-safety', 'linux-qa', 'linux-coverage', 'wasm', 'wasm-qa'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -194,14 +194,14 @@ def main():
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
             receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
-    if receipt['status'] == 'passed' and args.lane == 'coverage':
+    if receipt['status'] == 'passed' and args.lane in ('coverage', 'linux-coverage'):
         try:
             coverage = json.loads((output / 'export/coverage.json').read_text())
             if (coverage['status'] != 'passed' or coverage['root_counts'] != ROOT_COUNTS
                     or coverage['parameterized_invocations'] != PARAMETER_INVOCATIONS
                     or coverage['omitted_binary_probe']['status'] != 'rejected'
                     or set(coverage['modules']) != {name.removesuffix('Tests') for name in ROOT_COUNTS}):
-                raise ValueError('Missing complete native coverage boundary')
+                raise ValueError('Missing complete five-module coverage boundary')
             receipt['materialized_coverage'] = {'path':'export/coverage.json', 'sha256':hashlib.sha256((output / 'export/coverage.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
             receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)

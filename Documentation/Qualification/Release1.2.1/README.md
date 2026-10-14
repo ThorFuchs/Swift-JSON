@@ -39,3 +39,7 @@ results remain separate from the historical native waves.
 The portability follow-up is [qualified within its declared scopes](PortabilityOutcomes.json).
 Atomic coverage corrects saturated async counters to 97.46% lines / 93.04% regions;
 the structural completion gap is reviewed with its denominator retained.
+
+The [Linux coverage and behavior-gap wave](CoverageWave.md) extends tests across
+all five modules and repairs best-effort diagnostic sizing. Its new native/Linux
+qualification is recorded separately from the earlier unchanged-source receipts.

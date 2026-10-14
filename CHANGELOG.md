@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Preserve ordinary invalidity when best-effort schema diagnostics omit an issue
+  that exceeds the byte ceiling. Required work and annotation failures remain
+  terminal. Add 31 behavior and precise failure tests across all five modules,
+  plus reproducible five-module Linux coverage exports on ARM64 and x86_64.
+
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.

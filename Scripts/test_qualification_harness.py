@@ -91,6 +91,8 @@ class HarnessTests(unittest.TestCase):
         self.assertFalse(check_result(linux[4], 0, qa+'\nTest run with 1 test in 0 suites passed')[0])
         self.assertIn('--scope', commands('wasm-qa', output)[1])
         self.assertNotIn('--scope', commands('wasm', output)[1])
+        self.assertEqual(commands('coverage', output), commands('linux-coverage', output))
+        self.assertEqual(commands('linux-coverage', output)[1][1:3], ['-B', 'Scripts/coverage.py'])
 
     def test_darwin_executable_membership_is_exact(self):
         for name in ROOT_COUNTS:
