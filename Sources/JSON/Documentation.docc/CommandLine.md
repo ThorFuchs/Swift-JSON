@@ -53,5 +53,7 @@ counts nonzero discarded remainders in the cumulative stderr report. Builtin rou
 uses ties away from zero. Constructed objects replace duplicate names at their first
 position; parsed duplicate keys remain errors. Scalar-distinct keys stay distinct.
 
-Advanced filters, platform distribution and provider-specific adapters retain their
-separate qualification gates. This feature checkout is not a released 1.4 candidate.
+Advanced filters include lexical functions, reductions, finite collections, scalar
+strings, interpolation and staged path mutation. Regex and approximate math remain
+explicit compile errors. Platform distribution and provider-specific adapters retain
+their separate qualification gates. This feature checkout is not a released 1.4 candidate.

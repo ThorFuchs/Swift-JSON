@@ -484,8 +484,9 @@ and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
 for command semantics, cumulative budgets and qualification boundaries. The pull
 query increment adds navigation, generators, control, bindings and exact decimal
 arithmetic; see the [query](Documentation/Architecture/Release1.4/QueryCore.md) and
-[arithmetic](Documentation/Architecture/Release1.4/Arithmetic.md) contracts. Complete
-advanced-filter/platform/provider qualification remains open before a 1.4 release.
+[arithmetic](Documentation/Architecture/Release1.4/Arithmetic.md) contracts. The [advanced filter increment](Documentation/Architecture/Release1.4/Advanced.md)
+adds lexical functions, reductions, bounded collections/strings, path mutation and
+interpolation. Final platform/provider/distribution qualification remains open.
 
 ```sh
 swift build -c release --product swift-json

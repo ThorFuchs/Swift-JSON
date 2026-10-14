@@ -22,3 +22,10 @@ with its full license, NOTICE and third-party notices retained under
 Licenses/PlaywrightQualification. No Playwright source or browser binary is adapted
 or shipped as a library runtime dependency. The browser tool has its own manifest;
 root package dependencies remain empty.
+
+
+The CLI qualification corpus includes 119 golden and 49 subset cases from
+RhoePlatform/RhoeJSON at 51d37acc137422065b07ebeb7e4ecdb2d02b99ee, retained unchanged
+in Tests/Fixtures/CLI/Inherited. RhoeJSON contributors retain attribution;
+Apache-2.0 text is in Licenses/RhoeJSON-CLI-Fixtures-Apache-2.0.txt. Historical and
+planning compatibility labels do not constitute current evaluated successes.
