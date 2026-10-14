@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "scope": "Single-site assertion-quality pilot; no mutant is shipped",
+  "mutants": [
+    {
+      "id": "M01",
+      "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+      "before": "guard attempted <= limits[metric] else",
+      "after": "guard attempted < limits[metric] else",
+      "family": "inclusive-cap",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M02",
+      "path": "Sources/JSON/Limits/JSONWorkMeter.swift",
+      "before": "try Task.checkCancellation()\n        } catch",
+      "after": "/* dropped checkpoint */\n        } catch",
+      "family": "cancellation",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M03",
+      "path": "Sources/JSON/Value/JSONComparison.swift",
+      "before": "var l = lhs.utf8.makeIterator(), r = rhs.utf8.makeIterator()",
+      "after": "if lhs == rhs { return true }; var l = lhs.utf8.makeIterator(), r = rhs.utf8.makeIterator()",
+      "family": "canonical-key-collapse",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M04",
+      "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+      "before": "frame.expectation == .arrayFirstValue || frame.expectation == .arrayEnd",
+      "after": "frame.expectation == .arrayFirstValue || frame.expectation == .arrayEnd || frame.expectation == .arrayValue",
+      "family": "grammar",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M05",
+      "path": "Sources/JSON/Codec/JSONLexer.swift",
+      "before": "guard byte >= 32 else",
+      "after": "guard byte >= 10 else",
+      "family": "grammar",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M06",
+      "path": "Sources/JSON/Codec/JSONTokenMachine.swift",
+      "before": "guard !rootStarted else { throw failure(token, .trailingData) }",
+      "after": "guard !rootStarted || frames.isEmpty else { throw failure(token, .trailingData) }",
+      "family": "trailing-root",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M07",
+      "path": "Sources/JSON/Coding/JSONCodablePayload.swift",
+      "before": "version == 1 else",
+      "after": "version <= 2 else",
+      "family": "version-envelope",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M08",
+      "path": "Sources/JSON/Codec/JSONWriter.swift",
+      "before": "if options.numberStyle == .preserved, let lexeme",
+      "after": "if false, let lexeme",
+      "family": "exact-lexeme",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M09",
+      "path": "Sources/JSONPatch/JSONPatch.swift",
+      "before": "guard try JSONComparison.equals(selected, expected, meter: &meter) else",
+      "after": "guard try JSONComparison.equals(selected, selected, meter: &meter) else",
+      "family": "staged-publication",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M10",
+      "path": "Sources/JSONPatch/JSONPatch.swift",
+      "before": "staged.map { .document($0) } ?? .removed",
+      "after": "staged.map { .document($0) } ?? .document(.null)",
+      "family": "root-absence",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M11",
+      "path": "Sources/JSONPatch/JSONMergePatch.swift",
+      "before": "if existing != nil {",
+      "after": "if existing == nil {",
+      "family": "merge-removal",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M12",
+      "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+      "before": "closed = true; continue",
+      "after": "closed = true; terminal = true; return .documentCompleted(.init(records: input.meter.used(.totalRecords), statistics: input.meter.statistics()))",
+      "family": "early-completion",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M13",
+      "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+      "before": "try input.meter.charge(.totalRecords); assembler",
+      "after": "/* dropped record charge */ assembler",
+      "family": "dropped-charge",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M14",
+      "path": "Sources/JSONStreaming/JSONTopLevelArraySequence.swift",
+      "before": "catch { terminal = true; input.failed = true; assembler = JSONValueAssembler(); throw error }",
+      "after": "catch { terminal = true; input.failed = true; assembler = JSONValueAssembler(); return nil }",
+      "family": "swallowed-operational-error",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M15",
+      "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+      "before": "try input.meter.charge(.totalRecords)",
+      "after": "/* dropped record charge */",
+      "family": "dropped-charge",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M16",
+      "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+      "before": "catch { terminal = true; input.failed = true; throw error }",
+      "after": "catch { terminal = true; input.failed = true; return nil }",
+      "family": "swallowed-operational-error",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M17",
+      "path": "Sources/JSONStreaming/JSONAsyncWriter.swift",
+      "before": "try meter.checkpoint(); try await sink(JSONByteChunk(bytes)); try meter.checkpoint()\n                try meter.release",
+      "after": "try meter.checkpoint(); try await sink(JSONByteChunk(bytes)); /* dropped after-await checkpoint */\n                try meter.release",
+      "family": "await-cancellation",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M18",
+      "path": "Sources/JSONStreaming/JSONAsyncWriter.swift",
+      "before": "try meter.charge(.outputBytes); try meter.retain(1)",
+      "after": "/* dropped output charge */ try meter.retain(1)",
+      "family": "dropped-charge",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M19",
+      "path": "Sources/JSONSchema/Evaluation/JSONSchemaAssertions.swift",
+      "before": "case .minimum: return comparison != .orderedAscending",
+      "after": "case .minimum: return comparison == .orderedDescending",
+      "family": "inclusive-numeric-bound",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M20",
+      "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+      "before": "if child.valid { try merge(&child,into: &frame.branch,evaluated: true,meter: &meter) }",
+      "after": "if true { try merge(&child,into: &frame.branch,evaluated: true,meter: &meter) }",
+      "family": "failed-branch-annotation-merge",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M21",
+      "path": "Sources/JSONSchema/Evaluation/JSONSchemaAssertions.swift",
+      "before": "case \"integer\": return instance.numberValue?.isInteger ?? false",
+      "after": "case \"integer\": return instance.numberValue != nil",
+      "family": "integer-kind",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M22",
+      "path": "Sources/JSON/Reading/JSONReadCursor.swift",
+      "before": "if value.isNull { return .null }",
+      "after": "if value.isNull { return .absent }",
+      "family": "presence",
+      "filter": "qaE2E"
+    },
+    {
+      "id": "M23",
+      "path": "Sources/JSONSchema/Document/JSONSchemaBuiltins.swift",
+      "before": "guard hash.utf8.elementsEqual(expectedHash.utf8) else",
+      "after": "guard true else",
+      "family": "builtin-integrity",
+      "filter": "builtinIntegrity"
+    },
+    {
+      "id": "M24",
+      "path": "Sources/JSONSchema/Evaluation/JSONSchemaEvaluation.swift",
+      "before": "frame.outcome.valid = false\n        if options.output",
+      "after": "frame.outcome.valid = true\n        if options.output",
+      "family": "ordinary-invalidity",
+      "filter": "qaE2E"
+    }
+  ]
+}

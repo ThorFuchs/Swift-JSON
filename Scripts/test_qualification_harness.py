@@ -32,6 +32,15 @@ class HarnessTests(unittest.TestCase):
         self.assertFalse(result['branch_counters_available'])
         self.assertEqual(set(result['modules']), {'JSON','JSONPatch'})
 
+    def test_integration_bundle_does_not_create_a_library_denominator(self):
+        self.policy['root_functions']['JSONIntegrationTests'] = 19
+        self.policy['coverage_modules'] = ['JSON', 'JSONPatch']
+        result = validate_export(self.export, self.root, self.policy)
+        self.assertEqual(set(result['modules']), {'JSON', 'JSONPatch'})
+        self.export['data'][0]['files'].pop()
+        with self.assertRaisesRegex(ValueError, 'Incomplete library export'):
+            validate_export(self.export, self.root, self.policy)
+
     def test_omitted_module_is_not_a_higher_percentage(self):
         self.export['data'][0]['files'].pop()
         with self.assertRaisesRegex(ValueError, 'Incomplete library export'):
@@ -108,7 +117,7 @@ class HarnessTests(unittest.TestCase):
             (self.root/(name+'-test-runner')).touch()
         self.assertEqual(set(executable_objects(self.root)),set(ROOT_COUNTS))
         self.assertEqual(shared_objects(self.root), {})  # Static-linked backend remains valid.
-        targets = set(ROOT_COUNTS) | {name.removesuffix('Tests') for name in ROOT_COUNTS}
+        targets = set(ROOT_COUNTS) | set(DISCOVERY['coverage_modules'])
         for target in targets: (self.root/(target+'.so')).touch()
         self.assertEqual(set(shared_objects(self.root)), targets)
         (self.root/'libJSON.so').touch()

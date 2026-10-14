@@ -7,7 +7,7 @@ from preflight import collect, collect_linux
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|qaStreaming'
+SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|qaStreaming|qaE2ESharedPlan'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -68,6 +68,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
+            ['python3', '-B', 'Scripts/qualify_distribution.py', '--output', str(output / 'distribution')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
@@ -200,7 +201,7 @@ def main():
             if (coverage['status'] != 'passed' or coverage['root_counts'] != ROOT_COUNTS
                     or coverage['parameterized_invocations'] != PARAMETER_INVOCATIONS
                     or coverage['omitted_binary_probe']['status'] != 'rejected'
-                    or set(coverage['modules']) != {name.removesuffix('Tests') for name in ROOT_COUNTS}):
+                    or set(coverage['modules']) != set(DISCOVERY['coverage_modules'])):
                 raise ValueError('Missing complete five-module coverage boundary')
             receipt['materialized_coverage'] = {'path':'export/coverage.json', 'sha256':hashlib.sha256((output / 'export/coverage.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:

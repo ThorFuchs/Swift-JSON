@@ -33,7 +33,7 @@ def executable_objects(bin_directory):
 def shared_objects(bin_directory):
     """Swift Build's Linux runners load instrumented product/test DSOs."""
     result = {}
-    targets = list(ROOT_COUNTS) + [name.removesuffix('Tests') for name in ROOT_COUNTS]
+    targets = list(ROOT_COUNTS) + DISCOVERY['coverage_modules']
     for target in targets:
         found = [bin_directory / name for name in [target + '.so', 'lib' + target + '.so']
                  if (bin_directory / name).is_file()]
@@ -89,8 +89,7 @@ def validate_export(export, root=ROOT, policy=DISCOVERY):
         return result
 
     modules = {}
-    for test_target in policy['root_functions']:
-        module = test_target.removesuffix('Tests')
+    for module in policy.get('coverage_modules', [name.removesuffix('Tests') for name in policy['root_functions']]):
         names = {name for name in mapped if name.startswith('Sources/' + module + '/')}
         if not names or not totals(names)['regions']['count']:
             raise ValueError('Missing executable module coverage: ' + module)
@@ -157,7 +156,7 @@ def main():
                 raise ValueError('Merged coverage profile missing')
             shutil.copy2(profile, output / 'default.profdata')
             receipt['profile_sha256'] = digest(profile)
-            # Preserve the actual five objects, not just paths into a discarded CI build.
+            # Preserve the actual instrumented objects, not just paths into a discarded CI build.
             # Together with the merged profile these allow independent LLVM replay.
             binary_output = output / 'objects'
             binary_output.mkdir(exist_ok=True)
