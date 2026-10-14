@@ -273,7 +273,7 @@ private struct AlreadyChangedForeignNumber: Decodable {
 @Test func qaForeignCoderFidelityCannotRecoverPreviouslyChangedNumbers() throws {
     let source = try JSONParser().parse("9007199254740993")
     let decoded = try JSONValueDecoder().decode(AlreadyChangedForeignNumber.self,from:source)
-    #expect(decoded.number == JSONNumber(integer:9_007_199_254_740_992))
+    #expect(decoded.number == JSONNumber(integer:Int64(9_007_199_254_740_992)))
     #expect(JSON.number(decoded.number) != source)
     #expect(try JSONValueDecoder().decode(JSON.self,from:source) == source)
 }
