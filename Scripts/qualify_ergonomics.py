@@ -4,7 +4,9 @@
 import hashlib
 import json
 import pathlib
+import platform
 import subprocess
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OLD = '''import Foundation
@@ -55,7 +57,7 @@ def main():
         default_build = ROOT / '.build/out'
         search_root = default_build if default_build.is_dir() else ROOT / '.build'
         candidates = list(search_root.rglob('JSON.swiftmodule'))
-        candidates = [p for p in candidates if configuration in p.parts or configuration.title() in p.parts]
+        candidates = [p for p in candidates if p.is_file() and (configuration in p.parts or configuration.title() in p.parts)]
         if len(candidates) != 1:
             raise ValueError('Missing/ambiguous built module for ' + configuration)
         parent = candidates[0].parent
@@ -64,8 +66,11 @@ def main():
         else:
             include = [p.parent for name in ('JSON', 'JSONBridges')
                        for p in (ROOT / '.build/out').rglob(name + '.swiftmodule')
-                       if configuration.title() in p.parts]
+                       if p.is_file() and configuration.title() in p.parts]
         flags = ['swiftc', '-swift-version', '6', '-strict-concurrency=complete', '-warnings-as-errors']
+        if sys.platform == 'darwin':
+            sdk = subprocess.check_output(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], text=True).strip()
+            flags += ['-sdk', sdk, '-target', platform.machine() + '-apple-macosx27.0']
         for path in sorted(set(include)):
             flags += ['-I', str(path)]
         for name, source, expected, diagnostic in (
