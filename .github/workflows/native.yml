@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: a005e029caaa36a5b0e7cb4d14ba2ed1525dc88a
+          ref: e8b687f822c577311156b13bf1d15c2d5620b84e
           persist-credentials: false
           fetch-depth: 0
       - name: Reproduce and qualify extracted candidate
@@ -24,7 +24,7 @@ jobs:
           import datetime, hashlib, json, pathlib, shutil, subprocess, sys, tarfile, tempfile
           repo = pathlib.Path.cwd(); out = repo / '.build/archive-reproduction'
           out.mkdir(parents=True, exist_ok=True)
-          pin = 'a005e029caaa36a5b0e7cb4d14ba2ed1525dc88a'
+          pin = 'e8b687f822c577311156b13bf1d15c2d5620b84e'
           assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() == pin
           receipt = dict(schema_version=1, status='running', candidate_commit=pin,
                          started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(), commands=[])
