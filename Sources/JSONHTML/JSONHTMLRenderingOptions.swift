@@ -13,9 +13,9 @@ public enum JSONHTMLTheme: String, Sendable {
 
 /// Presentation of the complete standalone JSON document.
 public enum JSONHTMLPresentation: String, Sendable {
-    /// Expanded highlighted JSON without scripting.
+    /// Script-free expanded values in the independently selected layout.
     case formatted
-    /// Native disclosures, optional outline and fixed offline enhancement script.
+    /// Native structured disclosures and exact JSON pane with optional offline enhancement.
     case interactive
 }
 
@@ -92,7 +92,7 @@ public struct JSONHTMLLimits: Sendable {
 
 /// Configuration for complete highlighted HTML with optional offline interaction.
 public struct JSONHTMLRenderingOptions: Sendable {
-    /// Plain document title; control characters are rejected and HTML is escaped.
+    /// Plain document title; ASCII control characters are rejected and HTML is escaped.
     public var title: String
     /// Automatic, light or dark color policy.
     public var theme: JSONHTMLTheme
@@ -108,8 +108,28 @@ public struct JSONHTMLRenderingOptions: Sendable {
     /// Caller-supplied typed diagnostics; rendering does not execute schema validation.
     public var annotations: [JSONHTMLAnnotation] = []
 
-    /// Formatted by default; interactive behavior is explicitly selected.
-    public var presentation: JSONHTMLPresentation = .formatted
+    /// Interactive by default; formatted retains the script-free static spelling.
+    public var presentation: JSONHTMLPresentation = .interactive
+    /// Structured by default; syntax is explicitly selectable independently of presentation.
+    public var layout: JSONHTMLLayout = .structured
+    /// Direct structured rendering defaults to labelled inspection prefixes.
+    public var valueProfile: JSONHTMLValueProfile = .inspection
+    /// Complete print is independent of the active screen pane and disclosure state.
+    public var printValueProfile: JSONHTMLValueProfile = .complete
+    /// Closed inline dialect; syntax and exact copy bytes never run it.
+    public var inlineFormatting: JSONHTMLInlineFormatting = .automatic
+    /// Recognize complete supported sRGB strings and explicitly hinted channels.
+    public var colorPreviews: Bool = true
+    /// Admit only declared PNG/JPEG previews through the native bounded pipeline.
+    public var embeddedImagePreviews: Bool = true
+    /// User navigation is disabled unless explicitly enabled for checked HTTP/HTTPS links.
+    public var linkActivation: JSONHTMLLinkActivation = .disabled
+    /// Explicit typed declarations; literal suppression takes precedence.
+    public var previewHints: [JSONHTMLPreviewHint] = []
+    /// Caller-translated effective instance annotations; lower priority than explicit declarations.
+    public var effectivePreviewHints: [JSONHTMLPreviewHint] = []
+    /// Additional checked finite preview eligibility policy.
+    public var previewPolicy: JSONHTMLPreviewPolicy = .init()
     /// Containers at levels below this depth start open; root is level zero.
     public var initiallyExpandedDepth: Int = 2
     /// Include containers through this level in the outline; nil disables the outline.
@@ -126,7 +146,7 @@ public struct JSONHTMLRenderingOptions: Sendable {
     ///   - indentationUnit: Space units by default, or literal tabs.
     ///   - tabWidth: Visual tab width, one through eight.
     ///   - limits: Inclusive core and HTML capacities and work quotas.
-    public init(title: String = "JSON", theme: JSONHTMLTheme = .automatic,
+    public init(title: String = "JSON document", theme: JSONHTMLTheme = .automatic,
                 indentation: Int = 2, indentationUnit: JSONIndentationUnit = .spaces,
                 tabWidth: Int = 4, limits: JSONHTMLLimits = .init()) {
         self.title = title; self.theme = theme; self.indentation = indentation
@@ -146,7 +166,7 @@ public struct JSONHTMLRenderingOptions: Sendable {
     ///   - presentation: Formatted or interactive standalone document.
     ///   - initiallyExpandedDepth: Nonnegative initial disclosure depth; root is level zero.
     ///   - outlineDepth: Nonnegative inclusive container level, or nil to omit the outline.
-    public init(title: String = "JSON", theme: JSONHTMLTheme = .automatic,
+    public init(title: String = "JSON document", theme: JSONHTMLTheme = .automatic,
                 indentation: Int = 2, indentationUnit: JSONIndentationUnit = .spaces,
                 tabWidth: Int = 4, limits: JSONHTMLLimits = .init(),
                 presentation: JSONHTMLPresentation, initiallyExpandedDepth: Int = 2,
@@ -156,6 +176,22 @@ public struct JSONHTMLRenderingOptions: Sendable {
         self.presentation = presentation; self.initiallyExpandedDepth = initiallyExpandedDepth
         self.outlineDepth = outlineDepth
     }
+    /// Creates an explicitly selected layout with independent presentation/value policies.
+    /// - Parameters:
+    ///   - layout: Structured or complete syntax layout.
+    ///   - presentation: Interactive by default; formatted means script-free static output.
+    ///   - valueProfile: Inspection by default for direct structured rendering.
+    ///   - printValueProfile: Complete by default, independent of screen previews.
+    ///   - title: Escaped plain title; ASCII controls are rejected.
+    ///   - theme: Automatic/light/dark color policy.
+    ///   - limits: Unchanged core and HTML ceilings.
+    public init(layout: JSONHTMLLayout, presentation: JSONHTMLPresentation = .interactive,
+                valueProfile: JSONHTMLValueProfile = .inspection, printValueProfile: JSONHTMLValueProfile = .complete,
+                title: String = "JSON document", theme: JSONHTMLTheme = .automatic, limits: JSONHTMLLimits = .init()) {
+        self.init(title: title, theme: theme, limits: limits, presentation: presentation)
+        self.layout = layout; self.valueProfile = valueProfile; self.printValueProfile = printValueProfile
+    }
+
 }
 
 /// Stable identifiers for additional HTML capacities.

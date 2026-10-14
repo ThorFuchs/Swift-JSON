@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "status": "proposed_until_P0_P5_qualification",
+  "core_limits_unchanged": true,
+  "defaults": {
+    "rendererStructuredProfile": "inspection",
+    "cliHTMLProfile": "inspection",
+    "transferHTMLProfile": "complete",
+    "preparedHTMLProfile": "complete",
+    "printProfile": "complete",
+    "inlineFormatting": "automatic",
+    "colorPreviews": true,
+    "declaredEmbeddedImages": true,
+    "linkActivation": "disabled"
+  },
+  "strings": {
+    "maxSourceScalars": 512,
+    "maxPrefixUTF8Bytes": 2048,
+    "maxEscapedDisplayScalars": 512
+  },
+  "inline": {
+    "maxNesting": 8,
+    "maxTokens": 1024,
+    "maxDestinationUTF8Bytes": 2048,
+    "maxAltScalars": 128
+  },
+  "math": {
+    "maxSourceScalars": 256,
+    "maxSourceUTF8Bytes": 1024,
+    "maxSyntaxDepth": 16,
+    "maxStagedNodes": 256,
+    "maxTokens": 512,
+    "delimiters": [
+      "singleDollar",
+      "backslashParentheses"
+    ],
+    "greekCommands": {
+      "alpha": "\u03b1",
+      "beta": "\u03b2",
+      "gamma": "\u03b3",
+      "delta": "\u03b4",
+      "theta": "\u03b8",
+      "lambda": "\u03bb",
+      "mu": "\u03bc",
+      "pi": "\u03c0",
+      "sigma": "\u03c3",
+      "phi": "\u03c6",
+      "omega": "\u03c9",
+      "Delta": "\u0394",
+      "Omega": "\u03a9"
+    },
+    "operatorCommands": {
+      "times": "\u00d7",
+      "cdot": "\u22c5",
+      "pm": "\u00b1",
+      "le": "\u2264",
+      "ge": "\u2265",
+      "ne": "\u2260"
+    }
+  },
+  "media": {
+    "encodedCandidateBytes": 3145728,
+    "decodedBytesPerImage": 2097152,
+    "aggregateDecodedBytes": 8388608,
+    "maxWidth": 2048,
+    "maxHeight": 2048,
+    "maxPixels": 4194304,
+    "headerScanBytes": 262144,
+    "maxImagePreviews": 64,
+    "allowedMediaTypes": [
+      "image/png",
+      "image/jpeg"
+    ],
+    "remoteLoading": false
+  },
+  "hints": {
+    "maxRecords": 1024
+  },
+  "color": {
+    "maxCandidateUTF8Bytes": 256,
+    "hexOrder": "CSS_RGB_RGBA",
+    "namedColors": false
+  },
+  "accounting": "Eligibility policies supplement the one cumulative core/HTML meter; real global exhaustion is terminal. All finite values require checked representability and calibration."
+}

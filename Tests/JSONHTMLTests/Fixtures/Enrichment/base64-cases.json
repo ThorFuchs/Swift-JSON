@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scope": "Canonical encoding vectors; empty encoding itself is valid but cannot be an image",
+  "cases": [
+    {
+      "encoded": "",
+      "decodedHex": "",
+      "valid": true
+    },
+    {
+      "encoded": "Zg==",
+      "decodedHex": "66",
+      "valid": true
+    },
+    {
+      "encoded": "Zm8=",
+      "decodedHex": "666f",
+      "valid": true
+    },
+    {
+      "encoded": "Zm9v",
+      "decodedHex": "666f6f",
+      "valid": true
+    },
+    {
+      "encoded": "AA==",
+      "decodedHex": "00",
+      "valid": true
+    },
+    {
+      "encoded": "Zg",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "Zg=",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "Zg===",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "Zh==",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "Zm9=",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "Z g==",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "Zg==\n",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "!!!!",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "-w==",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "_w==",
+      "decodedHex": null,
+      "valid": false
+    },
+    {
+      "encoded": "A===",
+      "decodedHex": null,
+      "valid": false
+    }
+  ]
+}

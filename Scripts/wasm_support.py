@@ -6,8 +6,8 @@ from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
-COUNTS = {'JSONTests': 107, 'JSONSchemaTests': 51, 'JSONRegexRuntimeTests': 12,
-          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 25}
+COUNTS = {'JSONTests': 107, 'JSONSchemaTests': 52, 'JSONRegexRuntimeTests': 12,
+          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 81}
 GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3}
 
 def main():
@@ -71,7 +71,7 @@ def main():
             for name, count in COUNTS.items():
                 text = run('node-' + config + '-' + name, invoke('node', roots[name], 'tests'), tests(count))
                 invocations += sum(int(n) for n in re.findall(r'with (\d+) test cases passed', text))
-            if invocations != 173: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
+            if invocations != 288: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
             for package, name, scratch in [('Tools/WasmAudit', 'WasmAudit', '.build/wasm-audit-consumer'),
                                             ('Tools/Qualification', 'Qualification', '.build/wasm-qualification'),
                                             ('Tools/MCPReadiness', 'MCPReadiness', '.build/wasm-readiness')]:

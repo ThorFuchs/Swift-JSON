@@ -1,0 +1,25 @@
+{
+  "pngDataURI": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVR42mOwqmn//////wYGBob/Zzpc/jMxoAHCAgArzQlWwCUN4AAAAABJRU5ErkJggg==",
+  "jpegDataURI": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAAEAAQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDb0X/kafFX/cD/APUb0iiiivyDOf8AkYVv8R+o5L/yLqH+FH//2Q==",
+  "declaredBarePNG": "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVR42mOwqmn//////wYGBob/Zzpc/jMxoAHCAgArzQlWwCUN4AAAAABJRU5ErkJggg==",
+  "unhintedBarePNG": "iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVR42mOwqmn//////wYGBob/Zzpc/jMxoAHCAgArzQlWwCUN4AAAAABJRU5ErkJggg==",
+  "mismatch": "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVR42mOwqmn//////wYGBob/Zzpc/jMxoAHCAgArzQlWwCUN4AAAAABJRU5ErkJggg==",
+  "invalidEncoding": "data:image/png;base64,!!!!",
+  "noncanonicalPadBits": "data:image/png;base64,Zh==",
+  "oversizedHeader": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgABhqAAAYagCAIAAAAnMJyfAAAAAElFTkSuQmCC",
+  "remote": "https://example.invalid/image.png",
+  "svg": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxzY3JpcHQ+YWxlcnQoMSk8L3NjcmlwdD48L3N2Zz4=",
+  "inlineSmallPNG": "![sample](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVR42mOwqmn//////wYGBob/Zzpc/jMxoAHCAgArzQlWwCUN4AAAAABJRU5ErkJggg==)",
+  "declarations": [
+    {
+      "path": [
+        {
+          "key": "declaredBarePNG"
+        }
+      ],
+      "kind": "embeddedImage",
+      "contentEncoding": "base64",
+      "contentMediaType": "image/png"
+    }
+  ]
+}

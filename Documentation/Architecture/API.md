@@ -191,3 +191,11 @@ UTC time. Prior time-only stored values cannot recover their original calendar
 date; application migration needs an independent source of that information.
 Noncanonical Base64 with nonzero unused padding bits now rejects. These corrections
 restore the documented strict/native contracts; they do not add a permissive mode.
+
+## Structured HTML and previews
+
+Layout and presentation are orthogonal. Direct defaults are structured interactive
+inspection; prepared/transfer defaults are structured static complete values. Typed
+preview hints, the closed inline/MathML dialect and finite eligibility counters are
+defined in [the additive contract](Release1.3/StructuredPreviews/APIAndPolicy.md).
+Core exact values, native writer defaults and all 49 metrics retain their meanings.

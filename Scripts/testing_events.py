@@ -4,6 +4,11 @@ import collections
 import json
 
 ROOT_PARAMETER_CASES = {
+    'structuredCanonicalBase64MatchesPadBitGold(_:)': 16,
+    'structuredInlineMatchesIndependentDialectCases(_:)': 32,
+    'structuredMiniMathMatchesIndependentGold(_:)': 45,
+    'structuredAllPreviewCeilingsRejectBeforeGrowthAndKeepInclusiveEdges(metric:)': 22,
+    'cliHTMLPreviewFlagsRejectUsageBeforeInput(argv:)': 11,
     'cliEveryCounterHasInclusiveCheckedBoundaryAndTerminalFailure(metric:)': 16,
     'cliCompilerEnforcesCapsAtActualSourceTokenAndIRGrowth(metric:)': 4,
     'cliQueryManyTinyRecordsDoNotRetainTheWholeInputJob(records:)': 2,

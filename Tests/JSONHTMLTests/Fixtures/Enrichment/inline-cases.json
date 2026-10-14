@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "IN01",
+      "source": "**bold**",
+      "expected": "strong",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN02",
+      "source": "*italic*",
+      "expected": "em",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN03",
+      "source": "**outer *inner***",
+      "expected": "strong_with_em",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN04",
+      "source": "*outer **inner***",
+      "expected": "em_with_strong",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN05",
+      "source": "[label](https://example.invalid/)",
+      "expected": "inert_link",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN06",
+      "source": "[**label**](https://example.invalid/a_(b))",
+      "expected": "inert_link_with_strong",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN07",
+      "source": "$x_i^2$",
+      "expected": "math",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN08",
+      "source": "\\(\\frac{a}{b}\\)",
+      "expected": "math",
+      "reason": "Supported closed inline form; destination activation disabled by default",
+      "status": "not_run"
+    },
+    {
+      "id": "IN09",
+      "source": "\\*literal\\*",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN10",
+      "source": "\\$x^2\\$",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN11",
+      "source": "\\[label\\](https://example.invalid/)",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN12",
+      "source": "_not italic_",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN13",
+      "source": "~~not strike~~",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN14",
+      "source": "**unclosed",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN15",
+      "source": "* spaced *",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN16",
+      "source": "[label](https://example.invalid/ \"title\")",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN17",
+      "source": "[outer [inner](https://example.invalid)](https://example.invalid)",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN18",
+      "source": "`$x^2$ **bold**`",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN19",
+      "source": "```text\n$x^2$\n```",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN20",
+      "source": "# Heading",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN21",
+      "source": "$$x^2$$",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN22",
+      "source": "$5 and $10",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN23",
+      "source": "$x^2+\\unknown{a}$",
+      "expected": "literal",
+      "reason": "Unsupported, protected, escaped or malformed source stays literal in its applicable span",
+      "status": "not_run"
+    },
+    {
+      "id": "IN24",
+      "source": "[x](javascript:alert(1))",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN25",
+      "source": "[x](data:text/html,<script>x</script>)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN26",
+      "source": "[x](file:///private/file)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN27",
+      "source": "[x](//example.invalid/)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN28",
+      "source": "[x](https://user:secret@example.invalid/)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN29",
+      "source": "[x](https://example.invalid/\u0000x)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN30",
+      "source": "[x](&#x6a;avascript:alert(1))",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN31",
+      "source": "![photo](https://example.invalid/photo.png)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    },
+    {
+      "id": "IN32",
+      "source": "![svg](data:image/svg+xml;base64,PHN2Zy8+)",
+      "expected": "literal_or_inert_reference",
+      "reason": "No unsafe navigation, remote image request or SVG input",
+      "status": "not_run"
+    }
+  ]
+}

@@ -4,6 +4,12 @@ import Testing
 import JSON
 @testable import JSONHTML
 
+// The revision changes direct defaults; these unchanged exact-syntax invariants
+// explicitly select the original formatted syntax contract.
+private func syntaxRenderer(options: JSONHTMLRenderingOptions = .init()) -> JSONHTMLRenderer {
+    var explicit = options; explicit.layout = .syntax; explicit.presentation = .formatted
+    return JSONHTMLRenderer(options: explicit)
+}
 // Independent text extraction: fixed span markup is removed before decoding entities.
 private func body(_ html: String) throws -> [UInt8] {
     let start = try #require(html.range(of: "<pre><code>"))
@@ -22,7 +28,7 @@ private func body(_ html: String) throws -> [UInt8] {
 @Test func formattedHTMLHandlesSixRootsAndEmptyContainers() throws {
     for text in ["null", "false", "9007199254740993", #""é\u0000""#, "[true,null]", #"{"a":1}"#, "[]", "{}"] {
         let root = try JSONParser().parse(text)
-        let html = try JSONHTMLRenderer().renderString(root)
+        let html = try syntaxRenderer().renderString(root)
         #expect(html.hasPrefix("<!doctype html>"))
         #expect(html.hasSuffix("</html>\n"))
         #expect(!html.contains("<script"))
@@ -35,16 +41,16 @@ private func body(_ html: String) throws -> [UInt8] {
 @Test func formattedHTMLPreservesExactLexemesScalarKeysAndInsertionOrder() throws {
     let text = #"{"é":9007199254740993,"é":-0.00e+2,"":1.2300E-7,"0":"é","__proto__":true,"constructor":null}"#
     let root = try JSONParser().parse(text)
-    let actual = try body(JSONHTMLRenderer().renderString(root))
+    let actual = try body(syntaxRenderer().renderString(root))
     let expected = "{\n  \"é\": 9007199254740993,\n  \"e\u{301}\": -0.00e+2,\n  \"\": 1.2300E-7,\n  \"0\": \"e\u{301}\",\n  \"__proto__\": true,\n  \"constructor\": null\n}"
     #expect(actual == Array(expected.utf8)) // Swift String equality alone normalizes scalars.
-    #expect(try body(JSONHTMLRenderer().renderString(.number(42))) == Array("42".utf8))
+    #expect(try body(syntaxRenderer().renderString(.number(42))) == Array("42".utf8))
 }
 
 @Test func formattedHTMLKeepsPayloadAndTitleInert() throws {
     let payload = "</script></style><img src=x onerror=alert(1)> &quot; & < > \" ' \u{0}\n\t😀"
     let options = JSONHTMLRenderingOptions(title: "</title><script>boom</script>&\"'")
-    let html = try JSONHTMLRenderer(options: options).renderString(.string(payload))
+    let html = try syntaxRenderer(options: options).renderString(.string(payload))
     #expect(!html.contains("<script>"))
     #expect(!html.contains("<img"))
     #expect(html.contains("&lt;/style&gt;"))
@@ -52,7 +58,7 @@ private func body(_ html: String) throws -> [UInt8] {
     #expect(try body(html) == Array(JSONWriter(options: .init(numberStyle: .preserved)).write(.string(payload))))
     let hostileKey = "\r\n\u{0}\t</style>&\"'"
     let keyed = try JSONObject(members: [JSONMember(hostileKey, value: .string("e\u{301}"))])
-    let keyedHTML = try JSONHTMLRenderer().renderString(.object(keyed))
+    let keyedHTML = try syntaxRenderer().renderString(.object(keyed))
     #expect(!keyedHTML.contains("<script>"))
     let expectedKeyed = "{\n  \"\\u000d\\u000a\\u0000\\u0009</style>&\\\"'\": \"e\u{301}\"\n}"
     #expect(try body(keyedHTML) == Array(expectedKeyed.utf8))
@@ -67,7 +73,7 @@ private func body(_ html: String) throws -> [UInt8] {
     let root: JSON = .array([.array([.null])])
     for theme in [JSONHTMLTheme.automatic, .light, .dark] {
         let options = JSONHTMLRenderingOptions(theme: theme, indentation: 1, indentationUnit: .tabs, tabWidth: 8)
-        let html = try JSONHTMLRenderer(options: options).renderString(root)
+        let html = try syntaxRenderer(options: options).renderString(root)
         #expect(try body(html) == Array("[\n\t[\n\t\tnull\n\t]\n]".utf8))
         #expect(html.contains("class=\"" + theme.rawValue + " tabs-8\""))
     }
@@ -75,7 +81,7 @@ private func body(_ html: String) throws -> [UInt8] {
 
 @Test func formattedHTMLDataAndStringReportsShareOneAdmissionAndCopyBudget() throws {
     let root: JSON = .array([true, .null, .string("x")])
-    let renderer = JSONHTMLRenderer()
+    let renderer = syntaxRenderer()
     let data = try renderer.renderWithReport(root)
     let text = try renderer.renderStringWithReport(root)
     #expect(data.result == Data(text.result.utf8))
@@ -90,7 +96,7 @@ private func body(_ html: String) throws -> [UInt8] {
 
 @Test func formattedHTMLAdditionalCapsHaveInclusiveBoundaries() throws {
     let root: JSON = .array([true, .null])
-    let report = try JSONHTMLRenderer().renderWithReport(root)
+    let report = try syntaxRenderer().renderWithReport(root)
     for metric in [JSONHTMLResourceMetric.documentBytes, .renderedJSONNodes, .domNodes] {
         let boundary: UInt64 = switch metric {
         case .documentBytes: report.statistics.documentBytes
@@ -111,7 +117,7 @@ private func body(_ html: String) throws -> [UInt8] {
             case .metadataBytes: limits.maxMetadataBytes = cap
             case .annotations: limits.maxAnnotations = cap
             }
-            let renderer = JSONHTMLRenderer(options: .init(limits: limits))
+            let renderer = syntaxRenderer(options: .init(limits: limits))
             if delta < 0 {
                 do { _ = try renderer.render(root); Issue.record("Missing HTML cap refusal") }
                 catch let error as JSONHTMLFailure {
@@ -125,13 +131,13 @@ private func body(_ html: String) throws -> [UInt8] {
 
 @Test func formattedHTMLCoreCapsIncludeEscapingAssetsAndFinalCopies() throws {
     let root: JSON = .string("<&\"'")
-    let report = try JSONHTMLRenderer().renderWithReport(root)
+    let report = try syntaxRenderer().renderWithReport(root)
     for metric in [JSONResourceMetric.workUnits, .retainedBytes, .outputBytes] {
         let boundary = metric == .retainedBytes ? report.statistics.operation.peakLogicalRetainedBytes : report.statistics.operation[metric]
         for delta in [-1, 0, 1] {
             var limits = JSONHTMLLimits()
             limits.core[metric] = UInt64(Int64(boundary) + Int64(delta))
-            let renderer = JSONHTMLRenderer(options: .init(limits: limits))
+            let renderer = syntaxRenderer(options: .init(limits: limits))
             if delta < 0 {
                 do { _ = try renderer.render(root); Issue.record("Missing cumulative refusal") }
                 catch let error as JSONFailure { #expect(error.resource?.metric == metric && error.resource?.domain == .writing) }
@@ -142,19 +148,19 @@ private func body(_ html: String) throws -> [UInt8] {
 
 @Test func formattedHTMLRejectsUnsupportedConfigurationAndZeroCaps() throws {
     for options in [JSONHTMLRenderingOptions(indentation: -1), .init(indentation: 9), .init(tabWidth: 0), .init(tabWidth: 9), .init(title: "bad\n"), .init(title: "bad\u{7f}")] {
-        #expect(throws: JSONHTMLFailure.invalidConfiguration) { try JSONHTMLRenderer(options: options).render(.null) }
+        #expect(throws: JSONHTMLFailure.invalidConfiguration) { try syntaxRenderer(options: options).render(.null) }
     }
     for limits in [JSONHTMLLimits(maxRenderedJSONNodes: 0), .init(maxDOMNodes: 0), .init(maxDocumentBytes: 0)] {
-        #expect(throws: JSONHTMLFailure.self) { try JSONHTMLRenderer(options: .init(limits: limits)).render(.null) }
+        #expect(throws: JSONHTMLFailure.self) { try syntaxRenderer(options: .init(limits: limits)).render(.null) }
     }
-    #expect(throws: JSONHTMLFailure.invalidConfiguration) { try JSONHTMLRenderer(options: .init(limits: .init(maxDocumentBytes: UInt64.max))).render(.null) }
+    #expect(throws: JSONHTMLFailure.invalidConfiguration) { try syntaxRenderer(options: .init(limits: .init(maxDocumentBytes: UInt64.max))).render(.null) }
     #expect(throws: JSONHTMLFailure.counterOverflow(.domNodes)) { try JSONHTMLDocumentBuffer.adding(.domNodes, UInt64.max, 1, UInt64.max) }
 }
 
 @Test func formattedHTMLFailureCleansScratchAndLatchesTheEnclosingMeter() throws {
     var meter = try JSONWorkMeter(limits: .balanced, domain: .writing)
     try meter.retain(17)
-    let renderer = JSONHTMLRenderer(options: .init(limits: .init(maxDocumentBytes: 100)))
+    let renderer = syntaxRenderer(options: .init(limits: .init(maxDocumentBytes: 100)))
     #expect(throws: JSONHTMLFailure.self) { try renderer.render(.null, meter: &meter) }
     #expect(meter.used(.retainedBytes) == 17)
     let work = meter.used(.workUnits)
@@ -170,7 +176,7 @@ private func body(_ html: String) throws -> [UInt8] {
         meter.checkpointObserver = { work in
             if work >= 512 { withUnsafeCurrentTask { $0?.cancel() } }
         }
-        #expect(throws: CancellationError.self) { try JSONHTMLRenderer().render(.null, meter: &meter) }
+        #expect(throws: CancellationError.self) { try syntaxRenderer().render(.null, meter: &meter) }
         #expect(meter.used(.workUnits) >= 512 && meter.used(.outputBytes) > 0)
         #expect(meter.used(.retainedBytes) == 17)
         #expect(throws: CancellationError.self) { try meter.checkpoint() }
@@ -184,15 +190,16 @@ private func body(_ html: String) throws -> [UInt8] {
     for _ in 0..<80 { deep = .array([deep]) }
     let wide = try JSONObject(members: (0..<400).map { JSONMember("k\($0)", value: .number(JSONNumber(integer: $0))) })
     for root in [deep, .object(wide)] {
-        let html = try JSONHTMLRenderer().renderString(root)
+        let html = try syntaxRenderer().renderString(root)
         #expect(try body(html) == Array(JSONWriter(options: .init(indentation: 2, numberStyle: .preserved)).write(root)))
     }
-    #expect(try JSONHTMLRenderer().renderWithReport(deep).statistics.renderedJSONNodes == 81)
+    #expect(try syntaxRenderer().renderWithReport(deep).statistics.renderedJSONNodes == 81)
 }
 
 @Test func sharedFormattedHTMLRendererHasIndependentConcurrentInvocations() async throws {
     for mode in [JSONHTMLPresentation.formatted, .interactive] {
-    let renderer = JSONHTMLRenderer(options: .init(presentation: mode))
+    var options = JSONHTMLRenderingOptions(presentation: mode); options.layout = .syntax
+    let renderer = JSONHTMLRenderer(options: options)
     let root = try JSONParser().parse(#"{"é":9007199254740993,"é":[-0.00e+2,null]}"#)
     let expected = try renderer.renderWithReport(root)
     try await withThrowingTaskGroup(of: JSONHTMLRenderReport<Data>.self) { group in
@@ -208,7 +215,7 @@ private func body(_ html: String) throws -> [UInt8] {
 }
 
 @Test func formattedHTMLCSPHashesTheExactEmittedOriginalCSS() throws {
-    let html = try JSONHTMLRenderer().renderString(.null)
+    let html = try syntaxRenderer().renderString(.null)
     let start = try #require(html.range(of: "<style>"))
     let end = try #require(html.range(of: "</style>"))
     let css = Array(html[start.upperBound..<end.lowerBound].utf8)

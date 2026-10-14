@@ -14,6 +14,13 @@ import UniformTypeIdentifiers
 import PDFKit
 #endif
 
+// Retain the previously qualified syntax pagination/cap contract explicitly;
+// structured region capture has separate behavior cases below.
+private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init()) throws -> JSONExportDocument {
+    var explicit = options; explicit.layout = .syntax
+    return try JSONExportDocument.prepare(value, options: explicit)
+}
+
 @Test func exportPDFConfigurationIsFiniteAndRejectsUnsupportedGeometry() throws {
     for margin in [Double.nan, .infinity, -1, 145] {
         #expect(throws: JSONPDFFailure.invalidConfiguration) { try JSONPDFOptions(marginPoints: margin).validate() }
@@ -31,9 +38,9 @@ import PDFKit
 
 @Test func exportPDFRequiresExplicitPreparationAndRetainsOriginalCapPolicy() throws {
     #expect(throws: JSONExportFailure.preparationRequired(.pdf)) {
-        try JSONExportDocument.prepare(.null, options: .init(formats: [.html, .pdf]))
+        try syntaxPDFInput(.null, options: .init(formats: [.html, .pdf]))
     }
-    let item = try JSONExportDocument.prepare(.null)
+    let item = try syntaxPDFInput(.null)
     #expect(item.availableFormats == [.json, .html, .plainText, .markdown])
     #expect(throws: JSONExportFailure.unavailableFormat(.pdf)) { try item.data(for: .pdf) }
     #expect(throws: JSONExportFailure.unavailableFormat(.pdf)) { try item.selecting([.pdf]) }
@@ -46,7 +53,7 @@ import PDFKit
 }
 
 @Test @MainActor func exportPDFMissingHTMLNeverRerendersOrAltersSelection() async throws {
-    let original = try JSONExportDocument.prepare(.null, options: .init(formats: [.json]))
+    let original = try syntaxPDFInput(.null, options: .init(formats: [.json]))
     #expect(throws: JSONPDFFailure.missingHTML) { try original.pdfInput() }
     do { _ = try await original.preparingPDF(); Issue.record("Missing HTML was silently regenerated") }
     catch { #expect(error as? JSONPDFFailure == .missingHTML) }
@@ -61,7 +68,7 @@ import PDFKit
 }
 @MainActor private func pdfFixture(_ count: Int = 150) throws -> JSONExportDocument {
     let values = (0..<count).map { JSON.string("ROW-\($0)-END 9007199254740993 é e\u{301} 😀 العربية </script>") }
-    return try JSONExportDocument.prepare(.array(values + [.string("LAST-CONTENT-SENTINEL")]))
+    return try syntaxPDFInput(.array(values + [.string("LAST-CONTENT-SENTINEL")]))
 }
 @Suite(.serialized) struct ApplePDFTests {
 @Test @MainActor func applePDFPaginatedA4AndLetterHaveCompleteSelectableRegions() async throws {
@@ -97,7 +104,7 @@ import PDFKit
     #expect(try #require(pdf.page(at: 0)).bounds(for: .mediaBox).height > 2_000)
     #expect(pdf.string?.contains("LAST-CONTENT-SENTINEL") == true)
     for source in ["null", "true", "9007199254740993", #""é😀{}\\""#, "[]", "{}"] {
-        let item = try JSONExportDocument.prepare(JSONParser().parse(source))
+        let item = try syntaxPDFInput(JSONParser().parse(source))
         let result = try await item.preparingPDF()
         let document = try #require(PDFDocument(data: result.data(for: .pdf)))
         #expect(document.pageCount == 1 && !(document.string ?? "").isEmpty)
@@ -107,7 +114,7 @@ import PDFKit
 @Test @MainActor func applePDFWrapsWideContentAndHonorsZeroAndWideMargins() async throws {
     pdfBootstrap()
     let root: JSON = .string("FIRST-SENTINEL " + String(repeating: "https://example.test/long-key-😀-e\u{301}/", count: 300) + " LAST-CONTENT-SENTINEL")
-    let item = try JSONExportDocument.prepare(root)
+    let item = try syntaxPDFInput(root)
     for margin in [0.0, 144.0] {
         let report = try await item.preparingPDFWithReport(options: .init(marginPoints: margin))
         let pdf = try #require(PDFDocument(data: report.result.data(for: .pdf)))
@@ -121,7 +128,7 @@ import PDFKit
     pdfBootstrap()
     let item = try pdfFixture()
     let originalJSON = try item.data(for: .json)
-    let small = try JSONExportDocument.prepare(.null)
+    let small = try syntaxPDFInput(.null)
     let accepted = try await small.preparingPDFWithReport()
     let inclusive = [JSONPDFLimits(maxHTMLBytes: accepted.inputHTMLBytes),
         .init(maxCaptureBytes: accepted.capturedPDFBytes), .init(maxPDFBytes: accepted.outputPDFBytes),
@@ -160,7 +167,7 @@ import PDFKit
 
 @Test @MainActor func applePDFOwnedBudgetsAreCumulativeAndInclusive() async throws {
     pdfBootstrap()
-    let item = try JSONExportDocument.prepare(.string("é e\u{301} 😀 exact 9007199254740993"))
+    let item = try syntaxPDFInput(.string("é e\u{301} 😀 exact 9007199254740993"))
     let baseline = try await item.preparingPDFWithReport()
     #expect(baseline.operation[.workUnits] > baseline.inputHTMLBytes + baseline.outputPDFBytes)
     let resultBytes = baseline.existingPreparedBytes + baseline.outputPDFBytes
@@ -179,14 +186,14 @@ import PDFKit
 
 @Test @MainActor func applePDFHiddenHTMLAndReplacementPreserveImmutablePolicy() async throws {
     pdfBootstrap()
-    let original = try JSONExportDocument.prepare(.null).selecting([.json])
+    let original = try syntaxPDFInput(.null).selecting([.json])
     let first = try await original.preparingPDFWithReport()
     #expect(first.result.advertisedFormats == [.json, .pdf] && first.result.availableFormats.count == 5)
     let second = try await first.result.preparingPDFWithReport()
     #expect(second.result.availableFormats.count == 5 && second.existingPreparedBytes == first.existingPreparedBytes + first.outputPDFBytes)
     #expect(try second.result.data(for: .json) == original.data(for: .json))
     let sum = try original.pdfInput().bytes
-    let tight = try JSONExportDocument.prepare(.null, options: .init(limits: .init(maxPreparedBytes: sum)))
+    let tight = try syntaxPDFInput(.null, options: .init(limits: .init(maxPreparedBytes: sum)))
     do { _ = try await tight.preparingPDF(); Issue.record("Original aggregate cap was widened") }
     catch { #expect((error as? JSONPDFFailure) != nil) }
     #expect(!tight.availableFormats.contains(.pdf))
@@ -194,7 +201,7 @@ import PDFKit
 
 @Test @MainActor func applePDFFailureAndImmediateDeadlineNeverAdvertiseAnArtifact() async throws {
     pdfBootstrap()
-    let item = try JSONExportDocument.prepare(.null)
+    let item = try syntaxPDFInput(.null)
     do { _ = try await item.preparingPDF(options: .init(timeoutMilliseconds: 0)); Issue.record("Expired deadline accepted PDF") }
     catch { #expect(error as? JSONPDFFailure == .timedOut) }
     // Real iOS emoji fallback produced height 162 with nominal 16-point lines.
@@ -212,7 +219,7 @@ import PDFKit
 
 @Test @MainActor func applePDFTransferOffersOnlyPreparedSelectedBytes() async throws {
     pdfBootstrap()
-    let item = try JSONExportDocument.prepare(.null)
+    let item = try syntaxPDFInput(.null)
     let report = try await item.preparingPDFWithReport()
     #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
     let selected = try report.result.selecting([.pdf])
@@ -253,7 +260,7 @@ import PDFKit
 }
 @Test @MainActor func applePDFTimeoutReturnsWithoutWaitingForUncooperativeCapture() async throws {
     pdfBootstrap()
-    let item = try JSONExportDocument.prepare(.null)
+    let item = try syntaxPDFInput(.null)
     for stage in [JSONPDFStage.loading, .layout, .capture] {
     let backend = SuspendedPDFBackend(ready: {}); backend.waitAt = stage
     let start = ContinuousClock.now
@@ -289,7 +296,7 @@ import PDFKit
 }
 #else
 @Test @MainActor func exportPDFUnavailableBackendRemainsUnadvertised() async throws {
-    let item = try JSONExportDocument.prepare(.null)
+    let item = try syntaxPDFInput(.null)
     do { _ = try await item.preparingPDF(); Issue.record("Unsupported platform advertised PDF") }
     catch { #expect(error as? JSONPDFFailure == .backendUnavailable) }
     #expect(!item.availableFormats.contains(.pdf))

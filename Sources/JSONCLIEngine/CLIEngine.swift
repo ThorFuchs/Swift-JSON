@@ -74,7 +74,7 @@ package enum CLIEngine {
         }
         return result
     }
-    private static func execute(_ arguments: CLIArguments, context: inout CLIJobContext) throws -> Int32 {
+    package static func execute(_ arguments: CLIArguments, context: inout CLIJobContext) throws -> Int32 {
         if ["help", "--help", "-h"].contains(arguments.command) || arguments.hasHelp {
             let selected = arguments.hasHelp ? arguments.command : arguments.positionals.first
             guard arguments.hasHelp || arguments.positionals.count <= 1 else { throw CLIError(.usage, "helpArity") }
@@ -176,7 +176,18 @@ package enum CLIEngine {
                 default: throw CLIError(.usage, "invalidTheme")
                 }
                 try context.domain(.writing); try context.meter.resetValueBounds()
-                let options = JSONHTMLRenderingOptions(title: arguments.options["title"] ?? "JSON", theme: theme, limits: .init(core: context.meter.limits), presentation: presentation)
+                var options = JSONHTMLRenderingOptions(title: arguments.options["title"] ?? "JSON document", theme: theme, limits: .init(core: context.meter.limits), presentation: presentation)
+                options.layout = arguments.options["layout"] == "syntax" ? .syntax : .structured
+                options.valueProfile = arguments.options["full-values"] == nil ? .inspection : .complete
+                options.inlineFormatting = JSONHTMLInlineFormatting(rawValue: arguments.options["inline-formatting"] ?? "automatic")!
+                let previews = arguments.options["value-previews"] != "off"
+                options.colorPreviews = previews; options.embeddedImagePreviews = previews
+                if let value = arguments.options["string-preview"], let n = UInt64(value) {
+                    let product = n.multipliedReportingOverflow(by: 4)
+                    guard !product.overflow else { throw CLIError(.usage, "invalidStringPreview") }
+                    options.previewPolicy.maxSourceScalars = n; options.previewPolicy.maxEscapedDisplayScalars = n
+                    options.previewPolicy.maxPrefixUTF8Bytes = min(context.meter.limits[.stringBytes], product.partialValue)
+                }
                 let html = try JSONHTMLRenderer(options: options).render(value, meter: &context.meter)
                 try context.charge(.totalResults); try output.write(html.bytes, context: &context); output.resultAccepted(context: &context)
             } else if format == "text" || format == "markdown" {

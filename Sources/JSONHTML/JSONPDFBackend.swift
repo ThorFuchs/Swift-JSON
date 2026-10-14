@@ -15,8 +15,15 @@ import UIKit
     func layout(width: Double) async throws -> JSONPDFGeometry
     func textInfo() async throws -> JSONPDFTextInfo
     func textRun(at index: Int) async throws -> JSONPDFTextRun
+    func beginFragments() async throws
+    func nextFragment() async throws -> JSONPDFFragmentStep
     func capture(_ rectangle: JSONPDFRectangle) async throws -> Data
     func stop()
+}
+
+extension JSONPDFPageBackend {
+    package func beginFragments() async throws { throw JSONPDFFailure.layoutFailed }
+    package func nextFragment() async throws -> JSONPDFFragmentStep { throw JSONPDFFailure.layoutFailed }
 }
 
 private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
@@ -32,7 +39,9 @@ private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
     package init() {
         var configuration = WebPage.Configuration()
         configuration.websiteDataStore = .nonPersistent()
-        configuration.loadsSubresources = false
+        // Generated artifacts have default-src none and img-src data: only when
+        // native media was admitted. Permit those data images; no remote source is emitted.
+        configuration.loadsSubresources = true
         configuration.defaultNavigationPreferences.allowsContentJavaScript = false
         configuration.deviceSensorAuthorization = .init(decision: .deny)
         let page = WebPage(configuration: configuration, navigationDecider: JSONPDFOfflineNavigation())
@@ -59,11 +68,11 @@ private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
             // Fixed client-world print-profile code; content JS stays disabled. Fonts
             // readiness and a synchronous layout query replace correctness sleeps.
             let value = try await page.callJavaScript(
-                "const s=document.styleSheets[0]; s.insertRule('body{margin:0!important;padding:0!important;width:'+width+'px!important;background:#fff!important;color:#000!important}',s.cssRules.length); s.insertRule('main{margin:0!important}',s.cssRules.length); s.insertRule('h1{display:none!important}',s.cssRules.length); s.insertRule('pre{margin:0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;font:11px/16px Menlo,monospace!important}',s.cssRules.length); await document.fonts.ready; const p=document.querySelector('pre'); const r=p.getBoundingClientRect(); return [r.width,r.height,parseFloat(getComputedStyle(p).lineHeight),document.fonts.status==='loaded'?1:0,r.x,r.y];",
+                "const s=document.styleSheets[0]; s.insertRule('body{margin:0!important;padding:0!important;width:'+width+'px!important;background:#fff!important;color:#000!important}',s.cssRules.length); s.insertRule('main{margin:0!important;padding:0!important;max-width:none!important}',s.cssRules.length); s.insertRule('h1{display:none!important}',s.cssRules.length); s.insertRule('.rich .print-json{display:flow-root!important;margin:0!important;padding:0!important}',s.cssRules.length); s.insertRule('.rich .source-download,.rich .screen-view,.rich .document-header,.rich .exact-source,.rich .view-tabs,.rich .preview-issues,.rich .toolbar,.rich #jh-status,.rich .search-results,.rich dialog,.rich noscript{display:none!important}',s.cssRules.length); s.insertRule('pre{margin:0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;font:11px/16px Menlo,monospace!important}',s.cssRules.length); await document.fonts.ready; const images=document.querySelectorAll('.print-json img'); for(const image of images){await image.decode();if(!image.complete||image.naturalWidth===0)throw new Error('Image decode failed');} const rich=document.body.classList.contains('rich'); const p=rich?document.querySelector('.print-json'):document.querySelector('pre'); const r=p.getBoundingClientRect(); return [r.width,r.height,16,document.fonts.status==='loaded'?1:0,r.x,r.y];",
                 arguments: ["width": width], contentWorld: .defaultClient)
             guard let values = value as? [Double], values.count == 6, values[3] == 1,
                   values[4] == 0, values[5] == 0 else { throw JSONPDFFailure.layoutFailed }
-            return .init(width: values[0], height: values[1], lineHeight: values[2])
+            return .init(width: values[0], height: ceil(values[1]), lineHeight: values[2])
         } catch is CancellationError { throw CancellationError() }
         catch { throw JSONPDFFailure.layoutFailed }
     }
@@ -93,6 +102,29 @@ private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
                 throw JSONPDFFailure.layoutFailed
             }
             return .init(kind: row[0], text: row[1])
+        } catch is CancellationError { throw CancellationError() }
+        catch { throw JSONPDFFailure.layoutFailed }
+    }
+    package func beginFragments() async throws {
+        guard let page else { throw CancellationError() }
+        do {
+            _ = try await page.callJavaScript("const root=document.querySelector('.print-json'); window.__jhPDFScan={walker:document.createTreeWalker(root,NodeFilter.SHOW_TEXT),rects:null,index:0,media:root.querySelectorAll('img,math'),mediaIndex:0}; return 1;", contentWorld: .defaultClient)
+        } catch is CancellationError { throw CancellationError() }
+        catch { throw JSONPDFFailure.layoutFailed }
+    }
+    package func nextFragment() async throws -> JSONPDFFragmentStep {
+        guard let page else { throw CancellationError() }
+        do {
+            // At most one text node/media element/rectangle per invocation. DOM
+            // lists are SDK state; no owned JavaScript loop or generated array grows.
+            let value = try await page.callJavaScript("const s=window.__jhPDFScan;if(s.rects&&s.index<s.rects.length){const r=s.rects.item(s.index++);return [1,r.top,r.bottom];}const n=s.walker.nextNode();if(n){const r=document.createRange();r.selectNodeContents(n);s.rects=r.getClientRects();s.index=0;return [0,0,0];}if(s.mediaIndex<s.media.length){const r=s.media.item(s.mediaIndex++).getBoundingClientRect();return [1,r.top,r.bottom];}delete window.__jhPDFScan;return [2,0,0];", contentWorld: .defaultClient)
+            guard let values = value as? [Double], values.count == 3 else { throw JSONPDFFailure.layoutFailed }
+            switch values[0] {
+            case 0: return .advance
+            case 1: return .span(.init(top: values[1], bottom: values[2]))
+            case 2: return .end
+            default: throw JSONPDFFailure.layoutFailed
+            }
         } catch is CancellationError { throw CancellationError() }
         catch { throw JSONPDFFailure.layoutFailed }
     }

@@ -96,6 +96,11 @@ package enum CLIHelp {
             --format html|markdown|text (default html)
             HTML: --presentation static|interactive (default static)
             --theme system|light|dark --title TEXT
+            --layout structured|syntax (default structured)
+            --string-preview N | --full-values (default inspection: 512 scalars)
+            --inline-formatting off|declared|automatic (default automatic)
+            --value-previews off|standard (default standard; declared PNG/JPEG only)
+            HTML-only options cannot be used with text or Markdown.
             --html PATH is shorthand for HTML --output PATH.
             Static HTML is expanded and script-free. Text/Markdown use real tabs;
             Markdown wraps exact JSON in a JSON code fence.

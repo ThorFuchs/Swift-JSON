@@ -94,6 +94,27 @@ public struct JSONExportOptions: Sendable {
     /// HTML-specific ceilings; its core limits intersect the export core without resetting work.
     public var htmlLimits: JSONHTMLLimits
 
+    /// Independent HTML shape; defaults to ordered structured forms/cards.
+    public var layout: JSONHTMLLayout = .structured
+    /// Prepared static HTML defaults to full values.
+    public var valueProfile: JSONHTMLValueProfile = .complete
+    /// Explicit PDF/print string profile; complete by default.
+    public var printValueProfile: JSONHTMLValueProfile = .complete
+    /// Closed bounded inline string dialect.
+    public var inlineFormatting: JSONHTMLInlineFormatting = .automatic
+    /// Enable complete supported sRGB previews.
+    public var colorPreviews: Bool = true
+    /// Enable declared canonical PNG/JPEG previews.
+    public var embeddedImagePreviews: Bool = true
+    /// Default inert link policy.
+    public var linkActivation: JSONHTMLLinkActivation = .disabled
+    /// Explicit typed instance declarations.
+    public var previewHints: [JSONHTMLPreviewHint] = []
+    /// Caller-translated effective content annotations; independent of schema validity.
+    public var effectivePreviewHints: [JSONHTMLPreviewHint] = []
+    /// Finite local preview eligibility policy, additional to the cumulative core meter.
+    public var previewPolicy: JSONHTMLPreviewPolicy = .init()
+
     /// Creates preparation options with four native artifacts and one tab per level.
     /// - Parameters:
     ///   - formats: Requested exact artifact identifiers.

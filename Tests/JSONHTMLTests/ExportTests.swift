@@ -50,10 +50,11 @@ import UniformTypeIdentifiers
     let item = try JSONExportDocument.prepare(.string("</style><script>boom</script>&"),
         options: .init(title: "</title>&"))
     let html = String(decoding: try item.data(for: .html), as: UTF8.self)
-    #expect(html.contains("class=\"light tabs-4\""))
+    #expect(html.contains("class=\"rich light tabs-4\""))
     #expect(html.contains("&lt;/style&gt;&lt;script&gt;boom&lt;/script&gt;&amp;"))
     #expect(html.contains("script-src 'none'") && html.contains("default-src 'none'"))
-    for forbidden in ["<script", "<button", "<details", "<nav", "hidden", "src=\""] { #expect(!html.contains(forbidden)) }
+    // Native exact-source disclosure is deliberately available without scripting.
+    for forbidden in ["<script", "<button", "<nav", "<input", "data-pointer=", "src=\""] { #expect(!html.contains(forbidden)) }
 }
 
 @Test func exportSelectionRetainsHiddenArtifactsAndLookupIsExact() throws {

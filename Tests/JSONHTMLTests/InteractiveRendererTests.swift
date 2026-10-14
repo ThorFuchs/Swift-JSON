@@ -22,10 +22,10 @@ private func exact(_ root: JSON) throws -> [UInt8] {
     let limitsFactory: (JSONLimits, UInt64, UInt64, UInt64) -> JSONHTMLLimits = JSONHTMLLimits.init
     let limits = limitsFactory(.balanced, 100, 1000, 100_000)
     let options = optionsFactory("Old", .light, 2, .spaces, 4, limits)
-    #expect(options.presentation == .formatted)
+    #expect(options.presentation == .interactive && options.layout == .structured)
     let report = try JSONHTMLRenderer(options: options).renderStringWithReport(.null)
-    #expect(!report.result.contains("<script>"))
-    #expect(report.statistics.outlineEntries == 0 && report.statistics.metadataBytes == 0 && report.statistics.copyJSONBytes == 0)
+    #expect(report.result.contains("<script>"))
+    #expect(report.statistics.outlineEntries == 0 && report.statistics.metadataBytes > 0 && report.statistics.copyJSONBytes == 4)
 }
 
 @Test func interactiveHTMLCopiesAllRootKindsFromNativeWriter() throws {
@@ -57,10 +57,11 @@ private func exact(_ root: JSON) throws -> [UInt8] {
     let report = try renderer.renderStringWithReport(root)
     #expect(report.statistics.renderedJSONNodes == 5 && report.statistics.operation[.nodes] == 5)
     #expect(report.statistics.outlineEntries == 3)
-    #expect(report.result.components(separatedBy: " open>").count - 1 == 1)
-    #expect(report.result.components(separatedBy: "<details ").count - 1 == 4)
+    let screen = String(report.result[report.result.range(of: "id=\"jh-structured\"")!.lowerBound..<report.result.range(of: "id=\"jh-syntax\"")!.lowerBound])
+    #expect(screen.components(separatedBy: " open>").count - 1 == 1)
+    #expect(screen.components(separatedBy: "<details ").count - 1 == 3) // Empty object is an ordinary scalar-style complete row.
     #expect(!report.result.contains("<details name="))
-    #expect(report.result.contains("data-target=\"jh-n-4\" href=\"#jh-n-4\""))
+    #expect(report.result.contains("href=\"#jh-n-4\" data-target=\"jh-n-4\""))
 }
 
 @Test func interactiveHTMLOutlineCanBeOmittedWithoutLosingTreeOrCopy() throws {

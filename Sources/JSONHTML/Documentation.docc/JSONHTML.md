@@ -25,6 +25,7 @@ browser heap, browser instruction quotas, process RSS or printing behavior.
 
 ### Guide
 
+- <doc:StructuredPreviews>
 - <doc:FormattedRendering>
 - <doc:InteractiveRendering>
 - <doc:DiagnosticAnnotations>

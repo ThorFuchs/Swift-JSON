@@ -63,7 +63,7 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact highlighted HTML, offline disclosures/search and native-byte copy/download (1.3 development) |
+| **JSONHTML** | Structured forms/cards, exact syntax, bounded native previews and prepared exports |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch` and `JSONHTML` build on `JSON`. The package-private
@@ -346,32 +346,51 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
-## Standalone HTML (1.3 development)
+## Standalone HTML
 
-The additive `JSONHTML` product renders complete highlighted HTML from the same
-exact writer cursor. Formatted mode is script-free. Opt into interactive mode for
-native disclosures, a container outline, case-sensitive literal search and exact
-JSON/Pointer copy and downloads. All assets are embedded and hash-authorized;
-no network access or browser JSON number conversion is needed.
+`JSONHTML` presents the exact value as ordered object forms, indexed array cards and
+small scalar flow lists. The direct renderer defaults to interactive structured
+inspection. Static presentation is script-free; syntax is an explicit alternate.
 
 ```swift
+import JSON
 import JSONHTML
 
-let interactiveHTML = try JSONHTMLRenderer(options: .init(
-    title: "Exact values", presentation: .interactive,
-    initiallyExpandedDepth: 2, outlineDepth: 3
-)).renderWithReport(value)
+let valueForHTML = try JSONParser().parse(#"{"amount":9007199254740993,"note":"**Hello** $x_i^2$"}"#)
+let interactiveHTML = try JSONHTMLRenderer().renderWithReport(valueForHTML)
 precondition(interactiveHTML.statistics.copyJSONBytes > 0)
+let staticHTML = try JSONHTMLRenderer(options: .init(
+    layout: .structured, presentation: .formatted, valueProfile: .complete)
+).render(valueForHTML)
+let syntaxHTML = try JSONHTMLRenderer(options: .init(
+    layout: .syntax, presentation: .formatted)
+).render(valueForHTML)
 ```
 
-Every call shares one finite budget through admission, metadata, formatting and
-final copying. Downloads use native UTF-8 bytes, preserving numeric lexemes and
-scalar identity. Clipboard acceptance and manual copying depend on the browser;
-printing includes the full formatted JSON independently of disclosure state.
-Read the [formatted guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
-and [interactive guide](Sources/JSONHTML/Documentation.docc/InteractiveRendering.md)
-for limits and browser qualifications. Annotations, transfer formats, RTF and PDF
-preparation remain later increments. Published 1.2 versions do not include JSONHTML.
+Inspection string prefixes are labelled and capped at 512 decoded scalars, 2048 UTF-8
+bytes and 512 escaped-display scalars. Original values and full JSON source remain
+accessible without JavaScript. Keys, numbers and node structure remain complete.
+Copy/download use exact native writer bytes. Complete printing expands all values
+independently of collapsed screen state or selected tab.
+
+The bounded native preview dialect adds supported sRGB swatches, declared canonical
+PNG/JPEG, star emphasis, inert links and atomic mini-math as MathML Core. It keeps
+unsupported/malformed spans literal. There is no full Markdown/TeX engine, remote
+media, raw markup or mandatory schema/browser dependency. Native image header admission
+is distinct from browser raster decoding and process memory.
+
+Prepared export defaults to static structured complete values and light colors;
+JSON/text/Markdown/RTF bytes and strict JSON import retain their contracts. Explicit
+Apple PDF consumes prepared HTML, awaits fonts/media and reports its backend and
+page strategy. Generation and PDF preparation each have an explicit cumulative budget;
+transport, receiver and opaque SDK work are separate.
+
+Read the [structured preview guide](Sources/JSONHTML/Documentation.docc/StructuredPreviews.md),
+[formatted syntax guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md),
+[prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md) and
+[API/policy freeze](Documentation/Architecture/Release1.3/StructuredPreviews/APIAndPolicy.md).
+The consolidated design revision is not a package release number. This feature branch
+has its own qualification record; published versions retain their existing contract.
 
 ## Documentation and examples
 

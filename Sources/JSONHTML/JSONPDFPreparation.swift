@@ -146,7 +146,7 @@ private final class JSONPDFCancellationState: Sendable {
         try advance(.loading); try meter.work(8)
         let backend = factory(); self.backend = backend
         try await backend.load(html)
-        try advance(.layout); try work()
+        try advance(.layout); try meter.work(UInt64(input.html.count)); try work()
         let geometry = try await backend.layout(width: width)
         try check()
         guard geometry.width.isFinite, geometry.height.isFinite, geometry.lineHeight.isFinite,
@@ -169,7 +169,7 @@ private final class JSONPDFCancellationState: Sendable {
         var captured: UInt64 = 0
         var actualPages: UInt64 = 0
         var textReservation: UInt64 = 0
-        if options.layout == .paginated {
+        if options.layout == .paginated && document.htmlPolicy?.layout != .structured {
             // Fixed client script and conversion loops are conservatively admitted
             // under this same meter, before native extraction/attributed layout.
             try meter.work(UInt64(input.html.count))
@@ -206,15 +206,51 @@ private final class JSONPDFCancellationState: Sendable {
                 complete = page.isComplete
             }
         } else {
-            try advance(.capture); try work()
-            let region = JSONPDFRectangle(x: 0, y: 0, width: width, height: geometry.height)
-            let bytes = try await backend.capture(region)
-            try check()
-            captured = try pdfAdd(.captureBytes, captured, UInt64(bytes.count), options.limits.maxCaptureBytes)
-            try retainBytes(bytes, output: true)
-            try advance(.composition); try work()
-            try await compositor.append(bytes, region: region)
-            try check(); try meter.release(UInt64(bytes.count)); actualPages = 1
+            var spans: [JSONPDFFragment] = []
+            if options.layout == .paginated {
+                try advance(.extraction); try work(); try meter.retain(128); textReservation += 128
+                try await backend.beginFragments()
+                var complete = false
+                while !complete {
+                    try advance(.extraction); try work()
+                    switch try await backend.nextFragment() {
+                    case .end: complete = true
+                    case .advance: break
+                    case .span(let span):
+                        guard span.top.isFinite, span.bottom.isFinite, span.top >= 0, span.bottom >= span.top, span.bottom <= geometry.height + 1 else { throw JSONPDFFailure.layoutFailed }
+                        guard UInt64(spans.count) < UInt64(input.html.count) else { throw JSONPDFFailure.layoutFailed }
+                        try meter.retain(32); textReservation += 32; spans.append(span)
+                    }
+                }
+            }
+            var offset = 0.0
+            while offset < geometry.height {
+                try advance(.capture); try work()
+                var end = min(offset + chunk, geometry.height)
+                if options.layout == .paginated && end < geometry.height {
+                    // Cut through actual whitespace between line/media bounds. A tall
+                    // unbreakable fragment is an explicit layout failure, never a syntax fallback.
+                    var changed = true
+                    while changed {
+                        changed = false
+                        for span in spans {
+                            try work()
+                            if span.top < end && span.bottom > end { end = floor(span.top); changed = true }
+                        }
+                    }
+                    guard end > offset else { throw JSONPDFFailure.layoutFailed }
+                }
+                let region = JSONPDFRectangle(x: 0, y: offset, width: width, height: end - offset)
+                let bytes = try await backend.capture(region)
+                try check()
+                captured = try pdfAdd(.captureBytes, captured, UInt64(bytes.count), options.limits.maxCaptureBytes)
+                try retainBytes(bytes, output: true)
+                try advance(.composition); try work()
+                try await compositor.append(bytes, region: region)
+                try check(); try meter.release(UInt64(bytes.count))
+                actualPages = try pdfAdd(.pages, actualPages, 1, options.limits.maxPages)
+                offset += region.height
+            }
         }
         try advance(.composition); try work()
         let pdf = try await compositor.finish(maximumBytes: min(options.limits.maxPDFBytes, input.representationLimit),
@@ -237,7 +273,9 @@ private final class JSONPDFCancellationState: Sendable {
         return .init(result: result, operation: meter.statistics(), inputHTMLBytes: UInt64(input.html.count),
                      existingPreparedBytes: input.bytes, capturedPDFBytes: captured,
                      outputPDFBytes: UInt64(pdf.count), pageCount: actualPages,
-                     backend: options.layout == .paginated ? "WebPage static syntax + CoreText visible ranges + CoreGraphics" : "WebPage continuous region + CoreGraphics",
+                     backend: document.htmlPolicy?.layout == .structured ? "WebPage forced print structured regions + line/media bounds + CoreGraphics" : options.layout == .paginated ? "WebPage static syntax + CoreText visible ranges + CoreGraphics" : "WebPage continuous region + CoreGraphics",
+                     htmlLayout: document.htmlPolicy?.layout ?? .syntax, valueProfile: document.htmlPolicy?.printValueProfile ?? .complete,
+                     fontReadiness: "document.fonts.ready loaded", mediaReadiness: "print images decoded before layout/capture",
                      elapsed: started.duration(to: .now))
     }
 }
