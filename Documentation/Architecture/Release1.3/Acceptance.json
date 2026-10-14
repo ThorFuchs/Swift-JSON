@@ -205,7 +205,8 @@
       "status": "not_run",
       "evidence": [
         "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
-      ]
+      ],
+      "limitation": "No annotation/document-input implementation exists; final integrated audit keeps this release requirement open."
     },
     {
       "id": "JH21",
@@ -214,7 +215,8 @@
       "status": "not_run",
       "evidence": [
         "BrowserQualification.md: 37 automated cases and scoped native Safari/maintainer VoiceOver observations; final-platform/annotations clauses remain open."
-      ]
+      ],
+      "limitation": "No annotation/document-input implementation exists; final integrated audit keeps this release requirement open."
     },
     {
       "id": "JH22",
@@ -580,29 +582,41 @@
       "id": "TX34",
       "gate": "T4",
       "requirement": "RTF is valid styled RTF with token colors/monospace/tab stops; no renamed HTML/Markdown/attachments.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+      ],
+      "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
     },
     {
       "id": "TX35",
       "gate": "T4",
       "requirement": "Independent RTF decode matches pretty body with Unicode/surrogate/combining/tab/backslash/brace cases.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+      ],
+      "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
     },
     {
       "id": "TX36",
       "gate": "T4",
       "requirement": "RTF strategy has bounded growth/run/UTF-16 range accounting and qualified platform/isolation behavior.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+      ],
+      "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
     },
     {
       "id": "TX37",
       "gate": "T4",
       "requirement": "RTF styles remain present in Mac/mobile decoder and real rich-editor observations; recipient limits recorded.",
-      "status": "not_run",
-      "evidence": []
+      "status": "passed",
+      "evidence": [
+        "RTFExportTests.swift; 63-case Mac/iPhone native consumer; actual TextEdit rich reception and saved-file decoding in materialized receiving return"
+      ],
+      "limitation": "Native emitted RTF text/style qualified. TextEdit rich save normalizes a decomposed key; recipient exact scalar text fidelity is not promised and is explicitly reported."
     },
     {
       "id": "TX38",
@@ -731,7 +745,8 @@
       "requirement": "Five-product public consumers/resources and Apple framework boundary qualify Mac/iOS/iPadOS SDK/simulator/device cases.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
       "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
@@ -740,21 +755,29 @@
       "gate": "T6",
       "requirement": "Actual Mac/iOS/iPad receiving-app matrix records share/drag/paste/open behavior and selected content types.",
       "status": "not_run",
-      "evidence": []
+      "evidence": [
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+      ],
+      "limitation": "Physical representative UI checks passed; exact executed Mac/simulator receiver rows and pending gestures are recorded separately."
     },
     {
       "id": "TX50",
       "gate": "T6",
       "requirement": "Plain-text fallback versus Markdown subtype tested; explicit Copy JSON/Copy Markdown/Share PDF paths qualified.",
       "status": "not_run",
-      "evidence": []
+      "evidence": [
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+      ],
+      "limitation": "Physical representative UI checks passed; exact executed Mac/simulator receiver rows and pending gestures are recorded separately."
     },
     {
       "id": "TX51",
       "gate": "T6",
       "requirement": "Existing renderer JH requirements qualified with explicit JH25 dependency amendment; no hidden weakened baseline.",
       "status": "not_run",
-      "evidence": []
+      "evidence": [
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
+      ]
     },
     {
       "id": "TX52",
@@ -762,7 +785,8 @@
       "requirement": "Native/safety/docs lanes pass on final exact candidate with deliberate nonzero suite/case counts and current base.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
       "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
@@ -772,7 +796,8 @@
       "requirement": "Generation, combined preparation, RTF/PDF expansion and responsiveness measurements justify frozen finite profiles.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
       "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
@@ -782,7 +807,8 @@
       "requirement": "Public docs/examples describe exactness, preparation, format selection, recipient and system-resource boundaries.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
       "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
@@ -792,7 +818,8 @@
       "requirement": "Separate review pass findings resolved; final API/framework/limits choices and source/log/artifact identity returned.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
       "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     },
@@ -802,7 +829,8 @@
       "requirement": "Release slot reconciled; no main push/tag/release/messages under this brief alone; all incomplete rows explicit.",
       "status": "partial",
       "evidence": [
-        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests"
+        "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
+        "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
       "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
     }
@@ -817,7 +845,7 @@
     "T1": "partial",
     "T2": "partial",
     "T3": "partial",
-    "T4": "not_run",
+    "T4": "passed",
     "T5": "passed",
     "T6": "partial"
   }

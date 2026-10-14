@@ -23,6 +23,7 @@ import JSONSchema
             try Probes.codingAndScope(); print("CASE coding_and_scope passed")
             try Probes.cumulativeBudgets(); print("CASE cumulative_budgets passed")
             try Probes.patches(); print("CASE patch_and_merge_patch passed")
+        case "html": try await Probes.htmlRenderingAndExports()
         case "resources": try Probes.resourceRegistry(); print("CASE nine_pinned_resources passed")
         case "schema":
             try Probes.schemaAndRegex(); print("CASE schema_regex_operational_errors passed")

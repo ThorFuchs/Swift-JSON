@@ -70,14 +70,15 @@ This local lane neither activates hosted CI nor substitutes for Apple/Linux gate
 
 ## JSONHTML export development lane
 
-`python3 Scripts/ci.py --lane export` requires 22 focused Swift Testing functions
-in both configurations, 45 public consumer outcomes, six pinned fixtures and three
+`python3 Scripts/ci.py --lane export` requires 37 focused Swift Testing functions
+in both configurations, 63 public consumer outcomes, six pinned fixtures and three
 Apple SDK declaration probes. It builds all five products in iPhoneOS and
 simulator consumers. A bounded offscreen WebPage region experiment remains outside
 the production API. The lane establishes native API/file transport and SDK builds,
-not share sheets, receiving-editor UI, simulator execution or paginated PDF.
-Root discovery includes 22 Apple export functions (19 without Apple frameworks), and the
-shared export case joins the targeted Thread Sanitizer lane. All 49 cap checks
+not share sheets or receiving-editor UI. Explicit paginated PDF and simulator/device execution have separate materialized receipts.
+Current root discovery is 257 functions on Mac (62 HTML) and 244 on Linux/WASI
+(49 HTML). The focused export lane requires 37 functions on Mac. Nine Mac shared
+functions, including independent PDF cancellation, run under Thread Sanitizer. All 49 cap checks
 and the 173 baseline parameterized invocations remain required.
 
 ## Structured Swift Testing receipts
@@ -88,12 +89,22 @@ exact bundle cardinality and every baseline parameterized function's count (173
 invocations total), and rejects missing/duplicate/skipped/issue/malformed events.
 Human console summaries are retained as diagnostics; observed hosted runs can
 truncate those summaries even with exit zero. JSONL is split on LF so Unicode line
-separators inside valid message strings are preserved. Eleven harness regression
+separators inside valid message strings are preserved. Nineteen harness regression
 probes test these failures; they supplement the Swift Testing behavior suite.
 This change does not reduce discovery, cases, sanitizer coverage or the 49 caps.
 
-The styled RTF increment adds five portable functions and one native decode/style
+Historically, the styled RTF increment added five portable functions and one native decode/style
 function, retaining all existing cases. Mac root counts are 107/51/14/12/11/47;
 Linux counts are 107/51/14/12/11/44. Optional `qualify_rtf_runtime.py` executes the
 public consumer on isolated iPhone/iPad simulators; SDK compilation is separate
 from those outcomes and from physical-device/receiver UI qualification.
+
+## Integrated 1.3 portable qualification
+
+The five-product WASI lane requires six exact bundles: JSON 107, schema 51, private
+regex 12, streaming 14, patch 11 and portable HTML 49. Its public consumer requires
+14 functions and six explicit HTML/export outcomes in both Node and WasmKit. All
+173 parameter cases, 49 cap outcomes, pinned independent suites and rooted vectors
+remain required. The first failed inherited expectations are retained; no blanket
+nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
+observations remain separate from automated SDK/API and portable execution.

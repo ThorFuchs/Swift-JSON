@@ -68,3 +68,31 @@ The public export consumer exercises API/file transport, native decoding and PDF
 geometry/text independently of receiving-app and physical-device behavior. Failed
 explicit PDF requests install no artifact and advertise no capability. The original
 T0 tall-region probe is historical evidence; it never established pagination.
+
+## Receiving applications
+
+Offer an explicitly selected immutable item to SwiftUI with an explicit preview:
+
+```swift
+import SwiftUI
+import JSONHTML
+
+@MainActor func sharePrepared(_ item: JSONExportDocument) throws -> some View {
+    let selected = try item.selecting([.json])
+    return ShareLink("Share JSON", item: selected,
+                     preview: SharePreview("Exact offline JSON"))
+}
+```
+
+Actual Mac ShareLink PDF/Copy bytes matched the prepared PDF. Physical iPhone
+share/open checks passed for the representative generated JSON/Markdown/PDF input.
+These observations do not promise every receiving app chooses the same format.
+Explicit Copy JSON and Copy Markdown routes should select their exact artifacts.
+
+TextEdit plain paste/save preserved the native pretty-body UTF-8 bytes. Its saved
+rich RTF retained Menlo 11 and token colors but normalized a decomposed key to
+composed Unicode. HTML rich paste also carries the standalone document heading
+and follows the receiver's formatting choices. Presentation exports are export-only;
+retain native JSON for exact scalar identity and interchange. Native emitted RTF
+text/attributes are tested separately from these receiving-editor transformations.
+See the [receiving qualification scope](../../../Documentation/Architecture/Release1.3/ReceivingQualification.md).

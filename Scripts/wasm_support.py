@@ -6,9 +6,9 @@ from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
-COUNTS = {'JSONTests': 104, 'JSONSchemaTests': 51, 'JSONRegexRuntimeTests': 12,
-          'JSONStreamingTests': 14, 'JSONPatchTests': 11}
-GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3}
+COUNTS = {'JSONTests': 107, 'JSONSchemaTests': 51, 'JSONRegexRuntimeTests': 12,
+          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 49}
+GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -17,7 +17,7 @@ def main():
     output = ROOT / args.output; output.mkdir(parents=True, exist_ok=True)
     result = {'schema_version': 1, 'status': 'running', 'target': 'wasm32-unknown-wasip1',
               'sdk': SDK, 'commands': [], 'modules': [], 'root_counts': COUNTS,
-              'wasmkit_scope': '13 public consumer functions, 49 caps, 20 rooted vectors, debug/release command parity',
+              'wasmkit_scope': '14 public consumer functions, 49 caps, 20 rooted vectors, debug/release command parity',
               'node_scope': 'complete debug/release root suites, caps, public consumers and independent qualification'}
     def save():
         (output / 'wasi.json').write_text(json.dumps(result, indent=2) + '\n')
@@ -54,7 +54,7 @@ def main():
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version']); run('node-version', [node, '--version'])
         manifest = json.loads(run('root-manifest', [swift, 'package', 'dump-package']))
-        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONPatch', 'JSONSchema', 'JSONStreaming']:
+        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):
             if engine == 'node':
@@ -79,7 +79,7 @@ def main():
                 modules[config, name] = binary(scratch, config, name)
                 runner = binary(scratch, config, {'WasmAudit': 'WasmAuditTests', 'Qualification': 'LimitQualificationTests', 'MCPReadiness': 'MCPReadinessTests'}[name] + '-test-runner')
                 for engine in ['node', 'wasmkit']:
-                    text = run(engine + '-' + config + '-' + name + '-tests', invoke(engine, runner, 'tests'), tests({'WasmAudit':13, 'Qualification':1, 'MCPReadiness':3}[name]))
+                    text = run(engine + '-' + config + '-' + name + '-tests', invoke(engine, runner, 'tests'), tests({'WasmAudit':14, 'Qualification':1, 'MCPReadiness':3}[name]))
                     if name == 'Qualification':
                         matrix = json.loads((ROOT / 'Documentation/Qualification/LimitsMatrix.json').read_text())
                         expected = {m['metric']: m['public_probe_outcome'] for m in matrix['metrics']}

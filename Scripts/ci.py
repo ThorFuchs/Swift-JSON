@@ -209,7 +209,7 @@ def main():
     if receipt['status'] == 'passed' and args.lane == 'wasm':
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
-            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':104,'JSONSchemaTests':51,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11}:
+            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':107,'JSONSchemaTests':51,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':49}:
                 raise ValueError('Missing WASI qualification boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
