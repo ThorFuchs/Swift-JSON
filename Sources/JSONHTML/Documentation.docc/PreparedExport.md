@@ -96,3 +96,13 @@ and follows the receiver's formatting choices. Presentation exports are export-o
 retain native JSON for exact scalar identity and interchange. Native emitted RTF
 text/attributes are tested separately from these receiving-editor transformations.
 See the [receiving qualification scope](../../../Documentation/Architecture/Release1.3/ReceivingQualification.md).
+
+### Selected-format filenames
+
+Prepared selection also governs the provider-level filename. Apple's item provider
+collects one suggested name and can consult a hidden representation's metadata
+before loading the selected bytes. JSONHTML uses the first advertised format in
+its fixed preference order for that hidden metadata. Thus a PDF-only selection
+advertises PDF with a .pdf name; Markdown-only selection uses .md. Explicit typed
+exports retain their format-specific filenames, including when several formats
+are available. Selection never prepares or substitutes another artifact.

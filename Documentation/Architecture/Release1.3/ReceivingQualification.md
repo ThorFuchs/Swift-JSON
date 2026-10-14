@@ -73,3 +73,25 @@ those absent APIs into evaluated successes or make the complete 1.3 release read
 Affected native/safety/docs/browser and portable checks must be bound to the
 final feature source. No merge, tag, publication, protection change or parallel
 checkout modification is performed.
+
+## Receiver metadata regression
+
+The actual iPadOS 27 Files share sheet exposed A4.json for a PDF-only selection.
+A public NSItemProvider probe reproduced the same JSON suffix for HTML, RTF,
+plain text and Markdown although their registered content types were correct.
+The original selected-type/file-export checks did not inspect the provider's
+single suggestedName. A new Swift Testing regression failed with five issues
+before the correction and passed afterward. The filename callback now retains
+its own advertised format, or the first actual advertised preference when the
+SDK asks for hidden metadata. No shared cache, data conversion or fallback is
+introduced. The consumer adds two provider outcomes, including prepared PDF:
+65 outcomes / eight artifacts; native root 258 / 173, export 38; portable root
+244 / 173 and HTML 49 remain unchanged. Fresh receiver/native qualification is
+required for this source change; the earlier 63-case device record is historical.
+
+The iPad simulator's first migration wait timed out, then its actual completed
+migration allowed the unchanged 63-case consumer to pass. CUA observed JSON and
+Markdown copy/paste readers passing. Desktop and iPad drag attempts delivered no
+validated drop event; those gestures remain open, not passing library tests.
+The Mac UI tool also experienced a long locked-host wait. Such automation/SDK
+observations are not an owned-instruction or responsiveness guarantee.

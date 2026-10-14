@@ -45,10 +45,10 @@ def main():
         receipt['fixtures_verified'] = registry['fixtures']
         text = run('native-consumer', ['swift', 'run', '-c', 'release', '--package-path', 'Tools/JSONHTMLExport',
             'ExportConsumer', str(output / 'samples')])
-        if 'JSONHTML_EXPORT_CONSUMER passed cases=63 artifacts=8 measurements=7' not in text.splitlines():
+        if 'JSONHTML_EXPORT_CONSUMER passed cases=65 artifacts=8 measurements=7' not in text.splitlines():
             raise ValueError('Changed native consumer cardinality')
         consumer = json.loads((output / 'samples/consumer.json').read_text())
-        if consumer['status'] != 'passed' or len(consumer['cases']) != 63 or not all(row['passed'] for row in consumer['cases']):
+        if consumer['status'] != 'passed' or len(consumer['cases']) != 65 or not all(row['passed'] for row in consumer['cases']):
             raise ValueError('Missing consumer outcomes')
         receipt['consumer'] = consumer
         if len(consumer['pdfReports']) != 3 or len(consumer['samples']) != 8: raise ValueError('Missing PDF artifacts/reports')

@@ -205,7 +205,7 @@
     "implementation_head": "1e0b86d2580bb9678039597523aa3b99d2905abf",
     "branch": "codex/1.3-jsonhtml-transfer",
     "pr": 22,
-    "status": "physical representative UI and native consumer passed; integrated checks refreshing",
+    "status": "Seven hosted checks and native/safety/docs/export/browser/WASI source88 passed; provider filename regression discovered and corrected; affected successor qualification required",
     "native_consumer": {
       "mac": 63,
       "physical_iPhone": 63,
@@ -220,6 +220,16 @@
     ],
     "physical_iPad": "Existing maintainer deferral retained; simulator scope explicit.",
     "evidence": "ReceivingQualification.md; actual source-bound materialized private receipts",
-    "release_actions": "No merge/tag/publication/protection or parallel checkout edits"
+    "release_actions": "No merge/tag/publication/protection or parallel checkout edits",
+    "provider_filename_regression": {
+      "initial_source": "88abf5c4be75035b0b6571ffa623a891b32aa864",
+      "before": "NSItemProvider selected non-JSON formats suggested .json; new regression failed1 function/5 issues",
+      "correction": "Hidden filename metadata follows first advertised preference; typed requests keep their own format name",
+      "native_functions": 258,
+      "export_functions": 38,
+      "consumer_outcomes": 65,
+      "portable_functions": 244,
+      "remaining": "Fresh recipient/device filename and successor native qualification; JH20/JH21 still open"
+    }
   }
 }

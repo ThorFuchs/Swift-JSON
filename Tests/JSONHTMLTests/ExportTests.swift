@@ -201,6 +201,24 @@ import UniformTypeIdentifiers
     catch { #expect(!String(describing: error).isEmpty) }
 }
 
+@Test @MainActor func exportItemProviderSelectionKeepsFilenameAndTypesCoherent() throws {
+    let item = try JSONExportDocument.prepare(.null, options: .init(
+        formats: [.json, .html, .rtf, .plainText, .markdown], filenameStem: "Selected"))
+    for (format, type) in [(JSONExportFormat.json, UTType.json), (.html, .html),
+                          (.rtf, .rtf), (.plainText, .utf8PlainText), (.markdown, .markdown)] {
+        let selected = try item.selecting([format])
+        let provider = NSItemProvider()
+        provider.register(selected)
+        #expect(provider.registeredTypeIdentifiers == [type.identifier])
+        #expect(provider.suggestedName == "Selected." + format.filenameExtension)
+    }
+    let mixed = try item.selecting([.html, .markdown])
+    let provider = NSItemProvider()
+    provider.register(mixed)
+    #expect(provider.registeredTypeIdentifiers == [UTType.html.identifier, UTType.markdown.identifier])
+    #expect(provider.suggestedName == "Selected.html")
+}
+
 @Test func appleNativeJSONImportIsStrictAndPreservesExactBytes() async throws {
     let input = Data(#"{"é":9007199254740993,"é":-0.00e+2}"#.utf8)
     let value = try await JSON(importing: input, contentType: .json)

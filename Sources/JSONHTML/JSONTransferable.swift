@@ -34,25 +34,39 @@ extension JSONExportDocument: Transferable {
     ///
     /// No transfer closure renders or changes the document. Static type discovery
     /// describes possible representations; instance discovery respects selection.
+    /// Provider-level filenames use the first advertised format when the SDK
+    /// consults metadata belonging to a hidden representation.
     public static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(exportedContentType: .json) { try $0.transferData(for: .json) }
             .exportingCondition { $0.advertisedFormats.contains(.json) }
-            .suggestedFileName { $0.filenameStem + ".json" }
+            .suggestedFileName { $0.transferFilename(for: .json) }
         DataRepresentation(exportedContentType: .html) { try $0.transferData(for: .html) }
             .exportingCondition { $0.advertisedFormats.contains(.html) }
-            .suggestedFileName { $0.filenameStem + ".html" }
+            .suggestedFileName { $0.transferFilename(for: .html) }
         DataRepresentation(exportedContentType: .rtf) { try $0.transferData(for: .rtf) }
             .exportingCondition { $0.advertisedFormats.contains(.rtf) }
-            .suggestedFileName { $0.filenameStem + ".rtf" }
+            .suggestedFileName { $0.transferFilename(for: .rtf) }
         DataRepresentation(exportedContentType: .utf8PlainText) { try $0.transferData(for: .plainText) }
             .exportingCondition { $0.advertisedFormats.contains(.plainText) }
-            .suggestedFileName { $0.filenameStem + ".txt" }
+            .suggestedFileName { $0.transferFilename(for: .plainText) }
         DataRepresentation(exportedContentType: .markdown) { try $0.transferData(for: .markdown) }
             .exportingCondition { $0.advertisedFormats.contains(.markdown) }
-            .suggestedFileName { $0.filenameStem + ".md" }
+            .suggestedFileName { $0.transferFilename(for: .markdown) }
         DataRepresentation(exportedContentType: .pdf) { try $0.transferData(for: .pdf) }
             .exportingCondition { $0.advertisedFormats.contains(.pdf) }
-            .suggestedFileName { $0.filenameStem + ".pdf" }
+            .suggestedFileName { $0.transferFilename(for: .pdf) }
+    }
+
+    // NSItemProvider collects a single suggested name before selecting its data
+    // representation. Its filename visitor can inspect a hidden first candidate.
+    // Keep typed exports format-specific while that hidden metadata points to
+    // the actual advertised preference, never an unavailable JSON representation.
+    private func transferFilename(for format: JSONExportFormat) -> String? {
+        let preferred = advertisedFormats.contains(format) ? format :
+            [JSONExportFormat.json, .html, .rtf, .plainText, .markdown, .pdf]
+                .first { advertisedFormats.contains($0) }
+        guard let preferred else { return nil }
+        return filenameStem + "." + preferred.filenameExtension
     }
 }
 #endif

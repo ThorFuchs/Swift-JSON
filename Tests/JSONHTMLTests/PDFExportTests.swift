@@ -218,6 +218,10 @@ import PDFKit
     let selected = try report.result.selecting([.pdf])
     #expect(selected.exportedContentTypes() == [.pdf])
     #expect(try await selected.exported(as: .pdf) == report.result.data(for: .pdf))
+    let provider = NSItemProvider()
+    provider.register(selected)
+    #expect(provider.registeredTypeIdentifiers == [UTType.pdf.identifier])
+    #expect(provider.suggestedName == selected.filenameStem + ".pdf")
     do { _ = try await item.exported(as: .pdf); Issue.record("Unprepared transfer generated PDF") } catch {}
     do { _ = try await report.result.selecting([.json]).exported(as: .pdf); Issue.record("Hidden PDF transferred") } catch {}
     #endif

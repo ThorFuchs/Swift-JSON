@@ -129,6 +129,19 @@ struct PDFObservation: Codable {
         let richOnly = try rich.result.selecting([.rtf])
         try check("rtf-selection", richOnly.advertisedFormats == [.rtf] && richOnly.availableFormats.count == 5)
         #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
+        var providerNamesMatch = true
+        for (format, type) in [(JSONExportFormat.json, UTType.json), (.html, .html),
+                              (.rtf, .rtf), (.plainText, .utf8PlainText), (.markdown, .markdown)] {
+            let selected = try rich.result.selecting([format])
+            let provider = NSItemProvider()
+            provider.register(selected)
+            providerNamesMatch = providerNamesMatch && provider.registeredTypeIdentifiers == [type.identifier]
+                && provider.suggestedName == "Exact-JSON." + format.filenameExtension
+        }
+        try check("provider-selected-types-and-filenames", providerNamesMatch)
+        #endif
+
+        #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
         try check("rtf-content-type", richOnly.exportedContentTypes() == [.rtf])
         try check("rtf-transfer-bytes", try await richOnly.exported(as: .rtf) == rtfBytes)
         let richPath = try await richOnly.export(to: fileDirectory, contentType: .rtf)
@@ -148,6 +161,9 @@ struct PDFObservation: Codable {
         let pdfOnly = try pdfReport.result.selecting([.pdf])
         #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
         try check("pdf-content-type", pdfOnly.exportedContentTypes() == [.pdf])
+        let pdfProvider = NSItemProvider()
+        pdfProvider.register(pdfOnly)
+        try check("pdf-provider-type-and-filename", pdfProvider.registeredTypeIdentifiers == [UTType.pdf.identifier] && pdfProvider.suggestedName == "Exact-JSON.pdf")
         try check("pdf-transfer-bytes", try await pdfOnly.exported(as: .pdf) == pdfReport.result.data(for: .pdf))
         let pdfPath = try await pdfOnly.export(to: fileDirectory, contentType: .pdf)
         try check("pdf-system-filename", try pdfPath.lastPathComponent == "Exact-JSON.pdf" && Data(contentsOf: pdfPath) == pdfReport.result.data(for: .pdf))

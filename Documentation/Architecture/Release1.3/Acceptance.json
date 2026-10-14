@@ -748,27 +748,27 @@
         "First formatted increment: Increment.md; actual local native/safety/docs receipts and authored tests",
         "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
-      "limitation": "Only the implemented formatted renderer is covered; interactive, transfer/export, browser, final-platform or final-release clauses remain open as applicable."
+      "limitation": "Actual representative physical UI and Mac/iPad receiving checks executed; drag gestures and fresh device filename qualification remain open. See ReceivingQualification.md and materialized receipts."
     },
     {
       "id": "TX49",
       "gate": "T6",
       "requirement": "Actual Mac/iOS/iPad receiving-app matrix records share/drag/paste/open behavior and selected content types.",
-      "status": "not_run",
+      "status": "partial",
       "evidence": [
         "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
-      "limitation": "Physical representative UI checks passed; exact executed Mac/simulator receiver rows and pending gestures are recorded separately."
+      "limitation": "Actual representative physical UI and Mac/iPad receiving checks executed; drag gestures and fresh device filename qualification remain open. See ReceivingQualification.md and materialized receipts."
     },
     {
       "id": "TX50",
       "gate": "T6",
       "requirement": "Plain-text fallback versus Markdown subtype tested; explicit Copy JSON/Copy Markdown/Share PDF paths qualified.",
-      "status": "not_run",
+      "status": "partial",
       "evidence": [
         "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
       ],
-      "limitation": "Physical representative UI checks passed; exact executed Mac/simulator receiver rows and pending gestures are recorded separately."
+      "limitation": "Actual representative physical UI and Mac/iPad receiving checks executed; drag gestures and fresh device filename qualification remain open. See ReceivingQualification.md and materialized receipts."
     },
     {
       "id": "TX51",
@@ -777,7 +777,8 @@
       "status": "not_run",
       "evidence": [
         "ReceivingQualification.md; final integrated lane and receiver receipts in materialized return"
-      ]
+      ],
+      "limitation": "JH20/JH21 annotation/document-input APIs remain unimplemented; dependent complete renderer/release qualification cannot pass."
     },
     {
       "id": "TX52",

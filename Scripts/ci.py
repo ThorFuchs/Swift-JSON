@@ -112,7 +112,7 @@ def check_result(command, code, log, events=None):
     if events is not None:
         counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [37] if 'export|Export|apple' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 2 if sys.platform == 'linux' else 3, 4] if 'thread' in command else sorted([11, 12, 14, 49 if sys.platform == 'linux' else 62, 51, 107])
+        expected = [38] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 2 if sys.platform == 'linux' else 3, 4] if 'thread' in command else sorted([11, 12, 14, 49 if sys.platform == 'linux' else 63, 51, 107])
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 173)

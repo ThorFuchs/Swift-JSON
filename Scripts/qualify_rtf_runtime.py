@@ -51,14 +51,14 @@ def main():
                 run(family + '-bootstatus', ['xcrun', 'simctl', 'bootstatus', device, '-b'])
                 samples = output / family
                 text = run(family + '-consumer', ['xcrun', 'simctl', 'spawn', device, str(binary), str(samples)])
-                if 'JSONHTML_EXPORT_CONSUMER passed cases=63 artifacts=8 measurements=7' not in text.splitlines():
+                if 'JSONHTML_EXPORT_CONSUMER passed cases=65 artifacts=8 measurements=7' not in text.splitlines():
                     raise RuntimeError('Changed consumer discovery/cardinality')
                 consumer = json.loads((samples / 'consumer.json').read_text())
-                if consumer['status'] != 'passed' or len(consumer['cases']) != 63 or not all(c['passed'] for c in consumer['cases']):
+                if consumer['status'] != 'passed' or len(consumer['cases']) != 65 or not all(c['passed'] for c in consumer['cases']):
                     raise RuntimeError('Incomplete or failing consumer outcomes')
                 rtf = samples / 'Exact-JSON.rtf'
                 receipt['simulators'].append({'family': family, 'model': model['name'], 'runtime': runtime,
-                    'status': 'passed', 'cases': 63, 'artifacts': 8, 'rtf_sha256': hashlib.sha256(rtf.read_bytes()).hexdigest(),
+                    'status': 'passed', 'cases': 65, 'artifacts': 8, 'rtf_sha256': hashlib.sha256(rtf.read_bytes()).hexdigest(),
                     'pdf_sha256': {name: hashlib.sha256((samples / name).read_bytes()).hexdigest() for name in ['A4.pdf', 'Letter.pdf', 'Continuous.pdf']},
                     'consumer': consumer})
                 save()

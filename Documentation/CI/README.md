@@ -76,7 +76,7 @@ Apple SDK declaration probes. It builds all five products in iPhoneOS and
 simulator consumers. A bounded offscreen WebPage region experiment remains outside
 the production API. The lane establishes native API/file transport and SDK builds,
 not share sheets or receiving-editor UI. Explicit paginated PDF and simulator/device execution have separate materialized receipts.
-Current root discovery is 257 functions on Mac (62 HTML) and 244 on Linux/WASI
+Current root discovery is 258 functions on Mac (62 HTML) and 244 on Linux/WASI
 (49 HTML). The focused export lane requires 37 functions on Mac. Nine Mac shared
 functions, including independent PDF cancellation, run under Thread Sanitizer. All 49 cap checks
 and the 173 baseline parameterized invocations remain required.
