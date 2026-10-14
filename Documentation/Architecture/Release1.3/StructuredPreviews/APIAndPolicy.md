@@ -91,7 +91,7 @@ Prepared HTML retains immutable layout/value/print and font/media readiness poli
 Explicit asynchronous Apple PDF consumes that artifact, awaits fonts/image decoding,
 forces its print representation, and never regenerates JSONHTML. Syntax pagination
 retains CoreText visible ranges. Structured pagination collects native line/media
-bounds one DOM step at a time, chooses integer whitespace cuts and composites native
+bounds (including controlled swatches) one DOM step at a time, chooses integer whitespace cuts and composites native
 regions. Each capture checks and hides off-region indexed rows/cards one DOM
 node at a time; composition clips to the admitted region. This avoids SDK capture
 retaining neighboring selectable text. All scans and visibility calls charge the
@@ -129,3 +129,9 @@ structured source-download anchor reuses exact native UTF-8 and works without JS
 its Base64 duplication is metered. `copyJSONBytes` describes the one raw payload,
 while emitted metadata/output counts each copy. Legacy static syntax retains its
 original code-only counters.
+
+The approved responsive transitions are 1200px (outer spacing/title), 920px
+(full-width body and compact outline) and 580px (stacked key/value fields and
+full-row search). At visual depth bucket 3, nested record borders and padding
+stop accumulating. The complete 120-container alternating fixture is checked
+at 320px; static source links share the themed accessible link color.

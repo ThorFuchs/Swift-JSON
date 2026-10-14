@@ -129,7 +129,7 @@
             guard let page else { throw CancellationError() }
             do {
                 _ = try await page.callJavaScript(
-                    "const root=document.querySelector('.print-json'); window.__jhPDFScan={walker:document.createTreeWalker(root,NodeFilter.SHOW_TEXT),rects:null,index:0,media:root.querySelectorAll('img,math,.scalar-item,.record-card'),mediaIndex:0,height:height}; return 1;",
+                    "const root=document.querySelector('.print-json'); window.__jhPDFScan={walker:document.createTreeWalker(root,NodeFilter.SHOW_TEXT),rects:null,index:0,media:root.querySelectorAll('img,math,.color-swatch,.scalar-item,.record-card'),mediaIndex:0,height:height}; return 1;",
                     arguments: ["height": height], contentWorld: .defaultClient)
             } catch is CancellationError { throw CancellationError() } catch {
                 throw JSONPDFFailure.layoutFailed

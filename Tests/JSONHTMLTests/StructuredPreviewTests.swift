@@ -16,12 +16,14 @@ private struct Base64Gold: Decodable, Sendable {
     let valid: Bool
 }
 private struct GoldFile<T: Decodable>: Decodable { let cases: [T] }
+private func previewFixtureURL(_ name: String, _ extensionName: String = "json") throws -> URL {
+    // WASI Foundation's Bundle named-resource search truncates some extensions.
+    // Use the exact pinned path under the generated SwiftPM resource directory.
+    let root = try #require(Bundle.module.resourceURL)
+    return URL(fileURLWithPath: root.path + "/Fixtures/Enrichment/" + name + "." + extensionName)
+}
 private func gold<T: Decodable>(_ name: String, _: T.Type) throws -> T {
-    let url = try #require(
-        Bundle.module.url(
-            forResource: name, withExtension: "json", subdirectory: "Fixtures/Enrichment")
-    )
-    return try JSONDecoder().decode(T.self, from: Data(contentsOf: url))
+    return try JSONDecoder().decode(T.self, from: Data(contentsOf: previewFixtureURL(name)))
 }
 private let mathGold = try! gold("math-cases", GoldFile<MathGold>.self).cases
 private let inlineGold = try! gold("inline-cases", GoldFile<InlineGold>.self).cases
@@ -236,9 +238,7 @@ private func unwrapSingleRows(_ source: String) -> String {
     }
 }
 @Test func structuredAdmitsDeclaredMediaOnceAndRejectsMismatchedRemoteSVG() throws {
-    let mediaURL = try #require(
-        Bundle.module.url(
-            forResource: "media", withExtension: "json", subdirectory: "Fixtures/Enrichment"))
+    let mediaURL = try previewFixtureURL("media")
     guard case .object(let media) = try JSONParser().parse(Array(Data(contentsOf: mediaURL))) else {
         Issue.record("Fixture must be an object")
         return
@@ -502,9 +502,7 @@ func structuredAllPreviewCeilingsRejectBeforeGrowthAndKeepInclusiveEdges(metric:
             #expect(meter.used(.retainedBytes) == 0)
         }
     } else {
-        let url = try #require(
-            Bundle.module.url(
-                forResource: "sample", withExtension: "png", subdirectory: "Fixtures/Enrichment"))
+        let url = try previewFixtureURL("sample", "png")
         let data = try Data(contentsOf: url)
         let encoded = data.base64EncodedString()
         let boundary: UInt64 =

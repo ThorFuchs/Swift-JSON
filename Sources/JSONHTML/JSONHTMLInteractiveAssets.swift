@@ -23,6 +23,15 @@ package enum JSONHTMLInteractiveAssets {
 
 @media print{.rich .source-download{display:none!important}}
 .rich .scalar-item{display:flex;align-items:flex-start;gap:.55rem;min-width:0;padding:.3rem 0;border-top:1px solid var(--line)}.rich .scalar-item>.index-label{flex:none;min-width:2.5rem;margin:0;padding-top:.2rem}.rich .scalar-item>.node{min-width:0;flex:1}
+
+/* Approved responsive transitions; all deep record rails stop at bucket 3. */
+.rich a{color:var(--num)}
+.rich .depth-3 .record-card{padding:0;border:0;margin:0;border-radius:0}
+.rich .depth-3 .indexed-list{gap:.2rem}
+@media(max-width:1200px){.rich,.rich.interactive{padding:1.25rem}.rich .document-header h1{font-size:1.4rem}}
+@media(max-width:920px){.rich .layout{grid-template-columns:minmax(0,1fr)}.rich .outline{position:static;max-height:12rem}.rich .document-header{display:block}}
+@media(min-width:581px) and (max-width:700px){.rich .field-row{grid-template-columns:minmax(7rem,23%) minmax(0,1fr);gap:.6rem}}
+@media(max-width:580px){.rich,.rich.interactive{padding:.8rem}.rich .field-row{grid-template-columns:minmax(0,1fr);gap:.3rem}.rich #jh-query{flex:1 1 100%;width:100%}}
 """#
     package static let script = #"""
 // SPDX-License-Identifier: Apache-2.0
@@ -231,6 +240,6 @@ package enum JSONHTMLInteractiveAssets {
   say('Interactive controls ready. Search scope: selected displayed previews or exact JSON source.');
 })();
 """#
-    package static let styleHash = "i9/4be/W5I4qf52IUKpWqBrCgmLKllGtm6fH0XgpMrI="
+    package static let styleHash = "7DSyFzk9+PAtobOu58JQ6klUHFcpTNAffoo1DfByJvA="
     package static let scriptHash = "0E/zm4efMpR/ae2G76+pX+c/zABUnOf3Bmlbu8CFcDc="
 }

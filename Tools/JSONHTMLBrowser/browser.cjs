@@ -209,6 +209,11 @@ async function main() {
     }, {viewport: {width: 390, height: 844}});
     await run('complete-print', 'deep', 'http', true, async page => {
       assert.equal(await page.locator('#jh-tree details[open]').count(), 0);
+      await page.setViewportSize({width: 320, height: 900});
+      await page.locator('[data-action="expand"]').click();
+      assert.equal(await page.locator('#jh-tree details:not([open])').count(), 0);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'Expanded deep cards must stop accumulating indentation');
+      await page.locator('[data-action="collapse"]').click();
       await page.emulateMedia({media: 'print'});
       assert.equal(await page.locator('#jh-tree').isVisible(), false);
       assert.equal(await page.locator('.print-json').isVisible(), true);
