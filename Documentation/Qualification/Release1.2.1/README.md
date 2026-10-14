@@ -43,3 +43,7 @@ the structural completion gap is reviewed with its denominator retained.
 The [Linux coverage and behavior-gap wave](CoverageWave.md) extends tests across
 all five modules and repairs best-effort diagnostic sizing. Its new native/Linux
 qualification is recorded separately from the earlier unchanged-source receipts.
+
+The [reachable core follow-up](CoreClosure.md) adds 22 public behavior functions
+and extends escaped schema-output/presence assertions. Unadjusted coverage meets
+the five-module review targets; quiet-host diagnostic recalibration stays blocked.

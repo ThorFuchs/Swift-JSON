@@ -3,7 +3,7 @@
   "source_version": "1.2.0",
   "source_commit": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "target_version": "1.2.1",
-  "status": "native_linux_and_scoped_wasi_qualified_remaining_1_2_1_plan",
+  "status": "core_public_paths_qualified_quiet_diagnostic_calibration_blocked_broader_plan_open",
   "rows": [
     {
       "id": "HAR-01",
@@ -24,7 +24,8 @@
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
       "portability_evidence": "PortabilityOutcomes.json",
-      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "HAR-02",
@@ -41,7 +42,8 @@
         "no artificial test-only callers",
         "cleanup separate from tests-only scope"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "CORE-01",
@@ -63,7 +65,8 @@
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
       "second_wave_evidence": "Wave2Outcomes.json",
-      "portability_evidence": "PortabilityOutcomes.json"
+      "portability_evidence": "PortabilityOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "CORE-02",
@@ -83,7 +86,8 @@
         "equal values hash equally within a process",
         "order stable on replace/remove/reinsert",
         "no persistent hash claim"
-      ]
+      ],
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "COD-01",
@@ -103,7 +107,8 @@
         "successful roundtrip plus independent expected representation"
       ],
       "first_wave_evidence": "Wave1Outcomes.json",
-      "portability_evidence": "PortabilityOutcomes.json"
+      "portability_evidence": "PortabilityOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "COD-02",
@@ -145,7 +150,8 @@
         "all six kinds represented"
       ],
       "second_wave_evidence": "Wave2Outcomes.json",
-      "portability_evidence": "PortabilityOutcomes.json"
+      "portability_evidence": "PortabilityOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "COD-04",
@@ -163,7 +169,8 @@
         "correct admitted result",
         "configured limits intersection",
         "no duplicate/reset work"
-      ]
+      ],
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "DIA-01",
@@ -184,7 +191,8 @@
         "source replacement invalidates mapping",
         "caller description not traversed"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "DIA-02",
@@ -244,7 +252,8 @@
         "consumed work retained",
         "caller work excluded"
       ],
-      "first_wave_evidence": "Wave1Outcomes.json"
+      "first_wave_evidence": "Wave1Outcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "SCH-01",
@@ -307,7 +316,8 @@
         "selected builder phases cumulative",
         "compile error versus resource/cancel distinguished"
       ],
-      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "REG-01",
@@ -414,7 +424,8 @@
         "input unchanged on failure",
         "irrelevant fields treated per RFC"
       ],
-      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     },
     {
       "id": "PAT-02",
@@ -517,7 +528,8 @@
       "first_wave_evidence": "Wave1Outcomes.json",
       "second_wave_evidence": "Wave2Outcomes.json",
       "portability_evidence": "PortabilityOutcomes.json",
-      "coverage_wave_evidence": "CoverageWaveOutcomes.json"
+      "coverage_wave_evidence": "CoverageWaveOutcomes.json",
+      "core_closure_evidence": "CoreClosureOutcomes.json"
     }
   ],
   "proposed_targets": {
@@ -541,5 +553,6 @@
   "first_wave_evidence": "Wave1Outcomes.json",
   "second_wave_evidence": "Wave2Outcomes.json",
   "portability_evidence": "PortabilityOutcomes.json",
-  "coverage_wave_evidence": "CoverageWaveOutcomes.json"
+  "coverage_wave_evidence": "CoverageWaveOutcomes.json",
+  "core_closure_evidence": "CoreClosureOutcomes.json"
 }
