@@ -79,3 +79,13 @@ source remains identical; final C5 qualification will use the integration head.
 The inherited 168 corpus rows and auxiliary binding modes still need their complete
 mode-specific dispositions. Arithmetic and advanced filters have separate gates.
 No simulator/device, Linux or WASI CLI success is inferred from this local run.
+
+
+Hosted C2 Linux runs on x86_64/ARM64 passed 256 root functions/199 parameter cases,
+ASan/TSan safety and the 53 CLI subprocess cases, then the comparator failed to
+compile: Glibc's mutable `stderr` global is not concurrency-safe in async main.
+The qualification tool now writes bounded failure text through
+FileHandle.standardError. No unsafe annotation/flag or library behavior changed.
+Failed run 38593758299 and its actual compiler log are retained; a fresh hosted
+run is required before Linux closure. Local comparator rebuild and all 38 C2
+vectors verify the diagnostic-only fix on the supported Mac.

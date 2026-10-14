@@ -47,7 +47,7 @@ private struct Bytes: AsyncSequence {
             }
             guard try await iterator.next() == nil else { throw NSError(domain: "qualification", code: 1) }
             print("NATIVE_EXACT_COMPARE passed values=\(count)")
-        } catch { fputs("NATIVE_EXACT_COMPARE failed\n", stderr); exit(1) }
+        } catch { FileHandle.standardError.write(Data("NATIVE_EXACT_COMPARE failed\n".utf8)); exit(1) }
     }
     private static func bounded(_ path: String) throws -> [UInt8] {
         let handle = try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
