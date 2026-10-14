@@ -92,7 +92,10 @@ Explicit asynchronous Apple PDF consumes that artifact, awaits fonts/image decod
 forces its print representation, and never regenerates JSONHTML. Syntax pagination
 retains CoreText visible ranges. Structured pagination collects native line/media
 bounds one DOM step at a time, chooses integer whitespace cuts and composites native
-regions. An unbreakable fragment larger than a page fails explicitly; no syntax
+regions. Each capture checks and hides off-region indexed rows/cards one DOM
+node at a time; composition clips to the admitted region. This avoids SDK capture
+retaining neighboring selectable text. All scans and visibility calls charge the
+same PDF job meter and check cancellation. An unbreakable fragment larger than a page fails explicitly; no syntax
 fallback is selected. SDK decoding/layout/capture work and allocations are outside
 owned instruction/RSS claims. Actual readiness/output/font evidence is reported
 separately from the native generation policy.

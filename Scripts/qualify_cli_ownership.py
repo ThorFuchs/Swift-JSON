@@ -4,16 +4,31 @@
 import argparse, hashlib, json, pathlib, subprocess
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
+def built_package_name():
+    # SwiftPM derives package access identity from the checkout directory. Read
+    # the actual native build settings rather than assuming a Swift-JSON folder.
+    names=set()
+    def visit(value):
+        if isinstance(value,dict):
+            if value.get('PRODUCT_MODULE_NAME')=='JSONFilterRuntime' and 'SWIFT_PACKAGE_NAME' in value:
+                names.add(value['SWIFT_PACKAGE_NAME'])
+            for child in value.values(): visit(child)
+        elif isinstance(value,list):
+            for child in value: visit(child)
+    visit(json.loads((ROOT/'.build/manifest.pif').read_text()))
+    if len(names)!=1: raise ValueError('Cannot resolve the built JSONFilterRuntime package identity')
+    return names.pop()
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--output',required=True);a=p.parse_args();output=ROOT/a.output;output.mkdir(parents=True,exist_ok=True)
     sdk=subprocess.check_output(['xcrun','--sdk','macosx','--show-sdk-path'],text=True).strip()
-    modules=ROOT/'.build/debug'; rows=[]
+    modules=ROOT/'.build/debug'; rows=[]; package_name=built_package_name()
     cases=[('borrowed-job','import JSONFilterRuntime\npackage func use(_ job: inout CLIJobContext) throws { try job.work() }\n',True,None),
            ('double-consume','import JSONFilterRuntime\npackage func twice(_ job: consuming CLIJobContext) { let first = consume job; let second = consume job; _ = consume first; _ = consume second }\n',False,'consumed more than once'),
            ('outside-private-package','import JSONFilterRuntime\nfunc make() throws { let job = try CLIJobContext(); _ = consume job }\n',False,'cannot find')]
     for name,source,positive,diagnostic in cases:
         file=output/(name+'.swift');file.write_text(source)
-        command=['xcrun','swiftc','-swift-version','6','-sdk',sdk,'-target','arm64-apple-macos27.0','-module-cache-path',str(output/'ModuleCache'),'-I',str(modules),'-package-name','swift_json' if name!='outside-private-package' else 'external_consumer','-c',str(file),'-o',str(output/(name+'.o'))]
+        command=['xcrun','swiftc','-swift-version','6','-sdk',sdk,'-target','arm64-apple-macos27.0','-module-cache-path',str(output/'ModuleCache'),'-I',str(modules),'-package-name',package_name if name!='outside-private-package' else 'external_consumer','-c',str(file),'-o',str(output/(name+'.o'))]
         r=subprocess.run(command,capture_output=True,text=True);log=output/(name+'.log');log.write_text((r.stdout+r.stderr).replace(str(ROOT),'.'))
         passed=r.returncode==0 if positive else r.returncode!=0 and diagnostic in r.stderr
         rows.append({'id':name,'command':[x.replace(str(ROOT),'.') for x in command],'exit_code':r.returncode,'expected_diagnostic':diagnostic,'status':'passed' if passed else 'failed','source_sha256':hashlib.sha256(source.encode()).hexdigest(),'log_sha256':hashlib.sha256(log.read_bytes()).hexdigest()})

@@ -402,7 +402,11 @@ private func unwrapSingleRows(_ source: String) -> String {
     let file = FileManager.default.temporaryDirectory.appendingPathComponent(
         UUID().uuidString + ".html")
     defer { try? FileManager.default.removeItem(at: file) }
-    try bytes.write(to: file, options: .atomic)
+    #if os(WASI)
+        try bytes.write(to: file)  // WASI has no atomic temporary-file writer; the same immutable bytes are verified.
+    #else
+        try bytes.write(to: file, options: .atomic)
+    #endif
     #expect(try Data(contentsOf: file) == bytes)
     #expect(!String(decoding: bytes, as: UTF8.self).contains("outerHTML"))
     #expect(!String(decoding: bytes, as: UTF8.self).contains("download-html"))
