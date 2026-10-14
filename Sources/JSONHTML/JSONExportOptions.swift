@@ -11,7 +11,7 @@ public enum JSONExportFormat: String, CaseIterable, Hashable, Sendable {
     case markdown
     /// Expanded, highlighted, script-free standalone HTML.
     case html
-    /// Styled rich text; unavailable in the initial four-format increment.
+    /// Styled monospaced rich text with the unchanged pretty JSON body; explicit opt-in.
     case rtf
     /// Explicitly prepared PDF; unavailable until the Apple backend is qualified.
     case pdf
@@ -37,6 +37,10 @@ public struct JSONExportLimits: Sendable {
     public var maxRepresentationBytes: UInt64
     /// Inclusive sum of all prepared artifacts, including formats hidden by selection.
     public var maxPreparedBytes: UInt64
+    /// Inclusive syntax color runs in each RTF artifact, including the initial run.
+    public var maxRTFStyleRuns: UInt64
+    /// Inclusive UTF-16 code units in the decoded RTF body, including whitespace.
+    public var maxRTFUTF16Units: UInt64
     /// Inclusive UTF-8 title bytes before HTML escaping.
     public var maxTitleBytes: UInt64
     /// Inclusive UTF-8 filename stem bytes, excluding the fixed extension.
@@ -49,16 +53,20 @@ public struct JSONExportLimits: Sendable {
     ///   - maxPreparedBytes: Inclusive aggregate artifact bytes.
     ///   - maxTitleBytes: Inclusive plain title bytes.
     ///   - maxFilenameBytes: Inclusive filename component bytes.
+    ///   - maxRTFStyleRuns: Inclusive RTF color runs; one million by default.
+    ///   - maxRTFUTF16Units: Inclusive decoded RTF units; eight million by default.
     public init(core: JSONLimits = .balanced, maxRepresentationBytes: UInt64 = 8_388_608,
                 maxPreparedBytes: UInt64 = 16_777_216, maxTitleBytes: UInt64 = 4_096,
-                maxFilenameBytes: UInt64 = 128) {
+                maxFilenameBytes: UInt64 = 128, maxRTFStyleRuns: UInt64 = 1_000_000,
+                maxRTFUTF16Units: UInt64 = 8_388_608) {
         self.core = core; self.maxRepresentationBytes = maxRepresentationBytes
         self.maxPreparedBytes = maxPreparedBytes; self.maxTitleBytes = maxTitleBytes
         self.maxFilenameBytes = maxFilenameBytes
+        self.maxRTFStyleRuns = maxRTFStyleRuns; self.maxRTFUTF16Units = maxRTFUTF16Units
     }
     package func validate() throws {
         try core.validate()
-        guard [maxRepresentationBytes, maxPreparedBytes, maxTitleBytes, maxFilenameBytes]
+        guard [maxRepresentationBytes, maxPreparedBytes, maxTitleBytes, maxFilenameBytes, maxRTFStyleRuns, maxRTFUTF16Units]
             .allSatisfy({ $0 < UInt64(Int.max) }) else { throw JSONExportFailure.invalidConfiguration }
     }
 }
@@ -75,7 +83,7 @@ public struct JSONExportOptions: Sendable {
     public var indentation: Int
     /// Literal tabs by default; this does not change JSONWriter defaults.
     public var indentationUnit: JSONIndentationUnit
-    /// Visual HTML tab width, from one through eight; JSON bytes are unaffected.
+    /// Visual HTML/RTF tab width, from one through eight; JSON bytes are unaffected.
     public var tabWidth: Int
     /// Deterministic light HTML by default.
     public var theme: JSONHTMLTheme
@@ -93,7 +101,7 @@ public struct JSONExportOptions: Sendable {
     ///   - title: Plain bounded title without control characters.
     ///   - indentation: Unit count per nesting level, zero through eight.
     ///   - indentationUnit: Literal spaces or tabs.
-    ///   - tabWidth: HTML tab display width, one through eight.
+    ///   - tabWidth: HTML/RTF tab display width, one through eight.
     ///   - theme: HTML color policy.
     ///   - compactJSON: Whether native JSON alone should omit pretty whitespace.
     ///   - limits: Shared core and export limits.
@@ -115,6 +123,12 @@ public enum JSONExportResourceMetric: String, Sendable {
     case representationBytes
     /// Sum of all prepared artifact bytes.
     case preparedBytes
+    /// Syntax color runs in one RTF artifact, including the initial run.
+    case rtfStyleRuns
+    /// UTF-16 code units in the decoded RTF body.
+    case rtfUTF16Units
+    /// RTF tab position in twips, bounded by the format's signed 32-bit parameter.
+    case rtfTabPosition
     /// Plain UTF-8 title bytes.
     case titleBytes
     /// Plain UTF-8 filename component bytes.
@@ -125,7 +139,7 @@ public enum JSONExportResourceMetric: String, Sendable {
 public enum JSONExportFailure: Error, Sendable, Equatable {
     /// Empty selection, invalid limits, indentation or unsafe metadata.
     case invalidConfiguration
-    /// RTF is not yet a qualified artifact in this increment.
+    /// A reserved or unsupported artifact is unavailable in this implementation.
     case unsupportedFormat(JSONExportFormat)
     /// PDF requires a separately qualified explicit preparation operation.
     case preparationRequired(JSONExportFormat)

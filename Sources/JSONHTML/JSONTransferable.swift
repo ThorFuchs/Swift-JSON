@@ -41,6 +41,9 @@ extension JSONExportDocument: Transferable {
         DataRepresentation(exportedContentType: .html) { try $0.transferData(for: .html) }
             .exportingCondition { $0.advertisedFormats.contains(.html) }
             .suggestedFileName { $0.filenameStem + ".html" }
+        DataRepresentation(exportedContentType: .rtf) { try $0.transferData(for: .rtf) }
+            .exportingCondition { $0.advertisedFormats.contains(.rtf) }
+            .suggestedFileName { $0.filenameStem + ".rtf" }
         DataRepresentation(exportedContentType: .utf8PlainText) { try $0.transferData(for: .plainText) }
             .exportingCondition { $0.advertisedFormats.contains(.plainText) }
             .suggestedFileName { $0.filenameStem + ".txt" }

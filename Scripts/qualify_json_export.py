@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""T0/four-format Apple compiler and API qualification; receiver/PDF gates remain separate."""
+"""Native export and Apple compiler/API qualification; receiver/PDF gates remain separate."""
 import argparse, hashlib, json, os, pathlib, subprocess, sys
 from archive_candidate import files
 from preflight import collect
@@ -16,11 +16,11 @@ def main():
     inputs = [{'path': p.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
     receipt = {'status': 'blocked', 'environment': collect(), 'source_inputs': inputs,
         'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(),
-        'commands': [], 'capability': 'four-format native preparation and Apple API/file transport',
+        'commands': [], 'capability': 'four default formats plus opt-in styled RTF and Apple API/file transport',
         'limitations': ['SDK builds are not simulator/device execution.',
             'No share-sheet, drag/drop or receiving-editor UI success is inferred.',
             'WebPage region probe is not paginated A4/Letter or production PDF qualification.',
-            'RTF/PDF artifacts are not offered by the current product.']}
+            'PDF artifacts are not offered; RTF recipient UI is not inferred from native decoding.']}
     def run(name, command, timeout=900):
         log = output / (name + '.log')
         with log.open('w') as stream:
@@ -45,10 +45,10 @@ def main():
         receipt['fixtures_verified'] = registry['fixtures']
         text = run('native-consumer', ['swift', 'run', '-c', 'release', '--package-path', 'Tools/JSONHTMLExport',
             'ExportConsumer', str(output / 'samples')])
-        if 'JSONHTML_EXPORT_CONSUMER passed cases=35 artifacts=4 measurements=7' not in text.splitlines():
+        if 'JSONHTML_EXPORT_CONSUMER passed cases=45 artifacts=5 measurements=7' not in text.splitlines():
             raise ValueError('Changed native consumer cardinality')
         consumer = json.loads((output / 'samples/consumer.json').read_text())
-        if consumer['status'] != 'passed' or len(consumer['cases']) != 35 or not all(row['passed'] for row in consumer['cases']):
+        if consumer['status'] != 'passed' or len(consumer['cases']) != 45 or not all(row['passed'] for row in consumer['cases']):
             raise ValueError('Missing consumer outcomes')
         receipt['consumer'] = consumer
         probe = ROOT / 'Tools/JSONHTMLExport/Probes/WebPageBackend.swift'

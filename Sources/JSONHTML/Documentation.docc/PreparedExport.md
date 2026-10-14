@@ -1,7 +1,8 @@
 # Prepared export and Apple transfer
 
 Prepare exact JSON, pretty UTF-8 text, safely fenced Markdown and expanded static
-HTML without executing a browser. RTF and PDF are not yet qualified artifacts.
+HTML without executing a browser. Add `.rtf` explicitly for styled monospaced
+rich text; PDF still requires a future qualified explicit preparation operation.
 
 ```swift
 import JSON
@@ -35,8 +36,30 @@ mutate a shared cache. Generic text subtype negotiation belongs to the system;
 select a format explicitly when recipient choice matters. CoreTransferable wraps
 some native parser errors; use JSONParser for structured diagnostics.
 
+RTF uses the same strict syntax tokens and cumulative meter as other formats.
+Its independently decoded body equals pretty JSON, including quoted string roots,
+LF, literal indentation tabs, insertion order, exact number lexemes and decoded
+scalar sequences. Braces/backslashes are escaped, and supplementary scalars use
+signed UTF-16 surrogate pairs. Fixed local Menlo 11-point styling distinguishes
+keys, strings, numbers, booleans and null. Explicit paragraph tab stops use 6.6
+points per cell times `tabWidth`. RTF always uses a deterministic light palette;
+`theme` affects HTML only. A receiver may substitute fonts or convert colors.
+No attachment, executable link, external asset or native text renderer is used
+in generation. Native decoding is qualification work outside owned quotas.
+
+```swift
+let rich = try JSONExportDocument.prepare(root, options: .init(
+    formats: [.json, .plainText, .rtf], tabWidth: 4
+))
+let richTextItem = try rich.selecting([.rtf])
+let richTextBytes = try richTextItem.data(for: .rtf)
+```
+
 The default inclusive limits are 8 MiB per artifact, 16 MiB aggregate, 4 KiB title,
-128 bytes filename and balanced core/HTML limits. Zero forbids usage. These initial
+128 bytes filename, 1,000,000 RTF color runs, 8,388,608 decoded RTF UTF-16 units
+and balanced core/HTML limits. Each RTF artifact has its own run/unit ceilings;
+all formats share core work/output/retention and aggregate prepared bytes. Tab
+positions must fit the RTF signed 32-bit parameter, measured in twips. Zero forbids usage. These initial
 policy values are not process or recipient memory/CPU guarantees. Each generated
 artifact, overlapping construction buffer and owned copy is charged. Filename
 components reject controls, separators, dot components and bidi controls.
@@ -44,5 +67,5 @@ components reject controls, separators, dot components and bidi controls.
 The public export consumer and SDK builds qualify API/file transport separately
 from real receiving-app, simulator and device behavior. WebPage's T0 region probe
 produces one tall page and establishes no A4/Letter pagination, public PDF API or
-production timeout claim. Styled RTF and explicit MainActor PDF remain separate
-milestones; unsupported requests install no artifact and advertise no capability.
+production timeout claim. Explicit MainActor PDF and actual receiving-app behavior remain separate
+milestones; failed requests install no artifact and advertise no capability.

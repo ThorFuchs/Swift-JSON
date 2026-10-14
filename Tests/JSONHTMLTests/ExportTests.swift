@@ -145,9 +145,10 @@ import UniformTypeIdentifiers
 
 @Test func sharedExportPreparationsHaveIndependentConcurrentState() async throws {
     let root = try JSONParser().parse(#"{"é":9007199254740993,"é":[-0.00e+2,null]}"#)
-    let expected = try JSONExportDocument.prepareWithReport(root)
+    let options = JSONExportOptions(formats: [.json, .html, .plainText, .markdown, .rtf])
+    let expected = try JSONExportDocument.prepareWithReport(root, options: options)
     try await withThrowingTaskGroup(of: JSONExportReport<JSONExportDocument>.self) { group in
-        for _ in 0..<16 { group.addTask { try JSONExportDocument.prepareWithReport(root) } }
+        for _ in 0..<16 { group.addTask { try JSONExportDocument.prepareWithReport(root, options: options) } }
         var count = 0
         for try await report in group {
             #expect(report.operation == expected.operation && report.preparedBytes == expected.preparedBytes)
@@ -169,7 +170,7 @@ import UniformTypeIdentifiers
     for indentation in [-1, 9] { #expect(throws: JSONExportFailure.invalidConfiguration) { try JSONExportDocument.prepare(.null, options: .init(indentation: indentation)) } }
     for width in [0, 9] { #expect(throws: JSONExportFailure.invalidConfiguration) { try JSONExportDocument.prepare(.null, options: .init(tabWidth: width)) } }
     #expect(throws: JSONExportFailure.invalidConfiguration) { try JSONExportDocument.prepare(.null, options: .init(formats: [])) }
-    #expect(throws: JSONExportFailure.unsupportedFormat(.rtf)) { try JSONExportDocument.prepare(.null, options: .init(formats: [.json, .rtf])) }
+    #expect(try JSONExportDocument.prepare(.null, options: .init(formats: [.json, .rtf])).availableFormats == [.json, .rtf])
     #expect(throws: JSONExportFailure.preparationRequired(.pdf)) { try JSONExportDocument.prepare(.null, options: .init(formats: [.json, .pdf])) }
 }
 
@@ -179,14 +180,20 @@ import UniformTypeIdentifiers
     #expect(JSON.importedContentTypes() == [.json])
     #expect(JSONExportDocument.importedContentTypes().isEmpty)
     let root: JSON = .array([.null])
-    let item = try JSONExportDocument.prepare(root)
+    let item = try JSONExportDocument.prepare(root, options: .init(formats: [.json, .html, .plainText, .markdown, .rtf]))
     for (format, type) in [(JSONExportFormat.json, UTType.json), (.plainText, .utf8PlainText), (.markdown, .markdown), (.html, .html)] {
         let selected = try item.selecting([format])
         #expect(selected.exportedContentTypes() == [type])
         #expect(try await selected.exported(as: type) == item.data(for: format))
         #expect(try await root.exported(as: type) == item.data(for: format))
     }
+    let rtf = try item.selecting([.rtf])
+    #expect(rtf.exportedContentTypes() == [.rtf])
+    #expect(try await rtf.exported(as: .rtf) == item.data(for: .rtf))
+    #expect(try await rtf.exported(as: .text) == item.data(for: .rtf))
     let markdown = try item.selecting([.markdown])
+    do { _ = try await markdown.exported(as: .rtf); Issue.record("Hidden RTF bytes escaped selection") }
+    catch { #expect(!String(describing: error).isEmpty) }
     // The guard rejects hidden candidates; generic text matching then reaches Markdown.
     #expect(try await markdown.exported(as: .text) == item.data(for: .markdown))
     #expect(try await markdown.exported(as: .markdown) == item.data(for: .markdown))

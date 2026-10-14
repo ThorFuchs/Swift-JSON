@@ -104,7 +104,6 @@ public struct JSONExportDocument: Sendable {
             throw JSONExportFailure.invalidConfiguration
         }
         if options.formats.contains(.pdf) { throw JSONExportFailure.preparationRequired(.pdf) }
-        if options.formats.contains(.rtf) { throw JSONExportFailure.unsupportedFormat(.rtf) }
         let titleBytes = try metadata(options.title, filename: false, limit: options.limits.maxTitleBytes, meter: &meter)
         _ = try metadata(options.filenameStem, filename: true, limit: options.limits.maxFilenameBytes, meter: &meter)
         try JSONAdmission.value(value, meter: &meter)
@@ -159,6 +158,10 @@ public struct JSONExportDocument: Sendable {
                 tabWidth: options.tabWidth, limits: htmlLimits))
             let html = try renderer.renderAdmitted(value, meter: &meter)
             try install(html.bytes, as: .html, meter: &meter); try meter.release(UInt64(html.bytes.count))
+        }
+        if options.formats.contains(.rtf) {
+            let rtf = try JSONRTFWriter.write(value, options: options, meter: &meter)
+            try install(rtf, as: .rtf, meter: &meter); try meter.release(UInt64(rtf.count))
         }
         try meter.release(titleBytes)
         try meter.checkpoint()

@@ -386,8 +386,19 @@ tab per level, LF and light static HTML, sharing one finite cumulative budget.
 Read the [prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md)
 and [architecture contract](Documentation/Architecture/JSONHTMLExport.md) for format
 selection, transport error wrapping and finite limits. Real receiving-app behavior
-is qualified separately from API/file transport. Annotations, RTF and explicit PDF
-preparation remain later increments. Published 1.2 versions do not include JSONHTML.
+is qualified separately from API/file transport. Opt into styled RTF for prepared
+items; its native decoded text preserves the pretty JSON body. Generation is
+actor-independent and uses finite style/UTF-16 caps alongside shared core quotas.
+
+```swift
+let richItem = try JSONExportDocument.prepare(value, options: .init(
+    formats: [.json, .plainText, .rtf]
+)).selecting([.rtf])
+let richBytes = try richItem.data(for: .rtf)
+precondition(!richBytes.isEmpty)
+```
+
+Annotations and explicit PDF preparation remain later increments. Published 1.2 versions do not include JSONHTML.
 
 ## Documentation and examples
 

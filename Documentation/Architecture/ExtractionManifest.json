@@ -201,8 +201,9 @@
   "jsonhtml_export_original_contributions": {
     "license": "Apache-2.0",
     "adapted_third_party_code": false,
-    "source": "Sources/JSONHTML/JSONExportDocument.swift; JSONExportOptions.swift; JSONTransferable.swift",
+    "source": "Sources/JSONHTML/JSONExportDocument.swift; JSONExportOptions.swift; JSONTransferable.swift; JSONRTFWriter.swift",
     "synthetic_fixture_pack_sha256": "5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105",
-    "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers; WebKit/AppKit/PDFKit only in the T0 probe tool. No new root package dependency."
+    "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers; WebKit/AppKit/PDFKit only in the T0 probe tool. No new root package dependency.",
+    "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation."
   }
 }
