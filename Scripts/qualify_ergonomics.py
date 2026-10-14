@@ -11,6 +11,8 @@ OLD = '''import Foundation
 import JSON
 let a: JSON = .number(42)
 let b = JSON.number(JSONNumber(integer: 42))
+let inferredFactory = JSON.number
+let inferredValue = inferredFactory(42)
 let factory: (JSONNumber) -> JSON = JSON.number
 let values = [JSONNumber(integer: 1)].map(JSON.number)
 if case .number(let n) = a { precondition(n == 42) }
@@ -50,7 +52,9 @@ def main():
         receipt['guide_fences'] += 1
     for configuration in ('debug', 'release'):
         # Both the supported Xcode and native SwiftPM layouts are recognized.
-        candidates = list((ROOT / '.build').rglob('JSON.swiftmodule'))
+        default_build = ROOT / '.build/out'
+        search_root = default_build if default_build.is_dir() else ROOT / '.build'
+        candidates = list(search_root.rglob('JSON.swiftmodule'))
         candidates = [p for p in candidates if configuration in p.parts or configuration.title() in p.parts]
         if len(candidates) != 1:
             raise ValueError('Missing/ambiguous built module for ' + configuration)
