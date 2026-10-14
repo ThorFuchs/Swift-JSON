@@ -35,9 +35,9 @@ let foundation = try Decimal(jsonNumber: decimal)
 
 
 def main():
-    output = ROOT / '.build/ergonomics'
+    output = ROOT / '.build/ci/ergonomics'
     output.mkdir(parents=True, exist_ok=True)
-    receipt = {'status': 'failed', 'commands': [], 'guide_fences': 0}
+    receipt = {'status': 'failed', 'commands': [], 'build_paths': [], 'guide_fences': 0}
     guides = [ROOT / p for p in (
         'Sources/JSON/Documentation.docc/QuickEntryPoints.md',
         'Sources/JSONBridges/Documentation.docc/NumericFidelity.md',
@@ -53,20 +53,17 @@ def main():
             raise ValueError('Guide differs from public executable: ' + str(guide))
         receipt['guide_fences'] += 1
     for configuration in ('debug', 'release'):
-        # Both the supported Xcode and native SwiftPM layouts are recognized.
-        default_build = ROOT / '.build/out'
-        search_root = default_build if default_build.is_dir() else ROOT / '.build'
-        candidates = list(search_root.rglob('JSON.swiftmodule'))
-        candidates = [p for p in candidates if p.is_file() and (configuration in p.parts or configuration.title() in p.parts)]
-        if len(candidates) != 1:
-            raise ValueError('Missing/ambiguous built module for ' + configuration)
-        parent = candidates[0].parent
-        if parent.name == 'Modules':
-            include = [parent]
-        else:
-            include = [p.parent for name in ('JSON', 'JSONBridges')
-                       for p in (ROOT / '.build/out').rglob(name + '.swiftmodule')
-                       if p.is_file() and configuration.title() in p.parts]
+        # Ask SwiftPM rather than guessing Debug/Debug-linux/triple directories.
+        path_command = ['swift', 'build', '-c', configuration, '--show-bin-path']
+        products = pathlib.Path(subprocess.check_output(path_command, cwd=ROOT, text=True).strip())
+        if not products.is_dir() or not products.is_relative_to(ROOT / '.build'):
+            raise ValueError('Invalid SwiftPM products path: ' + str(products))
+        include = [products / 'Modules' if (products / 'Modules').is_dir() else products]
+        for module in ('JSON', 'JSONBridges'):
+            path = include[0] / (module + '.swiftmodule')
+            if not (path.is_file() or (path.is_dir() and any(path.glob('*.swiftmodule')))):
+                raise ValueError('Missing built module: ' + str(path))
+        receipt['build_paths'].append({'command': path_command, 'products': str(products)})
         flags = ['swiftc', '-swift-version', '6', '-strict-concurrency=complete', '-warnings-as-errors']
         if sys.platform == 'darwin':
             sdk = subprocess.check_output(['xcrun', '--sdk', 'macosx', '--show-sdk-path'], text=True).strip()
