@@ -76,6 +76,23 @@ private func gapCompilation(_ category: JSONSchemaCompilationFailure.Category, _
     #expect(issue.absoluteKeywordLocation?.string == "https://e.test/root#/properties/~1~0/type")
     #expect(result.issues.contains { $0.instanceLocation.tokens == [JSONKey("é")] })
     #expect(!result.issues.contains { $0.instanceLocation.tokens == [JSONKey("e\u{301}")] })
+    let output = try result.outputWithReport(.basic)
+    let errors = try #require(try output.result.requiredMember("errors").arrayValue)
+    #expect(errors.count == 2)
+    let escaped = try #require(errors.first { $0.objectValue?["instanceLocation"] == .string("/~1~0") })
+    #expect(try escaped.requiredMember("keywordLocation") == .string("/properties/~1~0/type"))
+    #expect(try escaped.requiredMember("absoluteKeywordLocation") == .string("https://e.test/root#/properties/~1~0/type"))
+    #expect(try escaped.requiredMember("valid") == .boolean(false))
+    var limits = JSONLimits.balanced; limits[.workUnits] = output.statistics[.workUnits]
+    #expect(try result.output(.basic, limits: limits) == output.result)
+    limits[.workUnits] -= 1
+    do { _ = try result.output(.basic, limits: limits); Issue.record("Expected cumulative output work refusal") }
+    catch let failure as JSONFailure { #expect(failure.category == .resource && failure.resource?.metric == .workUnits) }
+    limits = .balanced; limits[.pointerBytes] = UInt64("/properties/~1~0/type".utf8.count)
+    #expect(try result.output(.basic, limits: limits) == output.result)
+    limits[.pointerBytes] -= 1
+    do { _ = try result.output(.basic, limits: limits); Issue.record("Expected encoded Pointer byte refusal") }
+    catch let failure as JSONFailure { #expect(failure.category == .resource && failure.resource?.metric == .pointerBytes) }
 }
 
 @Test func qaSchemaEmptyArrayAndNonStringAnnotationApplicability() throws {

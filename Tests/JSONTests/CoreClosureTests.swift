@@ -72,6 +72,8 @@ private func closureFailure(_ category: JSONFailure.Category, _ code: JSONFailur
     let value = try JSONParser().parse(#"{"null":null,"é":1,"e\u0301":2}"#)
     #expect(try value.presence(of: "null") == .null)
     #expect(try value.presence(of: "missing") == .absent)
+    #expect(try value.presence(of: "é") == .value(1))
+    #expect(try value.presence(of: "e\u{301}") == .value(2))
     #expect(try value.requiredMember("null") == .null)
     #expect(try value.requiredMember("é") == 1 && value.requiredMember("e\u{301}") == 2)
     closureFailure(.missingValue, .missingMember) { _ = try value.requiredMember("missing") }
