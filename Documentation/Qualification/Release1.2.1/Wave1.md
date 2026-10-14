@@ -13,8 +13,9 @@ adds 23 nonparameterized Swift Testing functions using public JSON interfaces:
 
 - Keyed/unkeyed nested containers, named/default/unkeyed super containers, explicit
   empty values and repeated keyed requests/replacement preserving insertion order.
-- All 14 standard Bool/String/Float/Double/signed/unsigned primitive overloads,
-  nil and generic exact JSON values against independently specified golden values.
+- The 14 explicit Bool/String/Float/Double/signed/unsigned primitive overloads
+  through 64-bit integers, plus nil and generic exact JSON values against
+  independently specified golden values.
 - Unkeyed decodeNil/index/end behavior and recovery after ordinary type errors;
   unknown fields, key presence and explicit null.
 - Complete typed coding paths for missing keys, wrong kinds and inexact integer
@@ -55,3 +56,32 @@ schema/regex/Patch decision expansion, public end-to-end scenarios and adversari
 assurance are later waves. The proposed 98% line/95% region targets have not been
 declared achieved by adding these cases. New Linux/WASI and device results are not
 implied by a native run. No release or remote action is part of this increment.
+
+## Actual native outcome
+
+Tested code commit: `3c0c03b718c677ce2cb0a3f6c66488b5111d1098`.
+[Wave1Outcomes.json](Wave1Outcomes.json) records actual source/receipt identities,
+counts, toolchain, measured coverage, review findings and limitations. Closing
+documentation changes are separate from that tested code identity.
+
+Coverage, native acceptance, focused QA, safety and documentation passed on
+macOS 27.0 ARM64 with Apple Swift 6.4, Xcode 27.2/SDK 27.2 and language mode 6.
+Root debug/release and full ASAN checked 215/173; QA debug/release/ASAN checked
+34/3/3/2 functions; TSan checked six shared-state functions. Strict memory safety,
+49 cap probes, public consumers, independent policies and 582/582 authored DocC
+symbols passed. All approved command outcomes exited 0.
+
+The original native CLI exited 1 when opening command 12's log failed with ENOSPC.
+Its 12 completed commands were retained. After deleting only completed caches
+created by this task, the approved four-command tail passed using the same CI
+checks; unchanged source, prior log hashes and prior outcomes were revalidated.
+The original interruption remains in the local evidence. This is a verified
+resumption, not a claim that the interrupted CLI exited 0.
+
+Encoding/decoding container line coverage is 98.78% each; their region coverage
+is 95.45%/96.74%. Overall authored lines/regions are 97.06%/92.54%. One unchanged
+streaming completion-alternative region observed in the earlier baseline was not
+observed in this run; retain it for deterministic T04 coverage. No cause is
+inferred and its denominator remains. The SDK also declares Int128/UInt128
+container defaults; this wave qualifies the 14 explicit overloads through 64-bit
+integers and leaves that additional probe in T01.

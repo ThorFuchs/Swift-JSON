@@ -19,3 +19,7 @@ Codable containers and precise failures, then held source/sink backpressure.
 Subsequent waves expand combined schema/regex decisions, Patch, public end-to-end
 flows and bounded adversarial/mutation evidence. Existing independent suites,
 all 49 caps and platform-specific limitations remain authoritative.
+
+First wave implemented and natively qualified: 23 new Swift Testing functions,
+215/173 root discoveries, complete coverage export and negative omission probe.
+See [actual outcomes](Wave1Outcomes.json) for receipts and remaining scope.
