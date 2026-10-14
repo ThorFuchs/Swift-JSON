@@ -38,3 +38,5 @@ host; WASI executable feasibility is separate from the already qualified librari
 Native and sanitizer receipts, subprocess outcomes, commands, toolchain, source and
 binary identities accompany every qualified milestone. All 49 baseline probes and
 independent-suite exclusions remain required and separate from CLI additions.
+
+The stack has since been reconciled onto main9517233, retaining the complete1.3 renderer/export implementation. See [reconciliation](Reconciliation.md). Original renderer-pinned evidence remains historical; fresh current-source checks qualify the restacked heads.
