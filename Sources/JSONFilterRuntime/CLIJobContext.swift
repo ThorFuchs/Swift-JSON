@@ -68,8 +68,14 @@ package struct CLIError: Error, Sendable, Equatable {
     package let category: Category
     package let code: String
     package let metric: String?
-    package init(_ category: Category, _ code: String, metric: String? = nil) {
+    package let limit: UInt64?
+    package let attemptedUsage: UInt64?
+    package let overflow: Bool
+    package let byteOffset: UInt64?
+    package init(_ category: Category, _ code: String, metric: String? = nil, limit: UInt64? = nil,
+                 attemptedUsage: UInt64? = nil, overflow: Bool = false, byteOffset: UInt64? = nil) {
         self.category = category; self.code = code; self.metric = metric
+        self.limit = limit; self.attemptedUsage = attemptedUsage; self.overflow = overflow; self.byteOffset = byteOffset
     }
     package var exit: Int32 {
         switch category {
@@ -127,13 +133,13 @@ package struct CLIJobContext: ~Copyable {
     package mutating func require(_ metric: CLIResourceMetric, _ attempted: UInt64) throws {
         try checkpoint()
         guard attempted <= limits[metric] else {
-            let error = CLIError(.resource, "limitExceeded", metric: metric.rawValue)
+            let error = CLIError(.resource, "limitExceeded", metric: metric.rawValue, limit: limits[metric], attemptedUsage: attempted)
             latch(error); throw error
         }
     }
     package mutating func charge(_ metric: CLIResourceMetric, _ amount: UInt64 = 1) throws {
         let (next, overflow) = used(metric).addingReportingOverflow(amount)
-        guard !overflow else { let error = CLIError(.resource, "counterOverflow", metric: metric.rawValue); latch(error); throw error }
+        guard !overflow else { let error = CLIError(.resource, "counterOverflow", metric: metric.rawValue, limit: limits[metric], overflow: true); latch(error); throw error }
         try require(metric, next)
         switch metric {
         case .totalWorkUnits: try meter.work(amount)
@@ -147,7 +153,10 @@ package struct CLIJobContext: ~Copyable {
         else { counters[metric.index] -= amount }
     }
     package mutating func work(_ amount: UInt64 = 1) throws { try charge(.totalWorkUnits, amount) }
-    package mutating func domain(_ domain: JSONOperationDomain) throws { try meter.operationDomain(domain) }
+    package mutating func domain(_ domain: JSONOperationDomain) throws {
+        try checkpoint() // Drain finished stage leases before the next retention baseline.
+        try meter.operationDomain(domain)
+    }
     /// The only post-terminal accounting mutation spends previously reserved diagnostic work.
     /// It cannot reopen data operations, refund work or exceed aggregate diagnostic capacity.
     package mutating func acceptTerminalDiagnostics(_ bytes: UInt64) -> Bool {
@@ -158,7 +167,7 @@ package struct CLIJobContext: ~Copyable {
     }
     package mutating func configure(_ requested: CLILimits) throws {
         try requested.validate(); try checkpoint()
-        for metric in CLIResourceMetric.allCases { guard used(metric) <= requested[metric] else { throw CLIError(.resource, "limitExceeded", metric: metric.rawValue) } }
+        for metric in CLIResourceMetric.allCases { guard used(metric) <= requested[metric] else { throw CLIError(.resource, "limitExceeded", metric: metric.rawValue, limit: requested[metric], attemptedUsage: used(metric)) } }
         try meter.configure(requested.effectiveCore)
         limits = requested
     }

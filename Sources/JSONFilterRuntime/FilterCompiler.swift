@@ -14,9 +14,11 @@ package enum FilterCompiler {
         "select":[1], "map":[1], "map_values":[1], "has":[1], "length":[0], "utf8bytelength":[0], "type":[0],
         "keys":[0], "keys_unsorted":[0], "values":[0], "empty":[0], "not":[0],
         "arrays":[0], "objects":[0], "iterables":[0], "booleans":[0], "numbers":[0], "normals":[0], "finites":[0], "strings":[0], "nulls":[0], "scalars":[0],
-        "error":[0,1], "input":[0], "inputs":[0]
+        "error":[0,1], "input":[0], "inputs":[0],
+        "add":[0], "abs":[0], "floor":[0], "ceil":[0], "trunc":[0], "round":[0], "range":[1,2,3]
     ]
     package static func compile(_ source: String, variables: Set<String> = ["ARGS"], context: inout CLIJobContext) throws -> FilterProgram {
+        try context.domain(.core)
         let tokens = try FilterLexer.lex(source, context: &context)
         guard !tokens.isEmpty else { throw FilterCompileFailure("emptyFilter", at: 0) }
         var matches: [Int:Int] = [:], nesting: [(Int,String)] = []
@@ -84,7 +86,6 @@ package enum FilterCompiler {
                     }
                 }
                 if found.isEmpty { continue }
-                if level == 7 || level == 8 { throw FilterCompileFailure("arithmeticNotYetQualified", at: tokens[found[0]].range.lowerBound) }
                 if level == 3 { throw FilterCompileFailure("assignmentNotYetQualified", at: tokens[found[0]].range.lowerBound) }
                 if level == 6 && found.count > 1 { throw FilterCompileFailure("chainedComparison", at: tokens[found[1]].range.lowerBound) }
                 let position = level == 0 || level == 2 ? found.first! : found.last!, op = tokens[position].text!
@@ -107,11 +108,15 @@ package enum FilterCompiler {
                 let handler = try caught.map { try child(($0+1)..<hi,context:&context) }
                 nodes[task.destination] = .attempt(body,handler); continue
             }
-            if first == "-" {
-                if span.count == 2, case .literal(.number(let number)) = tokens[lo+1].kind, let lexeme = number.originalLexeme {
-                    let negative = try JSONNumber.parse(Array(("-" + lexeme).utf8),meter:&context.meter)
+            if first == "-" || first == "+" {
+                if first == "-", span.count == 2, case .literal(.number(let number)) = tokens[lo+1].kind, let lexeme = number.originalLexeme {
+                    let bytes = UInt64(lexeme.utf8.count) + 1
+                    try context.meter.retain(bytes); try context.work(bytes)
+                    defer { try? context.meter.release(bytes) }
+                    var token: [UInt8] = [45]; token.append(contentsOf: lexeme.utf8)
+                    let negative = try JSONNumber.parse(token,meter:&context.meter)
                     nodes[task.destination] = .literal(.number(negative))
-                } else { nodes[task.destination] = .unary("-",try child((lo+1)..<hi,context:&context)) }
+                } else { nodes[task.destination] = .unary(first!,try child((lo+1)..<hi,context:&context)) }
                 continue
             }
             if tokens[hi-1].text == "?" { nodes[task.destination] = .optional(try child(lo..<(hi-1),context:&context)); continue }
@@ -125,7 +130,10 @@ package enum FilterCompiler {
                 } else { nodes[task.destination] = .index(base,try child((open+1)..<(hi-1),context:&context)) }
                 continue
             }
-            if let dot = positions.last(where:{tokens[$0].text == "." && $0+2 == hi}), case .name(let key) = tokens[dot+1].kind {
+            if let dot = positions.last(where:{tokens[$0].text == "." && $0+2 == hi}),
+               { if case .name = tokens[dot+1].kind { return true }; if case .literal(.string) = tokens[dot+1].kind { return true }; return false }() {
+                let key: String
+                switch tokens[dot+1].kind { case .name(let text), .literal(.string(let text)): key = text; default: throw FilterCompileFailure("invalidField", at: tokens[dot].range.lowerBound) }
                 let base: Int
                 if dot == lo { base = nodes.count; try context.charge(.astNodes); try context.meter.retain(128); nodes.append(.identity); ranges.append(tokens[dot].range) }
                 else { base = try child(lo..<dot,context:&context) }

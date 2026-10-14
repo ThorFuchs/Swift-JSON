@@ -22,18 +22,18 @@ package struct CLIDiagnostics {
     }
     package static func classify(_ error: any Error) -> CLIError {
         if let error = error as? CLIError { return error }
-        if let failure = error as? FilterCompileFailure { return .init(.compile, failure.code) }
+        if let failure = error as? FilterCompileFailure { return .init(.compile, failure.code, byteOffset: UInt64(failure.offset)) }
         if let failure = error as? FilterLanguageFailure { return .init(.language, failure.code) }
         if error is CancellationError { return .init(.cancelled, "cancelled") }
         if let error = error as? JSONFailure {
             let category: CLIError.Category = error.category == .resource ? .resource : (error.category == .configuration ? .usage : .input)
-            return .init(category, error.code.rawValue, metric: error.resource?.metric.rawValue)
+            return .init(category, error.code.rawValue, metric: error.resource?.metric.rawValue, limit: error.resource?.limit, attemptedUsage: error.resource?.attemptedUsage, overflow: error.resource?.overflow ?? (error.code == .counterOverflow), byteOffset: error.location?.byteOffset)
         }
         if let failure = error as? JSONHTMLFailure {
             switch failure {
             case .invalidConfiguration: return .init(.usage, "invalidHTMLConfiguration")
-            case .limitExceeded(let metric, _, _): return .init(.resource, "limitExceeded", metric: metric.rawValue)
-            case .counterOverflow(let metric): return .init(.resource, "counterOverflow", metric: metric.rawValue)
+            case .limitExceeded(let metric, let limit, let attempted): return .init(.resource, "limitExceeded", metric: metric.rawValue, limit: limit, attemptedUsage: attempted)
+            case .counterOverflow(let metric): return .init(.resource, "counterOverflow", metric: metric.rawValue, overflow: true)
             }
         }
         if let failure = error as? JSONSchemaCompilationFailure { return .init(.input, "schemaCompilation." + failure.category.rawValue) }
@@ -54,7 +54,15 @@ package struct CLIDiagnostics {
         }
         if let error {
             // All codes and metric names are fixed ASCII identifiers, never instance text.
-            let parts = json ? ["{\"kind\":\"diagnostic\",\"version\":1,\"category\":\"", error.category.rawValue, "\",\"code\":\"", error.code, "\"}\n"] : ["swift-json: ", error.category.rawValue, ": ", error.code, "\n"]
+            var parts = json ? ["{\"kind\":\"diagnostic\",\"version\":1,\"category\":\"", error.category.rawValue, "\",\"code\":\"", error.code, "\"}\n"] : ["swift-json: ", error.category.rawValue, ": ", error.code, "\n"]
+            if json {
+                parts.removeLast()
+                parts += ["\"", ",\"metric\":", error.metric.map { "\"" + $0 + "\"" } ?? "null",
+                          ",\"limit\":", error.limit.map(String.init) ?? "null",
+                          ",\"attemptedUsage\":", error.attemptedUsage.map(String.init) ?? "null",
+                          ",\"overflow\":", String(error.overflow),
+                          ",\"byteOffset\":", error.byteOffset.map(String.init) ?? "null", "}\n"]
+            }
             _ = append(parts, to: &output, count: &used, maximum: capacity)
         }
         if wantsReport {
@@ -67,9 +75,9 @@ package struct CLIDiagnostics {
             part(",\"inputRecords\":", String(context.used(.totalRecords)))
             part(",\"outputResults\":", String(context.used(.totalResults)))
             part(",\"committedOutputResults\":", String(context.committedResults))
-            part(",\"inputBytes\":", String(context.used(.totalInputBytes)))
-            part(",\"outputBytes\":", String(context.used(.totalOutputBytes)))
-            part(",\"workUnits\":", String(context.used(.totalWorkUnits)))
+            part(",\"totalInputBytes\":", String(context.used(.totalInputBytes)))
+            part(",\"totalOutputBytes\":", String(context.used(.totalOutputBytes)))
+            part(",\"totalWorkUnits\":", String(context.used(.totalWorkUnits)))
             part(",\"peakLogicalRetainedBytes\":", String(statistics.peakLogicalRetainedBytes))
             part(",\"remainingWorkUnits\":", String(remaining))
             part(",\"limitsOrigin\":{\"profile\":\"", context.limits.profileName,
