@@ -25,6 +25,7 @@ def main():
         result.update(qa_counts=DISCOVERY['qa_functions'],
             wasmkit_scope='exact affected QA functions in debug/release; no full root/corpus claim',
             node_scope='complete debug/release root suites and exact affected QA; no separate consumer/cap/independent qualification refresh')
+    result['streaming_timeout_policy'] = 'Identical streaming assertions on every platform. Native/Linux Swift Testing limits stay at one minute. The pinned WASI SDK-only timer reproduction blocks its cooperative executor; streaming runners instead use an interruptible 120-second host process-group watchdog.'
     def save():
         (output / 'wasi.json').write_text(json.dumps(result, indent=2) + '\n')
     def run(name, command, check=lambda c, t: c == 0, timeout=1800):
@@ -39,7 +40,7 @@ def main():
         passed = check(code, text)
         path.write_text(text.replace(str(ROOT), '.'))
         result['commands'].append({'name': name, 'command': [x.replace(str(ROOT), '.') for x in command],
-            'exit_code': code, 'status': 'passed' if passed else 'failed', 'seconds': time.monotonic() - started,
+            'exit_code': code, 'status': 'passed' if passed else 'failed', 'seconds': time.monotonic() - started, 'timeout_seconds': timeout,
             'log': path.relative_to(ROOT).as_posix(), 'log_sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
         save()
         if not passed: raise ValueError('Failed actual outcome: ' + name)
@@ -75,14 +76,16 @@ def main():
             roots = {name: binary(scratch, config, name + '-test-runner') for name in COUNTS}
             invocations = 0
             for name, count in COUNTS.items():
-                text = run('node-' + config + '-' + name, invoke('node', roots[name], 'tests'), tests(count))
+                text = run('node-' + config + '-' + name, invoke('node', roots[name], 'tests'), tests(count),
+                    timeout=120 if name == 'JSONStreamingTests' else 1800)
                 invocations += sum(int(n) for n in re.findall(r'with (\d+) test cases passed', text))
             if invocations != PARAMETER_INVOCATIONS: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
             if args.scope == 'root-qa':
                 for name, count in DISCOVERY['qa_functions'].items():
                     for engine in ['node', 'wasmkit']:
                         run(engine + '-' + config + '-qa-' + name,
-                            invoke(engine, roots[name], 'tests', arguments=['--filter', 'qa']), tests(count))
+                            invoke(engine, roots[name], 'tests', arguments=['--filter', 'qa']), tests(count),
+                            timeout=120 if name == 'JSONStreamingTests' else 1800)
                 continue
             for package, name, scratch in [('Tools/WasmAudit', 'WasmAudit', '.build/wasm-audit-consumer'),
                                             ('Tools/Qualification', 'Qualification', '.build/wasm-qualification'),

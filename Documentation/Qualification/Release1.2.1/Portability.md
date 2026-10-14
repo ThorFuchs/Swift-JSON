@@ -31,6 +31,23 @@ prepared lane or a Mac-host Linux preflight rejection is not Linux execution.
 The root dependency graph, four products, private regex target, Apple baselines,
 finite profiles, notices and fixture policies are unchanged.
 
+The first actual WASI build rejected an untyped large integer oracle inferred
+as 32-bit Int. Its explicit Int64 replacement preserves the same exact expected
+value. The next run exposed a pinned Swift Testing timer issue: thirteen async
+cases with a one-minute trait timed out together before other async work
+progressed. A two-case SDK-only package, with no JSON imports, reproduced this
+on both hosts: an immediately returning timed body failed after 60 seconds;
+the untimed body passed immediately.
+
+`StreamingTestPolicy.deadline` therefore preserves the one-minute Swift Testing
+trait on native/Linux, and supplies an empty tag trait on WASI. No case or
+assertion is disabled. WASI streaming root and affected-QA runners instead have
+an interruptible 120-second host process-group watchdog, recorded per command.
+The host enforces a real termination deadline even if guest cooperative tasks
+stop yielding; it does not grant library operations an elapsed-time budget.
+Keep the SDK-only failing/passing receipts and revisit this adjustment with a
+new Swift Testing/SDK pin.
+
 ## Completion coverage disposition
 
 The zero-count alternative is the final `.recordCompleted(summary())` expression

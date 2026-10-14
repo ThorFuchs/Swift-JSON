@@ -88,7 +88,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
     }
 }
 
-@Test(.timeLimit(.minutes(1))) func qaStreamingRootCompletionWaitsForEOF() async throws {
+@Test(StreamingTestPolicy.deadline) func qaStreamingRootCompletionWaitsForEOF() async throws {
     let gate = SourceGate(["[0] \r\n"]), task = arrayTask(gate)
     await gate.waitForHeldOrFinished()
     let before = await gate.snapshot()
@@ -101,7 +101,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
     #expect(after.documentCompletions == 1 && after.pulls == 2)
     #expect(after.summary?.records == 1 && after.summary?.statistics[.totalScannedNodes] == 2)
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingClosingSyntaxAndWhitespacePrecedeCompletion() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingClosingSyntaxAndWhitespacePrecedeCompletion() async {
     let gate = SourceGate(["[0"]), task = arrayTask(gate)
     await gate.waitForHeldOrFinished()
     let before = await gate.snapshot()
@@ -112,7 +112,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
     #expect(result.error == nil && result.terminalNil && after.values == [0])
     #expect(after.documentCompletions == 1 && after.pulls == 3)
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingMalformedTailNeverCompletesAndStopsPulling() async throws {
+@Test(StreamingTestPolicy.deadline) func qaStreamingMalformedTailNeverCompletesAndStopsPulling() async throws {
     // An invalid token fails lexing; a valid second JSON root fails framing.
     // Keep both exact diagnoses rather than accepting any JSONFailure.
     for (tail, code) in [(" garbage", JSONFailure.Code.invalidSyntax), (" false", .trailingData)] {
@@ -128,7 +128,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
         #expect(result.terminalNil && final.documentCompletions == 0 && final.pulls == 2)
     }
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingSourceErrorAfterElementRemainsOperationalAndTerminal() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingSourceErrorAfterElementRemainsOperationalAndTerminal() async {
     let gate = SourceGate(["[0]"]), task = arrayTask(gate)
     await gate.waitForHeldOrFinished(); await gate.reply(.failure)
     let result = await task.value; await gate.close()
@@ -136,7 +136,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
     let final = await gate.snapshot()
     #expect(final.values == [0] && final.documentCompletions == 0 && final.pulls == 2)
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingCancellationWhileEOFHeldSuppressesCompletion() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingCancellationWhileEOFHeldSuppressesCompletion() async {
     let gate = SourceGate(["[0]"]), task = arrayTask(gate)
     await gate.waitForHeldOrFinished(); task.cancel(); await gate.reply(.eof)
     let result = await task.value; await gate.close()
@@ -144,7 +144,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
     let final = await gate.snapshot()
     #expect(final.values == [0] && final.documentCompletions == 0 && final.pulls == 2)
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingFirstElementReturnDoesNotAwaitAnotherSourceChunk() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingFirstElementReturnDoesNotAwaitAnotherSourceChunk() async {
     let gate = SourceGate(["[0,"])
     let task = Task {
         var iterator = JSONTopLevelArraySequence(ControlledSource(gate:gate)).makeAsyncIterator()
@@ -158,7 +158,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
     #expect(state.finished && !state.held && state.pulls == 1)
     await gate.close(); #expect(await task.value)
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingSeparatedEventsFinishAtEOFExactlyOnce() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingSeparatedEventsFinishAtEOFExactlyOnce() async {
     for text in ["false", "17", "{}"] {
         let gate = SourceGate([text])
         let task = Task {
@@ -186,7 +186,7 @@ private func arrayTask(_ gate: SourceGate) -> Task<ReadOutcome,Never> {
         #expect(final.summary?.records == 1)
     }
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingSingleValueAndFinalNDJSONRecordWaitForEOF() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingSingleValueAndFinalNDJSONRecordWaitForEOF() async {
     for ndjson in [false,true] {
         let gate = SourceGate([ndjson ? "1\n2" : "2"])
         let task = Task {
@@ -243,7 +243,7 @@ private func writerTask(_ gate:SinkGate,limits:JSONLimits = .balanced) -> Task<W
         await gate.done();return outcome
     }
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingHeldSinkHasOneOutstandingHandoffUntilAcceptance() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingHeldSinkHasOneOutstandingHandoffUntilAcceptance() async {
     let gate=SinkGate(),task=writerTask(gate)
     await gate.waitForHeldOrFinished()
     let held=await gate.snapshot()
@@ -253,7 +253,7 @@ private func writerTask(_ gate:SinkGate,limits:JSONLimits = .balanced) -> Task<W
     #expect(result.error == nil && final.bytes == Array("[1,2,3]".utf8) && final.calls == 4)
     #expect(result.report?[.outputBytes] == 7 && result.report?.domain == .writing)
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingHeldSinkFailureKeepsAcceptedPrefixAndStopsHandoffs() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingHeldSinkFailureKeepsAcceptedPrefixAndStopsHandoffs() async {
     let gate=SinkGate(holdAt:2),task=writerTask(gate)
     await gate.waitForHeldOrFinished()
     let held=await gate.snapshot()
@@ -263,14 +263,14 @@ private func writerTask(_ gate:SinkGate,limits:JSONLimits = .balanced) -> Task<W
     #expect(result.error as? ControlledError == .sink && result.report == nil)
     #expect(final.calls == 2 && final.bytes == Array("[1".utf8))
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingCancellationAfterHeldAcceptanceKeepsOnlyAcceptedBytes() async {
+@Test(StreamingTestPolicy.deadline) func qaStreamingCancellationAfterHeldAcceptanceKeepsOnlyAcceptedBytes() async {
     let gate=SinkGate(),task=writerTask(gate)
     await gate.waitForHeldOrFinished();task.cancel();await gate.reply(.accept)
     let result=await task.value;let final=await gate.snapshot()
     #expect(result.error is CancellationError && result.report == nil)
     #expect(final.calls == 1 && final.bytes == Array("[1".utf8))
 }
-@Test(.timeLimit(.minutes(1))) func qaStreamingOutputQuotaRefusalFollowsHeldChunkAcceptance() async throws {
+@Test(StreamingTestPolicy.deadline) func qaStreamingOutputQuotaRefusalFollowsHeldChunkAcceptance() async throws {
     var limits=JSONLimits.balanced;limits[.outputBytes]=2
     let gate=SinkGate(),task=writerTask(gate,limits:limits)
     await gate.waitForHeldOrFinished()

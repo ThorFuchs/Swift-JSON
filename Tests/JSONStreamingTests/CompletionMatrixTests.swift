@@ -8,7 +8,14 @@ private enum SyntaxObservation: Equatable {
     case key(JSONKey), scalar(JSON)
 }
 
-@Test(.timeLimit(.minutes(1))) func qaStreamingEveryRootEndingCompletesWithTheSelectedFramingAtEverySplit() async throws {
+@Test(StreamingTestPolicy.deadline) func qaStreamingEveryRootEndingCompletesWithTheSelectedFramingAtEverySplit() async throws {
+    let traits = try #require(Test.current).traits
+    #if os(WASI)
+    #expect(!traits.contains { $0 is TimeLimitTrait })
+    #else
+    let deadline = try #require(traits.compactMap { $0 as? TimeLimitTrait }.first)
+    #expect(deadline.timeLimit == .seconds(60))
+    #endif
     // Fixed syntax oracles, rather than comparing two consumers of one parser.
     // Include numbers finalized only by EOF and containers completed by a delimiter.
     let cases: [(String, [SyntaxObservation])] = [
