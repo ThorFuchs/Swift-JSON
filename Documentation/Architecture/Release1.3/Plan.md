@@ -1,6 +1,10 @@
 # Swift-JSON 1.3.0 — JSONHTML and exact export
 
-Status: first formatted-rendering increment implemented and locally checked; complete 1.3 release qualification remains pending.
+Status: all renderer/export implementation slices and representative receiving
+qualification are complete on the reviewed source. See
+[ReviewAndQualification.md](ReviewAndQualification.md) for source-bound receipts,
+retained scope limits and required final PR-head checks. Tagging and publication
+remain separate. The initial sequence and milestone history below are retained.
 
 1.3.0 introduces **JSONHTML**, a fifth library product in the existing Swift-JSON package. It depends on JSON; JSON does not acquire a reverse dependency. The five-product policy becomes effective with the working target, consumers and matching CI checks. Historical four-product releases remain unchanged. JSONRegexRuntime remains private and root external dependencies remain empty.
 

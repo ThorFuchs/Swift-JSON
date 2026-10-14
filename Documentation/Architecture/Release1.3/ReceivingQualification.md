@@ -1,5 +1,11 @@
 # Receiving-app and physical export qualification
 
+The observations below retain the earlier receiving candidates and failures. The
+[final qualification closure](ReviewAndQualification.md) records the subsequent
+65-case source, successful delivered drag events, corrected PDF save/reopen and
+annotation Safari/VoiceOver checks. Historical open states below do not describe
+the current reviewed candidate.
+
 This pass continues export implementation 1e0b86d2580bb9678039597523aa3b99d2905abf
 on codex/1.3-jsonhtml-transfer, stacked on renderer PR #21. It changes qualification
 tools and documentation, not the JSONHTML public API or library implementation.

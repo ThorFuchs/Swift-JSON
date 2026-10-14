@@ -63,15 +63,16 @@ distribution, architecture or libc claims.
 
 `python3 Scripts/ci.py --lane wasm` requires the matching Swift.org 6.4.0 compiler,
 SDK and WasmKit plus Node. It records cross-build and runtime outcomes separately.
-It preserves all 192/173 root discoveries, independent corpus policies and 49 cap
-outcomes; both hosts also execute the frozen public consumer. The
+Node executes the complete 256-function/173-parameter portable root suites,
+independent corpus policies and all 49 cap outcomes. Both hosts execute the frozen
+public consumer; WasmKit retains its separately recorded 14-function consumer scope. The
 [WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
 This local lane neither activates hosted CI nor substitutes for Apple/Linux gates.
 
 ## JSONHTML export development lane
 
 `python3 Scripts/ci.py --lane export` requires 38 focused Swift Testing functions
-in both configurations, 63 public consumer outcomes, six pinned fixtures and three
+in both configurations, 65 public consumer outcomes, eight artifacts, six pinned fixtures and three
 Apple SDK declaration probes. It builds all five products in iPhoneOS and
 simulator consumers. A bounded offscreen WebPage region experiment remains outside
 the production API. The lane establishes native API/file transport and SDK builds,
@@ -102,7 +103,7 @@ from those outcomes and from physical-device/receiver UI qualification.
 ## Integrated 1.3 portable qualification
 
 The five-product WASI lane requires six exact bundles: JSON 107, schema 51, private
-regex 12, streaming 14, patch 11 and portable HTML 49. Its public consumer requires
+regex 12, streaming 14, patch 11 and portable HTML 61. Its public consumer requires
 14 functions and six explicit HTML/export outcomes in both Node and WasmKit. All
 173 parameter cases, 49 cap outcomes, pinned independent suites and rooted vectors
 remain required. The first failed inherited expectations are retained; no blanket

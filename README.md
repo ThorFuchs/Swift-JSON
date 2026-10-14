@@ -405,7 +405,11 @@ bytes. Defaults are paginated A4, 36-point margins and a light Menlo profile.
 US Letter and an explicit continuous page are available. Finite limits and
 cancellation cover owned operations; opaque SDK work and allocation are separate.
 See the [PDF guide](Sources/JSONHTML/Documentation.docc/PDFPreparation.md).
-Annotations remain deferred. Published 1.2 versions do not include JSONHTML.
+Caller-supplied `JSONHTMLAnnotation` values attach diagnostics by exact typed path.
+Rendering a coherent `JSONDocument` can show original value or parent UTF-8 byte
+spans; unmapped or replaced roots invent none. Rendering does not execute schema
+validation. See the [diagnostic guide](Sources/JSONHTML/Documentation.docc/DiagnosticAnnotations.md).
+Published 1.2 versions do not include JSONHTML.
 
 ## Documentation and examples
 

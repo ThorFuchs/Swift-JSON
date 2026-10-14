@@ -110,7 +110,8 @@ There is no unlimited or device-specific widening preset.
 independent five-product consumer, verifies all six fixture hashes, compiles
 WebPage declarations on macOS/iPhoneOS/iPhoneSimulator and builds the public mobile
 consumers. It records actual commands, exits, source manifest and toolchain.
-The consumer produces five files, including explicit opt-in RTF, and tests native import, exact selected exports,
+The consumer records 65 outcomes and eight artifacts, including explicit opt-in RTF
+and A4, US Letter and continuous PDFs. It tests native import, exact selected exports,
 discovery, suggested filenames, immutable selection and cumulative reports.
 SDK builds do not establish simulator/device/share-sheet/drag/drop qualification.
 
@@ -122,10 +123,12 @@ A4/Letter output or a qualified cancellation/timeout backend. The current pagina
 nor paper policy is inferred from the historical T0 result. An external
 probe watchdog is not a production timeout guarantee.
 
-Remaining milestones: RTF/PDF real receiving-app UI and physical-device evidence;
-final five-product release qualification. Actual SDK and simulator evidence must be
-reported separately from those gates. The existing physical iPad
-deferral is preserved. These incomplete gates must remain explicit in returns.
+The initial receiving/device milestones above are historical. The
+[qualification closure](Release1.3/ReviewAndQualification.md) records their actual
+source-bound completion, including corrected PDF filenames, delivered drag events
+and the approved physical-iPad deferral. SDK builds, automated device outcomes and
+manual receiving observations remain separately attributed. Final PR-head checks
+are required before a protected merge; tagging and release publication remain separate.
 
 The synthetic fixture bytes originate in the JSONHTML Transfer/Export briefing
 ZIP SHA-256 `5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105`.

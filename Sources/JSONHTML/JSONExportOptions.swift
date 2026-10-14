@@ -13,7 +13,7 @@ public enum JSONExportFormat: String, CaseIterable, Hashable, Sendable {
     case html
     /// Styled monospaced rich text with the unchanged pretty JSON body; explicit opt-in.
     case rtf
-    /// Explicitly prepared PDF; unavailable until the Apple backend is qualified.
+    /// Explicitly prepared PDF; added only after successful Apple PDF preparation.
     case pdf
 
     /// The filename extension associated with this exact artifact format.
