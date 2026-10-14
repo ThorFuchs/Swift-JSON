@@ -37,7 +37,7 @@ extension JSONSchemaRegistry {
         let root = URL(fileURLWithPath: command).deletingLastPathComponent()
             .appendingPathComponent("Swift-JSON_JSONSchema.bundle", isDirectory: true)
         #else
-        guard let root = Bundle.module.resourceURL else { throw JSONSchemaCompilationFailure(.metaSchema) }
+        let root = try Self.builtinResourceRoot(meter: &meter)
         #endif
         for (path, identifier, size, expectedHash) in files {
             try meter.checkpoint(); try meter.charge(.schemaDocuments); try meter.resetValueBounds()
@@ -77,6 +77,34 @@ extension JSONSchemaRegistry {
         }
         return documents
     }
+    #if !os(WASI)
+    // SwiftPM's synthesized Bundle.module traps when the whole bundle is absent.
+    // Resolve only standard installed locations and propagate a structured failure.
+    // This uses Foundation for locating bytes, never as JSON/schema authority.
+    private static func builtinResourceRoot(meter: inout JSONWorkMeter) throws -> URL {
+        var candidates: [URL] = []
+        #if canImport(ObjectiveC)
+        let owner = Bundle(for: JSONSchemaBundleMarker.self)
+        if let resources = Bundle.main.resourceURL { candidates.append(resources) }
+        if let resources = owner.resourceURL { candidates.append(resources) }
+        candidates.append(owner.bundleURL.deletingLastPathComponent())
+        #endif
+        candidates.append(Bundle.main.bundleURL)
+        if let command = CommandLine.arguments.first, command.hasPrefix("/") {
+            candidates.append(URL(fileURLWithPath: command).deletingLastPathComponent())
+        }
+        for candidate in candidates {
+            try meter.work(); try meter.checkpoint()
+            for name in ["Swift-JSON_JSONSchema.bundle", "Swift-JSON_JSONSchema.resources"] {
+                try meter.work()
+                if let bundle = Bundle(url: candidate.appendingPathComponent(name)),
+                   let root = bundle.resourceURL { return root }
+            }
+        }
+        throw JSONSchemaCompilationFailure(.metaSchema)
+    }
+    #endif
+
     package static func verifyBuiltin(_ data: Data, size: UInt64, expectedHash: String,
                                       meter: inout JSONWorkMeter) throws {
         try meter.work()
@@ -87,3 +115,7 @@ extension JSONSchemaRegistry {
         guard hash.utf8.elementsEqual(expectedHash.utf8) else { throw JSONSchemaCompilationFailure(.metaSchema) }
     }
 }
+
+#if canImport(ObjectiveC)
+private final class JSONSchemaBundleMarker {}
+#endif

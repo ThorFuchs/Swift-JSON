@@ -22,7 +22,7 @@
     "JSONSchemaTests": 1,
     "JSONRegexRuntimeTests": 1,
     "JSONStreamingTests": 16,
-    "JSONIntegrationTests": 1
+    "JSONIntegrationTests": 10
   },
   "coverage_unmapped": {
     "Sources/JSON/Pointer/JSONLocationComponent.swift": "declaration-only enum",

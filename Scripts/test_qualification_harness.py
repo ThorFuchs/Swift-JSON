@@ -33,12 +33,17 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(set(result['modules']), {'JSON','JSONPatch'})
 
     def test_integration_bundle_does_not_create_a_library_denominator(self):
-        self.policy['root_functions']['JSONIntegrationTests'] = 19
+        self.policy['root_functions']['JSONIntegrationTests'] = 20
         self.policy['coverage_modules'] = ['JSON', 'JSONPatch']
         result = validate_export(self.export, self.root, self.policy)
         self.assertEqual(set(result['modules']), {'JSON', 'JSONPatch'})
         self.export['data'][0]['files'].pop()
         with self.assertRaisesRegex(ValueError, 'Incomplete library export'):
+            validate_export(self.export, self.root, self.policy)
+
+    def test_module_policy_cannot_hide_a_mapped_library(self):
+        self.policy['coverage_modules'] = ['JSON']
+        with self.assertRaisesRegex(ValueError, 'module policy differs'):
             validate_export(self.export, self.root, self.policy)
 
     def test_omitted_module_is_not_a_higher_percentage(self):

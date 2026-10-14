@@ -88,8 +88,11 @@ def validate_export(export, root=ROOT, policy=DISCOVERY):
                                 percent=100*covered/count if count else None)
         return result
 
+    declared = policy.get('coverage_modules', [name.removesuffix('Tests') for name in policy['root_functions']])
+    if set(declared) != {name.split('/')[1] for name in expected}:
+        raise ValueError('Coverage module policy differs from actual library source')
     modules = {}
-    for module in policy.get('coverage_modules', [name.removesuffix('Tests') for name in policy['root_functions']]):
+    for module in declared:
         names = {name for name in mapped if name.startswith('Sources/' + module + '/')}
         if not names or not totals(names)['regions']['count']:
             raise ValueError('Missing executable module coverage: ' + module)

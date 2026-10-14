@@ -25,7 +25,14 @@ def main():
     bundles = [q for q in candidates if q.is_dir() and q.suffix in ('.bundle','.resources')]
     assert len(bundles) == 1, 'Missing/ambiguous installed schema bundle'
     bundle = bundles[0]; files = sorted(q for q in bundle.rglob('*') if q.is_file())
-    resource = bundle / 'Draft2020-12/schema.json'; original = resource.read_bytes()
+    base = bundle / 'Contents/Resources' if (bundle/'Contents').is_dir() else bundle
+    expected = {'schema.json','Provenance.json'} | {'meta/'+name+'.json' for name in
+        ['applicator','content','core','format-annotation','format-assertion','meta-data','unevaluated','validation']}
+    prefix = base.relative_to(bundle).as_posix()
+    installed = {(base/'Draft2020-12'/name).relative_to(bundle).as_posix() for name in expected}
+    if prefix != '.': installed.add('Contents/Info.plist')
+    assert {q.relative_to(bundle).as_posix() for q in files} == installed, 'Unexpected installed bundle contents'
+    resource = base / 'Draft2020-12/schema.json'; original = resource.read_bytes()
     receipt['bundle'] = dict(layout=bundle.name, files=[dict(path=q.relative_to(bundle).as_posix(),sha256=hashlib.sha256(q.read_bytes()).hexdigest()) for q in files])
     receipt['executable_sha256'] = hashlib.sha256(executable.read_bytes()).hexdigest()
     run('intact', [str(executable),'intact'], 'DISTRIBUTION intact nine_offline_resources')

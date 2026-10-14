@@ -193,13 +193,17 @@ private func composition(_ account: inout Account, shared: CompiledJSONSchema) t
     #expect(bytes == Array("[1".utf8) && calls == 2 && report == nil)
 }
 @Test func qaE2EAwaitedSinkCancellationKeepsOnlyAcceptedBytes() async {
-    let sink = Output(cancelAt: 2)
-    let error = await Task { () -> (any Error)? in
-        do { _ = try await JSONAsyncWriter(chunkSize: 2).writeWithReport(.array([1,2,3])) { try await sink.accept($0) }; return nil }
-        catch { return error }
-    }.value
-    let (bytes, calls) = await sink.snapshot()
-    #expect(error is CancellationError && bytes == Array("[1,2".utf8) && calls == 2)
+    // Final full-chunk acceptance is a distinct cancellation fault point: there
+    // may be no later byte reservation to detect it on the writer's behalf.
+    for (value, size, cancelAt, prefix) in [(JSON.array([1,2,3]), 2, 2, "[1,2"), (JSON.number(.init(integer: 7)), 1, 1, "7")] {
+        let sink = Output(cancelAt: cancelAt)
+        let error = await Task { () -> (any Error)? in
+            do { _ = try await JSONAsyncWriter(chunkSize: size).writeWithReport(value) { try await sink.accept($0) }; return nil }
+            catch { return error }
+        }.value
+        let (bytes, calls) = await sink.snapshot()
+        #expect(error is CancellationError && bytes == Array(prefix.utf8) && calls == cancelAt)
+    }
 }
 @Test func qaE2EAnnotationsFromFailedBranchesDoNotAuthorizeProperties() throws {
     let raw = try JSONParser().parse(#"{"anyOf":[{"properties":{"a":{"const":1}},"required":["a"]},{"properties":{"b":{"const":2}},"required":["b"]}],"unevaluatedProperties":false}"#)
@@ -209,6 +213,14 @@ private func composition(_ account: inout Account, shared: CompiledJSONSchema) t
     #expect(try validator.validate(JSONParser().parse(#"{"b":2}"#), against: shared).isValid)
     let invalid = try validator.validate(JSONParser().parse(#"{"a":0,"b":2}"#), against: shared)
     #expect(!invalid.isValid && invalid.issues.contains { $0.instanceLocation == (try? JSONPointer(parsing: "/a")) && $0.keywordLocation == (try? JSONPointer(parsing: "/unevaluatedProperties")) })
+    // A failed branch can still have successfully evaluated children. Their
+    // annotations must not authorize a sibling branch's unevaluated properties.
+    let failedParent = try JSONParser().parse(#"{"anyOf":[{"properties":{"a":true},"required":["missing"]},{"properties":{"b":true},"required":["b"]}],"unevaluatedProperties":false}"#)
+    let failedPlan = try JSONSchemaCompiler().compile(JSONSchemaDocument(failedParent))
+    let failedResult = try validator.validate(JSONParser().parse(#"{"a":1,"b":2}"#), against: failedPlan)
+    #expect(!failedResult.isValid)
+    #expect(failedResult.issues.contains { $0.instanceLocation == (try? JSONPointer(parsing: "/a")) && $0.keywordLocation == (try? JSONPointer(parsing: "/unevaluatedProperties")) })
+
 }
 
 @Test func qaE2EExactScalarAndIntegerConstraintsRejectNearMatches() throws {
