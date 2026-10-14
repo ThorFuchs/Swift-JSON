@@ -4,7 +4,7 @@
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "branch": "codex/1.4-json-cli-integration",
-  "status": "Portable C5 implemented/tested; final head/distribution checks pending and provider prerequisites blocked",
+  "status": "Resource-fix successor: native/safety/WASI/mobile passed; final archive/hosted closure belongs to immutable return records",
   "gates": {
     "C0": "partial",
     "C1": "passed",
@@ -21,13 +21,13 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 297,
+  "root_test_functions": 298,
   "root_parameter_cases": 199,
-  "native_source_manifest_sha256": "68463696a494417a6509e7330cec0343a9199cb10f806cadfe4ff4d7506c9964",
+  "native_source_manifest_sha256": "c81e1eb3526a2f67546af9a1d906638ef1b506721390876d4bab8da5343619f8",
   "qualified_lanes": [
     "native",
     "safety",
-    "docs"
+    "wasm"
   ],
   "remaining_foundation_requirements": [
     "final-head hosted Linux/native checks",
@@ -89,6 +89,14 @@
       "root_parameter_cases": 199,
       "head": "8d00757022a753adc57a359be6bb4fd5307b0e8d",
       "pr": 26
+    },
+    {
+      "branch": "codex/1.4-json-cli-integration",
+      "head": "9a773f34fd35aa686ddf9d28bb0546621f3e9000",
+      "status": "Hosted seven checks passed, then clean installed missing-resource probe trapped; candidate superseded",
+      "root_test_functions": 297,
+      "integration_subprocess_cases": 36,
+      "source_archive_sha256": "cf72bb6c31976fc2c6020f66264d57f53f54adf7b873e048e23cabbaded97411"
     }
   ],
   "query_functions": 24,
@@ -109,9 +117,10 @@
   "inherited_passed": 154,
   "inherited_policy": 14,
   "integration_functions": 6,
-  "integration_subprocess_cases": 36,
+  "integration_subprocess_cases": 37,
   "new_cases_observed": 111,
   "new_cases_passed": 109,
   "new_cases_blocked": 2,
-  "release_ready": false
+  "release_ready": false,
+  "freeze_closure": "Final source/archive and hosted receipts are recorded in the materialized return pack without rewriting this frozen source."
 }
