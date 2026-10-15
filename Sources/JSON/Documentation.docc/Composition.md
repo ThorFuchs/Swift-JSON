@@ -79,7 +79,11 @@ func visit(_ scope: borrowing JSONCompositionScope) throws {
 ```
 
 Apple Swift 6.4.0.34.1 crashed during SIL generation for a nested local function
-that captured the borrowed scope. An explicit borrowed helper parameter compiles
+that captured the borrowed scope, and for direct escaping-closure capture.
+Bound method references also trigger that verifier defect. These crashes are
+recorded compiler defects, not intended diagnostic passes. Use explicit helper
+calls rather than forming a method value.
+An explicit borrowed helper parameter compiles
 without changing the public ownership model. Avoid that compiler pattern until
 it is fixed. Separate expected-failing SwiftPM builds qualify the prohibited
 copy, escape, async, Sendable, construction, replacement and ledger-access forms.

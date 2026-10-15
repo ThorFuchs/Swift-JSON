@@ -25,3 +25,18 @@ Apple Swift 6.4.0.34.1 has a SIL-generation crash for a nested local function
 capturing the borrowed scope. Explicit borrowed helper parameters compile; the
 positive consumer uses that shape. No unsafe annotations or compiler flags are
 needed. Platform receipts and the captured crash are reported with the handoff.
+
+The direct escaping-closure capture shape also crashes the observed 6.4 compiler
+during SIL ownership verification (`Have operand with incompatible ownership?!`,
+`copy_addr`). It is preserved under `CompilerBugs` and in failed exploratory
+receipts; it is not counted as an intended compiler-negative pass. The negative
+escape probe instead attempts to return an escaping closure from an explicit
+borrowed-parameter helper and requires a normal ownership diagnostic. These
+compiler defects remain usability/qualification limitations, not runtime passes.
+
+Forming a bound method reference also triggers the same observed SIL verifier
+crash, both directly and through a borrowed helper. Those two reproducers are
+retained separately as compiler limitations. Call an explicit borrowed helper
+instead of forming a method value. The return probe uses explicit `return`; an
+unused noncopyable expression can infer Void and does not attempt escape.
+The storage probe explicitly consumes to test the borrowed-value restriction.

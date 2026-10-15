@@ -1,4 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
 import JSONSchema
-let scope = try JSON.withComposition { scope in scope }
+let scope = try JSON.withComposition { scope in return scope }

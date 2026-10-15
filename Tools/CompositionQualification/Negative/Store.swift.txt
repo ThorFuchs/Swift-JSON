@@ -2,4 +2,4 @@
 import JSON
 import JSONSchema
 var saved: JSONCompositionScope?
-_ = try JSON.withComposition { scope in saved = scope }
+_ = try JSON.withComposition { scope in saved = consume scope }
