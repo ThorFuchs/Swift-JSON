@@ -126,6 +126,12 @@ class HarnessTests(unittest.TestCase):
         self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
         for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
+        proof = ['python3', '-B', 'Scripts/qualify_composition_proof.py']
+        summary = 'COMPOSITION_PROOF passed public_tests=26 configurations=2 mutants_rejected=2 compiler_negative=14'
+        self.assertTrue(check_result(proof, 0, summary)[0])
+        for broken in ['', summary.replace('26', '25'), summary.replace('rejected=2', 'rejected=0'), summary.replace('negative=14', 'negative=13')]:
+            self.assertFalse(check_result(proof, 0, broken)[0])
+        self.assertFalse(check_result(proof, 1, summary)[0])
         # Scoped portability lanes retain exact discovery and safety rather
         # than describing an exit-zero subset as full qualification.
         output = pathlib.Path(__file__).resolve().parents[1] / 'Artifacts/HarnessProbe'

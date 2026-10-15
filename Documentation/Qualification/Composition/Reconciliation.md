@@ -1,0 +1,70 @@
+# Composition reconciliation: PR35 and PR36
+
+PR35 landed as main 30631e8fe60201518c00544c172340ec6576e0d5. This follow-up
+reconciles that implementation with proof head
+bab6316d31e9c1aca30ba3f9040b20edf1e6ae85 from PR36. The independent original
+proofs and source archives remain historical evidence, not receipts for this tree.
+No downstream importer, release or dependency adoption is included.
+
+## Selected implementation
+
+There is one noncopyable borrowed `JSONCompositionScope`, one private state and
+one native ledger. PR35's native parse, Pointer, trusted admission, URI and
+terminal-failure routes are retained. JSON remains independent of JSONSchema.
+The original `reserveExternalLogicalBytes(_:count:)` declaration is retained;
+the explicit `overhead:` overload checks multiplication and addition before growth.
+
+PR36 adds per-document input capacity retirement with cumulative reported counts
+and persistent accepted-capacity history. It also prepays completion's independent
+49-slot report: 424 logical bytes and 50 work units. These are intentional
+composition accounting corrections. Existing standalone API counters, all 49
+metric meanings, finite profiles and native accounting weights are unchanged.
+Original continuation health/identity is checked before and after completion.
+A caught owned quota, arithmetic, syntax or cancellation failure cannot finalize.
+
+The 12 original root behavior functions and five external reference-import
+functions remain, including the failed direct 128/128 capacity hypothesis and
+eight characterized cells. Their assertions now include report/result overlap;
+the same native work still refuses the direct adapter after 98 references.
+The two supplementary native functions and 26 independent public functions from
+PR36 add cancellation boundaries, original-ledger identity, per-source capacity,
+exact values, event-ledger thresholds and deliberate omitted-charge mutants.
+There are 560 native / 544 Linux root functions and 325 parameter invocations.
+The 126 restored identities and 49 exact public cap probes remain required.
+
+## Reproducible checks
+
+Run Scripts/ci.py lanes `composition`, `composition-proof`, `native`, `safety`,
+`docs` and `archive` on the supported native toolchain. Linux architecture jobs
+retain `linux` and `linux-safety` plus both focused composition lanes. Existing
+protected check names/settings are preserved. The focused proof is a separate
+job so root discovery guards and reference-import cardinalities stay explicit.
+The original lane requires 12 root / five external functions, eight scale cells,
+11 intended compiler diagnostics and distinct consumers. The proof lane requires
+two root / 26 public functions, two rejected mutants and 14 intended diagnostics.
+Crashes never count as normal diagnostic rejection. Exact discovery guards retain
+15 Python harness functions; additional rejection assertions live in that harness.
+
+Compiler reductions and qualified explicit-borrow helper forms are preserved in
+`Tools/CompositionQualification/CompilerBugs`. Known Swift 6.4 inferred-capture and
+bound-method-value crashes remain usability limits. No unsafe annotation or
+experimental ownership flag is added. Public products remain seven and root
+external dependencies remain empty. Physical devices are not requalified here;
+portable compilation/runtime evidence must identify its actual host and SDK.
+
+## Performance and evidence policy
+
+The controlled Release comparison uses main 30631e8 as its full pinned baseline.
+Both existing PRs' comparisons against 037e735 remain historical. Identical public
+harnesses, runtime/resource paths and fixtures compare unchanged APIs and the
+composition document route. Existing API counters must match; composition's
+expected completion delta is exactly 50 work / 424 logical bytes. Five operations
+on two inputs, nine samples per process and ABBA ordering yield 18 samples per
+revision/row. Each pre/post admission requires three interval samples >=90% idle.
+The review trigger stays 10%; operational refusals and blocked/noisy timing are
+never evaluated successes. No RSS, throughput or arbitrary adapter honesty claim.
+
+Final commands, exits, source hashes, manifest-backed archives, materialized hosted
+receipts, performance disposition and review findings belong in the maintainer's
+return evidence. Source documents here specify replay and acceptance, not a
+fabricated pass. Private evidence and build caches are excluded from source archives.

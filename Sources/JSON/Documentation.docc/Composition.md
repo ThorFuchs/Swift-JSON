@@ -1,7 +1,7 @@
 # Compose native operations
 
 Run synchronous native operations and explicitly instrumented adapter work with
-one finite ledger. The experimental composition facade does not meter arbitrary
+one finite ledger. The composition facade does not meter arbitrary
 callback instructions, allocator sizes, physical RSS, or Foundation instructions.
 
 ```swift
@@ -9,7 +9,7 @@ import Foundation
 import JSON
 import JSONSchema
 
-let report = try JSON.withComposition { scope in
+let report = try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
     let document = try scope.parseDocument(Data(#"{"count":9007199254740993}"#.utf8))
     try scope.reserveExternalLogicalBytes(64) // Adapter-declared output frame weight.
     try scope.chargeExternalWork(1)           // Before the adapter's corresponding work.
@@ -34,10 +34,20 @@ claim about opaque storage. External loops must charge/checkpoint regularly.
 charges each copied byte and runs the native source-map parser on the same meter.
 The original caller Data is excluded; the array copy remains conservatively
 reserved alongside decoded values, source bytes, spans and final output.
-Version 1 native weights and internal scratch releases follow the resource
+Each document applies `inputBytes` independently. Completed input counts remain
+in the cumulative report; work, logical retention, accepted-capacity history and
+terminal health never restart. Other native capacities remain conservative across
+the scope. Version 1 native weights and internal scratch releases follow the resource
 contract. Reported peak is this ledger's conservative logical peak, not a sum of
 independent operation peaks. Final retained bytes include all unreleased
 reservations, even when the callback returns a smaller result.
+
+Completion reserves 424 logical bytes (32 header bytes plus 49 UInt64 slots)
+before allocating the independent report counter buffer. It charges 49 counter
+copies plus one final aggregate-work update: 50 work units. The returned result
+and all conservative reservations remain live through this final admission.
+An adapter must also reserve its result containers before growth; the generic
+result type does not reveal arbitrary storage to the library.
 
 All owned helper errors are terminal, including syntax and missing-target errors.
 Catching one cannot produce a successful report. Scope exit rethrows the original
@@ -56,3 +66,32 @@ unforgeable receipt, and it cannot establish that an arbitrary callback charged
 all its work. An adopting adapter must own its final accounting boundary and audit
 all external work and reservations. Independent reports cannot retroactively
 certify one enforced invocation.
+
+
+## Compiler and portability boundary
+
+Pass the borrowed scope explicitly to adapter helper functions:
+
+```swift
+func visit(_ scope: borrowing JSONCompositionScope) throws {
+    try scope.chargeExternalWork(1)
+}
+```
+
+Both Apple Swift 6.4.0.34.1 and Swift.org 6.4 reproduce an ownership-verifier
+crash when a nested helper captures an inferred closure parameter. Explicitly
+annotate `(scope: borrowing JSONCompositionScope)` as above: the nested synchronous
+helper compiles, shares the original ledger, and escaping capture receives the
+normal borrowed-parameter diagnostic. Ordinary calls also work through explicit
+borrowed helper parameters.
+
+Forming a bound method reference such as `scope.checkpoint` still crashes both
+observed compilers, including through an explicit borrowed helper. Call the method
+or a helper directly. Reduced reproducers with no JSON imports are retained in the
+qualification package. These are compiler defects, not intended negative-test
+passes; no experimental flags or weaker ownership model are used.
+
+Separate expected-failing SwiftPM builds qualify copying, explicit capture escape,
+async suspension, Sendable, construction, replacement and ledger-access attempts.
+See the qualification package for the exact executed scope. Cross-compilation is
+evidence for the observed SDK only and does not establish Linux runtime safety.

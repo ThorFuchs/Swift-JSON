@@ -148,3 +148,12 @@ The focused composition lane also runs on the Linux architecture jobs and Native
 Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
 The qualification harness now has 15 regression functions, retaining its original 14.
 See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.
+
+The additive `composition-proof` lane runs two native boundary functions and the
+independent 26-function public suite in both configurations, two omitted-charge
+mutants and 14 separate diagnostic builds. Both focused lanes run on Linux;
+Native / composition-proof is separate from the protected names. The original
+reference-load lane and its exact counts remain required. The controlled
+composition performance job compares pinned main 30631e8 with this successor;
+[the reconciliation record](../Qualification/Composition/Reconciliation.md) states
+the expected accounting delta and unchanged idle/review thresholds.

@@ -46,3 +46,13 @@ and all 11 compiler rejection cases. Five cells complete and three deliberately 
 those refusals remain operational errors. The initial direct 128/128 balanced capacity assumption
 failed and is preserved. Staging the reference array on the same scope qualifies that bounded target
 without changing core APIs or limits. See ../../Documentation/Architecture/CompositionQualification.md.
+
+## Reconciled independent accounting proof
+
+Run `python3 Scripts/ci.py --lane composition-proof` in addition to the reference-import
+lane above. It runs 26 public functions in Debug/Release, two actual omitted-charge
+mutants and 14 unrelated SwiftPM diagnostic builds. `Negative/` preserves the 11
+original compiler cases; `ProofNegative/` contains the independent 14-case suite.
+Compiler crashes are retained separately under `CompilerBugs/` and never satisfy
+an intended rejection. The package uses ordinary public JSON/JSONSchema products.
+See [the reconciliation record](../../Documentation/Qualification/Composition/Reconciliation.md).

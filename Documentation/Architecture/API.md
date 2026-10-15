@@ -244,3 +244,24 @@ includes `revisionKind: "source-sha256"` and `revision: "sha256:<hex>"`. This is
 SHA-256 of the ordered Package.swift plus Sources content manifest, excluding only
 the generated identity file itself. It is not a Git commit, binary digest or claim
 of publication. Generation/checking needs no Git, time, environment or network.
+
+
+## Borrowed native composition
+
+`JSON.withComposition(limits:_:)` synchronously borrows a noncopyable,
+non-Sendable `JSONCompositionScope` and returns `JSONOperationReport<Result>`
+only after healthy finalization. The scope has no public initializer. Public
+methods parse a source-backed `Data` document, admit an existing value, construct,
+parse, append and resolve native Pointers, charge external work, reserve checked
+external logical bytes, checkpoint and tighten limits. Importing JSONSchema adds
+`uri(_:relativeTo:)` and `removingFragment(_:)`; JSON has no sibling dependency.
+URI operations use the core domain, with no compiled-plan or compilation-work
+charge. This slice does not compose schema compilation/evaluation or Codable.
+
+All owned errors latch the original failure. Neither a caught failure, a nested
+independent invocation nor later callback failure permits a completed outer
+report. Scope handles cannot escape the synchronous borrow or cross suspension.
+Native values may be returned; adapter-owned containers must be prepaid. Reports
+are ordinary publicly constructible values, not certification of arbitrary
+callback work. See [composition qualification](../Qualification/Composition/README.md)
+and the JSON DocC composition guide for the exact accounting/ownership contract.

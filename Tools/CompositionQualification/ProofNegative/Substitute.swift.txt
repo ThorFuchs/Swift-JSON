@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+import JSONSchema
+_ = try JSON.withComposition { outer in
+ _ = try JSON.withComposition { inner in swap(&outer, &inner) }
+}

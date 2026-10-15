@@ -44,6 +44,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Throws: Original native failure or cancellation; caught failures stay terminal.
     public func parseDocument(_ data: Data) throws -> JSONDocument {
         try withMeter(domain: .parsing) { meter in
+            try meter.beginCompositionDocument()
             try meter.require(.inputBytes, UInt64(data.count))
             try meter.retain(UInt64(data.count))
             var bytes: [UInt8] = []
@@ -124,6 +125,15 @@ public struct JSONCompositionScope: ~Copyable {
         try withMeter { try $0.work(units) }
     }
 
+    /// Reserves checked adapter bytes before growth, retaining the original API shape.
+    /// - Parameters:
+    ///   - bytes: Logical weight per unit.
+    ///   - count: Number of units, multiplied with checked arithmetic.
+    /// - Throws: Terminal quota/overflow failure or cancellation.
+    public func reserveExternalLogicalBytes(_ bytes: UInt64, count: UInt64 = 1) throws {
+        try reserveExternalLogicalBytes(bytes, count: count, overhead: 0)
+    }
+
     /// Reserves adapter-owned logical bytes until scope completion, without refund.
     ///
     /// Call before growth. Separate calls count separately even for physical aliases.
@@ -132,8 +142,9 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Parameters:
     ///   - bytes: Logical weight per unit.
     ///   - count: Number of units, multiplied with checked UInt64 arithmetic.
+    ///   - overhead: Additional logical header or bookkeeping bytes, added before growth.
     /// - Throws: Quota/overflow failure or cancellation, permanently terminal.
-    public func reserveExternalLogicalBytes(_ bytes: UInt64, count: UInt64 = 1) throws {
+    public func reserveExternalLogicalBytes(_ bytes: UInt64, count: UInt64 = 1, overhead: UInt64) throws {
         try withMeter { meter in
             let (total, overflow) = bytes.multipliedReportingOverflow(by: count)
             guard !overflow else {
@@ -141,7 +152,8 @@ public struct JSONCompositionScope: ~Copyable {
                     domain: .core, metric: .retainedBytes, limit: meter.limits[.retainedBytes],
                     attemptedUsage: nil, overflow: true))
             }
-            try meter.retain(total)
+            let complete = try meter.adding(.retainedBytes, total, overhead)
+            try meter.retain(complete)
         }
     }
 
@@ -163,7 +175,9 @@ public struct JSONCompositionScope: ~Copyable {
         do {
             let result = try body(scope)
             try original.check(scope.state.context.meter)
-            return .init(result: result, statistics: scope.state.context.meter.statistics())
+            let statistics = try scope.withMeter { try $0.compositionStatistics() }
+            try original.check(scope.state.context.meter)
+            return .init(result: result, statistics: statistics)
         } catch {
             // A caller error cannot conceal an earlier native terminal failure or substitution.
             try original.check(scope.state.context.meter)
