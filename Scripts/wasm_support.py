@@ -6,7 +6,7 @@ from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
-COUNTS = {'JSONTests': 119, 'JSONBridgesTests': 10, 'JSONSchemaTests': 55, 'JSONRegexRuntimeTests': 12,
+COUNTS = {'JSONTests': 119, 'JSONBridgesTests': 10, 'JSONSchemaTests': 69, 'JSONRegexRuntimeTests': 12,
           'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 61}
 GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
 
@@ -18,7 +18,7 @@ def main():
     result = {'schema_version': 1, 'status': 'running', 'target': 'wasm32-unknown-wasip1',
               'sdk': SDK, 'commands': [], 'modules': [], 'root_counts': COUNTS,
               'wasmkit_scope': '14 public consumer functions, 49 caps, 20 rooted vectors, debug/release command parity',
-              'node_scope': 'complete debug/release root suites, caps, public consumers and independent qualification'}
+              'node_scope': 'complete core/HTML debug/release root suites, caps, public consumers and independent qualification; CLI runtime disposition is separate'}
     def save():
         (output / 'wasi.json').write_text(json.dumps(result, indent=2) + '\n')
     def run(name, command, check=lambda c, t: c == 0, timeout=1800):

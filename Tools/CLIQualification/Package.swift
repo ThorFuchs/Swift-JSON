@@ -1,9 +1,12 @@
 // swift-tools-version: 6.4
 // SPDX-License-Identifier: Apache-2.0
 import PackageDescription
-let package = Package(name: "CLIQualification", platforms: [.macOS("27.0")],
-    products: [.executable(name: "CLIExactCompare", targets: ["CLIExactCompare"])],
+let package = Package(name: "CLIQualification", platforms: [.macOS("27.0"), .iOS("27.0")],
+    products: [.executable(name: "CLIExactCompare", targets: ["CLIExactCompare"]), .executable(name: "ProviderConsumer", targets: ["ProviderConsumer"])],
     dependencies: [.package(name: "Swift-JSON", path: "../..")],
-    targets: [.executableTarget(name: "CLIExactCompare", dependencies: [
+    targets: [.executableTarget(name: "ProviderConsumer", dependencies: [.product(name: "JSON", package: "Swift-JSON"), .product(name: "JSONSchema", package: "Swift-JSON")]), .target(name: "CLIMobileConsumer", dependencies: [
+        .product(name: "JSON", package: "Swift-JSON"), .product(name: "JSONSchema", package: "Swift-JSON"),
+        .product(name: "JSONStreaming", package: "Swift-JSON"), .product(name: "JSONPatch", package: "Swift-JSON"),
+        .product(name: "JSONHTML", package: "Swift-JSON")]), .executableTarget(name: "CLIExactCompare", dependencies: [
         .product(name: "JSON", package: "Swift-JSON"), .product(name: "JSONStreaming", package: "Swift-JSON")])],
     swiftLanguageModes: [.v6])

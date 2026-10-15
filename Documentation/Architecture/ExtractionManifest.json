@@ -188,6 +188,17 @@
       "attribution": "BSD-3-Clause alternative; Licenses/json-schema-spec-BSD-AFL.txt",
       "validation": "Tests/JSONSchemaTests/EvaluationOutputTests.swift",
       "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
+    },
+    {
+      "repository": "Swift-JSON original implementation",
+      "scope": "JSONSchema portable provider profiles/checks, exact Responses fragments and CLI C5 adapters",
+      "provenance": "Original Apache-2.0 code; frozen user-provided provider fixtures copied unchanged from JSONSchema-Provider-Bridges-Specification-v0.1; profile source URLs/dates and individual fixture hashes in Release1.4/ProviderProfiles.json. No upstream algorithm, SDK or network client adapted.",
+      "paths": [
+        "Sources/JSONSchema/Providers",
+        "Tests/Fixtures/Providers",
+        "Scripts/qualify_schema_providers.py",
+        "Tools/CLIQualification/Sources/ProviderConsumer"
+      ]
     }
   ],
   "original_implementation_notes": [
@@ -213,6 +224,8 @@
   "original_notes": [
     "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied.",
     "1.4 inherited CLI qualification fixtures are copied byte-for-byte: RhoePlatform/RhoeJSON pin 51d37acc137422065b07ebeb7e4ecdb2d02b99ee, 119 golden and 49 subset rows. Apache-2.0 license retained in Licenses/RhoeJSON-CLI-Fixtures-Apache-2.0.txt. PlanningDispositions labels are provisional, not evaluated successes. New explicit-stack CLI code is original; old eager JSONValue evaluator and arithmetic were not ported.",
-    "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied."
+    "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied.",
+    "1.4 C5 stream/offline-schema adapters, checked sink handoff, command help and consumers are original Apache-2.0 code. Five NewInputs fixtures are copied byte-for-byte from the maintainer CLI briefing pack 43f8819c57e3d93bc6f7cf561d2d111442e089f2973cb7c62e16e3bd3fd73d0d; these authored data fixtures introduce no runtime dependency. Missing provider helper prerequisites remain blocked rather than adapted or silently rewritten.",
+    "1.4 checked schema resource lookup and its missing/quota/cancellation/install regressions are original Apache-2.0 code. Supported app/framework/command layouts retain all nine official resource pins; no unbounded directory scan, fallback engine or external dependency is introduced."
   ]
 }

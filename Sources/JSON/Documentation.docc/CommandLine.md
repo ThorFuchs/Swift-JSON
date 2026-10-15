@@ -2,7 +2,7 @@
 
 Run strict JSON workflows through the package's `swift-json` executable.
 
-The prospective 1.4 package keeps five library products and adds one executable.
+The prospective 1.4 package keeps six library products and adds one executable.
 The CLI engine and query runtime are package-private; applications continue to
 choose the library products they need. The root package has no external dependencies.
 
@@ -57,3 +57,22 @@ Advanced filters include lexical functions, reductions, finite collections, scal
 strings, interpolation and staged path mutation. Regex and approximate math remain
 explicit compile errors. Platform distribution and provider-specific adapters retain
 their separate qualification gates. This feature checkout is not a released 1.4 candidate.
+
+## Strict stream and schema commands
+
+```sh
+swift run swift-json stream check --framing ndjson records.ndjson
+swift run swift-json stream array large-array.json
+swift run swift-json schema check schema.json --resource https://example.test/item=item.json
+```
+
+Stream success requires closing syntax and EOF. An accepted stdout prefix may
+precede a late error; named output is installed only after completion. Schema
+check compiles offline and reports metadata; it does not validate an instance.
+`schema provider openai-format SCHEMA --name NAME` produces a strict Responses
+text-format fragment; `openai-tool` produces a flat function tool. Both use the
+public offline JSONSchema helpers, preserve the exact schema and share the CLI's
+cumulative budget. Incompatible declarations exit 1 with bounded issues and no
+candidate. Native errors, quotas and cancellation remain operational failures.
+Apple model/schema bridges remain unavailable. Local compatibility is not remote
+service acceptance. Use `swift-json help COMMAND` for compiled command options.

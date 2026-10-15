@@ -5,8 +5,10 @@ import JSONSchema
 import JSONFilterRuntime
 #if canImport(Darwin)
 import Darwin
-#else
+#elseif canImport(Glibc)
 import Glibc
+#elseif canImport(WASILibc)
+import WASILibc
 #endif
 
 /// Failure diagnostics use prepaid, finite work and ownership. A terminal native
@@ -34,6 +36,15 @@ package struct CLIDiagnostics {
             case .invalidConfiguration: return .init(.usage, "invalidHTMLConfiguration")
             case .limitExceeded(let metric, let limit, let attempted): return .init(.resource, "limitExceeded", metric: metric.rawValue, limit: limit, attemptedUsage: attempted)
             case .counterOverflow(let metric): return .init(.resource, "counterOverflow", metric: metric.rawValue, overflow: true)
+            }
+        }
+        if let failure = error as? JSONSchemaProviderFailure {
+            switch failure {
+            case .invalidConfiguration: return .init(.usage, "invalidProviderLimits")
+            case .profileMismatch: return .init(.usage, "providerProfileMismatch")
+            case .invalidMetadata: return .init(.usage, "invalidProviderMetadata")
+            case .incompatible: return .init(.input, "providerIncompatible") // The schema command handles completed compatibility separately.
+            case .limitExceeded(let metric, let limit, let attempted): return .init(.resource, "limitExceeded", metric: "provider." + metric.rawValue, limit: limit, attemptedUsage: attempted, overflow: attempted == nil)
             }
         }
         if let failure = error as? JSONSchemaCompilationFailure { return .init(.input, "schemaCompilation." + failure.category.rawValue) }
@@ -115,8 +126,10 @@ package struct CLIDiagnostics {
             let count = bytes.withUnsafeBytes {
                 #if canImport(Darwin)
                 unsafe Darwin.write(STDERR_FILENO, $0.baseAddress!.advanced(by: offset), bytes.count - offset)
-                #else
+                #elseif canImport(Glibc)
                 unsafe Glibc.write(STDERR_FILENO, $0.baseAddress!.advanced(by: offset), bytes.count - offset)
+                #elseif canImport(WASILibc)
+                unsafe WASILibc.write(STDERR_FILENO, $0.baseAddress!.advanced(by: offset), bytes.count - offset)
                 #endif
             }
             guard count > 0 else { break }; offset += count

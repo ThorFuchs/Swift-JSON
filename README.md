@@ -529,3 +529,39 @@ swift build -c release --product swift-json
 .build/release/swift-json validate --schema schema.json input.json
 .build/release/swift-json render input.json --output inspection.html
 ```
+
+### CLI development for 1.4
+
+The isolated 1.4 feature stack adds the `swift-json` executable beside the five
+libraries, with no external root dependencies. Build from the feature source
+with Swift6.4+ (`swift build -c release --product swift-json`), or use
+`swift run swift-json help`. Native qualification requires macOS/SDK27+.
+
+```sh
+swift run swift-json query --compact '.items[] | select(.active) | .name' input.json
+swift run swift-json stream check --framing ndjson records.ndjson
+swift run swift-json render input.json --presentation static --output output.html
+```
+
+Numbers use bounded exact decimal arithmetic; repeating division requires explicit
+`--division-scale N --rounding half-even`. Text and keys preserve decoded Unicode
+scalars. Work is cumulative across compilation, inputs, filters and output. All
+profiles are finite; logical retention is distinct from process RSS. The CLI is
+a specified filter dialect with documented exclusions, rather than a blanket jq
+compatibility claim. It never executes shell filters or fetches references.
+
+See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
+[integration contract](Documentation/Architecture/Release1.4/Integration.md) and
+[acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
+This feature stack is under review; provider prerequisites and any unqualified
+platform rows remain explicit release blockers. It does not change released tags.
+
+### Offline provider fragments (1.4 development)
+
+The development CLI supports `swift-json schema provider openai-format schema.json --name summary`
+and `openai-tool`. The public JSONSchema facade `OpenAIJSONSchemaBridge` checks a frozen strict
+Responses base-model subset and returns native request fragments, with exact values and finite
+cumulative reports. It makes no requests and never rewrites optional properties, keys or numbers.
+Incompatibility exits1; operational errors remain errors. Apple schema/model bridges are separate.
+See the [provider contract](Documentation/Architecture/Release1.4/Providers.md) and
+[compiled public consumer](Tools/CLIQualification/Sources/ProviderConsumer/Main.swift).

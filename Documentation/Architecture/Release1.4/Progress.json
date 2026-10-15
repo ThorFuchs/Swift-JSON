@@ -3,15 +3,15 @@
   "target_release": "1.4.0",
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
-  "branch": "codex/1.4-json-cli-query-advanced",
-  "status": "Advanced native behavior milestone; C5 integration and final distribution/platform closure open",
+  "branch": "codex/1.4-json-cli-integration",
+  "status": "E2 main reconciled without CLI implementation changes; fresh merge-head native/Linux evidence accompanies merge return",
   "gates": {
     "C0": "partial",
-    "C1": "partial",
-    "C2": "partial",
-    "C3": "partial",
-    "C4": "partial",
-    "C5": "not_run"
+    "C1": "passed",
+    "C2": "passed",
+    "C3": "passed",
+    "C4": "passed",
+    "C5": "portable_behavior_qualified_refreshed_merge_receipts_external"
   },
   "foundation_functions": 12,
   "foundation_parameter_cases": 4,
@@ -21,22 +21,13 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 291,
+  "root_test_functions": 395,
   "root_parameter_cases": 199,
-  "native_source_manifest_sha256": "aa742411f3d22bc82c681b03944c12772ad52e41b3773269b0d84b9d4e3a2cbc",
-  "qualified_lanes": [
-    "native",
-    "safety",
-    "docs"
-  ],
+  "native_source_manifest_sha256": null,
+  "qualified_lanes": [],
   "remaining_foundation_requirements": [
-    "clean-source reproduction",
-    "selected mobile SDK consumers",
-    "slow/partial/no-progress sink probes",
-    "query compile exit 3 and full exit precedence",
-    "actual operation-site coverage for all 16 CLI caps",
-    "inherited corpus/oracle compatibility dispositions",
-    "complete query grammar with C3/C4 and auxiliary binding subprocess coverage"
+    "full WASI CLI host/signal qualification remains a limited disposition",
+    "Apple GenerationSchema/DynamicGenerationSchema bridge is separate, unimplemented scope"
   ],
   "history": [
     {
@@ -83,6 +74,65 @@
       "root_test_functions": 266,
       "root_parameter_cases": 199,
       "native_source_manifest_sha256": "33439f5716ac7e33e01e477db4cb018547618fa7b74885867bb2b290ba43d7e0"
+    },
+    {
+      "branch": "codex/1.4-json-cli-query-advanced",
+      "status": "Advanced native behavior milestone; C5 integration and final distribution/platform closure open",
+      "root_test_functions": 291,
+      "root_parameter_cases": 199,
+      "head": "8d00757022a753adc57a359be6bb4fd5307b0e8d",
+      "pr": 26
+    },
+    {
+      "branch": "codex/1.4-json-cli-integration",
+      "head": "9a773f34fd35aa686ddf9d28bb0546621f3e9000",
+      "status": "Hosted seven checks passed, then clean installed missing-resource probe trapped; candidate superseded",
+      "root_test_functions": 297,
+      "integration_subprocess_cases": 36,
+      "source_archive_sha256": "cf72bb6c31976fc2c6020f66264d57f53f54adf7b873e048e23cabbaded97411"
+    },
+    {
+      "branch": "codex/1.4-json-cli-integration",
+      "head": "7a1334378493a72c08d428d475c26ccb7120c607",
+      "status": "Renderer-pinned immutable candidate; native/Linux passed, main merge probe28 conflicts",
+      "root_test_functions": 298,
+      "root_parameter_cases": 199,
+      "archive_sha256": "d7789117654d298bc9fe5157d71fe525761b7122ba4b5c59d311220d8c5e2be5"
+    },
+    {
+      "branch": "codex/1.4-json-cli-integration",
+      "status": "Reconciled onto main9517233; local native/safety/docs passed; final hosted receipts tracked separately",
+      "gates": {
+        "C0": "partial",
+        "C1": "passed",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "portable_behavior_qualified_final_head_pending"
+      },
+      "root_test_functions": 348,
+      "root_parameter_cases": 199,
+      "native_source_manifest_sha256": "792ade5810b9d8d2a43c3cd66fdebbe2895640fd1cea52ff19fef05cc36b0475",
+      "new_cases_observed": 111,
+      "new_cases_passed": 109,
+      "new_cases_blocked": 2,
+      "head": "aded3c9930f580bd4fb902bba002ab75ed199a7b",
+      "hosted_checks": 35,
+      "archive_sha256": "5c62427fd0f5a8f94884117fbc756e8c54e0ab7e45885d5dc7d0b53ba2b51639",
+      "return_sha256": "48a3fae0e1144f420d62fa552676a467cabc879605c3bdfc84d9f3e9e927ca15"
+    },
+    {
+      "head": "c3760730dc333a84810bba53cde4da339ada90af",
+      "status": "Portable C5 qualified: seven hosted checks, local native/safety/docs and clean archive CLI lane passed",
+      "root_test_functions": 369,
+      "linux_test_functions": 355,
+      "root_parameter_cases": 199,
+      "ci_receipts": 11,
+      "resolved_evidence_references": 172,
+      "new_cases_passed": 111,
+      "new_cases_blocked": 0,
+      "archive_sha256": "c452a30737c970c3ed3a99752de835cbd6feab98212f3635553f0572aa6768dc",
+      "return_sha256": "58a5c8ca2f2d381820e37d472dc5de040f2774037f73858c8237c1aab3215001"
     }
   ],
   "query_functions": 24,
@@ -94,12 +144,29 @@
   "arithmetic_oracle_sha256": "57b2affc52c872fdbc9e6cb25168bdd8b5999db6d8e5d8a988ff99cbf2c7accb",
   "arithmetic_vectors": 17,
   "arithmetic_vectors_passed": 17,
-  "cli_site_checks": 18,
+  "cli_site_checks": 33,
   "cli_site_metrics": 16,
   "advanced_functions": 25,
   "advanced_vectors": 38,
   "inherited_observed": 168,
   "inherited_evaluated": 154,
   "inherited_passed": 154,
-  "inherited_policy": 14
+  "inherited_policy": 14,
+  "integration_functions": 6,
+  "integration_subprocess_cases": 37,
+  "new_cases_observed": 111,
+  "new_cases_passed": 111,
+  "new_cases_blocked": 0,
+  "release_ready": false,
+  "freeze_closure": "Final source/archive and hosted receipts are recorded in the materialized return pack without rewriting this frozen source.",
+  "main_reconciled": "9517233ef0a3c1b961b738df58fe3ee4081d780c",
+  "linux_root_test_functions": 355,
+  "main_conflicts_resolved": true,
+  "provider_functions": 13,
+  "provider_cli_functions": 8,
+  "provider_public_consumer_cases": 14,
+  "provider_subprocess_cases": 37,
+  "provider_profile_revision": "2026-10-15.v1",
+  "linux_test_functions": 381,
+  "merge_base": "e8c3e4bd9ae40d797f07a527ea98879acee3c057"
 }

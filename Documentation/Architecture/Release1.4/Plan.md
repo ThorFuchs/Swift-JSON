@@ -39,4 +39,5 @@ Native and sanitizer receipts, subprocess outcomes, commands, toolchain, source 
 binary identities accompany every qualified milestone. All 49 baseline probes and
 independent-suite exclusions remain required and separate from CLI additions.
 
+The stack has since been reconciled onto main9517233, retaining the complete1.3 renderer/export implementation. See [reconciliation](Reconciliation.md). Original renderer-pinned evidence remains historical; fresh current-source checks qualify the restacked heads.
 Main reconciliation for merging PR23–PR27 preserves E2 main e8c3e4b and its public bridges, ergonomics behavior, six DocC catalogs and compiler consumers. Only the CLI executable is added to those six libraries. Exact combined module inventories and all 49 baseline probes remain mandatory.
