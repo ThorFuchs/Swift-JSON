@@ -26,7 +26,7 @@
     "native_lane": "All19 production commands passed across retained13-command run plus6-command source-equivalent continuation after ENOSPC; no uninterrupted full-lane exit0 claimed",
     "docs": "passed:1005/1005 comments,9 catalogs,1530 routes,7636 links",
     "wasi": "real public release consumer passed Node and WasmKit; consumer scope only",
-    "linux": "maintainer-authorized feature-branch push and ARM64/x86_64 CI pending execution",
+    "linux": "run38679209482:both safety lanes passed; both full lanes passed9 commands then failed Git ownership metadata before DSL compiler imports. Narrow exact-checkout trust/SHA verification added to ephemeral workflow; rerun pending.",
     "completion": "passed:3 actual SourceKit-LSP contexts; interactive Xcode UI not claimed"
   },
   "native_results": "Documentation/Qualification/DualDSL/NativeResults.md"
