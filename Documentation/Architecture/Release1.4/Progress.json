@@ -4,14 +4,14 @@
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "branch": "codex/1.4-json-cli-integration",
-  "status": "Portable C5 providers implemented and native behavior-qualified; current-head broad native/safety/docs/Linux qualification and reproduction are recorded in the new return",
+  "status": "E2 main reconciled without CLI implementation changes; fresh merge-head native/Linux evidence accompanies merge return",
   "gates": {
     "C0": "partial",
     "C1": "passed",
     "C2": "passed",
     "C3": "passed",
     "C4": "passed",
-    "C5": "portable_behavior_qualified_final_head_pending"
+    "C5": "portable_behavior_qualified_refreshed_merge_receipts_external"
   },
   "foundation_functions": 12,
   "foundation_parameter_cases": 4,
@@ -21,12 +21,11 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 369,
+  "root_test_functions": 395,
   "root_parameter_cases": 199,
   "native_source_manifest_sha256": null,
   "qualified_lanes": [],
   "remaining_foundation_requirements": [
-    "current provider-head native/safety/docs/Linux receipts and clean reproduction",
     "full WASI CLI host/signal qualification remains a limited disposition",
     "Apple GenerationSchema/DynamicGenerationSchema bridge is separate, unimplemented scope"
   ],
@@ -121,6 +120,19 @@
       "hosted_checks": 35,
       "archive_sha256": "5c62427fd0f5a8f94884117fbc756e8c54e0ab7e45885d5dc7d0b53ba2b51639",
       "return_sha256": "48a3fae0e1144f420d62fa552676a467cabc879605c3bdfc84d9f3e9e927ca15"
+    },
+    {
+      "head": "c3760730dc333a84810bba53cde4da339ada90af",
+      "status": "Portable C5 qualified: seven hosted checks, local native/safety/docs and clean archive CLI lane passed",
+      "root_test_functions": 369,
+      "linux_test_functions": 355,
+      "root_parameter_cases": 199,
+      "ci_receipts": 11,
+      "resolved_evidence_references": 172,
+      "new_cases_passed": 111,
+      "new_cases_blocked": 0,
+      "archive_sha256": "c452a30737c970c3ed3a99752de835cbd6feab98212f3635553f0572aa6768dc",
+      "return_sha256": "58a5c8ca2f2d381820e37d472dc5de040f2774037f73858c8237c1aab3215001"
     }
   ],
   "query_functions": 24,
@@ -154,5 +166,7 @@
   "provider_cli_functions": 8,
   "provider_public_consumer_cases": 14,
   "provider_subprocess_cases": 37,
-  "provider_profile_revision": "2026-10-15.v1"
+  "provider_profile_revision": "2026-10-15.v1",
+  "linux_test_functions": 381,
+  "merge_base": "e8c3e4bd9ae40d797f07a527ea98879acee3c057"
 }

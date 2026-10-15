@@ -4,9 +4,10 @@ Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
-- Keep six public products: JSON, JSONSchema, JSONStreaming, JSONPatch, JSONHTML
-  and the swift-json executable. JSONFilterRuntime and JSONCLIEngine are package-private.
-  JSONHTML depends on JSON only. The approved 1.4 CLI addition preserves historical product contracts.
+- Keep seven public products: JSON, JSONSchema, JSONStreaming, JSONPatch, JSONHTML,
+  JSONBridges and the swift-json executable. JSONFilterRuntime and JSONCLIEngine are package-private.
+  JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
+  The approved CLI and E2 additions preserve historical product contracts.
   JSONRegexRuntime is package-private. Root package dependencies remain empty.
 - Preserve exact bounded decimals, decoded Unicode scalar identity, ordered
   objects with order-independent equality, one strict UTF-8 grammar, native

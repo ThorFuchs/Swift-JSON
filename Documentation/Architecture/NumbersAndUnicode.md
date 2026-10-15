@@ -40,7 +40,7 @@ has the target's fixed precision/exponent bounds; exact policy verifies equality
 
 JSONNumber.fromFiniteDouble preserves Swift's round-trip decimal rendering of the
 supplied finite binary value. It cannot recover an earlier source token or the full
-infinite binary-to-decimal expansion. NaN and infinities fail. Native Codable integer
+terminating decimal expansion of its binary rational. NaN and infinities fail. Native Codable integer
 projections are exact; Float/Double projections round to their requested finite type.
 Foreign coders determine the fidelity of values they supply.
 
