@@ -3,12 +3,12 @@ import JSON
 import JSONSchema
 
 enum SchemaExampleVersion {
-    static let generator = "s3-candidates-v2"
+    static let generator = "s3-candidates-v3"
     static let rng = "splitmix64-v1"
     static let snapshot = "swift-json-schema-snapshot-v1"
     static let corpus = "swift-json-example-corpus-v1"
     static let policy = "swift-json-example-policy-v1"
-    static let trace = "swift-json-example-trace-v1"
+    static let trace = "swift-json-example-trace-v2"
     static let referencePushOrder: [JSONSchemaPlan.Keyword] = [.ref, .dynamicRef]
     static let keywords: [(String, JSONSchemaPlan.Keyword)] = [("const", .const), ("default", .default), ("enum", .enum), ("examples", .examples)]
 }
@@ -84,9 +84,10 @@ struct SchemaExampleTrace: ~Copyable {
     private var transport: SchemaExampleTransport
     private(set) var events: UInt64 = 0
     private var finished = false
+    var retainedByteCount: UInt64 { UInt64(transport.bytes.count) }
     init(snapshot: String, corpus: String, policy: String, seed: UInt64,
          profile: JSONSchemaExampleProfile, meter: inout JSONWorkMeter) throws {
-        var transport = try SchemaExampleTransport(header: "SwiftJSON-example-trace-v1\n", isTrace: true, meter: &meter)
+        var transport = try SchemaExampleTransport(header: "SwiftJSON-example-trace-v2\n", isTrace: true, meter: &meter)
         try meter.retain(JSONLogicalWeights.arraySlot * 4)
         for text in [SchemaExampleVersion.generator, snapshot, corpus, policy] {
             try transport.field(text.utf8, meter: &meter)

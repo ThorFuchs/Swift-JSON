@@ -1,0 +1,2152 @@
+{
+  "fixtureFormat": "SwiftJSON.SchemaExamples.Cases/1",
+  "draft": "https://json-schema.org/draft/2020-12/schema",
+  "intendedFor": "Independent correctness oracle and Codex acceptance gates; not production generator outputs",
+  "cases": [
+    {
+      "id": "boolean-true",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "boolean"
+      ],
+      "schema": true,
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": null,
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "valid_3",
+          "instance": [],
+          "valid": true
+        },
+        {
+          "label": "valid_4",
+          "instance": 42,
+          "valid": true
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "boolean-false",
+      "generatorExpectation": "must-prove-unsatisfiable",
+      "featureTags": [
+        "boolean",
+        "unsatisfiable"
+      ],
+      "schema": false,
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "invalid_1",
+          "instance": null,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {},
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": 12,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "not-true",
+      "generatorExpectation": "must-prove-unsatisfiable",
+      "featureTags": [
+        "not",
+        "unsatisfiable"
+      ],
+      "schema": {
+        "not": {}
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "invalid_1",
+          "instance": null,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {},
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": "x",
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "null-kind",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "type"
+      ],
+      "schema": {
+        "type": "null"
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": null,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": false,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 0,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "string-length",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "string",
+        "unicode",
+        "minLength",
+        "maxLength"
+      ],
+      "schema": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 4
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "ab",
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": "abc",
+          "valid": true
+        },
+        {
+          "label": "valid_3",
+          "instance": "é",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "",
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": "é",
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": "abcde",
+          "valid": false
+        },
+        {
+          "label": "invalid_4",
+          "instance": 7,
+          "valid": false
+        }
+      ],
+      "notes": "Length is Unicode scalars, not grapheme clusters",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "exact-integer-beyond-2pow53",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "integer",
+        "exactNumber"
+      ],
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740993,
+        "maximum": 9007199254740995
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 9007199254740993,
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": 9007199254740994,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 9007199254740992,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 9007199254740996,
+          "valid": false
+        },
+        {
+          "label": "valid_integral_decimal_lexeme",
+          "instance": 9007199254740994.0,
+          "valid": true
+        },
+        {
+          "label": "invalid_fractional_number",
+          "instance": 9007199254740994.5,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "exact-decimal-multiple-of",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "exactNumber",
+        "multipleOf",
+        "exclusiveMaximum"
+      ],
+      "schema": {
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": 0.02,
+        "exclusiveMaximum": 0.05
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 0.02,
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": 0.03,
+          "valid": true
+        },
+        {
+          "label": "valid_3",
+          "instance": 0.04,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 0.05,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 0.025,
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": 0.01,
+          "valid": false
+        }
+      ],
+      "notes": "Parse JSON numeric fractions as Decimal for independent Python oracle",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "numeric-exclusive-near-zero",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "exactNumber",
+        "multipleOf",
+        "exclusiveMinimum",
+        "exclusiveMaximum"
+      ],
+      "schema": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "exclusiveMaximum": 0.001,
+        "multipleOf": 0.0001
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 0.0001,
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": 0.0005,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 0,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 0.001,
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": 0.00015,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "object-required-and-null",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "object",
+        "required",
+        "null",
+        "additionalProperties"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "x"
+        ],
+        "additionalProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "x": null
+          },
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {
+            "x": "abc"
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {},
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "x": 1
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": {
+            "x": "a",
+            "y": 0
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "unicode-exact-scalar-keys",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "unicode",
+        "object",
+        "required",
+        "exactKeys"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 1
+          },
+          "é": {
+            "const": 2
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "é": 1,
+            "é": 2
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "é": 1
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "é": 2
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": {
+            "é": 2,
+            "é": 1
+          },
+          "valid": false
+        }
+      ],
+      "notes": "Two different decoded scalar sequences, even when canonically equivalent",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "undeclared-required-key",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "required",
+        "additionalProperties"
+      ],
+      "schema": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "additionalProperties": {
+          "type": "integer"
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "id": 0
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {},
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "id": null
+          },
+          "valid": false
+        }
+      ],
+      "notes": "Required key need not have a properties declaration",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "object-min-max-properties",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "minProperties",
+        "maxProperties",
+        "additionalProperties"
+      ],
+      "schema": {
+        "type": "object",
+        "minProperties": 2,
+        "maxProperties": 2,
+        "additionalProperties": {
+          "type": "integer"
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "a": 1,
+            "b": 2
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {},
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "a": 1
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": {
+            "a": 1,
+            "b": 2,
+            "c": 3
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "array-prefix-items",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "prefixItems",
+        "items",
+        "minItems"
+      ],
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          }
+        ],
+        "items": false,
+        "minItems": 2
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": [
+            "item",
+            42
+          ],
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": [
+            "item"
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": [
+            "item",
+            42,
+            true
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": [
+            4,
+            42
+          ],
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "array-unique",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "uniqueItems",
+        "minItems",
+        "maxItems"
+      ],
+      "schema": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "integer"
+        },
+        "uniqueItems": true
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": [
+            1,
+            2,
+            3
+          ],
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": [
+            1,
+            1,
+            2
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": [
+            1,
+            2
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": [
+            "a",
+            "b",
+            "c"
+          ],
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "array-contains",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "contains",
+        "minContains",
+        "maxContains"
+      ],
+      "schema": {
+        "type": "array",
+        "items": {
+          "type": "integer"
+        },
+        "contains": {
+          "multipleOf": 2
+        },
+        "minContains": 2,
+        "maxContains": 2
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": [
+            1,
+            2,
+            4
+          ],
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": [
+            2,
+            4,
+            5
+          ],
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": [
+            1,
+            3,
+            5
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": [
+            2,
+            4,
+            6
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": [
+            1,
+            2,
+            "hi"
+          ],
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "enum",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "enum"
+      ],
+      "schema": {
+        "enum": [
+          "red",
+          "green",
+          "blue"
+        ]
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "red",
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": "green",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "purple",
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": null,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "const-exact-decimal",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "const",
+        "exactNumber"
+      ],
+      "schema": {
+        "const": 0.1
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 0.1,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 0.2,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 1,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "anyof",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "anyOf"
+      ],
+      "schema": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 2
+          },
+          {
+            "type": "integer",
+            "minimum": 8
+          }
+        ]
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "ok",
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": 9,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "a",
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 7,
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": true,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "oneof-overlap",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "oneOf",
+        "overlap"
+      ],
+      "schema": {
+        "oneOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "integer"
+          }
+        ]
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 0.5,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 0,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 1,
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": "abc",
+          "valid": false
+        }
+      ],
+      "notes": "A number that is mathematically integer satisfies both branches and is invalid under oneOf",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "allof-object-composition",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "allOf",
+        "object"
+      ],
+      "schema": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "a": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "a"
+            ]
+          },
+          {
+            "properties": {
+              "b": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "b"
+            ]
+          }
+        ],
+        "additionalProperties": true
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "a": 1,
+            "b": "x"
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "a": 1
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "a": "wrong",
+            "b": "x"
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "condition-then-else",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "if",
+        "then",
+        "else",
+        "const",
+        "required"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "enum": [
+              "adult",
+              "child"
+            ]
+          },
+          "age": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "kind",
+          "age"
+        ],
+        "if": {
+          "properties": {
+            "kind": {
+              "const": "adult"
+            }
+          },
+          "required": [
+            "kind"
+          ]
+        },
+        "then": {
+          "properties": {
+            "age": {
+              "minimum": 18
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "age": {
+              "maximum": 17
+            }
+          }
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "kind": "adult",
+            "age": 18
+          },
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {
+            "kind": "child",
+            "age": 12
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "kind": "adult",
+            "age": 17
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "kind": "child",
+            "age": 18
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "dependent-required",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "dependentRequired"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "creditCard": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "type": "string"
+          }
+        },
+        "dependentRequired": {
+          "creditCard": [
+            "billingAddress"
+          ]
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {
+            "creditCard": "1234",
+            "billingAddress": "x"
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "creditCard": "1234"
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "dependent-schema",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "dependentSchemas"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "dependentSchemas": {
+          "country": {
+            "required": [
+              "state"
+            ]
+          }
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {
+            "country": "US",
+            "state": "CA"
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "country": "US"
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "pattern-properties",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "patternProperties",
+        "additionalProperties"
+      ],
+      "schema": {
+        "type": "object",
+        "patternProperties": {
+          "^s_": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "s_name": "Ada"
+          },
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "s_name": 42
+          },
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": {
+            "x": 2
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "property-names",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "propertyNames",
+        "pattern"
+      ],
+      "schema": {
+        "type": "object",
+        "propertyNames": {
+          "pattern": "^[A-Z]+$"
+        },
+        "additionalProperties": true
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "ABC": 1
+          },
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "Ab": 1
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "unevaluated-properties-composition",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "unevaluatedProperties",
+        "allOf",
+        "annotations"
+      ],
+      "schema": {
+        "type": "object",
+        "allOf": [
+          {
+            "properties": {
+              "a": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "a"
+            ]
+          },
+          {
+            "properties": {
+              "b": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "b"
+            ]
+          }
+        ],
+        "unevaluatedProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "a": 1,
+            "b": "x"
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "a": 1,
+            "b": "x",
+            "c": true
+          },
+          "valid": false
+        }
+      ],
+      "notes": "Successful branches must contribute evaluated-property annotations",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "local-ref",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "$ref",
+        "$defs"
+      ],
+      "schema": {
+        "$defs": {
+          "age": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "$ref": "#/$defs/age"
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 18,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": -1,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": "18",
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "recursive-tree",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "$ref",
+        "recursion"
+      ],
+      "schema": {
+        "$defs": {
+          "node": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "children": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/node"
+                }
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "$ref": "#/$defs/node"
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "name": "Ada",
+            "children": []
+          },
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {
+            "name": "root",
+            "children": [
+              {
+                "name": "leaf"
+              }
+            ]
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "children": []
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "dynamic-ref",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "$dynamicRef",
+        "$dynamicAnchor",
+        "recursion"
+      ],
+      "schema": {
+        "$dynamicAnchor": "node",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$dynamicRef": "#node"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "name": "root",
+            "children": []
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "children": []
+          },
+          "valid": false
+        }
+      ],
+      "notes": "Dynamic reference has evaluation-scope-dependent meaning",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "simple-regex",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "pattern",
+        "regex"
+      ],
+      "schema": {
+        "type": "string",
+        "pattern": "^SKU-[0-9]{4}$"
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "SKU-1234",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "sku-1234",
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": "SKU-123",
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "format-annotation",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "format",
+        "annotation"
+      ],
+      "schema": {
+        "type": "string",
+        "format": "email"
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "not-an-email",
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": "ada@example.org",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 15,
+          "valid": false
+        }
+      ],
+      "notes": "Format keyword is annotation-only under default 2020-12 dialect",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "format-assertion",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "format",
+        "assertion"
+      ],
+      "schema": {
+        "type": "string",
+        "format": "email"
+      },
+      "validation": {
+        "formatAssertion": true
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "ada@example.org",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "not-an-email",
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 15,
+          "valid": false
+        }
+      ],
+      "notes": "Optional format assertion flag enabled; independent oracle uses Python FormatChecker",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "conflicting-allof",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "allOf",
+        "unsatisfiable"
+      ],
+      "schema": {
+        "allOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          }
+        ]
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "invalid_1",
+          "instance": "hello",
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 3,
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": null,
+          "valid": false
+        }
+      ],
+      "notes": "Conservatively classify search failure unless sound proof implemented",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "unfulfillable-unique-enum",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "uniqueItems",
+        "enum",
+        "unsatisfiable"
+      ],
+      "schema": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "uniqueItems": true,
+        "items": {
+          "enum": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "invalid_1",
+          "instance": [
+            "a",
+            "a",
+            "b"
+          ],
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": [
+            "a",
+            "b"
+          ],
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "invalid-default-annotation",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "default",
+        "annotation"
+      ],
+      "schema": {
+        "type": "integer",
+        "minimum": 10,
+        "default": 3
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 12,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 3,
+          "valid": false
+        }
+      ],
+      "notes": "Default is not proof of validity",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "invalid-examples-annotation",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "examples",
+        "annotation"
+      ],
+      "schema": {
+        "type": "string",
+        "minLength": 2,
+        "examples": [
+          "a",
+          "ok"
+        ]
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "ok",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "a",
+          "valid": false
+        }
+      ],
+      "notes": "examples are untrusted candidate hints",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "false-nested-schema",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "boolean",
+        "properties"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "forbidden": false
+        },
+        "additionalProperties": true
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": {
+            "other": 1
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "forbidden": null
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "external-offline-ref",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "$ref",
+        "offlineRegistry",
+        "uri"
+      ],
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$ref": "urn:example:definitions:2026#/$defs/sku"
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {
+        "urn:example:definitions:2026": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "urn:example:definitions:2026",
+          "$defs": {
+            "sku": {
+              "type": "string",
+              "pattern": "^SKU-[0-9]{3}$"
+            }
+          }
+        }
+      },
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": "SKU-100",
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "ABC",
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "not-string",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "not"
+      ],
+      "schema": {
+        "not": {
+          "type": "string"
+        }
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": 0,
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": null,
+          "valid": true
+        },
+        {
+          "label": "valid_3",
+          "instance": {},
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": "hello",
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "oneof-overlap-limited",
+      "generatorExpectation": "may-fail-explicitly",
+      "featureTags": [
+        "oneOf",
+        "overlap"
+      ],
+      "schema": {
+        "oneOf": [
+          {
+            "type": "integer",
+            "minimum": 0
+          },
+          {
+            "type": "integer",
+            "maximum": 10
+          }
+        ]
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": -1,
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": 11,
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": 0,
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": 5,
+          "valid": false
+        },
+        {
+          "label": "invalid_3",
+          "instance": 10,
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "object-number-key-strings",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "object",
+        "exactKeys"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "0": {
+            "type": "integer"
+          },
+          "00": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "0",
+          "00"
+        ],
+        "additionalProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "0": 1,
+            "00": "ok"
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "0": 1
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "mincontains-with-prefixitems",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "prefixItems",
+        "contains",
+        "minContains",
+        "maxContains"
+      ],
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "number"
+          }
+        ],
+        "contains": {
+          "type": "integer"
+        },
+        "minContains": 1,
+        "maxContains": 1,
+        "minItems": 1
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": [
+            1.5,
+            1
+          ],
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": [
+            1
+          ],
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": [],
+          "valid": false
+        },
+        {
+          "label": "invalid_2",
+          "instance": [
+            1,
+            2
+          ],
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G4"
+    },
+    {
+      "id": "required-with-additional-properties-false",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "additionalProperties"
+      ],
+      "schema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "x"
+        ],
+        "additionalProperties": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": {
+            "x": 0
+          },
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": {
+            "x": 0,
+            "extra": true
+          },
+          "valid": false
+        }
+      ],
+      "notes": "",
+      "acceptanceGate": "G3"
+    },
+    {
+      "id": "array-mixed-evaluation",
+      "generatorExpectation": "must-generate",
+      "featureTags": [
+        "unevaluatedItems",
+        "prefixItems"
+      ],
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "type": "integer"
+          }
+        ],
+        "unevaluatedItems": false
+      },
+      "validation": {
+        "formatAssertion": false
+      },
+      "resources": {},
+      "witnesses": [
+        {
+          "label": "valid_1",
+          "instance": [
+            1
+          ],
+          "valid": true
+        },
+        {
+          "label": "valid_2",
+          "instance": [],
+          "valid": true
+        },
+        {
+          "label": "invalid_1",
+          "instance": [
+            1,
+            2
+          ],
+          "valid": false
+        }
+      ],
+      "notes": "[] also satisfies this schema; oracle negative list should not include []",
+      "acceptanceGate": "G4"
+    }
+  ]
+}

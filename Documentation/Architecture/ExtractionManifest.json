@@ -259,6 +259,18 @@
       "attribution": "Apache-2.0 SPDX header retained; original Swift-JSON integration code Apache-2.0.",
       "validation": "Tests/JSONSchemaExamplesTests/DeterminismTests.swift; independent stdlib transport oracle and public consumer",
       "evidence": "Release1.6 G2 qualification; actual native/safety/docs receipts"
+    },
+    {
+      "repository": "SwiftJSON-SchemaExamples-S3-Codex-Wave-v1.0 briefing packet",
+      "archive_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
+      "original_path": "Fixtures/cases.json",
+      "original_sha256": "6f2bfd4fdb7c7e206b6570c2156ca8e248831840733b0258aa8cd5938b35649f",
+      "destination": "Tests/Fixtures/SchemaExamples",
+      "disposition": "Original 44-case input retained byte-for-byte alongside the independently reviewed G0 integral-number correction (155 witnesses). G3 selects exactly 24 must-generate IDs plus two sound proofs; 18 G4 cases remain separate. No fixture expected verdict was lowered for the generator.",
+      "amended_sha256": "5b3e6e40e83439a810d0eb7ac412ce158a4e582f36b9d36d6e313c159654ddd3",
+      "attribution": "User-authored packet fixture input; original integration/tests Apache-2.0. Packet source/provenance retained separately.",
+      "validation": "TypedConstructionTests.swift and public G3Acceptance consumer; strict native compiler/evaluator authority",
+      "evidence": "Release1.6/G3 qualification and materialized per-case receipts"
     }
   ],
   "original_implementation_notes": [

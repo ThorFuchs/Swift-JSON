@@ -24,13 +24,14 @@ and exercises scalar-distinct keys, static/offline references and failures.
 
 ## Current construction boundary
 
-G2 offers active const, default, enum and examples in exact ASCII keyword
+G3 offers active const, default, enum and examples in exact ASCII keyword
 order, then compiler-qualified static reference declarations in ASCII keyword
 order. Array order remains semantic. True and empty schemas offer null under
 minimal, or a seeded synthetic token under demonstration. Defaults and examples are merely candidates: an invalid candidate
 is rejected, without inserting defaults or repairing values. Reference siblings
 are enforced by validating against the original root. Dynamic construction and
-cycles fail explicitly. This is neither full Draft 2020-12 generation nor a
+same-instance ancestor cycles fail explicitly. After declared candidates, G3
+constructs bounded typed proposals from compiler-qualified constraints. See <doc:TypedConstruction> for the qualified subset. This is neither full Draft 2020-12 generation nor a
 complete satisfiability solver.
 
 Minimal performs no random draws. Demonstration uses `splitmix64-v1` rejection
@@ -66,4 +67,4 @@ not RFC8785/JCS and is not a raw-text digest. The result also binds
 the immutable corpus and all policies with separate versioned digests. The complete
 abstract trace includes every raw draw and native verdict, without raw schema or
 instance content. It throws on exhaustion rather than silently truncating. Full
-byte transports are in the repository's Release1.6/G2Determinism contract.
+byte transports are in the repository's Release1.6/G2Determinism and G3Construction contracts.

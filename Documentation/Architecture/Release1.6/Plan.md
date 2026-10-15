@@ -11,8 +11,7 @@ The isolated branch is `codex/1.6-schema-examples`, pinned to main
 [source reconciliation](Reconciliation.md), [decisions](Decisions.md) and
 [progress](Progress.json). The initial orientation and compiler probes are complete. G1 now has a working
 explicit-candidate API, a package-only qualified plan bridge and a real public
-consumer; see [the accepted declarations and scope](G1API.md). [G1 native qualification](G1Qualification.md) is complete; G2 is next. Broad
-generation is not implemented.
+consumer; see [the accepted declarations and scope](G1API.md). [G1 native qualification](G1Qualification.md) and [G2 determinism](G2Qualification.md) are preserved. G3 now implements [conservative typed construction](G3Construction.md); [its native qualification](G3Qualification.md) is complete. General schema solving remains outside this product.
 
 ## Integration boundary
 
@@ -59,3 +58,9 @@ ownership boundaries. See G2Determinism.md and the subsequent qualification reco
 The isolated branch retains its G0/G1 base. Main independently advanced to 037e735
 with 1.5.1 repairs; rebasing/merging that train is a separate integration task
 before final G7/G8 release qualification, not silently part of G2.
+
+G3 advances the candidate algorithm to `s3-candidates-v3` and complete trace to
+`swift-json-example-trace-v2`; source/corpus/policy v1 transports are unchanged.
+The [capability ledger](Capabilities.json) distinguishes the 24 G3 must-generate
+cases and two sound proofs from the 18 remaining G4 cases. All returned witnesses
+still require complete validation against the original immutable compiled root.

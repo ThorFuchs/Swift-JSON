@@ -36,9 +36,9 @@ state belong to each call.
 
 ## Versioned identities
 
-`s3-candidates-v2` records `splitmix64-v1`, seed and profile. Snapshot, ordered
+`s3-candidates-v3` records `splitmix64-v1`, seed and profile. Snapshot, ordered
 corpus, all policy caps/flags and complete abstract trace have independent versioned
-SHA-256 identities. See the Release1.6/G2Determinism contract for the byte formats.
+SHA-256 identities. See the Release1.6/G2Determinism and G3Construction contracts for the byte formats.
 These transports use compact scalar-key normalized-number strict JSON, not JCS
 or unavailable original source bytes. Caller registry order is part of snapshot
 identity. Policy identity includes all 49 metrics for each of generation,
@@ -51,4 +51,11 @@ native diagnostics. A successful trace is complete; exhaustion/cancellation thro
 without a certificate. Hash work and result metadata also fit before return.
 Logical retained bytes do not describe process RSS, and owned work quotas do not
 limit caller code. Native golden vectors and separate-process checks establish
-the native G2 increment; full Linux/WASI/mobile qualification remains G7.
+the native G3 increment; full Linux/WASI/mobile qualification remains G7.
+
+
+G3 adds conservative typed value requests to the trace and uses
+`swift-json-example-trace-v2`. The original snapshot/corpus/policy transports stay
+at v1. Historical G2 vectors retain their earlier IDs in source history and the
+immutable G2 review archive. A new algorithm version can change witnesses/traces;
+reproducibility requires the same implementation and versioned inputs.

@@ -19,7 +19,7 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
         #expect(result.validation.isValid && result.validation.diagnosticsComplete)
         #expect(result.attempts == 1 && result.seed == 42)
         #expect(result.statistics[.evaluationWorkUnits] > 0)
-        #expect(result.generatorVersion == "s3-candidates-v2")
+        #expect(result.generatorVersion == "s3-candidates-v3")
         let native = try JSONSchemaCompiler().compile(prepared.document).validate(result.value)
         #expect(native.isValid == result.validation.isValid)
     }
@@ -34,11 +34,10 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
     #expect(result.validation.isValid)
 }
 
-@Test func g1NullConstIsPresentAndUnsupportedConstructionIsDistinct() throws {
+@Test func g1NullConstIsPresentAndG3TypedStringConstructionIsNativeCertified() throws {
     #expect(try generator(#"{"const":null}"#).generate().value.isNull)
-    #expect(throws: JSONSchemaExampleFailure.unsupportedFeature(.candidateConstruction)) {
-        try generator(#"{"type":"string"}"#).generate()
-    }
+    let typed = try generator(#"{"type":"string"}"#).generate()
+    #expect(typed.value == .string("") && typed.validation.isValid)
 }
 
 @Test func g1InvalidConstNeverEscapesRootValidation() throws {
@@ -61,9 +60,10 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
 @Test func g1AnnotationsAreCandidatesAndNotRepairs() throws {
     let result = try generator(#"{"type":"string","default":1,"examples":["ok"]}"#).generate()
     #expect(result.value == .string("ok") && result.attempts == 2)
-    #expect(throws: JSONSchemaExampleFailure.searchExhausted(attempts: 1)) {
-        try generator(#"{"type":"object","required":["id"],"default":{}}"#).generate()
-    }
+    let authored = try generator(#"{"type":"object","required":["id"],"default":{}}"#)
+    let built = try authored.generate()
+    #expect(built.value.objectValue?["id"]?.isNull == true && built.attempts == 2)
+    #expect(authored.document.raw.objectValue?["default"]?.objectValue?.isEmpty == true)
 }
 
 @Test func g1StaticAnchorAndEmbeddedResourceUseCompilerTargets() throws {
@@ -141,7 +141,9 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
         try generator(#"{"format":"date","const":"not-a-date"}"#, options: options).generate()
     }
     let meta = try document(#"{"$id":"https://e.test/assertion","$schema":"https://json-schema.org/draft/2020-12/schema","$vocabulary":{"https://json-schema.org/draft/2020-12/vocab/core":true,"https://json-schema.org/draft/2020-12/vocab/meta-data":true,"https://json-schema.org/draft/2020-12/vocab/format-assertion":true}}"#, uri: "https://e.test/assertion")
-    let required = try JSONSchemaExampleGenerator(document: document(#"{"$schema":"https://e.test/assertion","format":"date","default":"not-a-date"}"#), registry: .init(documents: [meta]))
+    let required = try JSONSchemaExampleGenerator(document: document(#"{"$schema":"https://e.test/assertion","format":"date","default":"not-a-date"}"#), registry: .init(documents: [meta]), options: .init(maximumAttempts: 1))
+    let requiredPlan = try JSONSchemaCompiler().compile(required.document, registry: required.registry)
+    #expect(try !requiredPlan.validate(.string("not-a-date")).isValid)
     #expect(!required.options.validationOptions.formatAssertion)
     #expect(throws: JSONSchemaExampleFailure.searchExhausted(attempts: 1)) { try required.generate() }
     let result = try generator(#"{"const":"ok","title":"label"}"#, options: .init(validationOptions: .init(output: .flag, collectAnnotations: true))).generate()

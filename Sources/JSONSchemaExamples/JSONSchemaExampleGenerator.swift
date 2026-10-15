@@ -4,9 +4,9 @@ import JSONSchema
 
 /// An immutable, offline source snapshot with invocation-owned candidate search.
 ///
-/// The current algorithm offers const, enum, default/examples, true/empty schemas and static reference
-/// targets. Every candidate is validated against the original compiled root. Dynamic
-/// construction and general numeric/string/object synthesis remain unsupported.
+/// Declared hints and conservative typed construction share one cumulative ledger.
+/// Every candidate is validated against the original compiled root. Dynamic scope
+/// and difficult interdependent constraints can still fail explicitly.
 public struct JSONSchemaExampleGenerator: Sendable {
     /// The admitted source document, including any caller-supplied source map.
     public let document: JSONSchemaDocument
@@ -78,16 +78,17 @@ public struct JSONSchemaExampleGenerator: Sendable {
             throw JSONSchemaExampleFailure.provenUnsatisfiable(.notTrue)
         }
         try meter.retain(JSONLogicalWeights.frame)
-        var pending = [root], visited: [Int] = []
-        var attempts: UInt64 = 0, sawCycle = false
+        var pending = [root], visited: [Int] = [], constructionSeeds: [JSONSchemaQualifiedNode] = []
+        var attempts: UInt64 = 0
         while let node = pending.popLast() {
             try meter.checkpoint(); try meter.work(); try meter.release(JSONLogicalWeights.frame)
             var seen = false
             for identity in visited { try meter.work(); if identity == node.identity { seen = true; break } }
-            if seen { sawCycle = true; continue }
+            if seen { continue }
             try meter.charge(.schemaNodes)
             try meter.retain(JSONLogicalWeights.indexSlot); visited.append(node.identity)
             try trace.event(1, 0, 0, meter: &meter)
+            try meter.retain(JSONLogicalWeights.indexSlot); constructionSeeds.append(node)
             let view = try node.declaration(meter: &meter)
             for offset in 0..<node.referenceCount {
                 if try node.reference(at: offset, meter: &meter).requiresDynamicScope {
@@ -115,6 +116,15 @@ public struct JSONSchemaExampleGenerator: Sendable {
                                          attempts: &attempts, random: &random, trace: &trace, meter: &meter) { return result }
                 if profile == .minimal { try meter.release(JSONLogicalWeights.arraySlot) }
             }
+            // Alternative declarations are proposal hints, never local certificates.
+            // Reverse pushes preserve ASCII keyword order and semantic array order.
+            let constraint = SchemaExampleConstraint(node: node, view: view)
+            for keyword in SchemaExampleConstructor.alternatives.reversed() {
+                for child in try constraint.children(keyword, meter: &meter).reversed() {
+                    try meter.require(.evaluationFrames, UInt64(pending.count) + 1)
+                    try meter.retain(JSONLogicalWeights.frame); pending.append(child)
+                }
+            }
             // Reverse push gives exact ASCII order: $dynamicRef, then $ref.
             for kind in SchemaExampleVersion.referencePushOrder {
                 for offset in 0..<node.referenceCount {
@@ -125,7 +135,25 @@ public struct JSONSchemaExampleGenerator: Sendable {
                 }
             }
         }
-        if sawCycle { throw JSONSchemaExampleFailure.unsupportedFeature(.cyclicReference) }
+        for variation in 0..<options.maximumAttempts {
+            for seedNode in constructionSeeds {
+                try meter.checkpoint(); try meter.resetValueBounds()
+                let retainedBefore = meter.used(.retainedBytes), traceBefore = trace.retainedByteCount
+                try meter.retain(JSONLogicalWeights.indexSlot * 2)
+                let nodes = seedNode.identity == root.identity ? [root] : [root, seedNode]
+                if let candidate = try SchemaExampleConstructor.construct(nodes: nodes, variation: variation,
+                    profile: profile, corpus: corpus, assertion: options.validationOptions.formatAssertion,
+                    random: &random, trace: &trace, meter: &meter) {
+                    try trace.event(2, 5, variation, meter: &meter)
+                    if let result = try certify(candidate, seed: seed, profile: profile, attempts: &attempts,
+                                                random: &random, trace: &trace, meter: &meter) { return result }
+                }
+                let (delta, badDelta) = meter.used(.retainedBytes).subtractingReportingOverflow(retainedBefore)
+                let (traceBytes, badTrace) = trace.retainedByteCount.subtractingReportingOverflow(traceBefore)
+                guard !badDelta, !badTrace, delta >= traceBytes else { throw JSONFailure(.configuration, code: .invalidOperation) }
+                try meter.release(delta - traceBytes)
+            }
+        }
         if attempts == 0 { throw JSONSchemaExampleFailure.unsupportedFeature(.candidateConstruction) }
         throw JSONSchemaExampleFailure.searchExhausted(attempts: attempts)
     }

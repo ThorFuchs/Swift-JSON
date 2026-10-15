@@ -6,13 +6,13 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G2 complete: metered deterministic choices, stable exact construction and versioned provenance; native increment qualified",
+  "status": "G3 complete: conservative typed construction; all 24 required fixtures native-qualified",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
     "S3-G1": "passed_native_increment",
     "S3-G2": "passed_native_increment",
-    "S3-G3": "not_started",
+    "S3-G3": "passed_native_increment",
     "S3-G4": "not_started",
     "S3-G5": "not_started",
     "S3-G6": "not_started",
@@ -46,15 +46,15 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "G3 conservative typed construction and 24 must-generate fixtures; preserve exact certification and cumulative accounting",
+  "next_gate": "G4 advanced conservative construction; preserve final root certification and one invocation ledger",
   "limitations": [
-    "G3-G8 remain open; this is not a qualified 1.6 release candidate",
+    "G4-G8 remain open; this is not a qualified 1.6 release candidate",
     "Original packet expectation/oracle representation amendment remains separately preserved",
     "No new full nine-bundle Native/safety, Linux, WASI, mobile or controlled-performance pass is claimed",
-    "Main independently advanced to 037e735 (1.5.1 repairs); this isolated G2 branch preserves its G0/G1 base pending later integration.",
-    "G2 is native-only qualification: Linux/WASI/mobile goldens remain G7; no controlled throughput or RSS claim",
-    "General typed/constraint-driven synthesis, boundary profile and advanced/dynamic construction remain G3/G4",
-    "G2 failed exploratory/compiler/test/harness attempts are retained separately from final passed receipts"
+    "Main independently advanced to 037e735 (1.5.1 repairs); this isolated G3 branch preserves its G0/G1 base pending later integration.",
+    "G2/G3 are native-only qualification: Linux/WASI/mobile goldens remain G7; no controlled throughput or RSS claim",
+    "General constraint solving, boundary profile and advanced/dynamic construction remain G4 or explicitly incomplete",
+    "G2/G3 failed exploratory/compiler/test/harness attempts are retained separately from final passed receipts"
   ],
   "push_merge_tag_or_publication_performed": false,
   "g1_observed": {
@@ -75,11 +75,11 @@
     "focused_safety_lane_commands": 3
   },
   "current_harness_requirements": {
-    "native_root_functions": 461,
+    "native_root_functions": 480,
     "parameter_invocations": 325,
-    "native_shared_state_functions": 16,
+    "native_shared_state_functions": 17,
     "core_metrics": 49,
-    "scope": "Full-lane requirements, distinct from the focused G1 observations"
+    "scope": "Full-lane requirements; focused G3 outcomes recorded separately"
   },
   "g1_implementation_commit": "6c19580dec99c9363bb4b4d1611af8b8a2bab266",
   "g1_qualification_record": "Documentation/Architecture/Release1.6/G1Qualification.md",
@@ -112,5 +112,40 @@
     "testing_event_parser_cases": 19,
     "focused_determinism_commands": 7,
     "focused_safety_commands": 3
+  },
+  "g3_base_commit": "42a523c6d0a4dab9195c847feb4e47b43803bfd1",
+  "g3_qualification_record": "Documentation/Architecture/Release1.6/G3Qualification.md",
+  "g3_observed": {
+    "generator_algorithm": "s3-candidates-v3",
+    "trace_algorithm": "swift-json-example-trace-v2",
+    "new_swift_testing_functions": 19,
+    "total_generator_functions": 61,
+    "debug_functions": 61,
+    "release_functions": 61,
+    "release_address_sanitizer_functions": 61,
+    "release_thread_sanitizer_functions": 2,
+    "concurrent_invocations_per_thread_function": 32,
+    "g3_must_generate_cases": 24,
+    "profiles": 2,
+    "seeds": 4,
+    "generated_per_process": 192,
+    "public_acceptance_processes": 2,
+    "witness_assertions_per_process": 90,
+    "separate_trivial_proofs": 2,
+    "remaining_g4_cases_not_counted": 18,
+    "integer_rounding_grid_cases": 2940,
+    "public_consumer_cases": 15,
+    "public_compiler_rejections": 2,
+    "implementation_compiler_positive_probes": 1,
+    "implementation_compiler_rejections": 8,
+    "focused_native_commands": 8,
+    "focused_safety_commands": 3,
+    "harness_mutation_cases": 22,
+    "testing_event_parser_cases": 19,
+    "unchanged_schema_source_files": 654,
+    "reused_schema_functions": 69,
+    "reused_schema_parameter_invocations": 12,
+    "reused_evaluated_pinned_schema_cases": 2300,
+    "separate_schema_policy_exclusions": 37
   }
 }

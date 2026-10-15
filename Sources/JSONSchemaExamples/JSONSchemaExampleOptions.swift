@@ -33,9 +33,9 @@ public struct JSONSchemaExampleOptions: Sendable {
 
 /// A candidate preference, without a guarantee of globally minimal output.
 public enum JSONSchemaExampleProfile: Sendable {
-    /// Scan declarations in stable order without random draws or general synthesis.
+    /// Prefer stable declared candidates and small conservative typed values.
     case minimal
-    /// Seeded circular candidate scans and synthetic tokens for true/empty schemas.
+    /// Seeded declared-candidate scans and synthetic tokens for admitted typed strings.
     case demonstration
 }
 

@@ -10,6 +10,9 @@ private func schema(_ text: String, uri: String? = nil) throws -> JSONSchemaDocu
 
 @main struct SchemaExamplesConsumer {
     static func main() throws {
+        if CommandLine.arguments.count == 5, CommandLine.arguments[1] == "--g3-fixtures", CommandLine.arguments[3] == "--g3-manifest" {
+            try G3Acceptance.run(fixturePath: CommandLine.arguments[2], manifestPath: CommandLine.arguments[4]); return
+        }
         let samples: [(String, String, UInt64)] = [
             ("true", "null", 1),
             ("{}", "null", 1),
@@ -65,10 +68,10 @@ private func schema(_ text: String, uri: String? = nil) throws -> JSONSchemaDocu
             let hex = bytes.map { String($0, radix: 16).count == 1 ? "0" + String($0, radix: 16) : String($0, radix: 16) }.joined()
             guard result.validation.isValid, result.corpusDigest == vectorGenerator.corpusDigest,
                   result.policyDigest == vectorGenerator.policyDigest,
-                  result.generatorVersion == "s3-candidates-v2", result.rngAlgorithm == "splitmix64-v1",
+                  result.generatorVersion == "s3-candidates-v3", result.rngAlgorithm == "splitmix64-v1",
                   result.corpusDigestAlgorithm == "swift-json-example-corpus-v1",
                   result.policyDigestAlgorithm == "swift-json-example-policy-v1",
-                  result.traceDigestAlgorithm == "swift-json-example-trace-v1",
+                  result.traceDigestAlgorithm == "swift-json-example-trace-v2",
                   result.schemaDigestAlgorithm == "swift-json-schema-snapshot-v1",
                   try JSONSchemaCompiler().compile(vectorGenerator.document).validate(result.value).isValid else { throw ConsumerFailure.mismatch(passed) }
             vectorRows.append("\"\(name)\":{\"trace\":\"\(result.traceDigest)\",\"events\":\(result.traceEventCount),\"draws\":\(result.randomDraws),\"value_hex\":\"\(hex)\",\"trace_bytes\":\(result.statistics[.diagnosticBytes])}")

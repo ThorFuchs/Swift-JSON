@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "gate": "S3-G3",
+  "generator_algorithm": "s3-candidates-v3",
+  "trace_algorithm": "swift-json-example-trace-v2",
+  "semantic_authority": "Original compiled root plus completed JSONSchemaValidator result. Capability classifications describe proposal construction only.",
+  "groups": [
+    {
+      "id": "type",
+      "keywords": [
+        "type"
+      ],
+      "construction": "constructive",
+      "policy": "Fixed type preference, unions/intersections from active vocabularies; integer remains exact integral number."
+    },
+    {
+      "id": "declared-candidates",
+      "keywords": [
+        "const",
+        "enum",
+        "default",
+        "examples"
+      ],
+      "construction": "conservative",
+      "policy": "Exact declared candidates; defaults/examples are hints, nested const/enum proposals still require complete root validation."
+    },
+    {
+      "id": "numeric",
+      "keywords": [
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf"
+      ],
+      "construction": "conservative",
+      "policy": "Exact bounded decimal step/rounding; dense alignment can exhaust finite digit/work limits. Multiple conjunctive divisors are certified natively rather than solved generally."
+    },
+    {
+      "id": "strings",
+      "keywords": [
+        "minLength",
+        "maxLength"
+      ],
+      "construction": "constructive",
+      "policy": "Unicode-scalar lengths; bounded admitted corpus/filler tokens."
+    },
+    {
+      "id": "format",
+      "keywords": [
+        "format"
+      ],
+      "construction": "conservative",
+      "policy": "Fixed email token when native assertion applies; annotation does not assert or imply a type. Other formats are native certification only."
+    },
+    {
+      "id": "objects",
+      "keywords": [
+        "properties",
+        "required",
+        "additionalProperties",
+        "minProperties",
+        "maxProperties"
+      ],
+      "construction": "conservative",
+      "policy": "Union of exact required keys, every conjunct scoped separately, optional omission and finite declared/synthetic fill names."
+    },
+    {
+      "id": "arrays",
+      "keywords": [
+        "prefixItems",
+        "items",
+        "minItems",
+        "maxItems"
+      ],
+      "construction": "constructive",
+      "policy": "Explicit iterative frames, checked lengths and positional indices; nested arrays do not flatten."
+    },
+    {
+      "id": "uniqueness",
+      "keywords": [
+        "uniqueItems"
+      ],
+      "construction": "conservative",
+      "policy": "Finite leaf variations; only native exact deep comparison certifies uniqueness. No complete cardinality solver."
+    },
+    {
+      "id": "composition",
+      "keywords": [
+        "allOf",
+        "anyOf",
+        "oneOf"
+      ],
+      "construction": "conservative",
+      "policy": "Positive conjunction hints; alternative child proposals; no schema algebra or branch-local success. G3 qualifies its allOf/anyOf fixtures only."
+    },
+    {
+      "id": "static-resources",
+      "keywords": [
+        "$ref",
+        "$id",
+        "$schema",
+        "$anchor",
+        "$defs",
+        "definitions",
+        "dependencies",
+        "$vocabulary",
+        "$comment"
+      ],
+      "construction": "compiler_authority",
+      "policy": "Compiler-qualified resource/node handles; no URI guessing or implicit definition rooting. Repeated static targets are DAG sharing; same-instance ancestor cycles are unsupported. Legacy definitions/dependencies remain non-applicative containers whose referenced children retain compiler locations."
+    },
+    {
+      "id": "dynamic",
+      "keywords": [
+        "$dynamicRef",
+        "$dynamicAnchor"
+      ],
+      "construction": "unsupported_dynamic_construction",
+      "policy": "A compiler-qualified static target can be used only when no dynamic scope is required; otherwise explicit dynamicReference failure."
+    },
+    {
+      "id": "native-only",
+      "keywords": [
+        "pattern",
+        "patternProperties",
+        "propertyNames",
+        "contains",
+        "minContains",
+        "maxContains",
+        "dependentRequired",
+        "dependentSchemas",
+        "unevaluatedProperties",
+        "unevaluatedItems",
+        "if",
+        "then",
+        "else"
+      ],
+      "construction": "native_certification_only",
+      "policy": "Not interpreted as constructive constraints in G3. A proposal may pass full native evaluation, otherwise bounded search fails explicitly. General inversion/dependency/conditional search is deferred."
+    },
+    {
+      "id": "not",
+      "keywords": [
+        "not"
+      ],
+      "construction": "native_certification_only",
+      "policy": "Only active root not-true/not-empty has a reviewed trivial unsatisfiability proof; other negations are native certification only."
+    },
+    {
+      "id": "annotations",
+      "keywords": [
+        "title",
+        "description",
+        "deprecated",
+        "readOnly",
+        "writeOnly",
+        "contentEncoding",
+        "contentMediaType",
+        "contentSchema"
+      ],
+      "construction": "metadata_only",
+      "policy": "Never executed, inserted, repaired, resolved online or treated as validation authority."
+    }
+  ],
+  "fixture_matrix": {
+    "source": "Tests/Fixtures/SchemaExamples/S3-integral-correction-v1.json",
+    "sha256": "5b3e6e40e83439a810d0eb7ac412ce158a4e582f36b9d36d6e313c159654ddd3",
+    "g3_must_generate_ids": [
+      "boolean-true",
+      "null-kind",
+      "string-length",
+      "exact-integer-beyond-2pow53",
+      "exact-decimal-multiple-of",
+      "numeric-exclusive-near-zero",
+      "object-required-and-null",
+      "unicode-exact-scalar-keys",
+      "undeclared-required-key",
+      "object-min-max-properties",
+      "array-prefix-items",
+      "array-unique",
+      "enum",
+      "const-exact-decimal",
+      "anyof",
+      "allof-object-composition",
+      "local-ref",
+      "format-annotation",
+      "format-assertion",
+      "invalid-default-annotation",
+      "invalid-examples-annotation",
+      "false-nested-schema",
+      "object-number-key-strings",
+      "required-with-additional-properties-false"
+    ],
+    "profiles": [
+      "minimal",
+      "demonstration"
+    ],
+    "seeds": [
+      "0",
+      "1",
+      "42",
+      "18446744073709551615"
+    ],
+    "expected_successful_invocations_per_process": 192,
+    "g3_proof_ids": [
+      "boolean-false",
+      "not-true"
+    ],
+    "g4_cases": 18,
+    "g4_status": "not qualified by this G3 increment"
+  },
+  "limitations": [
+    "No general satisfiability decision or universal must-generate promise outside the pinned subset",
+    "No unqualified cross-platform, RSS or controlled-throughput claim",
+    "Main 1.5.1 integration and G4-G8 remain separate gates"
+  ]
+}

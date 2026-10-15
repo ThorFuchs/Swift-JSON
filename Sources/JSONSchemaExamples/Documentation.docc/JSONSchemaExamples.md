@@ -2,9 +2,9 @@
 
 Opt-in exact candidates certified by the existing offline JSONSchema validator.
 
-The current G2 increment prepares an immutable source/registry snapshot and offers
-explicit candidates. It does not yet synthesize general strings, numbers, arrays
-or objects from constraints. Import JSON, JSONSchema and JSONSchemaExamples
+The current G3 increment prepares an immutable source/registry snapshot and offers
+exact declared candidates and conservative typed construction for the qualified
+foundational subset. Complete root validation certifies every successful value. Import JSON, JSONSchema and JSONSchemaExamples
 explicitly. Existing products gain no dependency on this module.
 
 ## Topics
@@ -17,6 +17,7 @@ explicitly. Existing products gain no dependency on this module.
 - ``JSONSchemaExampleProfile``
 - ``JSONSchemaExampleCorpus``
 - <doc:DeterministicConstruction>
+- <doc:TypedConstruction>
 - ``JSONSchemaExampleResult``
 
 ### Incomplete search and proofs

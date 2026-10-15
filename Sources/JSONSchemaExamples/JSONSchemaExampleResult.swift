@@ -4,8 +4,8 @@ import JSONSchema
 
 /// A candidate certified by completed native validation against the prepared root.
 ///
-/// Only the generator initializes results. The current algorithm offers explicit candidates and static
-/// references, not general schema synthesis or an arbitrary satisfiability decision.
+/// Only the generator initializes results. The current algorithm offers declared hints, static
+/// references and conservative typed construction, not arbitrary satisfiability decisions.
 public struct JSONSchemaExampleResult: Sendable {
     /// The exact candidate that received the attached valid verdict.
     public let value: JSON
@@ -15,7 +15,7 @@ public struct JSONSchemaExampleResult: Sendable {
     public let seed: UInt64
     /// The requested candidate preference.
     public let profile: JSONSchemaExampleProfile
-    /// The versioned candidate algorithm, currently s3-candidates-v2.
+    /// The versioned candidate algorithm, currently s3-candidates-v3.
     public let generatorVersion: String
     /// SHA-256 of the documented normalized source/registry transport, not original text or JCS.
     public let sourceSnapshotDigest: String

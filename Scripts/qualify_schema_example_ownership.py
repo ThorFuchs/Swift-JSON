@@ -14,7 +14,7 @@ def main():
     output = ROOT / args.output
     output.mkdir(parents=True, exist_ok=True)
     rows = []
-    receipt = {'schema_version': 1, 'status': 'failed', 'positive_probes': 1, 'negative_probes': 5,
+    receipt = {'schema_version': 1, 'status': 'failed', 'positive_probes': 1, 'negative_probes': 8,
                'scope': 'Trusted implementation compiler fixtures, not public consumer imports', 'commands': rows}
 
     def run(name, command, expected=0, diagnostic=None):
@@ -45,7 +45,7 @@ def main():
         probes = [('MoveAndShare', 0, None)]
         probes += [(kind + 'Copy', 1, "'state' consumed more than once") for kind in ['Random', 'Trace']]
         probes += [(kind + 'Sendable', 1, "conformance of 'SchemaExample" + kind + "' to 'Sendable' is unavailable")
-                   for kind in ['Random', 'Trace', 'Transport']]
+                   for kind in ['Random', 'Trace', 'Transport', 'Frame', 'ObjectFrame', 'ArrayFrame']]
         for name, expected, diagnostic in probes:
             fixture = fixtures / (name + '.swift')
             run(name, flags + [str(fixture), '-o', '/dev/null'], expected, diagnostic)
@@ -54,7 +54,7 @@ def main():
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
-    print('SCHEMA_EXAMPLES_OWNERSHIP ' + receipt['status'] + ' positive=1 negatives=5')
+    print('SCHEMA_EXAMPLES_OWNERSHIP ' + receipt['status'] + ' positive=1 negatives=8')
     return 0 if receipt['status'] == 'passed' else 1
 
 
