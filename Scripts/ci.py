@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Execute public native CI lanes with command, source and environment receipts."""
-import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
+import argparse, datetime, hashlib, json, os, pathlib, re, shutil, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
@@ -313,6 +313,9 @@ def main():
             receipt['status'] = 'blocked' if args.lane == 'browser' and code == 2 else 'failed'
             break
         save()
+        if args.lane == 'composition' and '--sanitize' in command and 'thread' in command:
+            # This dedicated TSan tree is no longer needed once its event receipt is saved.
+            shutil.rmtree(ROOT / '.build/composition-thread', ignore_errors=True)
     else:
         receipt['status'] = 'passed'
     if receipt['status'] == 'passed' and args.lane == 'composition':
