@@ -16,6 +16,9 @@ let package = Package(
     ],
     targets: [
         .target(name: "JSON"),
+        // Experimental N1 target. Product promotion requires separate release-gate review.
+        .target(name: "JSONNavigation", dependencies: ["JSON"]),
+        .testTarget(name: "JSONNavigationTests", dependencies: ["JSONNavigation", "JSON"], exclude: ["Fixtures"]),
         .target(name: "JSONBridges", dependencies: ["JSON"]),
         .testTarget(name: "JSONIntegrationTests", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch"]),
         .testTarget(name: "JSONBridgesTests", dependencies: ["JSONBridges", "JSON"]),

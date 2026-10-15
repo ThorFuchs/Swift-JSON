@@ -1,5 +1,17 @@
 # Native CI
 
+## Experimental N1 branch
+
+The Structural Intelligence branch adds exactly 36 Navigation functions and one
+shared-root safety function, keeping every existing identity/case. Root expectations
+are 582 native/566 Linux with 325 parameter invocations; TSan is 42/41. WASI's
+separate core scope is 478 functions/288 parameters. No new public product is exposed.
+`--lane navigation` checks focused discovery, Debug/Release, explicit strict-memory
+compilation and the external compiler/consumer/experimental DocC audit. Native/Linux
+include that consumer alongside their existing gates; all 49 core cap outcomes and
+126 restored maintenance identities remain required. The following earlier counts
+retain their original source context; actual source-bound receipts establish passes.
+
 This main-based forward-port retains seven products and restores the entire
 1.2.1 regression inventory. The experimental composition increment adds 12 functions; current native root discovery is 558 functions and
 325 parameter invocations; Linux is 542/325. Full ASan uses the same roots;

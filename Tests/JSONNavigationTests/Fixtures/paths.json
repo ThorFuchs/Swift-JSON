@@ -1,0 +1,15 @@
+{
+  "": "empty-key",
+  "0": "numeric-object-key",
+  "a/b": "slash-key",
+  "~": "tilde-key",
+  "a.b": "dotted-key",
+  "é": "composed",
+  "é": "decomposed",
+  "items": [
+    "first-array-item",
+    {
+      "0": "nested-numeric-object-key"
+    }
+  ]
+}

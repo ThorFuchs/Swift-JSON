@@ -41,6 +41,8 @@ Online references track main; tagged releases include matching compiled catalogu
 
 ## Consumers, qualification and maintenance
 
+- [Experimental N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md) and [gated traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md); JSONNavigation is not a released product.
+
 - [Six-library compiled example](../Examples/Consumer/README.md)
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)
