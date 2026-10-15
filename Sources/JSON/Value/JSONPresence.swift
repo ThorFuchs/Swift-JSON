@@ -12,6 +12,40 @@ extension JSONPresence: Sendable where Value: Sendable {}
 extension JSONPresence: Equatable where Value: Equatable {}
 extension JSONPresence: Hashable where Value: Hashable {}
 
+extension JSONPresence {
+    /// Transforms a non-null payload while preserving absence and explicit null.
+    ///
+    /// The callback runs exactly once for `.value` and never for the other cases.
+    /// Its computation is caller work; this helper performs no bounded admission.
+    /// - Parameter transform: The synchronous payload transformation.
+    /// - Returns: The same presence state, with a transformed value when present.
+    /// - Throws: The callback's error unchanged.
+    public func map<NewValue>(_ transform: (Value) throws -> NewValue) rethrows -> JSONPresence<NewValue> {
+        switch self {
+        case .absent: return .absent
+        case .null: return .null
+        case .value(let payload): return .value(try transform(payload))
+        }
+    }
+
+    /// Selects exactly one callback for absent, null or non-null presence.
+    ///
+    /// Callback computation is caller work; no resource quota is implied.
+    /// - Parameters:
+    ///   - absent: Invoked only when the field is missing.
+    ///   - null: Invoked only for explicit JSON null.
+    ///   - value: Invoked only with a non-null payload.
+    /// - Returns: The selected callback's result.
+    /// - Throws: The selected callback's error unchanged.
+    public func fold<Result>(absent: () throws -> Result, null: () throws -> Result, value: (Value) throws -> Result) rethrows -> Result {
+        switch self {
+        case .absent: return try absent()
+        case .null: return try null()
+        case .value(let payload): return try value(payload)
+        }
+    }
+}
+
 extension JSONObject {
     /// Looks up an exact scalar key and distinguishes absence, null and non-null values.
     ///
