@@ -4,7 +4,7 @@ import JSONSchema
 
 /// An immutable, offline source snapshot with invocation-owned candidate search.
 ///
-/// G1 offers const, enum, default/examples, true/empty schemas and static reference
+/// The current algorithm offers const, enum, default/examples, true/empty schemas and static reference
 /// targets. Every candidate is validated against the original compiled root. Dynamic
 /// construction and general numeric/string/object synthesis remain unsupported.
 public struct JSONSchemaExampleGenerator: Sendable {
@@ -14,10 +14,15 @@ public struct JSONSchemaExampleGenerator: Sendable {
     public let registry: JSONSchemaRegistry
     /// The frozen preparation, generation and evaluation policies.
     public let options: JSONSchemaExampleOptions
-    /// The normalized source/registry snapshot digest; policies are retained separately.
+    /// The normalized source/registry snapshot digest; policies and corpus have separate identities.
     public let sourceSnapshotDigest: String
     /// The single preparation ledger, covering compilation, serialization and hashing.
     public let preparationStatistics: JSONOperationStatistics
+    /// SHA-256 of the versioned, admitted ordered corpus transport.
+    public let corpusDigest: String
+    /// SHA-256 binding all generation, compilation and evaluation policies.
+    public let policyDigest: String
+    private let corpus: [JSON]
     private let compiled: CompiledJSONSchema
 
     /// Compiles once and prepares a bounded source snapshot without online resolution.
@@ -32,11 +37,19 @@ public struct JSONSchemaExampleGenerator: Sendable {
         guard options.maximumAttempts > 0, options.maximumAttempts < UInt64.max else {
             throw JSONSchemaExampleFailure.invalidConfiguration(.attemptLimit)
         }
+        guard !options.corpus.values.isEmpty else {
+            throw JSONSchemaExampleFailure.invalidConfiguration(.emptyCorpus)
+        }
         try options.limits.validate(); try options.validationOptions.limits.validate()
         var meter = try JSONWorkMeter(limits: options.compilationOptions.limits, domain: .schemaCompilation)
         let compiled = try JSONSchemaCompiler(options: options.compilationOptions)
             .compile(document, registry: registry, meter: &meter)
-        let digest = try SchemaExampleSnapshot.digest(document: document, registry: registry, meter: &meter)
+        let digest = try SchemaExampleDigests.snapshot(document: document, registry: registry, meter: &meter)
+        let normalizedCorpus = try SchemaExampleExact.construct(.array(options.corpus.values), meter: &meter)
+        guard let tokens = normalizedCorpus.arrayValue else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        corpus = tokens
+        corpusDigest = try SchemaExampleDigests.corpus(tokens, meter: &meter)
+        policyDigest = try SchemaExampleDigests.policy(options, meter: &meter)
         self.document = document; self.registry = registry; self.options = options
         self.compiled = compiled; sourceSnapshotDigest = digest
         preparationStatistics = meter.statistics()
@@ -44,13 +57,16 @@ public struct JSONSchemaExampleGenerator: Sendable {
 
     /// Offers bounded exact candidates, returning only a completed native valid verdict.
     /// - Parameters:
-    ///   - seed: Recorded provenance; this G1 algorithm performs no random draws.
-    ///   - profile: Candidate preference; currently only minimal is implemented.
+    ///   - seed: SplitMix64 initial state for demonstration choices; always bound into the trace.
+    ///   - profile: Stable minimal order or seeded demonstration candidate selection.
     /// - Returns: The exact certified value and cumulative successful-invocation statistics.
     /// - Throws: Explicit construction failure, native operational error or cancellation.
     public func generate(seed: UInt64 = 0, profile: JSONSchemaExampleProfile = .minimal) throws -> JSONSchemaExampleResult {
         let limits = try options.limits.intersection(options.validationOptions.limits)
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
+        var random = SchemaExampleRandom(seed: seed)
+        var trace = try SchemaExampleTrace(snapshot: sourceSnapshotDigest, corpus: corpusDigest,
+                                          policy: policyDigest, seed: seed, profile: profile, meter: &meter)
         let root = compiled.exampleRoot
         let declaration = try root.declaration(meter: &meter)
         if declaration.raw.booleanValue == false {
@@ -71,6 +87,7 @@ public struct JSONSchemaExampleGenerator: Sendable {
             if seen { sawCycle = true; continue }
             try meter.charge(.schemaNodes)
             try meter.retain(JSONLogicalWeights.indexSlot); visited.append(node.identity)
+            try trace.event(1, 0, 0, meter: &meter)
             let view = try node.declaration(meter: &meter)
             for offset in 0..<node.referenceCount {
                 if try node.reference(at: offset, meter: &meter).requiresDynamicScope {
@@ -78,30 +95,34 @@ public struct JSONSchemaExampleGenerator: Sendable {
                 }
             }
             if let object = view.raw.objectValue {
-                if view.vocabulary.applies(.const), let value = try object.lookup("const", meter: &meter),
-                   let result = try certify(value, seed: seed, profile: profile, attempts: &attempts, meter: &meter) { return result }
-                if view.vocabulary.applies(.enum), let values = try object.lookup("enum", meter: &meter)?.arrayValue {
-                    for value in values {
-                        try meter.work()
-                        if let result = try certify(value, seed: seed, profile: profile, attempts: &attempts, meter: &meter) { return result }
-                    }
-                }
-                if view.vocabulary.applies(.default), let value = try object.lookup("default", meter: &meter),
-                   let result = try certify(value, seed: seed, profile: profile, attempts: &attempts, meter: &meter) { return result }
-                if view.vocabulary.applies(.examples), let values = try object.lookup("examples", meter: &meter)?.arrayValue {
-                    for value in values {
-                        try meter.work()
-                        if let result = try certify(value, seed: seed, profile: profile, attempts: &attempts, meter: &meter) { return result }
-                    }
+                // Exact ASCII keyword order; array order remains semantic.
+                for (role, item) in SchemaExampleVersion.keywords.enumerated() {
+                    let (keyword, kind) = item
+                    try meter.work()
+                    guard view.vocabulary.applies(kind),
+                          let declared = try object.lookup(keyword, meter: &meter) else { continue }
+                    let values: [JSON]
+                    if role < 2 { try meter.retain(JSONLogicalWeights.arraySlot); values = [declared] } else { values = declared.arrayValue ?? [] }
+                    if let result = try scan(values, role: UInt64(role), seed: seed, profile: profile,
+                                             attempts: &attempts, random: &random, trace: &trace, meter: &meter) { return result }
+                    if role < 2 { try meter.release(JSONLogicalWeights.arraySlot) }
                 }
             }
             if view.raw.booleanValue == true || view.raw.objectValue?.isEmpty == true {
-                if let result = try certify(.null, seed: seed, profile: profile, attempts: &attempts, meter: &meter) { return result }
+                if profile == .minimal { try meter.retain(JSONLogicalWeights.arraySlot) }
+                let values: [JSON] = profile == .minimal ? [.null] : corpus
+                if let result = try scan(values, role: 4, seed: seed, profile: profile,
+                                         attempts: &attempts, random: &random, trace: &trace, meter: &meter) { return result }
+                if profile == .minimal { try meter.release(JSONLogicalWeights.arraySlot) }
             }
-            for offset in (0..<node.referenceCount).reversed() {
-                let edge = try node.reference(at: offset, meter: &meter)
-                try meter.require(.evaluationFrames, UInt64(pending.count) + 1)
-                try meter.retain(JSONLogicalWeights.frame); pending.append(edge.target)
+            // Reverse push gives exact ASCII order: $dynamicRef, then $ref.
+            for kind in SchemaExampleVersion.referencePushOrder {
+                for offset in 0..<node.referenceCount {
+                    let edge = try node.reference(at: offset, meter: &meter)
+                    guard edge.keyword == kind else { continue }
+                    try meter.require(.evaluationFrames, UInt64(pending.count) + 1)
+                    try meter.retain(JSONLogicalWeights.frame); pending.append(edge.target)
+                }
             }
         }
         if sawCycle { throw JSONSchemaExampleFailure.unsupportedFeature(.cyclicReference) }
@@ -109,8 +130,25 @@ public struct JSONSchemaExampleGenerator: Sendable {
         throw JSONSchemaExampleFailure.searchExhausted(attempts: attempts)
     }
 
+    private func scan(_ values: [JSON], role: UInt64, seed: UInt64, profile: JSONSchemaExampleProfile,
+                      attempts: inout UInt64, random: inout SchemaExampleRandom,
+                      trace: inout SchemaExampleTrace, meter: inout JSONWorkMeter) throws -> JSONSchemaExampleResult? {
+        guard !values.isEmpty else { return nil }
+        var index = profile == .minimal ? 0 : Int(try random.uniform(upperBound: UInt64(values.count), trace: &trace, meter: &meter))
+        for _ in values.indices {
+            try meter.work()
+            try trace.event(2, role, UInt64(index), meter: &meter)
+            if let result = try certify(values[index], seed: seed, profile: profile, attempts: &attempts,
+                                         random: &random, trace: &trace, meter: &meter) { return result }
+            // Avoid start + offset overflow on 32-bit WASI.
+            index = index == values.count - 1 ? 0 : index + 1
+        }
+        return nil
+    }
+
     private func certify(_ value: JSON, seed: UInt64, profile: JSONSchemaExampleProfile,
-                         attempts: inout UInt64, meter: inout JSONWorkMeter) throws -> JSONSchemaExampleResult? {
+                         attempts: inout UInt64, random: inout SchemaExampleRandom,
+                         trace: inout SchemaExampleTrace, meter: inout JSONWorkMeter) throws -> JSONSchemaExampleResult? {
         try meter.checkpoint()
         guard attempts < options.maximumAttempts else { throw JSONSchemaExampleFailure.searchExhausted(attempts: attempts) }
         // The configured ceiling is strictly below UInt64.max, so this cannot wrap.
@@ -118,6 +156,8 @@ public struct JSONSchemaExampleGenerator: Sendable {
         try meter.resetValueBounds()
         let retainedBefore = meter.used(.retainedBytes)
         let annotationBefore = meter.used(.annotationBytes)
+        let value = try SchemaExampleExact.construct(value, meter: &meter)
+        try meter.resetValueBounds()
         try meter.operationDomain(.schemaEvaluation)
         let verdict = try JSONSchemaValidator(options: options.validationOptions).validate(value, against: compiled, meter: &meter)
         try meter.operationDomain(.core)
@@ -129,49 +169,22 @@ public struct JSONSchemaExampleGenerator: Sendable {
             guard !badRetained, !badAnnotations else { throw JSONFailure(.configuration, code: .invalidOperation) }
             try meter.releaseAnnotationState(annotations)
             try meter.release(retained)
+            try trace.event(4, attempts, 0, meter: &meter)
             return nil
         }
-        try meter.retain(128); try meter.checkpoint()
+        try trace.event(4, attempts, 1, meter: &meter)
+        try trace.event(5, attempts, random.draws, meter: &meter)
+        let events = trace.events
+        let traceDigest = try trace.digest(meter: &meter)
+        try meter.retain(512); try meter.checkpoint()
         return .init(value: value, validation: verdict, seed: seed, profile: profile,
-                     generatorVersion: "s3-g1-candidates-v1", sourceSnapshotDigest: sourceSnapshotDigest,
-                     schemaDigestAlgorithm: "swift-json-schema-snapshot-g1-v1",
+                     generatorVersion: SchemaExampleVersion.generator, sourceSnapshotDigest: sourceSnapshotDigest,
+                     schemaDigestAlgorithm: SchemaExampleVersion.snapshot,
+                     corpusDigestAlgorithm: SchemaExampleVersion.corpus, corpusDigest: corpusDigest,
+                     policyDigestAlgorithm: SchemaExampleVersion.policy, policyDigest: policyDigest,
+                     rngAlgorithm: SchemaExampleVersion.rng, randomDraws: random.draws,
+                     traceDigestAlgorithm: SchemaExampleVersion.trace, traceDigest: traceDigest, traceEventCount: events,
                      validationOptions: options.validationOptions, compilationOptions: options.compilationOptions,
                      attempts: attempts, statistics: meter.statistics())
-    }
-}
-
-private enum SchemaExampleSnapshot {
-    static func appendByte(_ byte: UInt8, to bytes: inout [UInt8], meter: inout JSONWorkMeter) throws {
-        try meter.work(); try meter.require(.inputBytes, UInt64(bytes.count) + 1)
-        try meter.retain(1); bytes.append(byte)
-    }
-    static func append<C: Collection>(_ field: C, to bytes: inout [UInt8], meter: inout JSONWorkMeter) throws where C.Element == UInt8 {
-        var length: UInt64 = 0
-        for _ in field { try meter.work(); length = try meter.adding(.inputBytes, length, 1) }
-        for shift in stride(from: 56, through: 0, by: -8) {
-            try appendByte(UInt8(truncatingIfNeeded: length >> shift), to: &bytes, meter: &meter)
-        }
-        for byte in field {
-            try appendByte(byte, to: &bytes, meter: &meter)
-        }
-    }
-    static func digest(document: JSONSchemaDocument, registry: JSONSchemaRegistry, meter: inout JSONWorkMeter) throws -> String {
-        var bytes: [UInt8] = []
-        for byte in "SwiftJSON-schema-snapshot-g1-v1\n".utf8 { try appendByte(byte, to: &bytes, meter: &meter) }
-        let count = try meter.adding(.schemaDocuments, UInt64(registry.documents.count), 1)
-        for shift in stride(from: 56, through: 0, by: -8) { try appendByte(UInt8(truncatingIfNeeded: count >> shift), to: &bytes, meter: &meter) }
-        for index in 0..<Int(count) {
-            try meter.work()
-            let entry = index == 0 ? document : registry.documents[index - 1]
-            try appendByte(entry.retrievalURI == nil ? 0 : 1, to: &bytes, meter: &meter)
-            try append((entry.retrievalURI?.string ?? "").utf8, to: &bytes, meter: &meter)
-            try meter.resetValueBounds()
-            let encoded = try JSONWriter(options: .init(keyOrder: .scalar, numberStyle: .normalized)).write(entry.raw, meter: &meter)
-            try append(encoded, to: &bytes, meter: &meter)
-            try meter.release(UInt64(encoded.count))
-        }
-        let result = try JSONSHA256Core.hexadecimal(bytes, accounting: &meter)
-        try meter.release(UInt64(bytes.count))
-        return result
     }
 }

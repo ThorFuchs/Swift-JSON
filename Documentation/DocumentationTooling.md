@@ -32,7 +32,7 @@ statistics; the consumer imports no private meters.
 | --- | --- |
 | `.build/handoff/docc/JSON.doccarchive` | JSON API and exact values/native coding guide |
 | `.build/handoff/docc/JSONSchema.doccarchive` | Schema API and offline validation guide |
-| `.build/handoff/docc/JSONSchemaExamples.doccarchive` | G1 candidate verification API and bounded construction guide |
+| `.build/handoff/docc/JSONSchemaExamples.doccarchive` | G2 certified candidates, exact construction and deterministic provenance |
 | `.build/handoff/docc/JSONStreaming.doccarchive` | Streaming API and completion/backpressure guide |
 | `.build/handoff/docc/JSONHTML.doccarchive` | Exact formatted HTML API and rendering guide |
 | `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |

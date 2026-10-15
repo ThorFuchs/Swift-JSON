@@ -36,11 +36,11 @@ def main():
             raise ValueError('Failed actual consumer/compiler outcome: ' + name)
         return text
 
-    receipt = {'schema_version': 1, 'status': 'failed', 'public_cases': 12, 'negative_probes': 2,
-               'scope': 'G1 public consumer and access control; not G7 platform qualification', 'commands': rows}
+    receipt = {'schema_version': 1, 'status': 'failed', 'public_cases': 15, 'negative_probes': 2,
+               'scope': 'G2 public consumer, independent digest oracle and process repeatability; not G7 platform qualification', 'commands': rows}
     try:
         text = run('consumer', base + ['SchemaExamplesConsumer'])
-        if 'SCHEMA_EXAMPLES_CONSUMER passed cases=12' not in text.splitlines():
+        if 'SCHEMA_EXAMPLES_CONSUMER passed cases=15' not in text.splitlines():
             raise ValueError('Missing exact public consumer case count')
         location = ['swift', 'build', '--package-path', package, '--show-bin-path']
         if args.scratch_path:
@@ -49,6 +49,13 @@ def main():
         bin_paths = [pathlib.Path(line) for line in bin_text.splitlines() if line.startswith('/')]
         if len(bin_paths) != 1 or not bin_paths[0].is_dir():
             raise ValueError('Missing or ambiguous SwiftPM consumer binary path')
+        second = run('consumer-second-process', [str(bin_paths[0] / 'SchemaExamplesConsumer')])
+        first_vectors = [line for line in text.splitlines() if line.startswith('G2_VECTORS ')]
+        second_vectors = [line for line in second.splitlines() if line.startswith('G2_VECTORS ')]
+        if len(first_vectors) != 1 or first_vectors != second_vectors or 'SCHEMA_EXAMPLES_CONSUMER passed cases=15' not in second.splitlines():
+            raise ValueError('Cross-process value/trace mismatch or missing consumer cases')
+        run('independent-transport-oracle', ['python3', '-B', 'Scripts/check_schema_example_determinism.py',
+                                            '--consumer-log', str(output / 'consumer.log')])
         # Inspect only this consumer's actual product directory, not nested safety caches.
         modules = [p for p in [bin_paths[0], bin_paths[0] / 'Modules']
                    if (p / 'JSONSchemaExamples.swiftmodule').exists()]
@@ -68,7 +75,7 @@ def main():
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
-    print('SCHEMA_EXAMPLES_COMPILER ' + receipt['status'] + ' public_cases=12 negatives=2')
+    print('SCHEMA_EXAMPLES_COMPILER ' + receipt['status'] + ' public_cases=15 negatives=2')
     return 0 if receipt['status'] == 'passed' else 1
 
 

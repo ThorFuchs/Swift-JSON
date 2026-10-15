@@ -19,7 +19,7 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
         #expect(result.validation.isValid && result.validation.diagnosticsComplete)
         #expect(result.attempts == 1 && result.seed == 42)
         #expect(result.statistics[.evaluationWorkUnits] > 0)
-        #expect(result.generatorVersion == "s3-g1-candidates-v1")
+        #expect(result.generatorVersion == "s3-candidates-v2")
         let native = try JSONSchemaCompiler().compile(prepared.document).validate(result.value)
         #expect(native.isValid == result.validation.isValid)
     }
@@ -232,6 +232,18 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
         for try await result in group {
             #expect(result.value == expected.value && result.validation.isValid)
             #expect(result.statistics == expected.statistics && result.attempts == 2)
+            count += 1
+        }
+        #expect(count == 16)
+    }
+    let demos = try (0..<16).map { try prepared.generate(seed: UInt64($0), profile: .demonstration) }
+    try await withThrowingTaskGroup(of: JSONSchemaExampleResult.self) { group in
+        for seed in 0..<16 { group.addTask { try prepared.generate(seed: UInt64(seed), profile: .demonstration) } }
+        var count = 0
+        for try await result in group {
+            let expected = demos[Int(result.seed)]
+            #expect(result.value == expected.value && result.traceDigest == expected.traceDigest)
+            #expect(result.randomDraws == expected.randomDraws && result.statistics == expected.statistics)
             count += 1
         }
         #expect(count == 16)

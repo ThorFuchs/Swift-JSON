@@ -6,12 +6,12 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G1 complete: qualified read-only plan bridge, optional candidate-verification product and real public consumer",
+  "status": "G2 complete: metered deterministic choices, stable exact construction and versioned provenance; native increment qualified",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
     "S3-G1": "passed_native_increment",
-    "S3-G2": "not_started",
+    "S3-G2": "passed_native_increment",
     "S3-G3": "not_started",
     "S3-G4": "not_started",
     "S3-G5": "not_started",
@@ -46,13 +46,15 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "G2: versioned metered PRNG, stable construction ordering, corpus/snapshot/trace determinism; retain G1 certification authority",
+  "next_gate": "G3 conservative typed construction and 24 must-generate fixtures; preserve exact certification and cumulative accounting",
   "limitations": [
-    "G2-G8 remain open; this is not a qualified 1.6 release candidate",
-    "G1 offers explicit candidates and static refs; general construction, random choices, richer profiles and corpus/trace APIs are not implemented",
+    "G3-G8 remain open; this is not a qualified 1.6 release candidate",
     "Original packet expectation/oracle representation amendment remains separately preserved",
     "No new full nine-bundle Native/safety, Linux, WASI, mobile or controlled-performance pass is claimed",
-    "Initial native attempt failed for disk capacity; test-product selection and all failed probes are retained in private evidence"
+    "Main independently advanced to 037e735 (1.5.1 repairs); this isolated G2 branch preserves its G0/G1 base pending later integration.",
+    "G2 is native-only qualification: Linux/WASI/mobile goldens remain G7; no controlled throughput or RSS claim",
+    "General typed/constraint-driven synthesis, boundary profile and advanced/dynamic construction remain G3/G4",
+    "G2 failed exploratory/compiler/test/harness attempts are retained separately from final passed receipts"
   ],
   "push_merge_tag_or_publication_performed": false,
   "g1_observed": {
@@ -73,12 +75,42 @@
     "focused_safety_lane_commands": 3
   },
   "current_harness_requirements": {
-    "native_root_functions": 440,
+    "native_root_functions": 461,
     "parameter_invocations": 325,
     "native_shared_state_functions": 16,
     "core_metrics": 49,
     "scope": "Full-lane requirements, distinct from the focused G1 observations"
   },
   "g1_implementation_commit": "6c19580dec99c9363bb4b4d1611af8b8a2bab266",
-  "g1_qualification_record": "Documentation/Architecture/Release1.6/G1Qualification.md"
+  "g1_qualification_record": "Documentation/Architecture/Release1.6/G1Qualification.md",
+  "g2_base_commit": "8de39d55675180def26184f24b0eeb87feb214bd",
+  "g2_qualification_record": "Documentation/Architecture/Release1.6/G2Qualification.md",
+  "g2_observed": {
+    "generator_algorithm": "s3-candidates-v2",
+    "rng_algorithm": "splitmix64-v1",
+    "new_swift_testing_functions": 21,
+    "total_generator_functions": 42,
+    "debug_functions": 42,
+    "release_functions": 42,
+    "release_address_sanitizer_functions": 42,
+    "release_thread_sanitizer_functions": 1,
+    "concurrent_invocations_in_thread_test": 32,
+    "public_consumer_cases": 15,
+    "public_consumer_processes": 2,
+    "public_compiler_rejections": 2,
+    "implementation_compiler_positive_probes": 1,
+    "implementation_compiler_rejections": 5,
+    "independent_transport_profiles": 2,
+    "policy_generation_caps_perturbed": 49,
+    "native_prng_golden_draws": 16,
+    "native_prng_bounded_selections": 640,
+    "schema_functions_reused_with_unchanged_core_source": 69,
+    "schema_parameter_invocations": 12,
+    "evaluated_pinned_schema_cases": 2300,
+    "separate_schema_policy_cases": 37,
+    "harness_mutation_cases": 17,
+    "testing_event_parser_cases": 19,
+    "focused_determinism_commands": 7,
+    "focused_safety_commands": 3
+  }
 }

@@ -232,14 +232,17 @@ is neither native validation of an instance nor a service-acceptance guarantee. 
 and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
 [profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.
 
-## Schema examples (1.6 G1 development)
+## Schema examples (1.6 G2 development)
 
 The optional JSONSchemaExamples product prepares an immutable document/explicit
 registry/compiled-plan snapshot. `JSONSchemaExampleGenerator(document:registry:options:)`
 and `generate(seed:profile:)` offer exact declared candidates and compiler-qualified
 static reference targets. Every success contains the actual native valid verdict
-for the original root. The only current profile is minimal; seed is recorded but
-G1 performs no random draws. General constraint-driven synthesis is not included.
+for the original root. Minimal scans stable exact declarations; demonstration
+uses metered SplitMix64 rejection sampling and circular scans. An immutable exact
+`JSONSchemaExampleCorpus` supplies candidates for true/empty schemas. Returned
+objects/numbers use scalar order and normalized exact spelling. General
+constraint-driven synthesis is not included.
 
 `JSONSchemaExampleFailure` distinguishes unsupported construction, searchExhausted,
 reviewed trivial provenUnsatisfiable and invalidConfiguration. Core operational
@@ -247,5 +250,9 @@ failures and cancellation propagate without retries. Preparation accounting is
 separate from the shared per-generation ledger, which includes all completed
 invalid checks. Discarded validation ownership is released without refunding work. Logical
 retention is not process RSS.
-See [the exact G1 API decision](Release1.6/G1API.md) and the
+The result binds the versioned snapshot, ordered corpus, all generation/compiler/
+evaluator caps and flags, and complete abstract trace with SHA-256 digests. Trace
+bytes share diagnosticBytes with native diagnostics; exhaustion never truncates a
+success. See [the G2 byte transports](Release1.6/G2Determinism.md), the historical
+[G1 API decision](Release1.6/G1API.md), and the
 [compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).

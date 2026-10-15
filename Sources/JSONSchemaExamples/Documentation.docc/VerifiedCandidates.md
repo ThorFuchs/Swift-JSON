@@ -24,17 +24,19 @@ and exercises scalar-distinct keys, static/offline references and failures.
 
 ## Current construction boundary
 
-G1 offers active const, enum members in declaration order, default, examples,
-then compiler-qualified static reference declarations. True and empty schemas
-offer null. Defaults and examples are merely candidates: an invalid candidate
+G2 offers active const, default, enum and examples in exact ASCII keyword
+order, then compiler-qualified static reference declarations in ASCII keyword
+order. Array order remains semantic. True and empty schemas offer null under
+minimal, or a seeded synthetic token under demonstration. Defaults and examples are merely candidates: an invalid candidate
 is rejected, without inserting defaults or repairing values. Reference siblings
 are enforced by validating against the original root. Dynamic construction and
 cycles fail explicitly. This is neither full Draft 2020-12 generation nor a
 complete satisfiability solver.
 
-Only the minimal profile exists. Seed is recorded, but `s3-g1-candidates-v1`
-performs no random draws; varying seed need not vary output. Deterministic random
-construction, richer profiles and corpus/trace contracts belong to later gates.
+Minimal performs no random draws. Demonstration uses `splitmix64-v1` rejection
+sampling to pick a starting offset, followed by a circular scan without replacement.
+Every rejected draw and invalid candidate consumes the same invocation ledger.
+See <doc:DeterministicConstruction> for exact construction and provenance.
 
 ## Policies, errors and sharing
 
@@ -55,10 +57,13 @@ call owns its mutable search and evaluation state.
 
 ## Snapshot identity
 
-`swift-json-schema-snapshot-g1-v1` hashes the admitted normalized root and explicit
+`swift-json-schema-snapshot-v1` hashes the admitted normalized root and explicit
 registry documents in caller order, including unambiguous retrieval identities.
 It uses compact scalar-key/normalized-number writer bytes and big-endian UInt64
 lengths. It excludes source maps and unavailable original source bytes. Policies
 are retained separately: equal source digests do not imply equal policy. This is
-not RFC8785/JCS and is not a raw-text digest. Full transport details and future
-qualification boundaries are in the repository's Release1.6/G1API contract.
+not RFC8785/JCS and is not a raw-text digest. The result also binds
+the immutable corpus and all policies with separate versioned digests. The complete
+abstract trace includes every raw draw and native verdict, without raw schema or
+instance content. It throws on exhaustion rather than silently truncating. Full
+byte transports are in the repository's Release1.6/G2Determinism contract.

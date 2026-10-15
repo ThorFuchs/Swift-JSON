@@ -57,7 +57,31 @@ private func schema(_ text: String, uri: String? = nil) throws -> JSONSchemaDocu
             _ = try JSONSchemaExampleGenerator(document: schema(#"{"const":1,"type":"string"}"#)).generate()
             throw ConsumerFailure.mismatch(passed)
         } catch JSONSchemaExampleFailure.searchExhausted(attempts: 1) { passed += 1 }
-        guard passed == 12 else { throw ConsumerFailure.mismatch(passed) }
-        print("SCHEMA_EXAMPLES_CONSUMER passed cases=12")
+        let vectorGenerator = try JSONSchemaExampleGenerator(document: schema("true"))
+        var vectorRows: [String] = []
+        for (name, profile) in [("minimal", JSONSchemaExampleProfile.minimal), ("demonstration", .demonstration)] {
+            let result = try vectorGenerator.generate(seed: 42, profile: profile)
+            let bytes = try JSONWriter().write(result.value)
+            let hex = bytes.map { String($0, radix: 16).count == 1 ? "0" + String($0, radix: 16) : String($0, radix: 16) }.joined()
+            guard result.validation.isValid, result.corpusDigest == vectorGenerator.corpusDigest,
+                  result.policyDigest == vectorGenerator.policyDigest,
+                  result.generatorVersion == "s3-candidates-v2", result.rngAlgorithm == "splitmix64-v1",
+                  result.corpusDigestAlgorithm == "swift-json-example-corpus-v1",
+                  result.policyDigestAlgorithm == "swift-json-example-policy-v1",
+                  result.traceDigestAlgorithm == "swift-json-example-trace-v1",
+                  result.schemaDigestAlgorithm == "swift-json-schema-snapshot-v1",
+                  try JSONSchemaCompiler().compile(vectorGenerator.document).validate(result.value).isValid else { throw ConsumerFailure.mismatch(passed) }
+            vectorRows.append("\"\(name)\":{\"trace\":\"\(result.traceDigest)\",\"events\":\(result.traceEventCount),\"draws\":\(result.randomDraws),\"value_hex\":\"\(hex)\",\"trace_bytes\":\(result.statistics[.diagnosticBytes])}")
+            passed += 1
+        }
+        print("G2_VECTORS {\"snapshot\":\"\(vectorGenerator.sourceSnapshotDigest)\",\"corpus\":\"\(vectorGenerator.corpusDigest)\",\"policy\":\"\(vectorGenerator.policyDigest)\",\(vectorRows.joined(separator: ","))}")
+        let exactCorpus = JSONSchemaExampleCorpus(values: [try JSONParser().parse(#"{"é":9007199254740993,"e\u0301":9007199254740994.5}"#)])
+        let exactGenerator = try JSONSchemaExampleGenerator(document: schema("true"), options: .init(corpus: exactCorpus))
+        let exact = try exactGenerator.generate(seed: 42, profile: .demonstration)
+        guard exact.value == exactCorpus.values[0], exact.value.objectValue?.count == 2,
+              exact.randomDraws == 1, exact.validation.isValid else { throw ConsumerFailure.mismatch(passed) }
+        passed += 1
+        guard passed == 15 else { throw ConsumerFailure.mismatch(passed) }
+        print("SCHEMA_EXAMPLES_CONSUMER passed cases=15")
     }
 }

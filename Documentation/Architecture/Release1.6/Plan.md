@@ -51,3 +51,11 @@ Fresh S3 qualification must cover its actual final source; old evidence is a bas
 Release notes/version metadata, tagging, publication and public activation are
 later deliberate steps. This kickoff does not authorize or perform them. E11/E12,
 AI/model services, importers, CLI expansion and complete regex inversion stay outside S3.
+
+
+G2 implements `s3-candidates-v2`: metered SplitMix64, stable exact construction,
+explicit versioned corpus/source/policy/complete-trace transports and compiler
+ownership boundaries. See G2Determinism.md and the subsequent qualification record.
+The isolated branch retains its G0/G1 base. Main independently advanced to 037e735
+with 1.5.1 repairs; rebasing/merging that train is a separate integration task
+before final G7/G8 release qualification, not silently part of G2.

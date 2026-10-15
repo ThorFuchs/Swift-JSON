@@ -8,6 +8,8 @@ public struct JSONSchemaExampleOptions: Sendable {
     public var limits: JSONLimits
     /// The positive finite ceiling on candidate validations, including invalid candidates.
     public var maximumAttempts: UInt64
+    /// Immutable ordered candidates admitted and hashed during preparation.
+    public var corpus: JSONSchemaExampleCorpus
     /// Compilation and snapshot preparation policy, separate from instance evaluation.
     public var compilationOptions: JSONSchemaOptions
     /// Unchanged evaluator policy; required vocabulary assertions remain authoritative.
@@ -17,20 +19,24 @@ public struct JSONSchemaExampleOptions: Sendable {
     /// - Parameters:
     ///   - limits: Finite generation capacities and cumulative quotas.
     ///   - maximumAttempts: A positive value strictly below UInt64.max.
+    ///   - corpus: Exact synthetic tokens; never authoritative over schema constraints.
     ///   - compilationOptions: Offline compilation and preparation limits/policies.
     ///   - validationOptions: Instance evaluation limits and diagnostic/format policies.
     public init(limits: JSONLimits = .balanced, maximumAttempts: UInt64 = 16,
+                corpus: JSONSchemaExampleCorpus = .synthetic,
                 compilationOptions: JSONSchemaOptions = .init(),
                 validationOptions: JSONSchemaOptions = .init()) {
-        self.limits = limits; self.maximumAttempts = maximumAttempts
+        self.limits = limits; self.maximumAttempts = maximumAttempts; self.corpus = corpus
         self.compilationOptions = compilationOptions; self.validationOptions = validationOptions
     }
 }
 
 /// A candidate preference, without a guarantee of globally minimal output.
 public enum JSONSchemaExampleProfile: Sendable {
-    /// Prefer explicit declarations; G1 performs no random selection or general synthesis.
+    /// Scan declarations in stable order without random draws or general synthesis.
     case minimal
+    /// Seeded circular candidate scans and synthetic tokens for true/empty schemas.
+    case demonstration
 }
 
 /// A construction feature not implemented by this algorithm version.
@@ -55,6 +61,8 @@ public enum JSONSchemaUnsatisfiableProof: Sendable, Equatable {
 public enum JSONSchemaExampleConfigurationIssue: Sendable, Equatable {
     /// maximumAttempts was zero or UInt64.max.
     case attemptLimit
+    /// The corpus had no candidates.
+    case emptyCorpus
 }
 
 /// Bounded construction failures; core operational errors and cancellation propagate separately.

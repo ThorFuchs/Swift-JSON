@@ -75,10 +75,11 @@ SwiftPM dependency graph is empty. Qualification and benchmark tools are separat
 packages.
 
 The 1.6 development product `JSONSchemaExamples` depends only on JSON and JSONSchema.
-Its current G1 increment offers explicit const/enum/default/examples candidates and
+Its current G2 increment offers explicit const/default/enum/examples candidates and
 compiler-resolved static references, returning a value only after completed native
-validation. General constraint-driven synthesis and seeded random choices remain
-under development. See the [runnable public consumer](Examples/SchemaExamplesConsumer/README.md)
+validation. Seeded demonstration choices, normalized exact construction and
+versioned snapshot/corpus/policy/trace digests are implemented; general
+constraint-driven synthesis remains under development. See the [runnable public consumer](Examples/SchemaExamplesConsumer/README.md)
 and [verified-candidate guide](Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md).
 
 The Linux development increment adds portable schema integrity for all four products

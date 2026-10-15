@@ -249,6 +249,16 @@
         "Scripts/qualify_schema_providers.py",
         "Tools/CLIQualification/Sources/ProviderConsumer"
       ]
+    },
+    {
+      "repository": "SwiftJSON-SchemaExamples-S3-Codex-Wave-v1.0 briefing packet",
+      "archive_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
+      "original_path": "Reference/SplitMix64.swift and Reference/SplitMix64Check.swift",
+      "destination": "Sources/JSONSchemaExamples/SchemaExampleDeterminism.swift",
+      "disposition": "SplitMix64 constants, wrapping steps and rejection threshold adapted into invocation-owned noncopyable state with cumulative native metering; standalone shims not used. Sixteen golden draws retained in real-engine tests.",
+      "attribution": "Apache-2.0 SPDX header retained; original Swift-JSON integration code Apache-2.0.",
+      "validation": "Tests/JSONSchemaExamplesTests/DeterminismTests.swift; independent stdlib transport oracle and public consumer",
+      "evidence": "Release1.6 G2 qualification; actual native/safety/docs receipts"
     }
   ],
   "original_implementation_notes": [
