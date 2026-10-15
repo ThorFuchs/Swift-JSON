@@ -513,7 +513,7 @@ swift build -c release --product swift-json
 
 ### CLI development for 1.4
 
-The isolated 1.4 feature stack adds the `swift-json` executable beside the five
+The isolated 1.4 feature stack adds the `swift-json` executable beside the six
 libraries, with no external root dependencies. Build from the feature source
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.

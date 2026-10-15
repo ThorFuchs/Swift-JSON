@@ -4,8 +4,10 @@ This additive work implements the maintainer's consolidated briefing revision 0.
 The revision is a design input, not a package release number. Release placement is
 unassigned. Earlier Release1.3 and Release1.4 records retain their historical gates.
 
-The root package exposes five libraries (JSON, JSONSchema, JSONStreaming, JSONPatch,
-JSONHTML) and the sixth `swift-json` executable. External package dependencies remain
+The approved current baseline exposes six libraries (JSON, JSONSchema, JSONStreaming,
+JSONPatch, JSONHTML and opt-in JSONBridges) plus the `swift-json` executable. This
+supersedes the earlier five-library forward inventory; see [reconciliation](Reconciliation.md).
+JSONBridges depends on JSON only and is never re-exported by core. External dependencies remain
 empty. JSONHTML imports JSON; it does not require schema, an image codec, a Markdown
 engine, a TeX engine or a browser at generation time. Original code is Apache-2.0.
 
