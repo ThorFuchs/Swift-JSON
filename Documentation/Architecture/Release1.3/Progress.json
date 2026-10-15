@@ -325,10 +325,8 @@
     "scenarios": 88,
     "calibration_configurations": 96,
     "remaining": [
-      "Actual Linux runtime",
-      "Locked Mac native Safari/VoiceOver",
-      "Locked physical iPhone execution",
-      "Native touch and exact unexecuted scenario observations"
+      "Native physical touch/portrait-landscape browser interaction",
+      "Native media touch interaction"
     ],
     "qualification_contract": "StructuredPreviews/Qualification.md",
     "history_preserved": true,
@@ -342,6 +340,27 @@
       "public_consumer_functions": 14,
       "cap_metrics": 49,
       "mcp_server_claim": false
+    },
+    "qualification_follow_up": {
+      "source_head": "d89be60b66e753bb5f4be1b414710ab8c6155376",
+      "hosted_native_run": 38657093294,
+      "hosted_linux_run": 38657093290,
+      "hosted_checks_passed": 7,
+      "linux_architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "linux_functions_per_configuration": 356,
+      "linux_parameters_per_configuration": 325,
+      "physical_iphone_cases": 73,
+      "physical_iphone_artifacts": 8,
+      "native_safari_contexts": 16,
+      "native_safari_scope": "Accessibility/control smoke; selected five responsive widths, console/network; separate automated layout/zoom scope retained",
+      "voiceover": "Maintainer manually confirmed field/type/index, disclosure state and inline math; original off preference restored",
+      "additional_public_swift_testing_functions": 6,
+      "additional_search_cases": 9,
+      "history_preserved": true,
+      "library_changes": false
     }
   }
 }

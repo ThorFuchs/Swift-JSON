@@ -26,8 +26,9 @@ Playwright WebKit is supplementary and cannot certify actual Safari or VoiceOver
 Native export/PDF passed 65 public consumer cases/eight artifacts, 150 exact-once row
 markers in A4/Letter plus tail, media/math/full strings and failed-decoder semantics.
 The universal public Apple consumer built on both mobile SDKs; iPadOS 27.0 simulator
-execution passed 73 cases/eight artifacts. Physical iPhone launch was denied because
-it was locked. No receiving-editor, share-sheet or touch success is inferred.
+execution passed 73 cases/eight artifacts. The subsequent unlocked physical iPhone
+run on iOS 27.2 also passed 73 cases/eight artifacts; its actual files were copied
+back. Headless execution does not establish physical touch or share-sheet behavior.
 
 Native calibration uses eight bounded datasets, three finite profiles, 96 option
 combinations, 672 repeated renders and 674 behavior checks. Browser observations use 18
@@ -36,8 +37,8 @@ time is not an idle-host comparison or throughput guarantee. Logical retained by
 process RSS, caller work and owned quotas remain distinct. The inherited 1.075s versus
 0.96849s stream median (+11.0%) retains its existing reviewed disposition and 10% trigger.
 
-L5/P5 remains an explicit review boundary while Linux runtime, native Safari,
-VoiceOver, native touch/physical execution and any exact unexecuted scenarios are open.
+L5/P5 remains an explicit review boundary while native touch/portrait-landscape and
+media touch observations remain open.
 The supplied return materializes 110 requirement rows, 88 scenario rows, 48 requested
 browser contexts, actual source archive, per-file manifests, command receipts and
 failed-probe history. It does not turn related test counts into unexecuted scenario
@@ -56,3 +57,38 @@ to avoid a circular claim.
 No merge, tag, release, Site/social edit or outreach is authorized by this increment.
 The focused draft PR is dependent on the current CLI integration stack. Maintainers
 must review the materialized remaining actions before claiming complete qualification.
+
+## Qualification follow-up
+
+PR #30 at `d89be60b66e753bb5f4be1b414710ab8c6155376` passed all seven hosted native,
+safety, DocC and Linux checks. Native run `38657093294` tested GitHub's merge commit
+`adc9d424fd56253ba8d7885ad73418f33d1b5ccd`. Linux run `38657093290` executed Swift 6.4
+on Ubuntu 24.04/glibc 2.39 on both x86_64 and arm64: debug/release 356 functions and
+325 parameter cases per architecture, ASAN 356/325, TSan 11 and strict memory safety.
+All seven downloaded lane receipts preserve their original identities; their 991
+input file hashes match the reviewed source. Linux's source-archive invocation has
+no Git directory, so its manifest, run and architecture identify the input.
+
+Actual Safari 27.0 (`22625.1.29.11.24`) on macOS 27.0 exercised 16 file/served
+presentation contexts, including JavaScript disabled and stricter CSP. Native
+accessibility trees confirmed controls and script-free fallback; selected 320, 390,
+768, 1200 and 1440 point viewports were inspected. Console and local network
+observations supplement the pinned automated engines. This is a native smoke and
+selected-viewport scope; the three automated engines retain their separately
+recorded layout/zoom/motion counts. WebKit is never relabelled as Safari.
+
+The maintainer manually checked VoiceOver on that artifact and reported that field,
+type/index labels, disclosure state and the inline math expression worked as expected.
+This is attributed human evidence, not an automated spoken-output assertion. The
+JavaScript and VoiceOver preferences were restored to their observed original values.
+
+Six additional public-API Swift Testing probes passed against unchanged library
+bytes. They replay the resolved default depth 128 and rejected 129, supplied workspace
+annotations and project source mappings, exact repeated-search fixtures and both
+pinned non-HTML numeric/scalar fixtures. The 500-field long-string card explicitly
+exceeds the unchanged 14,400 point PDF ceiling; a finite 60-field adaptation produces
+ten pages with every tail marker exactly once. Nine additional browser cases cover
+100/1000/1100 repeated records, the 100-result/highlight bound, query byte overflow
+and cancellation of stale searches. TextEdit reception of the pinned exports is
+recorded separately from byte/content-type/selection assertions. No library feature,
+quota, platform, dependency or product policy changed in this follow-up.
