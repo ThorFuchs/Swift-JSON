@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "target_release": "1.6.0",
+  "wave": "S3 JSONSchemaExamples",
+  "branch": "codex/1.6-schema-examples",
+  "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
+  "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
+  "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
+  "status": "G0 orientation and executable API/fixture reconciliation complete; public product implementation not started",
+  "release_ready": false,
+  "gates": {
+    "S3-G0": "passed_with_documented_fixture_amendment",
+    "S3-G1": "not_started",
+    "S3-G2": "not_started",
+    "S3-G3": "not_started",
+    "S3-G4": "not_started",
+    "S3-G5": "not_started",
+    "S3-G6": "not_started",
+    "S3-G7": "not_started",
+    "S3-G8": "not_started"
+  },
+  "observed": {
+    "packet_manifest_files": 26,
+    "published_baseline_source_files": 995,
+    "baseline_hosted_receipts_verified": 7,
+    "baseline_clean_native_receipts_verified": 1,
+    "baseline_command_logs_verified": 120,
+    "baseline_event_streams_verified": 24,
+    "original_cases": 44,
+    "original_witnesses": 154,
+    "original_expected_verdict_errors": 1,
+    "amended_witnesses": 155,
+    "amended_native_oracle_disagreements": 0,
+    "oracle_version": "python-jsonschema 4.26.0 with exact numeric binding",
+    "oracle_binding_regressions": 8,
+    "native_prng_golden_draws": 16,
+    "native_prng_range_checks": 640,
+    "compiled_package_boundary_probes": 3,
+    "original_fixture_sha256": "6f2bfd4fdb7c7e206b6570c2156ca8e248831840733b0258aa8cd5938b35649f",
+    "amended_fixture_sha256": "5b3e6e40e83439a810d0eb7ac412ce158a4e582f36b9d36d6e313c159654ddd3"
+  },
+  "inherited_current_harness_requirements": {
+    "native_root_functions": 419,
+    "parameter_invocations": 325,
+    "native_shared_state_functions": 15,
+    "core_metrics": 49,
+    "scope": "Required counts on current main, not a fresh S3 qualification claim"
+  },
+  "next_gate": "G1: qualify exact public declarations, optional target and narrow immutable plan navigation bridge; then begin metered foundations",
+  "limitations": [
+    "No generator implementation or certified generated outputs yet",
+    "Original packet expectation and oracle representation error preserved with separate amended evidence",
+    "No new full Native/safety/docs/Linux/WASI/mobile or controlled-performance qualification claimed",
+    "Local disk capacity is limited; full new qualification needs capacity planning without sibling-cache removal",
+    "Current-main HTML post-merge evidence remains separate from the reused 1.5.0 baseline"
+  ],
+  "push_merge_tag_or_publication_performed": false
+}
