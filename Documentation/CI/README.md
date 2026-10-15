@@ -8,12 +8,12 @@ are recorded; macOS/SDK 27 and Swift 6.4 remain minimums.
 Pushes to main, pull requests and manual dispatch run three lanes:
 
 - Native: public inventory, manifest/dependency graph, release build, debug and
-  release Swift Testing, five-product example, rooted JSON/JSONSchema consumer,
+  release Swift Testing, public multi-product example, rooted JSON/JSONSchema consumer,
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, five native DocC catalogs with warnings as errors,
+  executed README examples, eight product DocC catalogs plus the shared DSL structure reference with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -63,7 +63,7 @@ distribution, architecture or libc claims.
 
 `python3 Scripts/ci.py --lane wasm` requires the matching Swift.org 6.4.0 compiler,
 SDK and WasmKit plus Node. It records cross-build and runtime outcomes separately.
-Node executes the complete 256-function/173-parameter portable root suites,
+Node executes the current 329-function/173-parameter portable root suites,
 independent corpus policies and all 49 cap outcomes. Both hosts execute the frozen
 public consumer; WasmKit retains its separately recorded 14-function consumer scope. The
 [WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
@@ -77,9 +77,9 @@ Apple SDK declaration probes. It builds all five products in iPhoneOS and
 simulator consumers. A bounded offscreen WebPage region experiment remains outside
 the production API. The lane establishes native API/file transport and SDK builds,
 not share sheets or receiving-editor UI. Explicit paginated PDF and simulator/device execution have separate materialized receipts.
-Current root discovery is 270 functions on Mac (75 HTML) and 256 on Linux/WASI
-(61 HTML). The focused export lane requires 38 functions on Mac. Ten Mac shared
-functions, including independent PDF cancellation, run under Thread Sanitizer. All 49 cap checks
+Current root discovery is 343 functions on Mac (75 HTML, 47 DSL) and 329 on Linux/WASI
+(61 HTML, 47 DSL). The focused export lane requires 38 functions on Mac. Thirteen Mac shared
+functions, including independent PDF cancellation and DSL finalization, run under Thread Sanitizer. All 49 cap checks
 and the 173 baseline parameterized invocations remain required.
 
 ## Structured Swift Testing receipts
@@ -109,3 +109,18 @@ regex 12, streaming 14, patch 11 and portable HTML 61. Its public consumer requi
 remain required. The first failed inherited expectations are retained; no blanket
 nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
 observations remain separate from automated SDK/API and portable execution.
+
+## Dual DSL development qualification
+
+`python3 Scripts/ci.py --lane dsl` runs all 47 actual-engine DSL Swift Testing
+functions in Debug and Release, six intended-domain compiler rejections in both
+configurations, qualified-name collision probes, native compiler scaling experiments
+and the separate public consumer in both configurations. Native/Linux lanes also
+require the DSL imports and consumer. Root discovery is 343 functions on Mac and
+329 on Linux/WASI, in eight exact bundles; all 173 parameter invocations and 49
+baseline metric probes remain unchanged. Native shared-state TSan discovery is
+13 functions (12 portable), including independent DSL finalization with shared plans.
+
+The P1.2 compiler experiment builds local variadic and pairwise builder modules
+against the same real engine. Measurements retain host load and compiler RSS;
+these do not imply runtime, staging-retention or caller-work guarantees.

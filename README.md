@@ -64,6 +64,8 @@ Choose the products your application needs:
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
 | **JSONHTML** | Exact HTML, offline exploration and immutable native transfer/export (1.3 development) |
+| **JSONValueDSL** | Opt-in typed authored objects/arrays with exact values and finite finalization (P1.2 development) |
+| **JSONSchemaDSL** | Opt-in typed authored Draft 2020-12 declarations using the existing engine (P1.2 development) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (E2 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
@@ -72,8 +74,8 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The Linux development increment adds portable schema integrity for all four products
-without runtime dependencies. Its initial qualification scope is Swift 6.4+,
+Linux support includes portable schema integrity without runtime dependencies.
+Its qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
 
@@ -100,7 +102,7 @@ Then add products to your target dependencies:
 
 Add `JSONStreaming`, `JSONPatch` and the 1.3 development product `JSONHTML` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [six-product consumer](Examples/Consumer) for a complete buildable
+releases. See the [eight-product consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 
@@ -136,6 +138,47 @@ text is distinct from its exact binary rational. Read the
 [entry-point guide](Sources/JSON/Documentation.docc/QuickEntryPoints.md),
 [numeric fidelity guide](Sources/JSONBridges/Documentation.docc/NumericFidelity.md)
 and [before/after crosswalk](Documentation/Ergonomics/README.md).
+
+## Typed authored DSLs (P1.2 development)
+
+Select the optional `JSONValueDSL` and `JSONSchemaDSL` products explicitly. They add
+syntax over the same exact model and schema engine; neither is imported by core.
+These APIs are development additions on main's feature line, not additions to older tags.
+
+```swift
+import JSONValueDSL
+import JSONSchemaDSL
+
+let authoredTenth = try JSONNumber(parsing: "0.1")
+let authoredJSON = try JSONValueDSL.object {
+    Field("amount", exactNumber: authoredTenth)
+    Field.array("nested") { Element.array { Element(1); Element(2) } }
+}
+let authoredSchema = try JSONSchemaDSL.document {
+    Schema.type(.object)
+    Schema.properties {
+        Property("amount") { Schema.type(.number); Schema.minimum(authoredTenth) }
+    }
+    Schema.required("amount")
+}
+let authoredPlan = try JSONSchemaCompiler().compile(authoredSchema)
+let authoredResult = try JSONSchemaValidator().validate(authoredJSON, against: authoredPlan)
+precondition(authoredResult.isValid)
+```
+
+This syntax is for **trusted authored configuration**. Callbacks, wrapper collection
+and staging are unmetered. Only iterative finalization and schema-document admission
+share a finite ledger; there is no staging/RSS bound or whole-DSL cumulative report.
+Use checked accumulators or the parser for dynamic untrusted input. Exact duplicates
+throw, scalar-distinct keys remain distinct, omitted branches emit nothing, and arrays
+expand only through explicit `Elements(contentsOf:)`. There is no implicit Float/Double
+bridge, requiredness inference, default application or custom schema validator.
+
+See the [value guide](Sources/JSONValueDSL/Documentation.docc/AuthoredValues.md),
+[schema guide](Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md),
+[public-only consumer](Examples/DualDSL) and [qualification scope](Documentation/Qualification/DualDSL).
+The shared JSONDSLCore module has no standalone product; its typed composition contracts
+support the two optional APIs. Typed schema synonyms and an umbrella import remain deferred.
 
 ## Parse, inspect and write exact values
 
@@ -454,11 +497,13 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The five DocC catalogs
-provide public API references, focused guides, parameter descriptions and failure
-contracts, compiled from the native Swift public symbol graphs.
+The [documentation index](Documentation/README.md) links the behavior contracts.
+Eight product DocC catalogues provide public API references, focused guides,
+parameter descriptions and failure contracts, compiled from native Swift public
+symbol graphs. A ninth catalogue documents shared DSL composition types; its
+helper module has no standalone product.
 
-Build all five catalogs on a supported native host:
+Build all nine catalogues on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs

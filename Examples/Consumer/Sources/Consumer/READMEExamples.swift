@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Compiled README examples; checked by the documentation lane.
 import JSONBridges
+import JSONValueDSL
+import JSONSchemaDSL
 import JSON
 import Foundation
 import JSONSchema
@@ -40,6 +42,22 @@ func runREADMEExamples() throws {
     let bridgeTenth = try JSONNumber(parsing: "0.1")
     let bridgeRounded = try Double(jsonNumber: bridgeTenth, policy: .rounded)
     precondition(bridgeRounded == 0.1)
+
+    let authoredTenth = try JSONNumber(parsing: "0.1")
+    let authoredJSON = try JSONValueDSL.object {
+        Field("amount", exactNumber: authoredTenth)
+        Field.array("nested") { Element.array { Element(1); Element(2) } }
+    }
+    let authoredSchema = try JSONSchemaDSL.document {
+        Schema.type(.object)
+        Schema.properties {
+            Property("amount") { Schema.type(.number); Schema.minimum(authoredTenth) }
+        }
+        Schema.required("amount")
+    }
+    let authoredPlan = try JSONSchemaCompiler().compile(authoredSchema)
+    let authoredResult = try JSONSchemaValidator().validate(authoredJSON, against: authoredPlan)
+    precondition(authoredResult.isValid)
 
     let parser = JSONParser()
     let value = try parser.parse(#"{"count":9007199254740993,"note":null}"#)

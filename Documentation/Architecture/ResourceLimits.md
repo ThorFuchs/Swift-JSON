@@ -121,3 +121,14 @@ so retained reusable scratch is zero. Live owned capacities still charge
 retainedBytes. Scalar scanning and immutable plan-local regex sharing remain the
 qualified choices; no SIMD or prefilter optimization is claimed. Native performance
 observations are separate from the logical policy in [performance notes](../Performance/README.md).
+
+## Optional authored DSL boundary (P1.2)
+
+JSONValueDSL and JSONSchemaDSL explicitly accept trusted authored staging. Their
+callbacks, content collection and flat IR assembly are outside the checked phase;
+there is no staging-retention, caller-instruction, RSS or whole-DSL cumulative
+claim. This is an authoring exception, not a new untrusted-input operation.
+The iterative finalizer shares one existing ledger through schema-document
+admission, without nested resets. Returned values satisfy their finite profile.
+These additional operations do not change the 49 metrics, weights or defaults.
+See [decisions and qualification](DualDSL/Decisions.md).

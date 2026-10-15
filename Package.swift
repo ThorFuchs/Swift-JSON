@@ -11,10 +11,16 @@ let package = Package(
         .library(name: "JSONStreaming", targets: ["JSONStreaming"]),
         .library(name: "JSONPatch", targets: ["JSONPatch"]),
         .library(name: "JSONHTML", targets: ["JSONHTML"]),
-        .library(name: "JSONBridges", targets: ["JSONBridges"])
+        .library(name: "JSONBridges", targets: ["JSONBridges"]),
+        .library(name: "JSONValueDSL", targets: ["JSONValueDSL"]),
+        .library(name: "JSONSchemaDSL", targets: ["JSONSchemaDSL"])
     ],
     targets: [
         .target(name: "JSON"),
+        .target(name: "JSONDSLCore", dependencies: ["JSON"]),
+        .target(name: "JSONValueDSL", dependencies: ["JSON", "JSONDSLCore"]),
+        .target(name: "JSONSchemaDSL", dependencies: ["JSON", "JSONSchema", "JSONDSLCore"]),
+        .testTarget(name: "JSONDSLTests", dependencies: ["JSON", "JSONSchema", "JSONDSLCore", "JSONValueDSL", "JSONSchemaDSL"]),
         .target(name: "JSONBridges", dependencies: ["JSON"]),
         .testTarget(name: "JSONBridgesTests", dependencies: ["JSONBridges", "JSON"]),
         .target(name: "JSONRegexRuntime", dependencies: ["JSON"]),

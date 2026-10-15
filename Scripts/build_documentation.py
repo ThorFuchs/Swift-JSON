@@ -28,7 +28,7 @@ def run(command, log, timeout):
 def package_catalogs(output):
     """Preserve native DocC filenames inside an artifact with a portable outer name."""
     records = []
-    for product in documentation_catalog.PRODUCTS:
+    for product in documentation_catalog.CATALOGS:
         catalog = output / (product + '.doccarchive')
         paths = sorted(catalog.rglob('*'))
         if not any(p.is_file() for p in paths):
@@ -60,7 +60,7 @@ def package_catalogs(output):
             'bytes': archive.stat().st_size, 'verified_files': len(records),
             'manifest': str(manifest.relative_to(ROOT)),
             'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(),
-            'policy': 'Six native DocC archives; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
+            'policy': 'Eight product DocC archives plus the shared DSL structure reference; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
 
 
 def main():
@@ -89,7 +89,7 @@ def main():
         receipt['readme_examples'] = dict(run(command, output / 'readme-examples.log', 900), executable_fences=example_count)
         if receipt['readme_examples']['exit_code']:
             raise ValueError('Compiled README examples failed')
-        for product in documentation_catalog.PRODUCTS:
+        for product in documentation_catalog.CATALOGS:
             graphs = output / 'symbols' / product
             if graphs.exists():
                 shutil.rmtree(graphs)

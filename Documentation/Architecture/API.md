@@ -1,7 +1,7 @@
 # Public API contract
 
 This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the six DocC catalogs. Examples
+graphs supply the complete declarations in the eight product DocC catalogs and the shared DSL structure reference. Examples
 in the [README](../../README.md) are compiled and executed by the public consumer.
 
 ## Products and ownership
@@ -9,6 +9,8 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | Product | Main entry points | Owned implementation boundary |
 | --- | --- | --- |
 | JSON | JSON, JSONNumber, JSONObject, JSONParser, JSONWriter, JSONValueEncoder, JSONValueDecoder, JSONPointer, JSONDocument | Shared strict codec, exact decimal model, bounded traversal and native coding |
+| JSONValueDSL | JSONValueDSL.object/array, Field, Element, Elements | Trusted authored staging; finite iterative exact finalization |
+| JSONSchemaDSL | JSONSchemaDSL.document/boolean, Schema, Property, Definition, PatternProperty, DependentSchema, RequiredDependency, Rule | Trusted authored schema declarations; existing document/compiler/validator authority |
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
@@ -16,7 +18,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are six public
+JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are eight public
 products and no external root-package dependencies. Runtime code uses no HTTP,
 UI, MCP or documentation-tool dependencies.
 
@@ -211,3 +213,25 @@ JSONHTMLRenderer also accepts JSONDocument in its four rendering/report methods.
 Caller annotations use exact typed paths, explicit missing-parent attachment and
 coherent value byte spans without schema execution or source-byte archival.
 See [diagnostic rendering](Release1.3/DiagnosticAnnotations.md).
+
+## Optional Dual DSL P1.2
+
+The two DSL products do not change or re-export the existing core entry points.
+JSONDSLCore has no standalone product; its public structural builder types occur
+in the optional generic signatures. See the [decisions](DualDSL/Decisions.md).
+Callbacks, content emission and staging are trusted and unmetered. Finalization
+uses one finite invocation ledger through iterative construction and, for schemas,
+document admission. This does not imply whole-pipeline cumulative billing, staging
+retention, caller instruction or RSS bounds. No whole-DSL report is supplied.
+
+Exact duplicate names throw JSONFailure/duplicateKey. Decoded scalar identity and
+order are preserved. Missing declarations emit nothing; null, empty containers and
+Boolean schemas differ. Array flattening requires Elements(contentsOf:). Implicit
+numbers accept BinaryInteger only, with explicit JSONNumber for decimals. E2 and
+JSONBridges remain unchanged; DSL targets import neither bridge nor framework DSL.
+
+Schema rawKeyword preserves declarations for existing compiler classification.
+No requiredness/default/format/reference/annotation policy is inferred. Invalid
+instances return false; malformed schemas, offline missing resources, nonproductive
+cycles, resource failures and cancellation remain operational errors. Factories
+never validate or publish a candidate schema as already compiled.
