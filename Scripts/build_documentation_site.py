@@ -25,14 +25,16 @@ GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONStreaming': ('Completion and backpressure', 'completionandbackpressure'),
           'JSONPatch': ('Choosing and applying patches', 'applyingpatches'),
           'JSONHTML': ('Exact interactive HTML', 'interactiverendering'),
-          'JSONBridges': ('Opt-in native conversions', 'numericfidelity')}
+          'JSONBridges': ('Opt-in native conversions', 'numericfidelity'),
+          'JSONNavigation': ('Exact bounded structural traversal', 'traversal')}
 DESCRIPTIONS = {
     'JSON': 'Exact values, strict UTF-8, native Codable, Pointer, presence and finite resource reports.',
     'JSONSchema': 'Draft 2020-12, explicit offline registries, immutable plans, annotations and bounded regex.',
     'JSONStreaming': 'Pull events and values, strict NDJSON, root-array completion and awaited output chunks.',
     'JSONPatch': 'Transactional RFC 6902 JSON Patch and RFC 7396 Merge Patch with exact value semantics.',
     'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
-    'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.'}
+    'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.',
+    'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.'}
 
 
 class Links(HTMLParser):
@@ -99,7 +101,7 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <div class="nav-links"><a href="{REPOSITORY}#installation">Get started</a><a href="{REPOSITORY}">GitHub</a><a href="{REPOSITORY}/issues">Support</a></div></nav></header>
 <main id="content" class="container"><div class="eyebrow">Public Swift documentation</div>
 <h1>Exact JSON. Clear contracts.</h1>
-<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore six Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
+<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore seven Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>

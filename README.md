@@ -17,6 +17,11 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
+This feature branch also contains an [opt-in structural traversal product candidate](Documentation/Architecture/StructuralIntelligence/N1Promotion.md).
+It preserves the seven released products and proposes JSONNavigation as the eighth.
+Merge and release remain human-gated; the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
+describes its many-node scope, exact locations, finite accounting and coverage.
+
 Published **1.5.0** provides six libraries and the CLI. This development branch
 retains main’s unreleased structured HTML previews and forward-ports the 1.5.1
 maintenance repairs: best-effort schema diagnostics, the complete 1.2.1 regression
@@ -72,6 +77,7 @@ Choose the products your application needs:
 | **JSONHTML** | Exact HTML and immutable exports since 1.3.0; structured forms/cards and bounded previews on unreleased main |
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
+| **JSONNavigation** | Unreleased candidate: exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -451,7 +457,7 @@ The [documentation index](Documentation/README.md) links the behavior contracts.
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all six catalogs on a supported native host:
+Build all seven candidate catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -559,3 +565,15 @@ cumulative reports. It makes no requests and never rewrites optional properties,
 Incompatibility exits1; operational errors remain errors. Apple schema/model bridges are separate.
 See the [provider contract](Documentation/Architecture/Release1.4/Providers.md) and
 [compiled public consumer](Tools/CLIQualification/Sources/ProviderConsumer/Main.swift).
+
+## Exact structural navigation (unreleased candidate)
+
+`JSONNavigation` adds many-node DFS preorder over a captured canonical document,
+with insertion-order object members, increasing array indices and exact typed
+locations. Physical and virtual scopes, explicit overlap/stop/pruning policies,
+bounded metadata collection and coverage share one finite cumulative core budget.
+Add the JSONNavigation product and import it explicitly. Existing one-node reads
+remain in JSON. Full source admission precedes traversal option validation.
+See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
+and [real external SwiftPM consumer](Tools/NavigationQualification). This branch
+prepares eight products; published 1.5.0 and its seven-product contract are unchanged.

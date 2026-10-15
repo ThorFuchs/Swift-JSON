@@ -1,7 +1,7 @@
 # Public API contract
 
 This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the six DocC catalogs. Examples
+graphs supply the complete declarations in the seven DocC catalogs. Examples
 in the [README](../../README.md) are compiled and executed by the public consumer.
 
 ## Products and ownership
@@ -9,6 +9,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | Product | Main entry points | Owned implementation boundary |
 | --- | --- | --- |
 | JSON | JSON, JSONNumber, JSONObject, JSONParser, JSONWriter, JSONValueEncoder, JSONValueDecoder, JSONPointer, JSONDocument | Shared strict codec, exact decimal model, bounded traversal and native coding |
+| JSONNavigation | JSONTraversal, JSONTraversalScope, JSONTraversalOptions | Exact many-node DFS, strict physical/virtual scopes, bounded metadata and explicit coverage; one core read-scope meter |
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
@@ -17,7 +18,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are seven public products: six libraries and the swift-json executable,
+JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are eight candidate public products: seven libraries and the swift-json executable,
 and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
 uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
 value, schema, Patch and streaming contracts do not acquire UI semantics.
@@ -244,3 +245,5 @@ includes `revisionKind: "source-sha256"` and `revision: "sha256:<hex>"`. This is
 SHA-256 of the ordered Package.swift plus Sources content manifest, excluding only
 the generated identity file itself. It is not a Git commit, binary digest or claim
 of publication. Generation/checking needs no Git, time, environment or network.
+
+JSONNavigation product promotion preserves all 56 N1 public declarations and resource semantics. Full-source admission precedes invalid depth/record-option validation, including oversized sources; N1Promotion.md records this preserved precedence. JSON imports no Navigation symbols implicitly.

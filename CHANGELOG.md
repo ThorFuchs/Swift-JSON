@@ -170,3 +170,12 @@ remain unselected; projection and RFC 7464 framing remain deferred.
   timing sleeps; retain an invocation-local package-only checkpoint observer.
 - Qualify twenty frozen explicitly rooted downstream schema vectors and public
   cumulative budgets in a separate consumer; no protocol/runtime dependency added.
+
+## Unreleased Navigation candidate
+
+- Propose opt-in JSONNavigation as an eighth SwiftPM product, preserving its56
+  exact traversal declarations and cumulative resource semantics.
+- Qualify a real external Debug/Release SwiftPM consumer and preserve source-first
+  error precedence with two explicit regressions.
+- N2 inspection remains unimplemented: its separate borrowed-context compiler
+  proof is blocked. No version/tag/release or automatic merge is implied.
