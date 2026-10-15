@@ -15,7 +15,9 @@ def main():
         modules = ROOT / '.build/debug/Modules'
     expected = {
         'Copy': 'Copyable', 'Send': 'Sendable', 'Escape': 'borrowed',
-        'Refund': "no member 'release'", 'Construct': "inaccessible", 'Return': 'Copyable', 'Substitute': 'immutable', 'CrossScope': "no member 'release'"
+        'Refund': "no member 'release'", 'Construct': "inaccessible", 'Return': 'Copyable', 'Substitute': 'immutable', 'CrossScope': "no member 'release'",
+        'SubstituteRetention': 'immutable', 'SubstituteCaughtWork': 'immutable',
+        'SubstituteCaughtRetention': 'immutable'
     }
     records = []
     with tempfile.TemporaryDirectory(prefix='swift-json-composition-') as directory:

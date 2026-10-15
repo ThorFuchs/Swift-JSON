@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+var limits = JSONLimits.balanced
+limits[.workUnits] = 1
+let report = try JSON.withComposition(limits: limits) { outer in
+    do {
+        let nested = try JSON.withComposition { inner in
+            swap(&outer, &inner)
+            do { try outer.chargeExternalWork(UInt64.max) } catch { }
+            swap(&outer, &inner)
+            return 42
+        }
+        return nested.result
+    } catch { }
+    return 42
+}

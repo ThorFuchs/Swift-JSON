@@ -137,7 +137,7 @@ observations remain separate from automated SDK/API and portable execution.
 
 `python3 Scripts/ci.py --lane composition` executes 12 composition functions in
 Debug and Release, a distinct-package JSON/JSONSchema consumer in both modes,
-and eight compiler-negative ownership fixtures. It supplements the full native,
+and 11 compiler-negative ownership fixtures. It supplements the full native,
 safety and docs lanes. On a CLT installation that does not discover TestingMacros,
 set `SWIFT_JSON_TESTING_PLUGIN_PATH` to the installed testing plugin directory;
 CI records the explicit `-plugin-path` arguments and preserves the original failure.

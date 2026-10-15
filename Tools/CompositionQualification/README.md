@@ -10,11 +10,12 @@ python3 Scripts/ci.py --lane composition
 ```
 
 The gate executes 12 Swift Testing functions in Debug and Release, this consumer
-in both configurations (two positive and four negative outcomes each), and eight
+in both configurations (two positive and four negative outcomes each), and 11
 compiler-negative cases. Negative cases use object emission, which catches
 ownership diagnostics deferred beyond typechecking. Missing imports never count
 as successful rejection. Copy, Sendable sharing, escape, direct construction,
-return, scope swap/use/restore, double refund and cross-scope refund are rejected.
+return, scope swap/use/restore for exact work, retention and caught failures,
+double refund and cross-scope refund are rejected.
 The policy exposes no ownership token or refund, so those operations are invalid
 public programs rather than runtime token failures.
 
@@ -30,3 +31,8 @@ safety runs are idle. Timing samples are observations, separate from native
 logical work/retention counters; a noisy shared machine cannot establish a
 controlled regression gate. No release or downstream pin change follows from
 successful qualification.
+
+The Data-document and Pointer timing workloads have no native public report; their
+raw zero counter placeholders mean unmeasured/N/A. Only byte-parser and schema-only
+workloads supply measured native logical work and retention counters. Zero
+placeholders must never establish measured counter equivalence.
