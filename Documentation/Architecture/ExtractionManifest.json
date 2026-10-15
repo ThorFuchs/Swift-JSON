@@ -209,5 +209,8 @@
     "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers plus a narrow explicit main-actor Apple PDF boundary using WebKit, CoreText, CoreGraphics and AppKit/UIKit paragraph styles. Core JSON imports none of these; no new root dependency.",
     "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation.",
     "pdf": "Original invocation-owned lifecycle, finite adapter accounting and visible-range pagination using Apple SDK APIs. PDFKit is independent qualification only; no third-party renderer adapted."
-  }
+  },
+  "original_notes": [
+    "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied."
+  ]
 }

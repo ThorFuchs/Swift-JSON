@@ -70,7 +70,6 @@ package enum CLIEngine {
                 default: throw CLIError(.usage, "unknownLimitsField")
                 }
             }
-            guard object[JSONKey("version")] != nil else { throw CLIError(.usage, "missingLimitsVersion") }
             try context.meter.resetValueBounds()
         }
         return result
@@ -222,7 +221,9 @@ package enum CLIEngine {
     --diagnostics human|json --report none|json   stderr only
     No online references, shell execution, server or remote providers.
     Query core: paths, generators, conditions, bindings, map, presence and exact comparison.
-    Arithmetic, richer filters and provider/stream/schema adapters have separate gates.
+    Exact arithmetic includes +, -, *, /, integral %, add and range.
+    Repeating division errors unless --division-scale N --rounding half-even is explicit.
+    Richer filters and provider/stream/schema adapters have separate gates.
 
     """
 }

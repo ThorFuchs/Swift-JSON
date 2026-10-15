@@ -3,13 +3,13 @@
   "target_release": "1.4.0",
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
-  "branch": "codex/1.4-json-cli-query-core",
-  "status": "Native pull query-core milestone qualified; complete C0-C5 integration remains open",
+  "branch": "codex/1.4-json-cli-exact-arithmetic",
+  "status": "Native exact-arithmetic milestone qualified; wasm32 arithmetic and complete C4/C5 remain pending",
   "gates": {
     "C0": "partial",
     "C1": "partial",
     "C2": "partial",
-    "C3": "not_run",
+    "C3": "partial",
     "C4": "not_run",
     "C5": "not_run"
   },
@@ -21,9 +21,9 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 256,
+  "root_test_functions": 266,
   "root_parameter_cases": 199,
-  "native_source_manifest_sha256": "c8f09d2eaa6cf14f3efb11e8a2645796075c54274fa6b8af9db464fe27b173aa",
+  "native_source_manifest_sha256": "33439f5716ac7e33e01e477db4cb018547618fa7b74885867bb2b290ba43d7e0",
   "qualified_lanes": [
     "native",
     "safety",
@@ -53,10 +53,32 @@
       "root_test_functions": 232,
       "root_parameter_cases": 177,
       "native_source_manifest_sha256": "864d9b3dd8e1d79a0a6cbec862476843ddca2ff8a1582471b80fba54b863459e"
+    },
+    {
+      "branch": "codex/1.4-json-cli-query-core",
+      "status": "Native pull query-core milestone qualified; complete C0-C5 integration remains open",
+      "gates": {
+        "C0": "partial",
+        "C1": "partial",
+        "C2": "partial",
+        "C3": "partial",
+        "C4": "not_run",
+        "C5": "not_run"
+      },
+      "root_test_functions": 256,
+      "root_parameter_cases": 199,
+      "native_source_manifest_sha256": "c8f09d2eaa6cf14f3efb11e8a2645796075c54274fa6b8af9db464fe27b173aa"
     }
   ],
   "query_functions": 24,
   "query_parameter_cases": 22,
   "query_vectors": 38,
-  "query_vectors_passed": 38
+  "query_vectors_passed": 38,
+  "arithmetic_functions": 10,
+  "arithmetic_oracle_cases": 738,
+  "arithmetic_oracle_sha256": "57b2affc52c872fdbc9e6cb25168bdd8b5999db6d8e5d8a988ff99cbf2c7accb",
+  "arithmetic_vectors": 17,
+  "arithmetic_vectors_passed": 17,
+  "cli_site_checks": 18,
+  "cli_site_metrics": 16
 }

@@ -45,6 +45,12 @@ package enum FilterValues {
         default:throw FilterLanguageFailure("invalidIndexKind")
         }
     }
+    package static func equals(_ a: JSON, _ b: JSON, context: inout CLIJobContext) throws -> Bool {
+        try context.checkpoint()
+        let entry = context.meter.used(.retainedBytes)
+        defer { try? context.meter.release(context.meter.used(.retainedBytes) - entry) }
+        return try JSONComparison.equals(a, b, meter: &context.meter)
+    }
     package static func has(_ value:JSON,key:JSON,context:inout CLIJobContext)throws->Bool {
         switch (value,key) {
         case (.object(let object),.string(let text)):return try object.lookup(text,meter:&context.meter) != nil

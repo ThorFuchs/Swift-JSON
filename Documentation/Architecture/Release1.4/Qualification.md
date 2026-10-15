@@ -89,3 +89,35 @@ FileHandle.standardError. No unsafe annotation/flag or library behavior changed.
 Failed run 38593758299 and its actual compiler log are retained; a fresh hosted
 run is required before Linux closure. Local comparator rebuild and all 38 C2
 vectors verify the diagnostic-only fix on the supported Mac.
+
+
+## Exact arithmetic milestone
+
+Branch `codex/1.4-json-cli-exact-arithmetic` starts at query core 6e8f145
+(draft PR #24). Native/safety/docs passed on the same unchanged source manifest
+`33439f5716ac7e33e01e477db4cb018547618fa7b74885867bb2b290ba43d7e0`.
+Native: 22 actual commands, exits 0; debug/release 266 root functions and 199
+parameter cases. Safety: ASan same counts, eight TSan shared functions and clean
+strict memory safety/warnings-as-errors build. DocC: five catalogs. Receipts are
+`.build/ci/cli-c3-handoff-{native,safety,docs}`; the CLI lane additionally passed
+46 functions, 53 historical foundation subprocesses, 38 C2 vectors, 17 C3 vectors,
+and 18 operation-site/report checks covering all sixteen CLI metrics.
+The ten arithmetic functions evaluate the 738 independent integer/Fraction cases,
+actual digit/exponent/token/work/retention boundaries, host narrowing and inner-loop
+cancellation. Original suite/cap/exclusion/downstream counts are preserved.
+
+Failed predecessor receipts are retained: negative-leading vector argv lacked `--`;
+a release integration exposed queued coefficient refunds crossing output's scratch
+baseline. The corrected domain handoff drains refunds before a new stage. Tests keep
+live result reservations, reclaim dead scratch and preserve cumulative work/health.
+No tests or accepted output expectations were lowered. The initial host-width probe
+was mathematically wrong about 2*D+2 overflow for D<Int.max and was corrected to
+exercise the actual Int.max allocation/narrowing boundary.
+
+The pinned Swift 6.4 WASI SDK is installed (swift sdk list exits 0), but this milestone
+has not executed its arithmetic kernel on wasm32. Native macOS evidence does not
+close that row. The final C5 candidate still requires precise matching compiler/host,
+selected mobile library consumers, CLI installation/reproduction/performance and
+all inherited corpus dispositions. Provider helpers are not advertised or inferred.
+These receipts precede only this milestone ledger/prose update; runtime, tests and
+harness are unchanged. Final integration must refresh the affected final-source checks.

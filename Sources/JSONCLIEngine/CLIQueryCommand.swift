@@ -13,7 +13,12 @@ package enum CLIQueryCommand {
             guard let first = arguments.positionals.first else { throw CLIError(.usage, "missingFilter") }
             source = first; files = Array(arguments.positionals.dropFirst())
         }
-        guard arguments.options["division-scale"] == nil else { throw CLIError(.usage, "arithmeticNotYetQualified") }
+        if let raw = arguments.options["division-scale"] {
+            guard arguments.options["rounding"] == "half-even", !raw.isEmpty,
+                  raw.utf8.allSatisfy({ (48...57).contains($0) }),
+                  let scale = UInt64(raw), scale <= context.meter.limits[.numberDigits], scale < UInt64(Int.max) else { throw CLIError(.usage, "invalidDivisionPolicy") }
+            context.divisionScale = Int(scale)
+        }
         let inputFiles = files.isEmpty ? ["-"] : files
         let auxiliary = arguments.repeated.enumerated().compactMap { index, pair -> String? in
             guard pair.0 == "bindingValue", index > 0, ["rawfile","slurpfile"].contains(arguments.repeated[index-1].0) else { return nil }
@@ -44,7 +49,9 @@ package enum CLIQueryCommand {
             try context.domain(.core)
             var vm = try FilterVM(program: program, input: input, bindings: bindings, context: &context)
             defer { try? vm.close(context: &context) }
-            while var value = try vm.next(input: &cursor, context: &context) {
+            while true {
+                try context.domain(.core)
+                guard var value = try vm.next(input: &cursor, context: &context) else { break }
                 finalTruth = FilterTruth.test(value.value)
                 try CLIQueryOutput.emit(value.value, arguments: arguments, output: output, context: &context)
                 try value.release(context: &context)
