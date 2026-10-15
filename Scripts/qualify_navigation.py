@@ -2,13 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 """Compile/run the unpublished N1 module as an external consumer, including negative compiler probes."""
 import argparse
+import gzip
 import hashlib
+import io
 import json
 import pathlib
 import re
 import shutil
 import subprocess
 import sys
+import tarfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CHECKS = {'root-empty-key', 'typed-key-index', 'presence', 'scalar-keys', 'native-exact',
@@ -16,6 +19,42 @@ CHECKS = {'root-empty-key', 'typed-key-index', 'presence', 'scalar-keys', 'nativ
           'default-overlap-rejection', 'typed-missing', 'complete-empty-filter',
           'collection-limit', 'cumulative-report', 'coherent-spans',
           'replacement-invalidates-spans', 'intentional-stop', 'cumulative-quota'}
+
+
+def pack_catalog(catalog, output):
+    """Preserve native DocC names inside a verified portable transport envelope."""
+    if catalog.is_symlink() or catalog.parent.resolve() != output.resolve():
+        raise ValueError('Unexpected generated catalogue location')
+    records = []
+    for path in sorted(catalog.rglob('*')):
+        if path.is_symlink():
+            raise ValueError('Unexpected generated catalogue symlink')
+        if path.is_file():
+            records.append((path.relative_to(output).as_posix(), path.read_bytes()))
+    if not records:
+        raise ValueError('Empty experimental DocC catalogue')
+    archive = output / 'JSONNavigation-DocC.tar.gz'
+    manifest = output / 'JSONNavigation-DocC.MANIFEST.sha256'
+    manifest.write_text(''.join(hashlib.sha256(data).hexdigest() + '  ' + name + '\n' for name, data in records))
+    with archive.open('wb') as stream:
+        with gzip.GzipFile(fileobj=stream, mode='wb', filename='', mtime=0) as zipped:
+            with tarfile.open(fileobj=zipped, mode='w', format=tarfile.GNU_FORMAT) as tar:
+                for name, data in records:
+                    entry = tarfile.TarInfo(name); entry.size = len(data); entry.mode = 0o644
+                    tar.addfile(entry, io.BytesIO(data))
+    with tarfile.open(archive) as tar:
+        members = tar.getmembers()
+        if len(members) != len(records) or len({m.name for m in members}) != len(records):
+            raise ValueError('DocC transport inventory differs')
+        for member, (name, data) in zip(members, records):
+            if not member.isfile() or member.name != name or tar.extractfile(member).read() != data:
+                raise ValueError('DocC transport bytes differ')
+    # Only this helper's verified generated tree is removed. Native ':' filenames
+    # remain intact inside the tar; GitHub artifact transport never sees raw paths.
+    shutil.rmtree(catalog)
+    return {'archive': archive.relative_to(ROOT).as_posix(), 'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
+            'bytes': archive.stat().st_size, 'files': len(records), 'manifest': manifest.relative_to(ROOT).as_posix(),
+            'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(), 'all_bytes_verified': True}
 
 
 def main():
@@ -104,8 +143,9 @@ def main():
             run('docc', ['xcrun', 'docc', 'convert', str(ROOT / 'Sources/JSONNavigation/Documentation.docc'),
                 '--additional-symbol-graph-dir', str(graphs), '--output-dir', str(output / 'JSONNavigation.doccarchive'),
                 '--fallback-bundle-identifier', 'org.swift-json.experimental.JSONNavigation', '--warnings-as-errors'])
+            receipt['compiled_docc'] = pack_catalog(output / 'JSONNavigation.doccarchive', output)
         receipt['status'] = 'passed'
-    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+    except (OSError, ValueError, tarfile.TarError, subprocess.TimeoutExpired) as error:
         receipt['status'] = 'failed'; receipt['error'] = str(error)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     print('NAVIGATION_COMPILER ' + receipt['status'] + ' configurations=2 consumer_cases=18 negative_probes=8')

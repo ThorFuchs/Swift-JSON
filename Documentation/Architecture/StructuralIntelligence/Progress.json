@@ -4,9 +4,34 @@
   "implementation_base": "037e735dc6224789e4d04d2c18d15b8d27440198",
   "packet_sha256": "d758f75d84271a97da515bf7b7ef70de7a61e91fdf949a511fe0fca2708156f8",
   "N0": "source authorities reconciled; core-only seven-witness consumer and package-scoped one-ledger composition compiled/executed",
-  "N1": "experimental physical/virtual DFS, bounded collection and 37 focused behavior functions implemented; complete platform qualification in progress",
+  "N1": "experimental physical/virtual DFS, bounded collection and 37 behavior functions implemented; functional native/Linux/WASI proofs passed at 6e5e5fa; public product promotion remains gated",
   "public_product": false,
   "public_products_preserved": 7,
   "core_semantic_changes": false,
-  "deferred": ["BFS", "N2", "N3", "P1", "P2", "R1", "R2", "actors", "persistence", "query grammar", "rendering", "CLI verbs", "EngineBench"]
+  "deferred": [
+    "BFS",
+    "N2",
+    "N3",
+    "P1",
+    "P2",
+    "R1",
+    "R2",
+    "actors",
+    "persistence",
+    "query grammar",
+    "rendering",
+    "CLI verbs",
+    "EngineBench"
+  ],
+  "qualification": {
+    "evidence_source": "6e5e5fa7d8c4c7e8ce1c4fe14bb3323f1ddc7ac8",
+    "native_run": 38781500802,
+    "native_boundary": "native/safety/docs/archive qualification commands passed; native/archive artifact upload failed on raw DocC colon filenames; preserved as a failed workflow",
+    "linux_run": 38781500823,
+    "linux_boundary": "both architectures qualification and safety passed",
+    "wasi_boundary": "77-command full Node/limited WasmKit lane passed with unchanged source; supplementary 37-function Navigation Debug/Release runs passed in WasmKit",
+    "mobile_boundary": "iPhoneOS/iPhoneSimulator 27.2 target compilation passed, no device/runtime claim",
+    "transport_successor": "native catalogue is packaged byte-for-byte into a verified tar/manifest before upload; fresh hosted outcomes and materialized evidence are supplied by PR 34 and the return packet",
+    "product_review": "experimental target only; no public product or merge/release action"
+  }
 }
