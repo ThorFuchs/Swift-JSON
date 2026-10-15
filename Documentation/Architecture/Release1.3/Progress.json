@@ -311,7 +311,7 @@
     "briefing_revision": "0.2",
     "release_assignment": null,
     "branch": "codex/jsonhtml-structured-previews",
-    "status": "Implementation reviewable; complete L5/P5 qualification remains open",
+    "status": "L5/P5 scoped qualification complete; dependent draft PR remains unmerged",
     "native_library_head": "76e4b262c4247ca3784b62b97bc21321e43d4044",
     "source_preserving_cli_base": "aded3c9930f580bd4fb902bba002ab75ed199a7b",
     "native_functions": 372,
@@ -324,10 +324,7 @@
     "requirements": 110,
     "scenarios": 88,
     "calibration_configurations": 96,
-    "remaining": [
-      "Native physical touch/portrait-landscape browser interaction",
-      "Native media touch interaction"
-    ],
+    "remaining": [],
     "qualification_contract": "StructuredPreviews/Qualification.md",
     "history_preserved": true,
     "publication_performed": false,
@@ -361,6 +358,25 @@
       "additional_search_cases": 9,
       "history_preserved": true,
       "library_changes": false
+    },
+    "qualification_touch_follow_up": {
+      "tested_source_head": "e0d5f0c26519c3eaa5faaa62f4104cc10ad5c419",
+      "hosted_native_run": 38673549572,
+      "hosted_linux_run": 38673549500,
+      "hosted_checks_passed": 7,
+      "requirements_passed": 110,
+      "scenarios_passed": 88,
+      "physical_iphone_consumer_cases": 73,
+      "physical_iphone_consumer_artifacts": 8,
+      "physical_touch": "Maintainer confirmed requested tab/disclosure/search, media, rotation and script-off access after fixture findings; bounded native observation supplements the manual result",
+      "fixture_findings": [
+        "Original 4x4 admission samples decode but are too small for recognizable visual QA",
+        "Inline expressions crossing the finite prefix or destination ceiling remain literal; compact 415-scalar image qualified"
+      ],
+      "library_changes": false,
+      "limits_widened": false,
+      "history_preserved": true,
+      "merge_tag_publication_performed": false
     }
   }
 }

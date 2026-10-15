@@ -135,3 +135,7 @@ The approved responsive transitions are 1200px (outer spacing/title), 920px
 full-row search). At visual depth bucket 3, nested record borders and padding
 stop accumulating. The complete 120-container alternating fixture is checked
 at 320px; static source links share the themed accessible link color.
+
+Complete values expand the full original string. Derived inline previews retain their
+finite prefix and destination ceilings in both value profiles; complete output does
+not promise that every expression in a long string is interpreted as rich content.

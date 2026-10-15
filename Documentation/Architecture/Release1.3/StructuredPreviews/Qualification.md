@@ -37,8 +37,8 @@ time is not an idle-host comparison or throughput guarantee. Logical retained by
 process RSS, caller work and owned quotas remain distinct. The inherited 1.075s versus
 0.96849s stream median (+11.0%) retains its existing reviewed disposition and 10% trigger.
 
-L5/P5 remains an explicit review boundary while native touch/portrait-landscape and
-media touch observations remain open.
+The native touch/portrait-landscape and media follow-up is recorded below; earlier
+open-gate observations remain in the private evidence history.
 The supplied return materializes 110 requirement rows, 88 scenario rows, 48 requested
 browser contexts, actual source archive, per-file manifests, command receipts and
 failed-probe history. It does not turn related test counts into unexecuted scenario
@@ -55,8 +55,8 @@ receipt commits. The source archive's actual digest is recorded outside its own 
 to avoid a circular claim.
 
 No merge, tag, release, Site/social edit or outreach is authorized by this increment.
-The focused draft PR is dependent on the current CLI integration stack. Maintainers
-must review the materialized remaining actions before claiming complete qualification.
+The focused draft PR is dependent on the current CLI integration stack. Qualification
+evidence does not itself authorize merging or publication.
 
 ## Qualification follow-up
 
@@ -92,3 +92,43 @@ ten pages with every tail marker exactly once. Nine additional browser cases cov
 and cancellation of stale searches. TextEdit reception of the pinned exports is
 recorded separately from byte/content-type/selection assertions. No library feature,
 quota, platform, dependency or product policy changed in this follow-up.
+
+## Physical touch and media closure — 2026-10-15
+
+All seven hosted checks at `e0d5f0c26519c3eaa5faaa62f4104cc10ad5c419` passed:
+Native run `38673549572` and Linux run `38673549500`. Downloaded command logs and
+all 991 source-input hashes were verified against that checkout. Native debug/release
+and ASAN remain 372 functions/325 parameter cases; each Linux architecture remains
+356/325, with TSan 11 and the existing strict-memory/cap/conformance checks retained.
+
+The actual iPhone consumer rerun passed 73 cases/eight artifacts. The maintainer then
+performed finger-touch tab/disclosure/search, portrait-landscape-portrait, media and
+script-disabled source/disclosure checks in a private WKWebView host. After the two
+fixture findings below were isolated, the maintainer confirmed the requested checks
+worked as expected. This closes JL26/PV38 and their dependent QC25/QC56/QC84 rows:
+110/110 requirement rows and 88/88 scenario rows are recorded passed within their
+existing scoped evidence. Human observations remain attributed to the maintainer.
+
+The initial 4-by-4-pixel admission samples decoded on the phone but were unsuitable
+for a recognizable visual check. Original 256-by-144 PNG/JPEG QA supplements made the
+pictures visible. A long inline data-URL expression remained literal at the unchanged
+512-scalar preview boundary; a complete 415-scalar expression rendered a recognizable
+64-by-36 inline image. Complete values expand original text; derived inline previews
+still obey their prefix and destination eligibility ceilings. No renderer, asset,
+limit, platform, product or dependency was changed to obtain these outcomes.
+
+Private device records separately preserve trusted touch events, 430-point portrait
+and 814-point landscape observations, native image decode dimensions, and disabled
+content JavaScript with the enhanced toolbar absent. They are supplementary to the
+maintainer's final observation, not an automated assertion of every requested gesture.
+The compact inline decode was captured with scripting enabled; script-off standalone
+media was independently captured on the preceding fixture. The final combined manual
+check covers the remaining user-visible behavior. Device identifiers, signed apps and
+local evidence paths are excluded from public source.
+
+The self-contained return preserves the previous immutable source/archive and receipts,
+materializes current-head hosted evidence and the test-host/fixture source, and retains
+both initial findings and failed harness assumptions. Pinned browser probes distinguish
+inspection cutoff, destination ineligibility, complete original text and positive
+compact inline media. These additional fixtures do not replace the independent pins
+or existing browser matrix. Merge, tag and publication remain separate decisions.

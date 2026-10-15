@@ -21,7 +21,8 @@ Inspection prefixes are labelled and bounded independently by 512 decoded Unicod
 scalars, 2048 UTF-8 bytes and 512 escaped-display scalars. A scalar or control escape
 is never split. Keys, exact numbers and node structure remain complete. Native
 Original value disclosures and the complete JSON pane/source work without JavaScript.
-Complete values and the print representation expand full original strings. Copy and
+Complete values and the print representation expand full original strings. Derived
+inline previews still obey their source-prefix and destination eligibility limits. Copy and
 download use native exact writer bytes, not a JavaScript JSON model.
 
 Declare typed paths through ``JSONHTMLPreviewHint``. Literal declarations suppress
