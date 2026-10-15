@@ -8,6 +8,7 @@ let package = Package(
     products: [
         .library(name: "JSON", targets: ["JSON"]),
         .library(name: "JSONSchema", targets: ["JSONSchema"]),
+        .library(name: "JSONSchemaExamples", targets: ["JSONSchemaExamples"]),
         .library(name: "JSONStreaming", targets: ["JSONStreaming"]),
         .library(name: "JSONPatch", targets: ["JSONPatch"]),
         .library(name: "JSONHTML", targets: ["JSONHTML"]),
@@ -20,6 +21,8 @@ let package = Package(
         .testTarget(name: "JSONBridgesTests", dependencies: ["JSONBridges", "JSON"]),
         .target(name: "JSONRegexRuntime", dependencies: ["JSON"]),
         .target(name: "JSONSchema", dependencies: ["JSON", "JSONRegexRuntime"], resources: [.copy("Resources/Draft2020-12")]),
+        .target(name: "JSONSchemaExamples", dependencies: ["JSON", "JSONSchema"]),
+        .testTarget(name: "JSONSchemaExamplesTests", dependencies: ["JSONSchemaExamples", "JSON", "JSONSchema"]),
         .target(name: "JSONStreaming", dependencies: ["JSON"]),
         .target(name: "JSONPatch", dependencies: ["JSON"]),
         .target(name: "JSONHTML", dependencies: ["JSON"], exclude: ["Assets"]),

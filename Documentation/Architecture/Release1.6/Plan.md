@@ -9,8 +9,10 @@ No arbitrary-schema completeness or unsatisfiability claim is intended.
 The isolated branch is `codex/1.6-schema-examples`, pinned to main
 `507dbf9ad4b545a5d60d7d6acf6b814795ec3099`. See
 [source reconciliation](Reconciliation.md), [decisions](Decisions.md) and
-[progress](Progress.json). The initial orientation and compiler probes are complete;
-the generator and its public API have not been implemented at this milestone.
+[progress](Progress.json). The initial orientation and compiler probes are complete. G1 now has a working
+explicit-candidate API, a package-only qualified plan bridge and a real public
+consumer; see [the accepted declarations and scope](G1API.md). Final G1 receipt
+closure precedes G2; broad generation is not implemented.
 
 ## Integration boundary
 

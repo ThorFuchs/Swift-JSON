@@ -17,7 +17,8 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are seven public products: six libraries and the swift-json executable,
+JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON.
+JSONSchemaExamples depends only on JSON and JSONSchema. There are eight public products: seven libraries and the swift-json executable,
 and no external root-package dependencies. Runtime code uses no HTTP,
 UI, MCP or documentation-tool dependencies.
 
@@ -230,3 +231,21 @@ offline registries and exact typed issue paths stay authoritative. A compatible 
 is neither native validation of an instance nor a service-acceptance guarantee. Finite limits
 and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
 [profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.
+
+## Schema examples (1.6 G1 development)
+
+The optional JSONSchemaExamples product prepares an immutable document/explicit
+registry/compiled-plan snapshot. `JSONSchemaExampleGenerator(document:registry:options:)`
+and `generate(seed:profile:)` offer exact declared candidates and compiler-qualified
+static reference targets. Every success contains the actual native valid verdict
+for the original root. The only current profile is minimal; seed is recorded but
+G1 performs no random draws. General constraint-driven synthesis is not included.
+
+`JSONSchemaExampleFailure` distinguishes unsupported construction, searchExhausted,
+reviewed trivial provenUnsatisfiable and invalidConfiguration. Core operational
+failures and cancellation propagate without retries. Preparation accounting is
+separate from the shared per-generation ledger, which includes all completed
+invalid checks. Discarded validation ownership is released without refunding work. Logical
+retention is not process RSS.
+See [the exact G1 API decision](Release1.6/G1API.md) and the
+[compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).

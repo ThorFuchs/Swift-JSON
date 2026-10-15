@@ -13,7 +13,7 @@ Pushes to main, pull requests and manual dispatch run three lanes:
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, five native DocC catalogs with warnings as errors,
+  executed README examples, seven native DocC catalogs with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -109,3 +109,27 @@ regex 12, streaming 14, patch 11 and portable HTML 61. Its public consumer requi
 remain required. The first failed inherited expectations are retained; no blanket
 nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
 observations remain separate from automated SDK/API and portable execution.
+
+## S3 G1 focused native lane
+
+`python3 Scripts/ci.py --lane schema-examples` checks the exact eight-product
+manifest, empty dependencies, all 49 unchanged finite core policies, 21 functions
+in JSONSchemaExamplesTests, all 69 existing JSONSchemaTests functions with their
+12 exact parameter invocations, and the real standalone public consumer (12 cases and
+2 expected package-boundary compiler rejections). This focused lane supplements
+the unchanged required Native checks; it does not establish G7 platform release
+qualification. It records source hashes, toolchain, commands, exits and events.
+
+The full root lane now requires 440 functions on Mac (424 on Linux), with the
+same 325 parameter invocations. TSan adds one shared-generator function for a
+Mac total of 16. New tests are also included in the exact WASI bundle inventory;
+changing an expected inventory does not claim a WASI execution pass. All 49 core
+cap behavior probes, pinned independent-suite policies and existing discovery
+checks remain required in the full lanes.
+
+`--lane schema-examples-safety` supplements full safety with Release ASan (all
+21 G1 functions), TSan (the one shared-generator function) and strict memory-safety
+compilation of the new target and dependencies. Native Swift 6.4's observed
+`--test-product JSONSchemaExamplesTests` selects the generated test product; this
+does not add a public library product or change full-lane cardinalities. No
+filtered lane substitutes for the full release/conformance/platform gates.

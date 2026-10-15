@@ -1,7 +1,7 @@
 # Building and maintaining the DocC catalogs
 
 Swift source comments are the API documentation authority. Native compiler symbol
-graphs supply the declarations and links for six Swift DocC catalogs. Each catalog
+graphs supply the declarations and links for seven Swift DocC catalogs. Each catalog
 combines the product reference with curated Topics and a focused usage guide.
 See the [Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
@@ -19,13 +19,14 @@ python3 Scripts/ci.py --lane docs
 The lane records native preflight, extracts fresh public symbol graphs, requires
 summaries and named-parameter documentation on every authored public declaration,
 checks README Swift fences against their executable consumer source, runs that
-consumer, and compiles all six DocC catalogs with warnings as errors. Zero public
+consumer, and compiles all seven DocC catalogs with warnings as errors. Zero public
 symbols, missing comments, stale examples or a failed catalog fail the lane.
 
 | Output | Purpose |
 | --- | --- |
 | `.build/handoff/docc/JSON.doccarchive` | JSON API and exact values/native coding guide |
 | `.build/handoff/docc/JSONSchema.doccarchive` | Schema API and offline validation guide |
+| `.build/handoff/docc/JSONSchemaExamples.doccarchive` | G1 candidate verification API and bounded construction guide |
 | `.build/handoff/docc/JSONStreaming.doccarchive` | Streaming API and completion/backpressure guide |
 | `.build/handoff/docc/JSONHTML.doccarchive` | Exact formatted HTML API and rendering guide |
 | `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |
@@ -33,9 +34,9 @@ symbols, missing comments, stale examples or a failed catalog fail the lane.
 | `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |
-| `.build/handoff/docc/compiled-catalogs.tar.gz` | All six compiled catalogs with their exact native filenames |
+| `.build/handoff/docc/compiled-catalogs.tar.gz` | All seven compiled catalogs with their exact native filenames |
 | `.build/handoff/docc/compiled-catalogs.MANIFEST.sha256` | Independently verifiable hashes for every archived catalog file |
-| `.build/handoff/pages/site/` | Static site, landing page and all six references under the project base path |
+| `.build/handoff/pages/site/` | Static site, landing page and all seven references under the project base path |
 | `.build/handoff/pages/receipt.json` | Native transformations, input/output hashes and route/asset verification |
 
 Open a `.doccarchive` in Xcode for the compiled reference. To preview a source
@@ -64,7 +65,7 @@ The manifest and receipt preserve file-level and archive-level digests.
 
 The docs lane uses native `docc process-archive transform-for-static-hosting` to
 prepare each qualified archive under `/Swift-JSON/<product>`. A shared landing
-page links all six references and guides. The build verifies product/guide routes,
+page links all seven references and guides. The build verifies product/guide routes,
 local HTML links and assets, rejects private-path/credential markers and symlinks,
 and records a file manifest. Only the generated site is packaged for Pages;
 source graphs, command logs and private maintainer records are not website content.

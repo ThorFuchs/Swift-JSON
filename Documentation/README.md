@@ -6,12 +6,14 @@ behavioral contracts and native qualification procedure.
 
 ## API references and guided reading
 
-The five native DocC catalogs combine inline API documentation with focused guides:
+The seven native DocC catalogs combine inline API documentation with focused guides:
 
 | Product | Catalog source | Guide |
 | --- | --- | --- |
 | JSON | [JSON](../Sources/JSON/Documentation.docc/JSON.md) | [Exact values and native coding](../Sources/JSON/Documentation.docc/ExactValuesAndCoding.md) |
 | JSONSchema | [JSONSchema](../Sources/JSONSchema/Documentation.docc/JSONSchema.md) | [Offline schema validation](../Sources/JSONSchema/Documentation.docc/OfflineValidation.md) |
+| JSONSchemaExamples | [JSONSchemaExamples](../Sources/JSONSchemaExamples/Documentation.docc/JSONSchemaExamples.md) | [Verified candidates](../Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md) |
+| JSONBridges | [JSONBridges](../Sources/JSONBridges/Documentation.docc/JSONBridges.md) | [Opt-in native conversions](../Sources/JSONBridges/Documentation.docc/NumericFidelity.md) |
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
 | JSONHTML | [JSONHTML](../Sources/JSONHTML/Documentation.docc/JSONHTML.md) | [Formatted rendering](../Sources/JSONHTML/Documentation.docc/FormattedRendering.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
