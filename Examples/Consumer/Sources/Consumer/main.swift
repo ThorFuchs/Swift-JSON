@@ -79,3 +79,8 @@ precondition(diagnosticReport.result.contains("Missing target; nearest existing 
 let unmappedDiagnosticHTML = try diagnosticRenderer.renderString(mappedDocument.replacingRoot(value))
 precondition(!unmappedDiagnosticHTML.contains("source span:"))
 print("JSONHTML_ANNOTATION_PUBLIC_CONSUMER passed typed_targets=2 coherent_spans=2 replaced_spans=0")
+
+try runE2CoreExamples()
+try runE2BridgeExamples()
+try runE2SchemaExamples()
+print("ERGONOMICS_PUBLIC_CONSUMER passed guides=3")
