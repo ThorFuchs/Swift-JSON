@@ -197,7 +197,8 @@
     "Private FIPS 180-4 SHA-256 is an original Swift implementation with checked cumulative production accounting, bounded scratch and inner cancellation. The separate trusted fixture tool mirrors its primitive core byte-for-byte; public_check verifies parity. No CryptoKit fallback or runtime dependency is introduced.",
     "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted.",
     "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted.",
-    "CLI foundation, argv parser, POSIX adapters, prepaid bounded diagnostics and shared-meter package adapters are original Apache-2.0 Swift code. No legacy filter engine or jq source is copied. See Release1.4/Foundation.md for native test-harness reuse provenance."
+    "CLI foundation, argv parser, POSIX adapters, prepaid bounded diagnostics and shared-meter package adapters are original Apache-2.0 Swift code. No legacy filter engine or jq source is copied. See Release1.4/Foundation.md for native test-harness reuse provenance.",
+    "Tests/Fixtures/CLI/NewCases.json is the byte-identical 111-case authored CLI briefing fixture, SHA-256 6f863f3e98d2dea12e59018e7cf3a074ae0ebee5f1ab950a651df72e5eb18a4c. Fixture expected JSON texts use native exact comparison, not a floating-point oracle. The query compiler/VM and lifetime ledger are original Apache-2.0 implementations; no legacy eager evaluator or jq implementation is copied."
   ],
   "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
   "jsonhtml_export_original_contributions": {

@@ -1,7 +1,7 @@
 {
   "schema": "swift-json-cli-acceptance/1",
   "prepared": "2026-10-14",
-  "implementation_status": "foundation boundary only; integration unqualified",
+  "implementation_status": "Foundation and pull query-core milestones; complete C0-C5 integration remains unqualified",
   "requirements": [
     {
       "id": "CL001",
@@ -366,9 +366,13 @@
       "title": "Native query lexer/literals",
       "verification": "Exact numbers and scalar text/keys with source byte ranges; malformed source compiles to exit3.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL028",
@@ -376,10 +380,14 @@
       "title": "Grammar precedence",
       "verification": "Pipeline/comma/default/assignment/operator precedence and delimiters tested beyond old parser goldens.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
       "fixture_ids": [
         "pipeline-comma-precedence"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -388,9 +396,13 @@
       "title": "Pull VM cardinality",
       "verification": "Empty/one/many outputs without whole-job array; next() demand limits observable reads/retention.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL030",
@@ -398,9 +410,13 @@
       "title": "Pipeline and comma order",
       "verification": "Every upstream result is evaluated and ordered; late errors do not resume a failed branch.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL031",
@@ -408,10 +424,14 @@
       "title": "Cartesian operators/constructors",
       "verification": "No .first collapse; object versus arithmetic nesting orders and shared input effects are tested.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
       "fixture_ids": [
         "object-product-order"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -420,7 +440,7 @@
       "title": "Navigation and wrong-type",
       "verification": "Missing/null convention, has, wrong-type error, optional catch and checked indices/slices.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "missing-field-null",
@@ -428,6 +448,10 @@
         "optional-wrong-type-empty",
         "has-present-null",
         "negative-index"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -436,7 +460,7 @@
       "title": "Exact Unicode identity",
       "verification": "Scalar-distinct strings/keys, scalar length/slicing/order and non-BMP behavior.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "scalar-key-lookup",
@@ -444,6 +468,10 @@
         "scalar-length",
         "utf8-length",
         "scalar-slice"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -452,7 +480,7 @@
       "title": "Truth/default/Boolean generators",
       "verification": "Only false/null falsey; // handles full streams; left-driven short-circuit and if generators.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "truthiness",
@@ -460,6 +488,10 @@
         "fallback-empty",
         "Boolean-short-circuit",
         "if-condition-stream"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -468,10 +500,14 @@
       "title": "Constructed duplicate keys",
       "verification": "Explicit replace-preserve-position policy; parsed exact duplicate keys still reject.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "constructed-key-replacement"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -480,9 +516,13 @@
       "title": "Exact comparison/order",
       "verification": "Metered decimal/string/array/object equality and total order with stable ties.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL037",
@@ -490,7 +530,7 @@
       "title": "Common builtin inventory",
       "verification": "All C2 builtins and type/domain/empty cases; map collects and map_values updates/deletes correctly.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
       "fixture_ids": [
         "empty-array-collector",
@@ -498,6 +538,10 @@
         "map-values-first",
         "map-values-delete",
         "normals-nonzero-native"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -506,11 +550,15 @@
       "title": "Lexical bindings/arguments",
       "verification": "as, --arg/argjson/rawfile/slurpfile, $ARGS, duplicate/reserved names, strict auxiliary-file admission.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "partial",
       "evidence_required": true,
       "fixture_ids": [
         "binding-original-input",
         "argjson-exact"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -519,11 +567,15 @@
       "title": "Shared input cursor",
       "verification": "Driver/input/inputs share consumption; EOF catchable only for input; malformed tails/IO remain fatal.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "null-input-once",
         "shared-inputs"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -532,13 +584,17 @@
       "title": "JSON/raw framing",
       "verification": "values/document/NDJSON and strict raw UTF-8 lines/slurp; files have independent boundaries.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "values-framing",
         "adjacent-roots-rejected",
         "ndjson-blank-line-rejected",
         "raw-line-crlf"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -547,13 +603,17 @@
       "title": "Raw output/NUL/join",
       "verification": "Correct string bytes and nonstring JSON; embedded NUL rejected; delimiters/errors/counts tested.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "raw-lf",
         "raw-nul-delimiter",
         "raw-nul-value-rejected",
         "join-no-delimiter"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -562,10 +622,14 @@
       "title": "ASCII output and sort keys",
       "verification": "Owned escaping, surrogate pairs and exact scalar order; option conflicts tested.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "ascii-surrogate-pair"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -574,12 +638,16 @@
       "title": "Query exit-status",
       "verification": "Final semantic value only after completion; truthy0/empty string/collections; false/null1 and noresult4.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "exit-status-truthy-zero",
         "exit-status-false",
         "exit-status-empty"
+      ],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
       ]
     },
     {
@@ -588,9 +656,13 @@
       "title": "Plan reuse and isolation",
       "verification": "Concurrent independent invocations share immutable plan only; mutable iterator not concurrently accessed.",
       "obligation": "mandatory",
-      "status": "not_run",
+      "status": "passed",
       "evidence_required": true,
-      "fixture_ids": []
+      "fixture_ids": [],
+      "evidence": [
+        "Documentation/Architecture/Release1.4/QueryCore.md",
+        "Documentation/Architecture/Release1.4/Qualification.md"
+      ]
     },
     {
       "id": "CL045",

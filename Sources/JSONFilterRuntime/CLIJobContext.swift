@@ -86,6 +86,7 @@ package struct CLIError: Error, Sendable, Equatable {
 /// Mutable runtime state belongs to the invocation; immutable plans may be shared.
 package struct CLIJobContext: ~Copyable {
     package var meter: JSONWorkMeter
+    package let leaseRefunds: CLILeaseRefunds
     package private(set) var limits: CLILimits
     private var counters = Array(repeating: UInt64(0), count: CLIResourceMetric.allCases.count)
     private var failure: (any Error)?
@@ -98,8 +99,19 @@ package struct CLIJobContext: ~Copyable {
         try limits.validate()
         meter = try .init(limits: limits.effectiveCore, domain: .parsing, trackAcceptedCapacities: true)
         self.limits = limits
+        leaseRefunds = CLILeaseRefunds()
+    }
+    /// Refund dead value storage even when data operations are terminal. Work is
+    /// never refunded; the single native ledger remains authoritative.
+    package mutating func reclaimValueLeases() throws {
+        let bytes = leaseRefunds.retained, values = leaseRefunds.collections
+        leaseRefunds.retained = 0; leaseRefunds.collections = 0
+        if bytes > 0 { try meter.release(bytes) }
+        if values > 0 { try release(.collectionValues, values) }
+        if let error = leaseRefunds.failure { latch(error); throw error }
     }
     package mutating func checkpoint() throws {
+        try reclaimValueLeases()
         if let failure { throw failure }
         do { try meter.checkpoint() }
         catch { latch(error); throw error }

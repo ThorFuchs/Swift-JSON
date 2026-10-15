@@ -3,12 +3,12 @@
   "target_release": "1.4.0",
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
-  "branch": "codex/1.4-json-cli-foundation",
-  "status": "Compiling foundation boundary qualified on native macOS; C0/C1 complete closure and C2-C5 remain pending",
+  "branch": "codex/1.4-json-cli-query-core",
+  "status": "Native pull query-core milestone qualified; complete C0-C5 integration remains open",
   "gates": {
     "C0": "partial",
     "C1": "partial",
-    "C2": "not_run",
+    "C2": "partial",
     "C3": "not_run",
     "C4": "not_run",
     "C5": "not_run"
@@ -21,9 +21,9 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 232,
-  "root_parameter_cases": 177,
-  "native_source_manifest_sha256": "864d9b3dd8e1d79a0a6cbec862476843ddca2ff8a1582471b80fba54b863459e",
+  "root_test_functions": 256,
+  "root_parameter_cases": 199,
+  "native_source_manifest_sha256": "c8f09d2eaa6cf14f3efb11e8a2645796075c54274fa6b8af9db464fe27b173aa",
   "qualified_lanes": [
     "native",
     "safety",
@@ -32,10 +32,31 @@
   "remaining_foundation_requirements": [
     "clean-source reproduction",
     "selected mobile SDK consumers",
-    "immutable filter-plan compiler probe and implemented IR",
-    "all 16 CLI cap boundaries",
-    "multi-record shared accounting",
     "slow/partial/no-progress sink probes",
-    "query compile exit 3 and full exit precedence"
-  ]
+    "query compile exit 3 and full exit precedence",
+    "actual operation-site coverage for all 16 CLI caps",
+    "inherited corpus/oracle compatibility dispositions",
+    "complete query grammar with C3/C4 and auxiliary binding subprocess coverage"
+  ],
+  "history": [
+    {
+      "branch": "codex/1.4-json-cli-foundation",
+      "status": "Compiling foundation boundary qualified on native macOS; C0/C1 complete closure and C2-C5 remain pending",
+      "gates": {
+        "C0": "partial",
+        "C1": "partial",
+        "C2": "partial",
+        "C3": "not_run",
+        "C4": "not_run",
+        "C5": "not_run"
+      },
+      "root_test_functions": 232,
+      "root_parameter_cases": 177,
+      "native_source_manifest_sha256": "864d9b3dd8e1d79a0a6cbec862476843ddca2ff8a1582471b80fba54b863459e"
+    }
+  ],
+  "query_functions": 24,
+  "query_parameter_cases": 22,
+  "query_vectors": 38,
+  "query_vectors_passed": 38
 }
