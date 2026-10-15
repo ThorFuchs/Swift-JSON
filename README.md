@@ -74,8 +74,8 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The Linux development increment adds portable schema integrity for all four products
-without runtime dependencies. Its initial qualification scope is Swift 6.4+,
+Linux support includes portable schema integrity without runtime dependencies.
+Its qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
 
@@ -497,11 +497,13 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The five DocC catalogs
-provide public API references, focused guides, parameter descriptions and failure
-contracts, compiled from the native Swift public symbol graphs.
+The [documentation index](Documentation/README.md) links the behavior contracts.
+Eight product DocC catalogues provide public API references, focused guides,
+parameter descriptions and failure contracts, compiled from native Swift public
+symbol graphs. A ninth catalogue documents shared DSL composition types; its
+helper module has no standalone product.
 
-Build all five catalogs on a supported native host:
+Build all nine catalogues on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
