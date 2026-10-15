@@ -11,7 +11,7 @@
     "P1.2-G2": "passed",
     "P1.2-G3": "passed",
     "P1.2-G4": "passed",
-    "P1.2-G5": "in_progress",
+    "P1.2-G5": "passed",
     "P1.2-G6": "in_progress"
   },
   "scope": "Trusted authored staging; finite iterative shared-ledger finalization; no staging/RSS/caller-work claim",
@@ -23,9 +23,11 @@
     "compiler_commands": 41,
     "negative_rejections": 12,
     "native_safety": "passed after retained transient PDF failure and unchanged full rerun",
-    "native_lane": "13 commands passed; downstream mobile tool build blocked by ENOSPC; full lane not passed",
-    "docs": "1005/1005 comments;9 catalogs passed; route fix privately verified, final lane pending",
+    "native_lane": "All19 production commands passed across retained13-command run plus6-command source-equivalent continuation after ENOSPC; no uninterrupted full-lane exit0 claimed",
+    "docs": "passed:1005/1005 comments,9 catalogs,1530 routes,7636 links",
     "wasi": "real public release consumer passed Node and WasmKit; consumer scope only",
-    "linux": "authorized branch push/CI pending native completion or explicit changed-condition authorization"
-  }
+    "linux": "maintainer-authorized feature-branch push and ARM64/x86_64 CI pending execution",
+    "completion": "passed:3 actual SourceKit-LSP contexts; interactive Xcode UI not claimed"
+  },
+  "native_results": "Documentation/Qualification/DualDSL/NativeResults.md"
 }
