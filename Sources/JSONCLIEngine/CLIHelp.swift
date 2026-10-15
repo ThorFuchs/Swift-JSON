@@ -20,7 +20,7 @@ package enum CLIHelp {
         #else
         let architecture = "unknown"
         #endif
-        return "{\"version\":\"1.4.0-dev\",\"revision\":\"unknown\",\"platform\":\"\(platform)\",\"architecture\":\"\(architecture)\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"query\",\"stream\",\"schema-check\",\"render-html\",\"render-markdown\",\"render-text\"],\"dialect\":\"swift-json-filter/1\"}\n"
+        return "{\"version\":\"1.4.0-dev\",\"revision\":\"unknown\",\"platform\":\"\(platform)\",\"architecture\":\"\(architecture)\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"query\",\"stream\",\"schema-check\",\"openai-format\",\"openai-tool\",\"render-html\",\"render-markdown\",\"render-text\"],\"dialect\":\"swift-json-filter/1\"}\n"
     }
     package static func text(for command: String?) throws -> String {
         let common = """
@@ -89,6 +89,12 @@ package enum CLIHelp {
             Usage: swift-json schema check SCHEMA [--resource URI=PATH] [OPTIONS]
             Compiles one offline Draft 2020-12 object/Boolean schema and emits
             completed metadata. This command does not validate an instance or fetch.
+            schema provider openai-format|openai-tool SCHEMA --name NAME
+            Optional --description TEXT and explicit --resource URI=PATH.
+            Frozen strict Responses base-model profiles preserve declarations unchanged.
+            Success emits a native text.format fragment or flat function tool. Incompatible
+            or unverified schemas emit bounded compatibility issues and exit 1.
+            These local helpers make no API requests and do not guarantee service acceptance.
 
             """
         case "render": body = """

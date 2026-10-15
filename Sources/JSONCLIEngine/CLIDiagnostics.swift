@@ -38,6 +38,15 @@ package struct CLIDiagnostics {
             case .counterOverflow(let metric): return .init(.resource, "counterOverflow", metric: metric.rawValue, overflow: true)
             }
         }
+        if let failure = error as? JSONSchemaProviderFailure {
+            switch failure {
+            case .invalidConfiguration: return .init(.usage, "invalidProviderLimits")
+            case .profileMismatch: return .init(.usage, "providerProfileMismatch")
+            case .invalidMetadata: return .init(.usage, "invalidProviderMetadata")
+            case .incompatible: return .init(.input, "providerIncompatible") // The schema command handles completed compatibility separately.
+            case .limitExceeded(let metric, let limit, let attempted): return .init(.resource, "limitExceeded", metric: "provider." + metric.rawValue, limit: limit, attemptedUsage: attempted, overflow: attempted == nil)
+            }
+        }
         if let failure = error as? JSONSchemaCompilationFailure { return .init(.input, "schemaCompilation." + failure.category.rawValue) }
         if let failure = error as? JSONSchemaEvaluationFailure { return .init(.input, "schemaEvaluation." + failure.category.rawValue) }
         // Schema errors remain operational; no unknown error becomes validation false.

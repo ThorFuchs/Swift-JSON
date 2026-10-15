@@ -202,3 +202,13 @@ JSONHTMLRenderer also accepts JSONDocument in its four rendering/report methods.
 Caller annotations use exact typed paths, explicit missing-parent attachment and
 coherent value byte spans without schema execution or source-byte archival.
 See [diagnostic rendering](Release1.3/DiagnosticAnnotations.md).
+
+## Provider-specific schema fragments (1.4 development)
+
+`OpenAIJSONSchemaBridge(profile:limits:)` in JSONSchema provides `check`/`checkWithReport`,
+`responseFormat`/`functionTool`, and their complete Data/String and WithReport forms.
+Profiles are `.openAIResponsesFormatV1` and `.openAIResponsesFunctionV1`; native JSON schemas,
+offline registries and exact typed issue paths stay authoritative. A compatible local check
+is neither native validation of an instance nor a service-acceptance guarantee. Finite limits
+and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
+[profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.

@@ -35,7 +35,10 @@ def main():
         run('schema-missing-resource',['schema','check',schema],exit=5,expected=b'')
         run('schema-boolean',['schema','check',file('false.json','false')],check=lambda p:json.loads(p.stdout)['schemaKind']=='boolean')
         run('schema-invalid-declaration',['schema','check',file('invalid-schema.json','{"type":123}')],exit=5,expected=b'')
-        for capability in ['openai-format','openai-tool','apple-check']:
+        provider=file('provider.json','{"type":"object","properties":{"value":{"type":"integer"}},"required":["value"],"additionalProperties":false}')
+        run('provider-format',['schema','provider','openai-format',provider,'--name','sample'],check=lambda p:json.loads(p.stdout).get('schema')==json.loads(pathlib.Path(provider).read_text()) and json.loads(p.stdout).get('strict') is True)
+        run('provider-tool',['schema','provider','openai-tool',provider,'--name','sample'],check=lambda p:json.loads(p.stdout).get('parameters')==json.loads(pathlib.Path(provider).read_text()) and json.loads(p.stdout).get('type')=='function')
+        for capability in ['apple-check']:
             run('unavailable-'+capability,['schema','--diagnostics=json','provider',capability,'not-opened.json','--name','sample'],exit=2,expected=b'',check=lambda p:json.loads(p.stderr)['code']=='capabilityUnavailable')
         run('filter-utf8-is-compile',['query','-f',file('filter.bin',b'\xff')],b'null',exit=3,expected=b'',check=lambda p:b'invalidQueryUTF8' in p.stderr)
         run('missing-filter-file-is-io',['query','-f',str(directory/'missing')],exit=7,expected=b'')
@@ -72,6 +75,6 @@ def main():
         good=bool(prefix) and p.returncode==130 and json.loads(err)['category']=='cancelled'
         rows.append({'id':'cancel-after-real-pipe-progress','exit_code':p.returncode,'expected_exit':130,'accepted_prefix_bytes':len(prefix)+len(out),'status':'passed' if good else 'failed'})
     receipt={'schema_version':1,'status':'passed' if rows and all(r['status']=='passed' for r in rows) else 'failed','observed':len(rows),'passed':sum(r['status']=='passed' for r in rows),'failed':sum(r['status']=='failed' for r in rows),'binary_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'cases':rows,
-             'scope':'Qualified portable C5 adapters and unavailable-capability rejection; provider successes remain blocked in authored C5 vector receipt'}
+             'scope':'Qualified portable C5 adapters, native provider fragments and unavailable Apple capability rejection'}
     output=ROOT/args.output;output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps({k:v for k,v in receipt.items() if k!='cases'}));return 0 if receipt['status']=='passed' else 1
 if __name__=='__main__':raise SystemExit(main())

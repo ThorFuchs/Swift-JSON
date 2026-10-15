@@ -1,0 +1,1 @@
+{"type":"object","properties":{"value":{"type":"number","minimum":0.1,"maximum":9007199254740993}},"required":["value"],"additionalProperties":false}

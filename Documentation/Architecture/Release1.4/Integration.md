@@ -135,3 +135,17 @@ peak logical retention is about66.5KB and measured RSS about7.5MB on a loaded ho
 There is no quiet-host throughput or hard RSS claim. Final-head hosted checks,
 source archive, clean extraction and acceptance closure are bound by the returned
 freeze/evidence records. Mandatory provider CL078/CL079 remain blocked.
+
+
+## Portable provider successor
+
+The aded3c9 reconciliation is retained with35 passed hosted checks and its immutable
+source/evidence return. A distinct provider successor implements CL078/CL079 through
+public JSONSchema helpers; the historical unavailable results above are superseded
+by the [provider contract](Providers.md), [frozen profile](ProviderProfiles.json) and
+its new source-bound receipts. Native C5 vectors now have6 passes/0 blocked; the
+full authored corpus has111 successes. Unsupported/unverified declaration reports
+exit1; compilation, IO, resource and cancellation failures remain operational.
+Apple model/schema bridges remain a separate slice. No prior WASI/performance result
+is silently reused as qualification of new helper behavior. Current broad native,
+safety, docs, Linux and reproduction receipts accompany the successor return.

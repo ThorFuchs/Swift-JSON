@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "é": {
+      "type": "string"
+    },
+    "é": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "é",
+    "é"
+  ],
+  "additionalProperties": false
+}
