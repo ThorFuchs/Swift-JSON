@@ -18,3 +18,8 @@ use the public APIs documented in README and the product DocC catalogs.
 
 The fifth product, JSONHTML, additionally checks exact highlighted output, checked
 Sendable reports, one admission and a cumulative work refusal using public APIs.
+
+The sixth optional product, JSONBridges, is imported explicitly for the E2 numeric
+examples. Three synchronized guide fences execute alongside all README examples.
+Core-only and unsupported-Float compiler rejections are checked separately by
+Scripts/qualify_ergonomics.py in debug and release configurations.
