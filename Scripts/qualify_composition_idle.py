@@ -65,7 +65,7 @@ def main():
     try:
         assert platform.system()=='Darwin'
         env={}
-        for label,argv in [('os',['sw_vers','-productVersion']),('swift',['xcrun','swift','--version']),('sdk',['xcrun','--sdk','macosx','--show-sdk-version']),('developer',['xcode-select','-p']),('hardware',['sysctl','-n','hw.model','hw.memsize','hw.ncpu']),('thermal',['pmset','-g','therm'])]:env[label]=command(argv,label+'.log').strip()
+        for label,argv in [('os',['sw_vers','-productVersion']),('swift',['xcrun','swift','--version']),('sdk',['xcrun','--sdk','macosx','--show-sdk-version']),('sdk_path',['xcrun','--sdk','macosx','--show-sdk-path']),('developer',['xcode-select','-p']),('hardware',['sysctl','-n','hw.model','hw.memsize','hw.ncpu']),('thermal',['pmset','-g','therm'])]:env[label]=command(argv,label+'.log').strip()
         assert tuple(map(int,env['os'].split('.')[:2]))>=(27,0) and tuple(map(int,env['sdk'].split('.')[:2]))>=(27,0)
         ver=re.search(r'Apple Swift version (\d+)\.(\d+)',env['swift']);assert ver and tuple(map(int,ver.groups()))>=(6,4)
         receipt['environment']=dict(**env,architecture=platform.machine(),language_mode='6')
@@ -82,7 +82,7 @@ def main():
             (target/'main.swift').write_bytes(harness)
             manifest='// swift-tools-version: 6.4\n// SPDX-License-Identifier: Apache-2.0\nimport PackageDescription\nlet package = Package(name: \"CompositionIdleProbe\", platforms: [.macOS(\"27.0\")], dependencies: [.package(name: \"Swift-JSON\", path: '+json.dumps(str(tree))+')], targets: [.executableTarget(name: \"CompositionRegression\", dependencies: [.product(name: \"JSON\", package: \"Swift-JSON\"), .product(name: \"JSONSchema\", package: \"Swift-JSON\")])], swiftLanguageModes: [.v6])\n'
             (package/'Package.swift').write_text(manifest)
-            command(['xcrun','swift','build','-c','release','--package-path',str(package)],kind+'-build.log',timeout=900)
+            command(['xcrun','swift','build','-c','release','--sdk',env['sdk_path'],'--package-path',str(package),'--verbose'],kind+'-build.log',timeout=900)
             (out/(kind+'-Package.swift')).write_text(manifest)
         binaries={};identities={};source=None
         for kind in ['baseline','candidate']:
@@ -95,8 +95,10 @@ def main():
             (out/(kind+'-main.swift')).write_bytes(harness)
             load=command(['otool','-l',str(binary)],kind+'-load-commands.log')
             build=load.split('LC_BUILD_VERSION',1)[1].split('Load command',1)[0]
-            assert re.search(r'minos\s+27\.0',build) and re.search(r'sdk\s+'+re.escape(env['sdk'])+r'\b',build)
-            binaries[kind]=binary;identities[kind]=dict(source_commit=pin,harness_sha256=sha(harness),binary=str(binary),binary_sha256=sha(binary.read_bytes()),binary_bytes=binary.stat().st_size,release_build_version=build.strip())
+            linked_sdk=re.search(r'sdk\s+(\d+)\.(\d+)',build)
+            assert re.search(r'minos\s+27\.0\b',build) and linked_sdk and tuple(map(int,linked_sdk.groups()))>=(27,0), 'unsupported Mach-O deployment/SDK: '+kind
+            binaries[kind]=binary;identities[kind]=dict(source_commit=pin,harness_sha256=sha(harness),binary=str(binary),binary_sha256=sha(binary.read_bytes()),binary_bytes=binary.stat().st_size,release_build_version=build.strip(),linked_sdk=linked_sdk.group(1)+'.'+linked_sdk.group(2))
+        assert identities['baseline']['linked_sdk']==identities['candidate']['linked_sdk'], 'mismatched linked SDKs'
         command(['git','diff','--quiet','084eb5af918a63e0eec113db6d347e0d06bea86d',PINS['candidate'],'--','Sources','Package.swift','Tests'],'runtime-continuity.log',TREES['candidate'])
         receipt['identities']=identities;save()
         before=None;after=None

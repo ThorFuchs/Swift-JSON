@@ -10,6 +10,9 @@ Equal-length before/after paths avoid introducing unequal bundle-path accounting
 The script builds both Release programs with the same Swift/SDK before measuring.
 It preserves commands, exits, source pins, binary hashes, exact harness bytes,
 samples, thermal observations and host/process/paging logs.
+Build commands explicitly select the discovered SDK path and preserve verbose
+compiler/linker output. Discovered SDK and Mach-O linked SDK versions are recorded
+separately: both binaries must target macOS 27.0 with the same linked SDK >=27.0.
 
 Three alternating pairs (AB, BA, AB) provide 27 samples per workload/revision,
 with three warmup batches per process. Each process requires pre/post intervals
