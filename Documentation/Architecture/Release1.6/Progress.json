@@ -6,7 +6,7 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G6 complete: synchronized compiled public guides, current API/README/DocC and all 49 metric scopes native-qualified",
+  "status": "G7 main repairs reconciled; full Git-free native/safety, oracle and Apple/WASI qualification passed; full Linux native/safety blocked by local storage",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
@@ -16,7 +16,7 @@
     "S3-G4": "passed_native_increment",
     "S3-G5": "passed_native_increment",
     "S3-G6": "passed_native_increment",
-    "S3-G7": "not_started",
+    "S3-G7": "qualified_available_scopes_linux_blocked",
     "S3-G8": "not_started"
   },
   "observed": {
@@ -46,15 +46,14 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "G7 main-repair integration, full native/safety/pinned-suite/oracle/platform qualification; G8 final review return",
+  "next_gate": "Complete G7 Linux native/safety on sufficient storage or separately authorized host, then G8 review",
   "limitations": [
-    "G7/G8 remain open; this is not a qualified 1.6 release candidate",
-    "Original packet expectation/oracle representation amendment remains separately preserved",
-    "No new full nine-bundle Native/safety, Linux, WASI, mobile or controlled-performance pass is claimed",
-    "Main independently advanced to 037e735 (1.5.1 repairs); this isolated G6 branch preserves its G0/G1 base pending later integration.",
-    "G2-G6 are native-only qualification: Linux/WASI/mobile goldens remain G7; no controlled throughput or RSS claim",
+    "G7 Linux full native/safety remains blocked by local disk; seven commands including Release build passed before guest interruption (exit137), not a full test pass",
+    "No local native x86_64 Linux qualification; physical iPad deferred under existing simulator acceptance policy",
+    "G8 remains open and this increment is not a qualified 1.6 release candidate",
     "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
-    "Historical exploratory/compiler/test/harness attempts are retained separately from final passed receipts"
+    "No controlled throughput, heap/RSS or caller instruction guarantee",
+    "All exploratory/harness failures remain separate from later passed receipts; no push, PR, release or deployment"
   ],
   "push_merge_tag_or_publication_performed": false,
   "g1_observed": {
@@ -75,11 +74,15 @@
     "focused_safety_lane_commands": 3
   },
   "current_harness_requirements": {
-    "native_root_functions": 515,
+    "native_root_functions": 644,
+    "linux_root_functions": 628,
+    "wasi_root_functions": 540,
     "parameter_invocations": 325,
-    "native_shared_state_functions": 19,
+    "wasi_parameter_invocations": 288,
+    "native_shared_state_functions": 45,
+    "linux_shared_state_functions": 44,
     "core_metrics": 49,
-    "scope": "Full-lane requirements; focused G5 observations recorded separately"
+    "scope": "Exact integrated G7 inventories; Linux requirements do not imply completed Linux qualification"
   },
   "g1_implementation_commit": "6c19580dec99c9363bb4b4d1611af8b8a2bab266",
   "g1_qualification_record": "Documentation/Architecture/Release1.6/G1Qualification.md",
@@ -260,5 +263,72 @@
     "native_fixture_witness_expectations_per_process": 155,
     "conditional_dsl_example": "deferred: product absent from inspected S3 package and main base; sibling train untouched",
     "release_ready": false
+  },
+  "historical_current_states": [
+    {
+      "gate": "S3-G6",
+      "status": "G6 complete: synchronized compiled public guides, current API/README/DocC and all 49 metric scopes native-qualified",
+      "current_harness_requirements": {
+        "native_root_functions": 515,
+        "parameter_invocations": 325,
+        "native_shared_state_functions": 19,
+        "core_metrics": 49,
+        "scope": "Full-lane requirements; focused G5 observations recorded separately"
+      },
+      "next_gate": "G7 main-repair integration, full native/safety/pinned-suite/oracle/platform qualification; G8 final review return",
+      "limitations": [
+        "G7/G8 remain open; this is not a qualified 1.6 release candidate",
+        "Original packet expectation/oracle representation amendment remains separately preserved",
+        "No new full nine-bundle Native/safety, Linux, WASI, mobile or controlled-performance pass is claimed",
+        "Main independently advanced to 037e735 (1.5.1 repairs); this isolated G6 branch preserves its G0/G1 base pending later integration.",
+        "G2-G6 are native-only qualification: Linux/WASI/mobile goldens remain G7; no controlled throughput or RSS claim",
+        "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
+        "Historical exploratory/compiler/test/harness attempts are retained separately from final passed receipts"
+      ]
+    }
+  ],
+  "g7_base_commit": "4368947c0db3831da988b9d8626055a38b42a7e3",
+  "g7_integrated_main_commit": "037e735dc6224789e4d04d2c18d15b8d27440198",
+  "g7_qualified_source_commit": "6652f9bd65b6f21e1a0c8a22fde5d0ce03b68813",
+  "g7_qualification_record": "Documentation/Architecture/Release1.6/G7Qualification.md",
+  "g7_observed": {
+    "default_git_free_native_commands": 37,
+    "native_debug_functions": 644,
+    "native_release_functions": 644,
+    "native_parameter_invocations": 325,
+    "release_address_sanitizer_functions": 644,
+    "thread_sanitizer_functions": 45,
+    "strict_memory_safety_warnings_as_errors": true,
+    "s3_functions": 98,
+    "s3_shared_functions": 4,
+    "restored_maintenance_function_identities": 126,
+    "core_public_cap_probes": 49,
+    "fixed_grammar_schemas": 64,
+    "certifications_per_process": 512,
+    "known_invalid_per_grammar": 64,
+    "separate_randomized_grammar_schemas": 64,
+    "external_generated_certifications": 1328,
+    "external_known_invalid": 128,
+    "external_disagreements": 0,
+    "amended_fixture_schemas": 44,
+    "amended_fixture_witnesses": 155,
+    "oracle_numeric_binding_regressions": 8,
+    "evaluated_pinned_schema_cases": 2300,
+    "separate_schema_policy_cases": 37,
+    "evaluated_pinned_json_cases": 287,
+    "separate_json_policy_cases": 31,
+    "wasi_checks": 77,
+    "node_debug_functions": 540,
+    "node_release_functions": 540,
+    "wasi_parameter_invocations": 288,
+    "mobile_sdk_builds": 2,
+    "simulator_runtimes": 2,
+    "physical_iphone_runs": 1,
+    "cross_platform_byte_equal_matrix_hosts": 6,
+    "linux_completed_commands": 7,
+    "linux_guest_command_exit": 137,
+    "linux_full_native_or_safety_pass": false,
+    "controlled_performance_claim": false,
+    "public_signature_or_default_changes": false
   }
 }

@@ -161,4 +161,26 @@ The schema-examples consumer qualifier preserves its 15 public cases/two compile
 negatives and additionally requires ten synchronized DocC snippets in two processes.
 The docs lane checks those source bytes before compilation. Exact marker/cardinality
 checks reject missing documentation outcomes; all 49 baseline cap probes and the
-96 generator/515 full-root/19 sharing-function requirements remain unchanged.
+historical G6 requirements (96 generator/515 full-root/19 sharing functions).
+
+
+## S3 G7 integrated qualification
+
+The current exact discovery contract is 644 Mac / 628 Linux / 540 WASI functions,
+325 Mac/Linux and 288 WASI parameter invocations, 45 Mac / 44 Linux shared-state
+functions, and all 49 core cap probes. JSONSchemaExamples contributes 98 functions
+and four sharing functions. All 126 restored maintenance identities remain required.
+Earlier counts above describe their named historical increments.
+
+`--lane schema-examples-qualification` composes the advanced lane with the fixed
+64-schema public matrix: 512 seed/profile certifications and 64 known-invalid
+mutations, replayed in two processes. Full native also runs that matrix and uses
+one explicit root consumer scratch path for subsequent compiler/replay checks.
+A broad nonzero test count cannot satisfy any lane. Incomplete generation and
+independent-suite policy exclusions remain separate from evaluated successes.
+
+G7 passed full default native from a Git-free extraction, full native safety,
+WASI and the recorded Apple scopes. Linux preflight and Release build passed, but
+the guest was interrupted for disk pressure before full tests/safety. Those gates
+remain open; platform SDK compilation, simulator/device consumers and WASI do not
+substitute for Linux results. See the [G7 record](../Architecture/Release1.6/G7Qualification.md).
