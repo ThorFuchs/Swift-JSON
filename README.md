@@ -80,7 +80,7 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-Linux supports the six libraries and CLI with portable schema integrity
+Linux supports the seven libraries and CLI with portable schema integrity
 without runtime dependencies. Its initial qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
@@ -448,11 +448,11 @@ For the exact released 1.6.0 interface, use its
 [tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0/Sources)
 or its compiled DocC asset from the [1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0).
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The six DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The seven DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all seven candidate catalogs on a supported native host:
+Build all seven release catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -505,7 +505,7 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Command-line tool (released in 1.5.0)
 
-`swift-json` accompanies the six libraries. It provides strict formatting, validation, Pointer selection, staged
+`swift-json` accompanies the seven libraries. It provides strict formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
 for command semantics, cumulative budgets and qualification boundaries. The pull
@@ -525,7 +525,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-The package has six libraries plus the executable, with no external root
+The package has seven libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
@@ -561,14 +561,14 @@ Incompatibility exits1; operational errors remain errors. Apple schema/model bri
 See the [provider contract](Documentation/Architecture/Release1.4/Providers.md) and
 [compiled public consumer](Tools/CLIQualification/Sources/ProviderConsumer/Main.swift).
 
-## Exact structural navigation (unreleased candidate)
+## Exact structural navigation (released in 1.6.0)
 
 `JSONNavigation` adds many-node DFS preorder over a captured canonical document,
 with insertion-order object members, increasing array indices and exact typed
 locations. Physical and virtual scopes, explicit overlap/stop/pruning policies,
 bounded metadata collection and coverage share one finite cumulative core budget.
-Add the JSONNavigation product and import it explicitly. Existing one-node reads
+Import the opt-in JSONNavigation product explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
-and [real external SwiftPM consumer](Tools/NavigationQualification). This branch
-prepares eight products; published 1.5.0 and its seven-product contract are unchanged.
+and [real external SwiftPM consumer](Tools/NavigationQualification). Release 1.6.0
+contains seven libraries plus the executable.

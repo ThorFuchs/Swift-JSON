@@ -1,18 +1,17 @@
 # Native CI
 
-## Reconciled Navigation and composition increment
+## Current release source
 
-Current source retains composition from main and adds the opt-in Navigation
-product. The discovery contract requires 597 native functions, 581 Linux functions
-and 493 WASI functions, including all 39 Navigation and 12 composition functions.
-Parameterized inventories remain 325 native/Linux and 288 WASI. Shared-state
-sanitizer expectations are 43 native and 42 Linux. All 126 restored maintenance
-identities and all 49 public capacity probes remain mandatory. Full ASan uses the
-current root inventory. Native has 33 commands, Linux 29; the separate composition
-lane retains its nine commands, five external functions, eight capacity cells and
-11 negative compiler cases. Navigation's focused lane retains five commands.
-Seven public library DocC catalogues include Navigation. These are acceptance
-expectations; source-bound receipts establish actual execution outcomes.
+Current source includes the bounded composition API and the opt-in JSONNavigation
+product. The discovery contract requires 605 native functions, 589 Linux functions
+and 581 WASI functions, including 39 Navigation and 20 composition functions.
+Parameterized inventories remain 325 native/Linux and 288 WASI. All 126 restored
+maintenance identities and 49 public capacity probes remain mandatory. Full ASan
+uses the current root inventory. Native has 33 commands, Linux 29; the focused
+composition lane has 16 commands, five external adapter functions, eight capacity
+cells and 18 semantic-negative compiler cases. Navigation's focused lane retains
+five commands. Seven public library DocC catalogues include Navigation. These are
+acceptance expectations; source-bound receipts establish actual execution outcomes.
 
 The following dated sections retain their original source context.
 
@@ -65,7 +64,7 @@ are recorded; macOS/SDK 27 and Swift 6.4 remain minimums.
 Pushes to main, pull requests and manual dispatch run four lanes:
 
 - Native: public inventory, manifest/dependency graph, release build, debug and
-  release Swift Testing, six-library example, rooted JSON/JSONSchema consumer,
+  release Swift Testing, seven-library example, rooted JSON/JSONSchema consumer,
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
@@ -74,7 +73,7 @@ Pushes to main, pull requests and manual dispatch run four lanes:
   after execution. The extracted receipt must have null Git identity and the same
   complete source manifest.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, six native DocC catalogs with warnings as errors,
+  executed README examples, seven native DocC catalogs with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -171,7 +170,7 @@ remain required. The first failed inherited expectations are retained; no blanke
 nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
 observations remain separate from automated SDK/API and portable execution.
 
-## Experimental composition lane
+## Composition qualification lane
 
 `python3 Scripts/ci.py --lane composition` runs 20 core composition functions in
 Debug, Release and ASan, two concurrent-invocation functions with TSan, strict

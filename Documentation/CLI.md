@@ -1,6 +1,6 @@
 # Command-line workflows
 
-The `swift-json` executable ships with the six libraries from 1.5.0. It uses the
+The `swift-json` executable ships with the seven libraries in 1.6.0. It uses the
 same exact decimal/scalar model, strict grammar, explicit offline schema resources
 and finite cumulative limits. It has no network provider, shell filter or universal
 jq compatibility claim.

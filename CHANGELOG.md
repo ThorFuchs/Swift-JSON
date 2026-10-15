@@ -11,6 +11,9 @@
   and atomic MathML previews; preserve exact source, complete export/print and shared
   CLI policy. Native, browser and WASI evidence retains its assistive and host
   qualification boundaries.
+- Ship the opt-in JSONNavigation library for exact many-node DFS over canonical
+  documents, with typed locations, physical and virtual scopes, finite metadata,
+  explicit coverage and the existing cumulative resource contract.
 - Carry forward the 1.5.1 diagnostic, regression-suite, CLI-identity and Git-free
   archive repairs. The CLI reports `1.6.0` and a deterministic source digest.
 - Composition qualification covers 20 core functions in Debug/Release/ASan, two
@@ -185,12 +188,3 @@ remain unselected; projection and RFC 7464 framing remain deferred.
   timing sleeps; retain an invocation-local package-only checkpoint observer.
 - Qualify twenty frozen explicitly rooted downstream schema vectors and public
   cumulative budgets in a separate consumer; no protocol/runtime dependency added.
-
-## Unreleased Navigation candidate
-
-- Propose opt-in JSONNavigation as an eighth SwiftPM product, preserving its56
-  exact traversal declarations and cumulative resource semantics.
-- Qualify a real external Debug/Release SwiftPM consumer and preserve source-first
-  error precedence with two explicit regressions.
-- N2 inspection remains unimplemented: its separate borrowed-context compiler
-  proof is blocked. No version/tag/release or automatic merge is implied.

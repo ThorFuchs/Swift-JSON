@@ -1,21 +1,14 @@
-# N1 candidate platform scope
-
-This additive candidate proposes JSONNavigation as an eighth product (seven
-libraries plus CLI), with no external dependencies. Its public SwiftPM consumer
-and39 Navigation functions join the unchanged Linux lanes. Both actual ARM64 and
-x86_64 full/safety receipts are required for final qualification. The historical
-platform text below describes the original seven-product implementation.
-
 # Linux platform contract
 
-The six libraries and swift-json executable are qualified for 64-bit
+Release 1.6.0 includes opt-in JSONNavigation alongside the six established
+libraries. The seven libraries and swift-json executable are qualified for 64-bit
 Linux with Swift tools/compiler 6.4+ and Swift language mode 6. Initial execution
 qualification targets Ubuntu 24.04 with glibc on ARM64 and x86_64. A platform
 preflight identifies the actual runtime; cross-compilation alone cannot qualify
 behavior or safety. Architecture-specific receipts must pass before claiming
 that architecture qualified. Apple minimums remain macOS/SDK 27 and iOS/SDK 27.
 
-The root manifest keeps an empty dependency graph and seven products.
+The root manifest keeps an empty dependency graph and eight products.
 Apple PDF and native transfer APIs retain their platform availability; portable
 HTML has no WebKit requirement.
 Linux does not need a SwiftPM deployment-platform entry. Foundation file/resource

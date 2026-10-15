@@ -3,8 +3,8 @@
 The synchronous borrowed composition API is described in
 [Compose native operations](../../Sources/JSON/Documentation.docc/Composition.md).
 Its public surface and default profiles are unchanged by this qualification work.
-The root dependency graph remains empty and the package retains the existing products and adds opt-in JSONNavigation after its
-separate public-product gate.
+The root dependency graph remains empty and JSONNavigation is available as an
+opt-in product alongside the composition API.
 
 The separate [qualification package](../../Tools/CompositionQualification) exercises
 source-backed parsing, exact Pointer targets, URI identity and explicitly charged
