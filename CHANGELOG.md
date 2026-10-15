@@ -1,15 +1,30 @@
 # Changelog
 
-## Unreleased — next feature train
+## 1.6.0 — 2026-10-16
 
+- Add bounded synchronous JSON composition with one cumulative work/retention
+  ledger, borrowed scope lifetime, cross-scope rejection and a scope-bound admitted
+  root. Trusted and source-parsed roots are admitted once; each selected output
+  remains charged. Preserve exact values, source snapshots, cancellation and
+  terminal owned failures.
 - Add structured JSONHTML layouts with finite string, color, declared raster, inline
   and atomic MathML previews; preserve exact source, complete export/print and shared
-  CLI policy. Native, browser and WASI evidence is recorded with remaining assistive
-  and host qualification boundaries.
-- Forward-port the following 1.5.1 maintenance repairs. Development CLI metadata
-  is `1.6.0-dev` with a deterministic source digest; this is not a released version.
+  CLI policy. Native, browser and WASI evidence retains its assistive and host
+  qualification boundaries.
+- Carry forward the 1.5.1 diagnostic, regression-suite, CLI-identity and Git-free
+  archive repairs. The CLI reports `1.6.0` and a deterministic source digest.
+- Composition qualification covers 20 core functions in Debug/Release/ASan, two
+  concurrent-scope functions under TSan, 18 semantic ownership rejections, nine
+  call-site probes and 1,000 selections from 50,000-value trusted and parsed roots.
+- **Known compiler limitation:** six of the nine call-site forms abort Swift 6.4
+  during compilation; the ownership harness records these as blocked, never as
+  successful rejections. The direct reference adapter still refuses the
+  `balanced-128-128` capacity target. The large-root consumer is synthetic and does
+  not qualify a complete Swift-OpenAPI importer, arbitrary callback instructions,
+  process RSS or broad application capacity. See the [composition qualification
+  record](Documentation/Qualification/Release1.6.0/README.md).
 
-### 1.5.1 maintenance repairs
+## 1.5.1 — 2026-10-15
 
 - Restore best-effort schema diagnostic omission without latching terminal failure;
   strict diagnostic, work, retention, annotation and cancellation errors still throw.
@@ -19,7 +34,7 @@
 - Replace stale CLI development metadata with an explicit version and reproducible
   source digest; preserve empty dependencies, all seven products and 49 core caps.
 - Reconcile README, support/platform guidance, release history and DocC navigation.
-  Structured HTML previews remain outside the separate 1.5.1 patch candidate.
+  Structured HTML previews shipped in 1.6.0.
 
 ## 1.5.0 — 2026-10-15
 
@@ -30,7 +45,7 @@
 - Qualify native and ARM64/x86_64 Linux behavior/safety, source reproduction,
   public consumers and six DocC catalogues. Full CLI/WASI and Apple model helpers
   remain unqualified/unavailable. Frozen CLI metadata reports 1.4.0-dev/unknown,
-  explicitly disclosed in the release notes and repaired in the next candidate.
+  explicitly disclosed in the release notes and repaired in 1.5.1.
 
 ## 1.4.0 tag — 2026-10-15
 
@@ -85,7 +100,7 @@ Published from the separate 1.2 maintenance branch. Add 126 behavior/conformance
 functions, public integration and missing/corrupt-resource acceptance, complete
 coverage export and explicit performance disposition. Repair best-effort schema
 diagnostics and Git-free qualification identity. These two repairs and the added
-suites were absent from 1.3.0 through 1.5.0; the 1.5.1 candidate restores them.
+suites were absent from 1.3.0 through 1.5.0; the 1.5.1 release restores them.
 Historical qualification and performance receipts retain their original scope.
 
 ## 1.2.0 — 2026-10-13

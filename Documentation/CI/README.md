@@ -173,23 +173,33 @@ observations remain separate from automated SDK/API and portable execution.
 
 ## Experimental composition lane
 
-`python3 Scripts/ci.py --lane composition` executes 20 composition functions in
+`python3 Scripts/ci.py --lane composition` runs 20 core composition functions in
 Debug, Release and ASan, two concurrent-invocation functions with TSan, strict
-memory-safety compilation of JSON, and a distinct-package JSON/JSONSchema consumer
-in both modes (four positive and six negative outcomes). A Release public consumer
-performs 1,000 resolutions over 50,000-value trusted and parsed roots under balanced
-limits. Eighteen compiler negatives require semantic diagnostics with no object or
-compiler abort. Nine real call-site probes include three explicit-borrow positives
-and six forms that expose current compiler aborts. Ten Python cases verify
-that signals, fatal diagnostics and missing imports cannot pass as rejections.
-All commands, nonzero exits, source hashes and outcomes remain in receipts.
+memory-safety compilation of JSON, and distinct-package consumers. The public
+consumer has four positive and six negative outcomes in both configurations. The
+external reference adapter retains its five Debug/Release/ASan tests and eight
+scale cells, including three explicit finite-quota refusals. A separate Release
+consumer performs 1,000 resolutions over 50,000-value trusted and parsed roots
+under balanced limits, checking the admitted-root path and per-selection accounting.
+
+Eighteen compiler ownership negatives require source-local diagnostics and no
+object emission. Nine actual call-site probes include three borrowing positives
+and six forms that expose current Swift 6.4 compiler aborts, including a root-only
+escaping capture. Ten Python cases verify that module-cache false positives,
+signals, fatal diagnostics and missing imports cannot pass as rejections. All
+commands, nonzero exits, source hashes and outcomes remain in receipts.
 
 The lane runs every check before reporting compiler robustness. Reproduced known
 aborts set overall status `blocked` and exit 2 while `behavior_status` and the
 ownership rejection results remain explicit. A crash is never a semantic pass.
 This lane uses actual Linux preflight when invoked on Linux; no Linux success is
 inferred from macOS execution. It supplements full native, safety and docs lanes.
+The focused lane also runs in the native and both Linux architecture workflows.
 On a CLT installation that does not discover TestingMacros,
 set `SWIFT_JSON_TESTING_PLUGIN_PATH` to the installed testing plugin directory;
 CI records the explicit `-plugin-path` arguments and preserves the original failure.
 No language, SDK, platform, discovery or sanitizer baseline changes.
+
+The full native/Linux behavior lanes discover and run the new root functions.
+The standalone composition lane adds the independent public compiler harness,
+reference-heavy adapter matrix and the large repeated-root consumer.

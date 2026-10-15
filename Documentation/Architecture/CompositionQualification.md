@@ -50,6 +50,32 @@ characterization check verifies those outcomes; it does not turn the three
 incomplete imports into successes or establish arbitrary production capacity.
 The direct adapter's failed capacity target remains explicit.
 
+## Admitted-root lookup path
+
+`withAdmittedRoot` admits one trusted immutable graph and lends a private,
+noncopyable, non-Sendable handle for the synchronous callback. `withParsedDocument`
+parses and admits its root on the same ledger without traversing that parsed root
+again. The handle retains the exact snapshot and a private reference to its owner;
+only that composition can resolve through it. Cross-scope use fails before
+navigation. Root admission and the logical handle slot remain charged through
+composition completion.
+
+Each Pointer and selected output still consumes work and retention. Selecting the
+entire root with an empty Pointer therefore reserves the selected graph again.
+The arbitrary-JSON overload retains conservative repeated admission. For a root
+with N nodes and R small selections, the admitted-handle path changes root
+admission from O(R × N) to O(N), plus Pointer navigation and each selected-output
+graph. A 50,000-value trusted root and the same source-parsed root are each
+resolved 1,000 times in the separate public consumer under balanced limits; its
+work and retention receipts qualify that synthetic workload only.
+
+The public compiler probes also record supported explicit-borrow call sites and
+known Swift 6.4 compiler aborts. Those aborts remain compiler-robustness blockers;
+they are not counted as successful ownership rejections. The synthetic scale
+consumer does not qualify a full Swift-OpenAPI importer, broad application
+capacity, process RSS or callback instruction limits. The original direct
+adapter's 128/128 balanced quota refusal remains in the record.
+
 The adapter declares 64 logical bytes for its frame, 16 per output slot and a
 conservative 68 per descriptor (20 index-text bytes and three 16-byte input token
 slots). Staging adds one admitted input token slot. Reservations and work charges
@@ -59,13 +85,14 @@ owned operation. Functional elapsed times do not establish throughput guarantees
 
 ## Execution and evidence
 
-Run python3 Scripts/ci.py --lane composition on the supported native or Linux
-runner. The lane requires 12 core functions in each build mode, separate public
-consumers, five external Swift Testing functions in Debug/Release/ASan, all eight
-scale cells and 11 compiler rejection cases. Exact module/cardinality checks
-reject missing tests and misclassified resource failures. The reconciled 597 native / 581
-Linux root functions, 325 parameter invocations, restored identities and 49 public
-metric probes retain their existing contracts.
+Run `python3 Scripts/ci.py --lane composition` on the supported native or Linux
+runner. The lane requires 20 core functions in Debug/Release/ASan, two TSan
+concurrency functions, a strict-memory-safety build, distinct public consumers,
+both 50,000-value admitted-root scale cases, all eight reference-adapter scale
+cells, 18 semantic compiler rejections and nine actual call-site probes. Exact
+module/cardinality checks reject missing tests and misclassified resource
+failures. The current root function counts and 49 public metric probes are
+recorded by `Documentation/Qualification/TestDiscovery.json`.
 
 The tests replay exact and one-below work/retention thresholds, compare both
 strategies on identical input, preserve exact values and scalar keys, and catch
@@ -73,12 +100,12 @@ late missing-target/cancellation failures before attempting normal completion.
 Finalization must still throw the original native failure. Each report retains
 its actual source, environment, command exits, counts and input hashes.
 
-CI runs the focused lane alongside the existing Native / native and both Linux
-architecture jobs. Their names and protection rules remain unchanged. Sanitizer
-and full-root lanes continue independently. Linux uses the existing Swift
-Testing-only runner policy; no baseline is suppressed.
+The full Native / native and Linux architecture lanes discover and run the new
+root functions. The standalone composition lane adds the separate compiler
+harness and adapter/scale consumers. Sanitizer and full-root lanes continue
+independently. Linux uses the existing Swift Testing-only runner policy; no
+baseline is suppressed.
 
 Controlled idle-host performance remains a separate gate using the unchanged
 10% review trigger. Shared or busy-host timing cannot close it. Representative
-application scale beyond these synthetic cells needs separate evaluation; no
-downstream dependency adoption, merge or release follows automatically.
+application scale beyond these synthetic cells needs separate evaluation.

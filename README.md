@@ -17,16 +17,11 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-This feature branch also contains an [opt-in structural traversal product candidate](Documentation/Architecture/StructuralIntelligence/N1Promotion.md).
-It preserves the seven released products and proposes JSONNavigation as the eighth.
-Merge and release remain human-gated; the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
-describes its many-node scope, exact locations, finite accounting and coverage.
-
-Published **1.5.0** provides six libraries and the CLI. This development branch
-retains main’s unreleased structured HTML previews and forward-ports the 1.5.1
-maintenance repairs: best-effort schema diagnostics, the complete 1.2.1 regression
-suites and Git-free qualification. Its CLI identifies itself as `1.6.0-dev`; this
-is not a published version. See the [repair record](Documentation/Qualification/Release1.5.1/README.md).
+Published **1.6.0** provides seven libraries and the CLI. It adds bounded synchronous
+JSON composition with scope-bound admitted roots and opt-in structural traversal,
+ships structured HTML previews, and includes the 1.5.1 maintenance repairs. The
+compiler robustness and downstream importer limits remain explicit in the
+[release qualification record](Documentation/Qualification/Release1.6.0/README.md).
 
 ## Why Swift-JSON?
 
@@ -71,13 +66,13 @@ Choose the products your application needs:
 
 | Product | Use it for |
 | --- | --- |
-| **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
+| **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents, diagnostics and bounded composition |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact HTML and immutable exports since 1.3.0; structured forms/cards and bounded previews on unreleased main |
+| **JSONHTML** | Exact HTML and immutable exports since 1.3.0; structured forms/cards and bounded previews since 1.6.0 |
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
-| **JSONNavigation** | Unreleased candidate: exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage |
+| **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage (available since 1.6.0) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -101,7 +96,7 @@ and Embedded Swift hosting require separate qualification.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.5.0")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.6.0")
 ```
 
 Then add products to your target dependencies:
@@ -393,7 +388,7 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
-## Standalone HTML (structured previews on unreleased main)
+## Standalone HTML (structured previews since 1.6.0)
 
 `JSONHTML` presents the exact value as ordered object forms, indexed array cards and
 small scalar flow lists. The direct renderer defaults to interactive structured
@@ -436,8 +431,8 @@ Read the [structured preview guide](Sources/JSONHTML/Documentation.docc/Structur
 [formatted syntax guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md),
 [prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md) and
 [API/policy freeze](Documentation/Architecture/Release1.3/StructuredPreviews/APIAndPolicy.md).
-The consolidated design revision is not a package release number. These structured
-previews are on unreleased main; published 1.5.0 retains the prior renderer contract.
+The consolidated design revision is not a package release number. Structured
+previews are part of the 1.6.0 renderer contract.
 
 ## Documentation and examples
 
@@ -448,10 +443,10 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/),
 [JSONHTML](https://thorfuchs.github.io/Swift-JSON/JSONHTML/documentation/jsonhtml/) and
 [JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/).
-The site tracks `main` and publishes only after all four native CI lanes pass.
-It includes unreleased APIs. For the exact released 1.5.0 interface, use its
-[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.5.0/Sources)
-or its [compiled DocC asset](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.5.0).
+The site tracks `main` and publishes only after the native CI lanes pass.
+For the exact released 1.6.0 interface, use its
+[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0/Sources)
+or its compiled DocC asset from the [1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0).
 
 The [documentation index](Documentation/README.md) links the behavior contracts. The six DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
@@ -552,9 +547,9 @@ See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [integration contract](Documentation/Architecture/Release1.4/Integration.md) and
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
 The frozen 1.5.0 CLI reports `1.4.0-dev` and revision `unknown`, as disclosed in
-its release notes. This 1.5.1 candidate reports its actual candidate version and a
-deterministic source digest; see the [CLI guide](Documentation/CLI.md).
-Versioned release assets identify the exact qualified platform and source scope.
+its release notes. Swift-JSON 1.6.0 reports its release version and a deterministic
+source digest; see the [CLI guide](Documentation/CLI.md). Versioned release assets
+identify the exact qualified platform and source scope.
 
 ### Offline provider fragments (available since 1.5.0)
 

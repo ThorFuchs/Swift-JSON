@@ -46,8 +46,8 @@ Data parsing, Pointer construction/append/resolve and schema-only compilation.
 Build the identical source against each revision, then measure while builds and
 safety runs are idle. Timing samples are observations, separate from native
 logical work/retention counters; a noisy shared machine cannot establish a
-controlled regression gate. No release or downstream pin change follows from
-successful qualification.
+controlled regression gate. They do not substitute for functional or ownership
+qualification.
 
 The Data-document and Pointer timing workloads have no native public report; their
 raw zero counter placeholders mean unmeasured/N/A. Only byte-parser and schema-only
@@ -59,7 +59,7 @@ placeholders must never establish measured counter equivalence.
 The separate fixture target and five Swift Testing functions cover exact scalar/number semantics,
 shared exact work/retention boundaries, late failure/cancellation and serial descriptor staging.
 Run the composition CI lane to execute both configurations, ASan, eight materialized scale cells
-and all 11 compiler rejection cases. Five cells complete and three deliberately reach finite quotas;
+and all 18 source-anchored compiler ownership rejections. Five cells complete and three deliberately reach finite quotas;
 those refusals remain operational errors. The initial direct 128/128 balanced capacity assumption
 failed and is preserved. Staging the reference array on the same scope qualifies that bounded target
 without changing core APIs or limits. See ../../Documentation/Architecture/CompositionQualification.md.

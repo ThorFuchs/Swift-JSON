@@ -32,6 +32,10 @@ def commands(lane, output):
             ['swift', 'build', '--target', 'JSON', '--scratch-path', '.build/composition-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
             ['swift', 'run', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
+            ['swift', 'test', '--package-path', 'Tools/CompositionQualification'],
+            ['swift', 'test', '-c', 'release', '--package-path', 'Tools/CompositionQualification'],
+            ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/composition-address', '--package-path', 'Tools/CompositionQualification'],
+            ['python3', '-B', 'Scripts/qualify_composition_scale.py', '--output', str(output / 'scale')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionRootScale'],
             ['python3', '-B', 'Scripts/qualify_composition.py', '--output', str(output / 'compiler-negative')],
         ]
@@ -171,7 +175,7 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [DISCOVERY['composition_functions']] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [2] if 'composition.*IndependentScopesCanBeSharedAcrossTasks' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [DISCOVERY['composition_functions']] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [2] if 'composition.*IndependentScopesCanBeSharedAcrossTasks' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         if 'navigation' in command:
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
