@@ -124,7 +124,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
-            ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output / 'schema-examples')],
+            ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output / 'schema-examples'), '--scratch-path', '.build'],
             ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py', '--output', str(output / 'schema-example-ownership')],
             ['python3', '-B', 'Scripts/qualify_schema_example_generation.py', '--output', str(output / 'schema-example-generation')],
             ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'schema-example-advanced')],
