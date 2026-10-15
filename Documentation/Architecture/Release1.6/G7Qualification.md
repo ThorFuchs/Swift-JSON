@@ -124,4 +124,3 @@ On pinned Swift 6.4 Linux, resume both linux and linux-safety after sufficient l
 space is available, or use separately authorized hosted execution. Preserve 628
 root functions, 325 parameter invocations, 44 shared functions, all 49 caps and the
 exact independent-suite policy split. A filtered or WASI pass does not close Linux.
-
