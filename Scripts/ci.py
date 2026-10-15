@@ -119,7 +119,7 @@ def check_result(command, code, log, events=None):
     if events is not None:
         counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [36] if 'cli|sharedFilterPlan' in command else [38] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted([119, 55, 14, 11, 12, 61 if sys.platform == 'linux' else 75, 36, 10])
+        expected = [36] if 'cli|sharedFilterPlan' in command else [38] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted([1, 1, 3 if sys.platform == 'linux' else 4, 1, 2, 4]) if 'thread' in command else sorted([119, 55, 14, 11, 12, 61 if sys.platform == 'linux' else 75, 36, 10])
         passed = passed and sorted(counts) == expected
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
