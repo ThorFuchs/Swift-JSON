@@ -87,10 +87,10 @@ owned-loop cancellation qualification; no public consumer can install it.
 
 ## Qualification and promotion boundary
 
-The reviewed new inventory is 36 nonparameterized Navigation tests, including the
+The reviewed new inventory is 37 nonparameterized Navigation tests, including the
 three pinned synthetic packet documents. Existing function identities and all 325
 native/Linux parameter invocations remain; WASI retains its separate 288. Full roots
-become 582 native, 566 Linux and 478 WASI, and shared-state counts 42/41. All 126
+become 583 native, 567 Linux and 479 WASI, and shared-state counts 42/41. All 126
 maintenance identities, corpus policies and 49 cap probes remain required.
 
 `Scripts/ci.py --lane navigation` checks exact focused discovery, Debug/Release,

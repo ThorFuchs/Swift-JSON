@@ -26,6 +26,7 @@ phases use the **same** read-scope state and its noncopyable core-domain meter.
 | Admission and source lifetime | [JSONReadScope.init/check/complete/invalidate](../../../Sources/JSON/Reading/JSONReadScope.swift) | Exactly one root/source admission and terminal ledger; complete releases scope ownership |
 | Exact keys / insertion order | [JSONObject](../../../Sources/JSON/Value/JSONObject.swift), JSONKey | Visit ordinal members; no String sort, dictionary conversion or duplicate index |
 | Typed physical selection | JSONReadScope.select inside run | Strict key/index parent checks and existing JSONAccessFailure; no Pointer-token reinterpretation |
+| Requested scope-key admission | JSONAdmission.text(key: true), as in JSONReadCursor's JSONKey subscript | Caller query keys consume the same cumulative key/text capacities before path staging or lookup |
 | Typed path staging | JSONReadScope.append and JSONReadPath | Existing pointerTokens/pointerBytes/diagnosticBytes checks, path copy/UTF-8 work and live refunds |
 | Meter/operational failure | [JSONWorkMeter](../../../Sources/JSON/Limits/JSONWorkMeter.swift), JSONCodingState | Shared cumulative work, capacity/retention, cancellation and terminal health; never reset |
 | DFS child enumeration | JSON array indices / JSONObject ordinal collection access | New iterative frontier; each node/edge/frame/callback handoff checked and charged |

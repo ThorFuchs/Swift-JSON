@@ -238,3 +238,17 @@ private func navigationFailure(_ body: () throws -> Void) -> JSONFailure? {
     #expect(navigationFailure { _ = try JSONTraversal(document: document, limits: limits).collect() }?.category == .resource)
     #expect(try JSONTraversal(document: document).collect().result.summary.completion == .complete)
 }
+
+@Test func navigationRequestedKeyAdmissionMatchesCoreCursor() throws {
+    let document = JSONDocument(root: .object(try JSONObject()))
+    for metric: JSONResourceMetric in [.keyBytes, .aggregateTextBytes] {
+        var limits = JSONLimits.balanced; limits[metric] = 1
+        let key = JSONKey("long")
+        let core = navigationFailure { _ = try document.read(limits: limits) { try $0[key].requiredValue() } }
+        #expect(core?.category == .resource && core?.resource?.metric == metric)
+        for selection: JSONTraversalScope in [.subtree(at: [.key(key)]), .virtual(roots: [[.key(key)]])] {
+            let failure = navigationFailure { _ = try JSONTraversal(document: document, limits: limits).collect(scope: selection) }
+            #expect(failure == core)
+        }
+    }
+}

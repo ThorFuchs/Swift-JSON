@@ -4,7 +4,7 @@
   "implementation_base": "037e735dc6224789e4d04d2c18d15b8d27440198",
   "packet_sha256": "d758f75d84271a97da515bf7b7ef70de7a61e91fdf949a511fe0fca2708156f8",
   "N0": "source authorities reconciled; core-only seven-witness consumer and package-scoped one-ledger composition compiled/executed",
-  "N1": "experimental physical/virtual DFS, bounded collection and 36 focused behavior functions implemented; complete platform qualification in progress",
+  "N1": "experimental physical/virtual DFS, bounded collection and 37 focused behavior functions implemented; complete platform qualification in progress",
   "public_product": false,
   "public_products_preserved": 7,
   "core_semantic_changes": false,
