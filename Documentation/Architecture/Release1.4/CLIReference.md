@@ -114,9 +114,9 @@ promise is made. Stdout may contain an accepted prefix after a late failure;
 cancellation cannot recall accepted bytes. Collectors/replay/slurp/sort need finite
 storage; pull evaluation does not imply constant memory for every filter.
 
-Known schema-provider commands remain unavailable because their qualified helper
-prerequisite is absent at this source base. Their authored success/rejection cases
-remain blocked. Portable HTML needs neither Apple PDF preparation nor transfer
+At the pre-C5 source snapshot, schema-provider commands were unavailable and their
+authored success/rejection cases were blocked. The qualified portable increment
+below supersedes that observation. Portable HTML needs neither Apple PDF preparation nor transfer
 providers. WASI CLI feasibility is distinct from compiled libraries/private kernel;
 Node poll_oneoff currently fails with IO exit7, while five WasmKit commands pass; POSIX SIGINT bridging remains unavailable. Actual receipts
 and remaining mandatory gates determine release readiness.
