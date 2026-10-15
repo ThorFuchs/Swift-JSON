@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Compile/run the unpublished N1 module as an external consumer, including negative compiler probes."""
+"""Qualify the N1 library product with a real external SwiftPM consumer, including negative compiler probes."""
 import argparse
 import gzip
 import hashlib
@@ -64,7 +64,7 @@ def main():
     output = ROOT / args.output
     output.mkdir(parents=True, exist_ok=True)
     receipt = {'schema_version': 1, 'status': 'running', 'commands': [],
-               'scope': 'External Swift module API proof; JSONNavigation is not a released SwiftPM product',
+               'scope': 'External SwiftPM product/API proof; candidate source is not a published release',
                'consumer_sha256': hashlib.sha256((ROOT / 'Tools/NavigationQualification/Consumer.swift').read_bytes()).hexdigest()}
 
     def run(name, command, expected=None):
@@ -95,9 +95,7 @@ def main():
                     raise ValueError('Missing built module objects: ' + module)
                 objects.extend(str(p) for p in selected)
             common = ['swiftc', '-swift-version', '6', '-warnings-as-errors', '-I', str(modules), '-package-name', 'navigation_external_consumer']
-            executable = output / ('consumer-' + config)
-            run(config + '-consumer-compile', common + ['-parse-as-library', str(ROOT / 'Tools/NavigationQualification/Consumer.swift'), *objects, '-o', str(executable)])
-            text = run(config + '-consumer-run', [str(executable)])
+            text = run(config + '-swiftpm-consumer', ['swift', 'run', '-c', config, '--package-path', 'Tools/NavigationQualification', 'NavigationConsumer'])
             observed = re.findall(r'^NAVIGATION_CHECK (\S+) passed$', text, re.M)
             if len(observed) != 18 or set(observed) != CHECKS or 'NAVIGATION_CONSUMER passed cases=18' not in text:
                 raise ValueError('Missing/duplicate public consumer outcomes')
@@ -134,7 +132,7 @@ def main():
             for path in (ROOT / '.build/out/symbolgraph').glob('JSONNavigation*.symbols.json'):
                 shutil.copyfile(path, graphs / path.name)
             import documentation_catalog
-            # This local audit does not promote an experimental module to the public site.
+            # The public site separately qualifies the complete seven-library inventory.
             documentation_catalog.PRODUCTS = ('JSONNavigation',)
             coverage = documentation_catalog.verify_comments(documentation_catalog.public_symbols(graphs))
             receipt['experimental_api_coverage'] = coverage
@@ -142,7 +140,7 @@ def main():
                 raise ValueError('Undocumented experimental API: ' + str(coverage['errors']))
             run('docc', ['xcrun', 'docc', 'convert', str(ROOT / 'Sources/JSONNavigation/Documentation.docc'),
                 '--additional-symbol-graph-dir', str(graphs), '--output-dir', str(output / 'JSONNavigation.doccarchive'),
-                '--fallback-bundle-identifier', 'org.swift-json.experimental.JSONNavigation', '--warnings-as-errors'])
+                '--fallback-bundle-identifier', 'org.swift-json.JSONNavigation', '--warnings-as-errors'])
             receipt['compiled_docc'] = pack_catalog(output / 'JSONNavigation.doccarchive', output)
         receipt['status'] = 'passed'
     except (OSError, ValueError, tarfile.TarError, subprocess.TimeoutExpired) as error:

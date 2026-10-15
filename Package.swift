@@ -12,11 +12,12 @@ let package = Package(
         .library(name: "JSONPatch", targets: ["JSONPatch"]),
         .library(name: "JSONHTML", targets: ["JSONHTML"]),
         .library(name: "JSONBridges", targets: ["JSONBridges"]),
+        .library(name: "JSONNavigation", targets: ["JSONNavigation"]),
         .executable(name: "swift-json", targets: ["JSONCLI"])
     ],
     targets: [
         .target(name: "JSON"),
-        // Experimental N1 target. Product promotion requires separate release-gate review.
+        // Opt-in N1 product candidate; promotion does not change core navigation semantics.
         .target(name: "JSONNavigation", dependencies: ["JSON"]),
         .testTarget(name: "JSONNavigationTests", dependencies: ["JSONNavigation", "JSON"], exclude: ["Fixtures"]),
         .target(name: "JSONBridges", dependencies: ["JSON"]),

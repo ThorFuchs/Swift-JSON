@@ -74,3 +74,9 @@ an unqualified hash index. Complete path copies are bounded by the existing read
 scope; deep frontiers can use quadratic path metadata. No EngineBench speed, linear
 total-time, zero-copy or fixed-memory claim is made. Classification, snapshots,
 projections, persistence, async actors, query syntax and rendering are later gates.
+
+Full captured-source admission precedes validation of depth and collection options.
+An oversized source may therefore refuse admission before a negative option is
+reported. A valid small source with a negative option throws invalidLimits.
+The real external SwiftPM consumer resolves the JSONNavigation product in Debug
+and Release; package scopes/meters and the owned context remain inaccessible.

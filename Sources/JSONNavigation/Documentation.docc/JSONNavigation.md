@@ -2,9 +2,9 @@
 
 Exact, synchronous, bounded exploration of many nodes in one canonical JSON source.
 
-This is an experimental N1 target, **not a released SwiftPM product**. The package's
-seven public products remain unchanged. Product promotion requires the recorded
-correctness, resource, compiler, platform and API review gate.
+JSONNavigation is an opt-in library product candidate on this development branch.
+Add its SwiftPM product and import it explicitly; core JSON does not re-export it.
+Product visibility does not establish a published version or approval to merge.
 
 The core JSON module continues to own one-node lookup, exact numbers and keys,
 presence and RFC 6901 Pointer. Use ``JSONTraversal`` for deterministic DFS preorder,
