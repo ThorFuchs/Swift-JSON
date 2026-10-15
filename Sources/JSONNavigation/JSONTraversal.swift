@@ -88,6 +88,11 @@ public struct JSONTraversal: Sendable {
             try state.meter.require(.pointerTokens, UInt64(location.count))
             var path = JSONReadPath(scope: scope, components: [], bytes: 0)
             for part in location {
+                // Caller-supplied query keys have the same admission as a typed
+                // read-cursor key; generated child keys were admitted with the root.
+                if case .key(let key) = part {
+                    try JSONAdmission.text(key.string, key: true, meter: &state.meter)
+                }
                 path = try scope.append(part, to: path.components, state: state)
                 _ = try scope.check()
             }

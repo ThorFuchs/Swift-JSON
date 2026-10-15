@@ -2,10 +2,10 @@
 
 ## Experimental N1 branch
 
-The Structural Intelligence branch adds exactly 36 Navigation functions and one
+The Structural Intelligence branch adds exactly 37 Navigation functions and one
 shared-root safety function, keeping every existing identity/case. Root expectations
-are 582 native/566 Linux with 325 parameter invocations; TSan is 42/41. WASI's
-separate core scope is 478 functions/288 parameters. No new public product is exposed.
+are 583 native/567 Linux with 325 parameter invocations; TSan is 42/41. WASI's
+separate core scope is 479 functions/288 parameters. No new public product is exposed.
 `--lane navigation` checks focused discovery, Debug/Release, explicit strict-memory
 compilation and the external compiler/consumer/experimental DocC audit. Native/Linux
 include that consumer alongside their existing gates; all 49 core cap outcomes and
