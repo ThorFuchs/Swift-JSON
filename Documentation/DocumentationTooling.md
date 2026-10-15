@@ -30,6 +30,7 @@ symbols, missing comments, stale examples or a failed catalog fail the lane.
 | `.build/handoff/docc/JSONHTML.doccarchive` | Exact formatted HTML API and rendering guide |
 | `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |
 | `.build/handoff/docc/JSONBridges.doccarchive` | Opt-in native numeric conversion and fidelity guide |
+| `.build/handoff/docc/JSONNavigation.doccarchive` | Opt-in exact structural traversal and coverage |
 | `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |

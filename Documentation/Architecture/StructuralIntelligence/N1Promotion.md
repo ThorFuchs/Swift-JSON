@@ -23,3 +23,10 @@ lanes and Git-free reproduction must qualify the final source before recommendin
 release readiness. Actual outcomes accompany the return; this document is an API
 review decision, not a claim that unfinished qualification has passed. Draft #34
 and the immutable N1 anchor remain untouched. No PR-ready/merge/release transition.
+
+A0 is independently blocked in the separate e11f93f borrowing spike: Apple Swift6.4
+accepts an escaping borrowed capture at type checking and aborts in SILGenCleanup
+during full compilation. A compiler crash is not a valid negative proof. No borrowed
+context or JSONInspection code is included in this product candidate. Its executor
+is byte-identical to the reviewed N1 anchor. The return preserves exact reproducer
+commands, positive/runtime results and failed diagnostic outcomes.

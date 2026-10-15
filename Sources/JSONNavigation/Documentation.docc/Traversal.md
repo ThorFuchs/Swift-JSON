@@ -79,4 +79,4 @@ Full captured-source admission precedes validation of depth and collection optio
 An oversized source may therefore refuse admission before a negative option is
 reported. A valid small source with a negative option throws invalidLimits.
 The real external SwiftPM consumer resolves the JSONNavigation product in Debug
-and Release; package scopes/meters and the owned context remain inaccessible.
+and Release; package scopes and meters remain inaccessible.

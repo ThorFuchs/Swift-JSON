@@ -1,0 +1,17 @@
+{
+  "parent": "4403b9ab3b0a1fadc57c12a283cfabb255f6237a",
+  "initial_product_commit": "7ee2712",
+  "P1": "56 public declarations preserved; real external SwiftPM Debug/Release18 checks/config,39 regression functions/config passed; full final-source qualification required",
+  "A0": "separate e11f93f spike: runtime46/config pass; Apple Swift6.4 escape compiler crashes at full code generation; gate BLOCKED",
+  "A1": "not started per stop condition; JSONInspection target/product absent",
+  "public_products": 8,
+  "new_product": "JSONNavigation",
+  "human_gates": [
+    "PR-ready transition",
+    "merge",
+    "tag",
+    "version release",
+    "publication"
+  ],
+  "evidence": "source-bound actual final outcomes accompany the private return; no old250MB bundle reconstructed"
+}

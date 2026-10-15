@@ -1,3 +1,9 @@
+# Historical N0/N1 decision record
+
+This records the experimental4403b9a anchor. The current public-product candidate
+is described in [N1Promotion.md](N1Promotion.md); the original decisions below
+retain their historical source context.
+
 # N1 exact traversal decisions
 
 Scope is N0/N1 only. JSONNavigation depends exclusively on JSON and currently has
