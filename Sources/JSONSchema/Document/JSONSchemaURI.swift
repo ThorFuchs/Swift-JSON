@@ -61,8 +61,8 @@ public struct JSONSchemaURI: Sendable, Hashable {
     public func removingFragment(limits: JSONLimits = .balanced) throws -> Self {
         try Self(string.split(separator: "#", maxSplits: 1, omittingEmptySubsequences: false).first.map(String.init) ?? string, limits: limits)
     }
-    package func withoutFragment(meter: inout JSONWorkMeter) throws -> Self {
-        if fragment == nil { try meter.work(); return self }
+    package func withoutFragment(meter: inout JSONWorkMeter, fragmentPresent: Bool? = nil) throws -> Self {
+        if fragmentPresent == false || (fragmentPresent == nil && fragment == nil) { try meter.work(); return self }
         var bytes: [UInt8] = []
         for byte in string.utf8 {
             try meter.work(); if byte == 35 { break }; try meter.retain(1); bytes.append(byte)

@@ -1,0 +1,6 @@
+import JSON
+func rejected() throws {
+    let _: JSONOperationReport<JSONCompositionScope> = try JSON.withComposition { scope in
+        return consume scope
+    }
+}

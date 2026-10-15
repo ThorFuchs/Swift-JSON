@@ -121,3 +121,25 @@ so retained reusable scratch is zero. Live owned capacities still charge
 retainedBytes. Scalar scanning and immutable plan-local regex sharing remain the
 qualified choices; no SIMD or prefilter optimization is claimed. Native performance
 observations are separate from the logical policy in [performance notes](../Performance/README.md).
+
+## Experimental synchronous composition
+
+`JSON.withComposition` borrows a noncopyable, non-Sendable facade over one native
+invocation. Native methods and instrumented external work consume the same work
+ceiling. The borrowing closure prevents temporary scope substitution. All owned
+errors latch; catching one cannot create a successful report. Restriction retains
+accepted capacities and consumed work. JSONSchema adds offline URI operations
+through package access without a dependency from JSON to JSONSchema. URI identity
+and adapter reservations use core, never compiledPlanBytes or compileWorkUnits.
+
+The initial ownership policy is conservative: no public refunds or owner tokens.
+External reservations and native result ownership survive until scope completion;
+re-admitted roots and selected result graphs are reserved again even for aliases.
+The full Data-to-array reservation precedes allocation and remains charged
+alongside the root, source bytes, spans, resources and final result. Native scratch
+uses its existing release rules. The logical peak is a maximum of this single
+ledger, not a sum of independent stage peaks. Arbitrary callback instructions,
+uninstrumented adapter allocations and process RSS are outside the claim. A public
+JSONOperationReport initializer permits pairing statistics with another result;
+its type alone does not establish provenance or adapter completeness. See the
+[composition guide](../../Sources/JSON/Documentation.docc/Composition.md).

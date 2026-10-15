@@ -6,12 +6,13 @@
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
     "JSONPatchTests": 16,
-    "JSONIntegrationTests": 20,
+    "JSONIntegrationTests": 32,
     "JSONHTMLTests": 97,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88
   },
   "parameterized_invocations": 325,
+  "composition_external_functions": 5,
   "qa_functions": {
     "JSONTests": 82,
     "JSONSchemaTests": 13,
@@ -25,7 +26,7 @@
     "JSONSchemaTests": 3,
     "JSONRegexRuntimeTests": 1,
     "JSONStreamingTests": 16,
-    "JSONIntegrationTests": 10,
+    "JSONIntegrationTests": 11,
     "JSONHTMLTests": 5,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1
@@ -60,7 +61,7 @@
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
     "JSONPatchTests": 16,
-    "JSONIntegrationTests": 20,
+    "JSONIntegrationTests": 32,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88
@@ -71,7 +72,7 @@
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
     "JSONPatchTests": 16,
-    "JSONIntegrationTests": 20,
+    "JSONIntegrationTests": 32,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10
   },
@@ -81,7 +82,7 @@
     "JSONSchemaTests": 3,
     "JSONRegexRuntimeTests": 1,
     "JSONStreamingTests": 16,
-    "JSONIntegrationTests": 10,
+    "JSONIntegrationTests": 11,
     "JSONHTMLTests": 4,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1
