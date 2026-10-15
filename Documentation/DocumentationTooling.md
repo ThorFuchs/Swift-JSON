@@ -67,7 +67,9 @@ The manifest and receipt preserve file-level and archive-level digests.
 
 The docs lane uses native `docc process-archive transform-for-static-hosting` to
 prepare each qualified archive under `/Swift-JSON/<product>`. A shared landing
-page links eight public-product references and the supporting DSL reference and guides. The build verifies product/guide routes,
+page links all eight product references and guides. The supporting DSL reference is
+also deployed at `/Swift-JSON/JSONDSLCore/documentation/jsondslcore/`, without a
+product card. The build verifies product/guide and supporting-reference routes,
 local HTML links and assets, rejects private-path/credential markers and symlinks,
 and records a file manifest. Only the generated site is packaged for Pages;
 source graphs, command logs and private maintainer records are not website content.
