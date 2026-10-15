@@ -146,13 +146,13 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Throws: Quota/overflow failure or cancellation, permanently terminal.
     public func reserveExternalLogicalBytes(_ bytes: UInt64, count: UInt64 = 1, overhead: UInt64) throws {
         try withMeter { meter in
-            let (total, overflow) = bytes.multipliedReportingOverflow(by: count)
-            guard !overflow else {
+            let (total, productOverflow) = bytes.multipliedReportingOverflow(by: count)
+            let (complete, sumOverflow) = total.addingReportingOverflow(overhead)
+            guard !productOverflow && !sumOverflow else {
                 throw JSONFailure(.resource, code: .counterOverflow, resource: .init(
                     domain: .core, metric: .retainedBytes, limit: meter.limits[.retainedBytes],
                     attemptedUsage: nil, overflow: true))
             }
-            let complete = try meter.adding(.retainedBytes, total, overhead)
             try meter.retain(complete)
         }
     }
