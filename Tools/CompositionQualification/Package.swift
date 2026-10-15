@@ -5,7 +5,14 @@ let package = Package(
     name: "CompositionQualification",
     platforms: [.macOS("27.0")],
     dependencies: [.package(name: "Swift-JSON", path: "../..")],
-    targets: [.executableTarget(name: "CompositionConsumer", dependencies: [
+    targets: [.target(name: "CompositionFixtures", dependencies: [
+        .product(name: "JSON", package: "Swift-JSON"),
+        .product(name: "JSONSchema", package: "Swift-JSON")
+    ]), .testTarget(name: "CompositionScaleTests", dependencies: [
+        "CompositionFixtures", .product(name: "JSON", package: "Swift-JSON")
+    ]), .executableTarget(name: "CompositionScaleProbe", dependencies: [
+        "CompositionFixtures", .product(name: "JSON", package: "Swift-JSON")
+    ]), .executableTarget(name: "CompositionConsumer", dependencies: [
         .product(name: "JSON", package: "Swift-JSON"),
         .product(name: "JSONSchema", package: "Swift-JSON")
     ]), .executableTarget(name: "CompositionRegression", dependencies: [

@@ -137,8 +137,14 @@ observations remain separate from automated SDK/API and portable execution.
 
 `python3 Scripts/ci.py --lane composition` executes 12 composition functions in
 Debug and Release, a distinct-package JSON/JSONSchema consumer in both modes,
+five external reference-load functions in Debug/Release/ASan, eight separately classified scale cells,
 and 11 compiler-negative ownership fixtures. It supplements the full native,
 safety and docs lanes. On a CLT installation that does not discover TestingMacros,
 set `SWIFT_JSON_TESTING_PLUGIN_PATH` to the installed testing plugin directory;
 CI records the explicit `-plugin-path` arguments and preserves the original failure.
 No language, SDK, platform, discovery or sanitizer baseline changes.
+
+The focused composition lane also runs on the Linux architecture jobs and Native / native.
+Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
+The qualification harness now has 15 regression functions, retaining its original 14.
+See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.

@@ -14,6 +14,24 @@ from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_
 from ci import check_result, commands
 
 class HarnessTests(unittest.TestCase):
+    def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
+        command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']
+        events = dict(bundle_counts=[5], module_function_counts={'CompositionScaleTests': 5},
+                      parameter_case_invocations=0)
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        for broken in [dict(events, bundle_counts=[4]),
+                       dict(events, module_function_counts={'WrongModule': 5}),
+                       dict(events, parameter_case_invocations=1)]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+        command = ['python3', '-B', 'Scripts/qualify_composition_scale.py']
+        report = dict(status='passed', cells=8, completed_imports=5, operational_refusals=3,
+                      adoption_status='bounded_fixtures_only', simple_strategy_capacity_status='blocked',
+                      unmet_capacity_targets=['balanced-128-128'])
+        self.assertTrue(check_result(command, 0, json.dumps(report))[0])
+        for broken in [dict(report, completed_imports=8), dict(report, operational_refusals=0),
+                       dict(report, unmet_capacity_targets=[]), dict(report, adoption_status='all_imports_qualified')]:
+            self.assertFalse(check_result(command, 0, json.dumps(broken))[0])
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
@@ -105,8 +123,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=14')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         # Scoped portability lanes retain exact discovery and safety rather
         # than describing an exit-zero subset as full qualification.

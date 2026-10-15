@@ -20,13 +20,18 @@ def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
     if lane == 'composition':
-        return [
+        result = [
             ['swift', 'test', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
             ['swift', 'test', '-c', 'release', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
             ['swift', 'run', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
+            ['swift', 'test', '--package-path', 'Tools/CompositionQualification'],
+            ['swift', 'test', '-c', 'release', '--package-path', 'Tools/CompositionQualification'],
+            ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/composition-address', '--package-path', 'Tools/CompositionQualification'],
+            ['python3', '-B', 'Scripts/qualify_composition_scale.py', '--output', str(output / 'scale')],
             ['python3', '-B', 'Scripts/qualify_composition.py', '--output', str(output / 'compiler-negative')],
         ]
+        return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
     if lane == 'archive':
         return [['python3', '-B', 'Scripts/public_check.py'],
                 ['python3', '-B', 'Scripts/qualify_native_reproduction.py', '--output', str(output / 'reproduction')]]
@@ -154,8 +159,10 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
+        if 'Tools/CompositionQualification' in command and events is not None:
+            passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
         if 'thread' in command and events is not None:
@@ -172,6 +179,9 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['observed'] == data['passed'] == 53 and data['failed'] == 0
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_composition_scale.py'] and passed:
+        data = json.loads(log.strip().splitlines()[-1])
+        passed = data['status'] == 'passed' and (data['cells'], data['completed_imports'], data['operational_refusals']) == (8, 5, 3) and data['adoption_status'] == 'bounded_fixtures_only' and data['simple_strategy_capacity_status'] == 'blocked' and data['unmet_capacity_targets'] == ['balanced-128-128']
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_integration.py'] and passed:
         d = json.loads(log.strip().splitlines()[-1])
         passed = d['status'] == 'passed' and (d['observed'], d['passed'], d['failed']) == (37, 37, 0)
@@ -210,7 +220,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=14' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=15' in log.splitlines()
     return passed, counts
 
 def main():
@@ -224,7 +234,7 @@ def main():
     repository = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
     is_checkout = repository.returncode == 0 and pathlib.Path(repository.stdout.strip()).resolve() == ROOT.resolve()
     commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True) if is_checkout else None
-    environment = collect_linux() if args.lane.startswith('linux') else collect()
+    environment = collect_linux() if args.lane.startswith('linux') or (args.lane == 'composition' and sys.platform == 'linux') else collect()
     receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit is not None and commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')

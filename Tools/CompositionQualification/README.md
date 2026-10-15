@@ -36,3 +36,13 @@ The Data-document and Pointer timing workloads have no native public report; the
 raw zero counter placeholders mean unmeasured/N/A. Only byte-parser and schema-only
 workloads supply measured native logical work and retention counters. Zero
 placeholders must never establish measured counter equivalence.
+
+## Reference-heavy public adapter
+
+The separate fixture target and five Swift Testing functions cover exact scalar/number semantics,
+shared exact work/retention boundaries, late failure/cancellation and serial descriptor staging.
+Run the composition CI lane to execute both configurations, ASan, eight materialized scale cells
+and all 11 compiler rejection cases. Five cells complete and three deliberately reach finite quotas;
+those refusals remain operational errors. The initial direct 128/128 balanced capacity assumption
+failed and is preserved. Staging the reference array on the same scope qualifies that bounded target
+without changing core APIs or limits. See ../../Documentation/Architecture/CompositionQualification.md.
