@@ -32,3 +32,10 @@ compiler probes and three synchronized, executed public guide fences.
 their public consumer. `verify_schema_example_documentation.py` rejects count/import/
 drift and receipt mutations; the native/docs qualifiers execute the ten blocks in
 two actual processes. Root README fences execute in the seven-library consumer.
+The maintenance repair restores `--lane coverage` / `--lane linux-coverage` as
+explicit profiling tools, `--lane linux-qa` and `--lane wasm-qa` as scoped execution
+lanes. Their receipts retain precise scopes; preparation does not establish a pass.
+`Scripts/generate_cli_identity.py --check` rejects stale CLI source metadata.
+`Documentation/Qualification/TestDiscovery.json` is the reviewed exact root, QA,
+shared-state and portable inventory; it does not infer expected counts from the
+current test output. Native and Linux retain all 49 public cap outcomes.

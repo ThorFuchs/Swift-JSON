@@ -5,11 +5,12 @@ import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
+from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedExportPreparationsHaveIndependentConcurrentState|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations|g5SharedPreparationSeparatesConcurrentFailureAndSuccessHealth'
-ROOT_COUNTS = {'JSONTests':119,'JSONSchemaTests':69,'JSONSchemaExamplesTests':96,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':97 if sys.platform == 'darwin' else 81,'JSONCLITests':87,'JSONBridgesTests':10}
-SHARED_COUNTS = {'JSONTests':4,'JSONSchemaTests':3,'JSONSchemaExamplesTests':4,'JSONRegexRuntimeTests':1,'JSONHTMLTests':5 if sys.platform == 'darwin' else 4,'JSONCLITests':1,'JSONBridgesTests':1}
+SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|sharedExportPreparationsHaveIndependentConcurrentState|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState'
+SHARED_TESTS += '|qaStreaming|qaE2E(SharedPlan|RootImport|NDJSONImport|AwaitedSink|ExactWorkflow)'
+SHARED_TESTS += '|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations|g5SharedPreparationSeparatesConcurrentFailureAndSuccessHealth'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -43,11 +44,24 @@ def commands(lane, output):
             ['swift', 'test', '--jobs', '2', '--test-product', 'JSONSchemaTests'],
             ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output / 'consumer'), '--scratch-path', '.build'],
         ]
-    if lane == 'wasm':
+    if lane == 'archive':
+        return [['python3', '-B', 'Scripts/public_check.py'],
+                ['python3', '-B', 'Scripts/qualify_native_reproduction.py', '--output', str(output / 'reproduction')]]
+    if lane in ('coverage', 'linux-coverage'):
+        return [['python3', '-B', 'Scripts/test_qualification_harness.py'],
+                ['python3', '-B', 'Scripts/coverage.py', '--output', str(output / 'export')]]
+    if lane in ('wasm', 'wasm-qa'):
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
-            ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')],
+            ['python3', '-B', 'Scripts/wasm_support.py', '--output', str(output / 'probes')] + (['--scope', 'root-qa'] if lane == 'wasm-qa' else []),
         ]
+    if lane == 'linux-qa':
+        return [['python3', '-B', 'Scripts/public_check.py'],
+                ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+                ['swift', 'test', '--disable-xctest'], ['swift', 'test', '-c', 'release', '--disable-xctest'],
+                commands('qa', ROOT / output)[2] + ['--disable-xctest'],
+                commands('safety', ROOT / output)[1] + ['--disable-xctest'],
+                commands('safety', ROOT / output)[2]]
     if lane == 'linux':
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
         # probes are separate Apple acceptance; they never become Linux passes.
@@ -88,6 +102,8 @@ def commands(lane, output):
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/generate_cli_identity.py', '--check'],
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
             ['swift', 'package', 'dump-package'],
             ['swift', 'package', 'show-dependencies', '--format', 'json'],
             ['swift', 'build', '-c', 'release'],
@@ -110,6 +126,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py', '--output', str(output / 'schema-example-ownership')],
             ['python3', '-B', 'Scripts/qualify_schema_example_generation.py', '--output', str(output / 'schema-example-generation')],
             ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'schema-example-advanced')],
+            ['python3', '-B', 'Scripts/qualify_distribution.py', '--output', str(output / 'distribution')],
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
@@ -158,19 +175,21 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [69] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 96] if 'JSONSchemaExamplesTests' in command else [87] if 'cli|sharedFilterPlan' in command else [1, 39] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 96] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
         if 'JSONSchemaExamplesTests' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'JSONSchemaExamplesTests': expected[0]} and events['parameter_case_invocations'] == 0
         if 'JSONSchemaTests' in command and events is not None:
             parameters = {name: ROOT_PARAMETER_CASES[name] for name in ['successfulAlternativesCannotSwallowRegexExhaustion(keyword:)', 'URIIdentityUsesSyntaxNormalizationWithoutUnicodeFolding(input:expected:)']}
-            passed = passed and events['module_function_counts'] == {'JSONSchemaTests': 69} and events['parameterized_functions'] == parameters and events['parameter_case_invocations'] == 12
+            passed = passed and events['module_function_counts'] == {'JSONSchemaTests': 79} and events['parameterized_functions'] == parameters and events['parameter_case_invocations'] == 12
+        if 'qa' in command and events is not None:
+            passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
         if 'thread' in command and 'JSONSchemaExamplesTests' not in command and events is not None:
             passed = passed and events['module_function_counts'] == SHARED_COUNTS
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
-                passed = passed and events['module_function_counts'] == ROOT_COUNTS
-            passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == 325)
+                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events)
+            passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == PARAMETER_INVOCATIONS)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
             matrix = json.loads((ROOT / 'Documentation/Qualification/LimitsMatrix.json').read_text())
@@ -197,7 +216,7 @@ def check_result(command, code, log, events=None):
         passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
         passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges']}, **{'swift-json': ['JSONCLI']})
         targets = {t['name']: t for t in d['targets']}
-        passed = passed and set(targets) == {'JSON', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
+        passed = passed and set(targets) == {'JSON', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py']:
         passed = passed and 'SCHEMA_EXAMPLES_ADVANCED passed required=10 incomplete=8 profiles=2 seeds=4 per_process=144 processes=2 witnesses=155' in log.splitlines()
@@ -223,11 +242,13 @@ def check_result(command, code, log, events=None):
         passed = passed and 'JSONHTML_BROWSER_FIXTURES passed count=15' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
+    if 'Scripts/test_qualification_harness.py' in command:
+        passed = passed and 'HARNESS_TESTS passed cases=14' in log.splitlines()
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -254,7 +275,7 @@ def main():
         log_path = output / ('command-%02d.log' % index)
         with log_path.open('w') as stream:
             try:
-                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane == 'wasm' else 1800)
+                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane in ('wasm', 'wasm-qa') else 3500 if args.lane == 'archive' else 1800)
                 code = result.returncode
             except (OSError, subprocess.TimeoutExpired) as error:
                 stream.write('\n' + str(error) + '\n')
@@ -292,13 +313,41 @@ def main():
             receipt['status'] = 'failed'
             receipt['evidence_error'] = str(error)
             print('Native evidence failed: ' + str(error), flush=True)
-    if receipt['status'] == 'passed' and args.lane == 'wasm':
+    if receipt['status'] == 'passed' and args.lane in ('wasm', 'wasm-qa'):
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
-            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':119,'JSONBridgesTests':10,'JSONSchemaTests':69,'JSONSchemaExamplesTests':96,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':81}:
+            if wasi['status'] != 'passed' or wasi['root_counts'] != DISCOVERY['wasi_root_functions']:
                 raise ValueError('Missing WASI qualification boundary')
+            if args.lane == 'wasm-qa' and (wasi.get('scope') != 'root-qa' or wasi.get('qa_counts') != DISCOVERY['qa_functions']):
+                raise ValueError('Missing scoped WASI QA boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:
+            receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
+    if receipt['status'] == 'passed' and args.lane in ('coverage', 'linux-coverage'):
+        try:
+            coverage = json.loads((output / 'export/coverage.json').read_text())
+            if coverage['status'] != 'passed' or coverage['root_counts'] != ROOT_COUNTS or coverage['parameterized_invocations'] != PARAMETER_INVOCATIONS or coverage['omitted_binary_probe']['status'] != 'rejected' or set(coverage['modules']) != set(DISCOVERY['coverage_modules']):
+                raise ValueError('Missing complete current-module coverage boundary')
+            receipt['materialized_coverage'] = {'path': 'export/coverage.json', 'sha256': hashlib.sha256((output / 'export/coverage.json').read_bytes()).hexdigest()}
+        except (OSError, KeyError, ValueError, TypeError) as error:
+            receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
+    if receipt['status'] == 'passed' and args.lane == 'archive':
+        try:
+            reproduction = json.loads((output / 'reproduction/reproduction.json').read_text())
+            native_path = output / 'reproduction/native/receipt.json'
+            native = json.loads(native_path.read_text())
+            candidate = output / 'reproduction/candidate.tar.gz'
+            if (reproduction['status'] != 'passed' or not reproduction['outside_git_verified']
+                or not reproduction['byte_equal_rebuild'] or not reproduction['byte_equal_extracted_rebuild']
+                or reproduction['archive_sha256'] != hashlib.sha256(candidate.read_bytes()).hexdigest()
+                or reproduction['native_receipt_sha256'] != hashlib.sha256(native_path.read_bytes()).hexdigest()
+                or native['status'] != 'passed' or native['git_commit'] is not None
+                or not native['source_inputs_unchanged'] or native['source_inputs'] != inputs
+                or reproduction['native_commands'] != len(commands('native', output))):
+                raise ValueError('Missing full source-bound Git-free reproduction')
+            receipt['materialized_reproduction'] = {'path': 'reproduction/reproduction.json',
+                'sha256': hashlib.sha256((output / 'reproduction/reproduction.json').read_bytes()).hexdigest()}
+        except (OSError, KeyError, ValueError, TypeError) as error:
             receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
     receipt['source_inputs_unchanged'] = snapshot() == inputs
     if not receipt['source_inputs_unchanged']:

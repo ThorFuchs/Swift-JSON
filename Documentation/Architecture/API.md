@@ -19,8 +19,9 @@ in the [README](../../README.md) are compiled and executed by the public consume
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON.
 JSONSchemaExamples depends only on JSON and JSONSchema. There are eight public products: seven libraries and the swift-json executable,
-and no external root-package dependencies. Runtime code uses no HTTP,
-UI, MCP or documentation-tool dependencies.
+and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
+uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
+value, schema, Patch and streaming contracts do not acquire UI semantics.
 
 Immutable facades store value configuration. Every operation owns its mutable
 context; every stream iterator requires exclusive access. Sendable follows the
@@ -28,7 +29,7 @@ actual stored state and result types. See [concurrency](Concurrency.md).
 
 ## Exact values and construction
 
-The additive E2 development surface is documented in the
+The ergonomic surface released through the 1.4.0 tag and 1.5.0 release is documented in the
 [ergonomics crosswalk](../Ergonomics/README.md). JSON.parse forwards String, Data
 and byte arrays to their respective parser overloads; buildObject, number(parsing:)
 and value(at:) wrap one existing authority each. JSONObject.containsKey is an
@@ -278,3 +279,6 @@ Preparation and generation use separate finite ledgers. All attempts within a ge
 share one ledger; false verdicts consume work, operational errors/cancellation terminate
 without a candidate or successful report, and search exhaustion is not a proof.
 G7/G8 final release/platform qualification remains open.
+and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
+uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
+value, schema, Patch and streaming contracts do not acquire UI semantics.

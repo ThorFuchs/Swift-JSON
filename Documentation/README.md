@@ -16,6 +16,7 @@ The seven native DocC catalogs combine inline API documentation with focused gui
 | JSONBridges | [JSONBridges](../Sources/JSONBridges/Documentation.docc/JSONBridges.md) | [Opt-in native conversions](../Sources/JSONBridges/Documentation.docc/NumericFidelity.md) |
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
 | JSONHTML | [JSONHTML](../Sources/JSONHTML/Documentation.docc/JSONHTML.md) | [Formatted rendering](../Sources/JSONHTML/Documentation.docc/FormattedRendering.md) |
+| JSONBridges | [JSONBridges](../Sources/JSONBridges/Documentation.docc/JSONBridges.md) | [Numeric fidelity](../Sources/JSONBridges/Documentation.docc/NumericFidelity.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
 
 [Browse the public documentation](https://thorfuchs.github.io/Swift-JSON/) or
@@ -23,11 +24,14 @@ The seven native DocC catalogs combine inline API documentation with focused gui
 tracks `main` and publishes after native, safety and documentation CI pass.
 Compiled archives and public symbol graphs remain available in CI artifacts.
 
+The [CLI guide](CLI.md) covers executable workflows and release/source metadata.
+Online references track main; tagged releases include matching compiled catalogues.
+
 ## Behavioral contracts
 
 - [Actual public API and ownership](Architecture/API.md)
 - [Exact numbers, conversion and scalar identity](Architecture/NumbersAndUnicode.md)
-- [Finite resource accounting](Architecture/ResourceLimits.md), [49 profiles](Architecture/ResourceProfiles.json) and [cap ownership](Qualification/LimitsMatrix.json)
+- [Finite resource accounting](Architecture/ResourceLimits.md), [49 metric policies](Architecture/ResourceProfiles.json) and [cap ownership](Qualification/LimitsMatrix.json)
 - [Draft 2020-12, regex dialect and declaration inspection](Architecture/SchemaAndRegex.md)
 - [Strict streaming and certified completion](Architecture/Streaming.md)
 - [Pointer, JSON Patch and Merge Patch](Architecture/Patch.md)
@@ -35,7 +39,7 @@ Compiled archives and public symbol graphs remain available in CI artifacts.
 - [Linux platform and portable schema integrity](Architecture/Linux.md)
 - [WebAssembly audit and unresolved qualification boundary](Architecture/WebAssemblyAudit.md)
 
-- [Prospective 1.4 CLI plan](Architecture/Release1.4/Plan.md) and [foundation contract](Architecture/Release1.4/Foundation.md)
+- [CLI implementation history](Architecture/Release1.4/Plan.md) and [foundation contract](Architecture/Release1.4/Foundation.md)
 
 ## Consumers, qualification and maintenance
 
