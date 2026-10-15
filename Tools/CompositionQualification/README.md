@@ -27,9 +27,10 @@ The policy exposes no transferable owner token or refund. Borrowed root handles
 have no public constructor, value accessor or mutation; their private owner
 identity rejects use by another scope before navigation.
 
-Eight additional actual-callsite probes include three explicit-borrow positives and
-five forms exposing Swift 6.4 compiler aborts. Their outcomes are separate from
-the 18 semantic rejections. Eight Python harness cases check the distinction.
+Nine additional actual-callsite probes include three explicit-borrow positives and
+six forms exposing Swift 6.4 compiler aborts, including a root-only escaping capture.
+Their outcomes are separate from the 18 semantic rejections. Ten Python harness
+cases check the distinction and reject setup-log keyword false positives.
 The lane completes its checks, then exits 2 with overall `blocked` if known compiler
 aborts reproduce. Successful behavior and ownership results are recorded alongside
 the compiler robustness blocker. Use explicit nonescaping closures in supported

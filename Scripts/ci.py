@@ -311,6 +311,20 @@ def main():
         save()
     else:
         receipt['status'] = 'passed'
+    if receipt['status'] == 'passed' and args.lane == 'composition':
+        try:
+            compiler_path = output / 'compiler-negative/receipt.json'
+            compiler = json.loads(compiler_path.read_text())
+            if compiler['status'] != 'passed' or compiler['compiler_negative_cases'] != 18 or compiler['callsite_cases'] != 9:
+                raise ValueError('Missing composition compiler outcomes')
+            receipt['compiler_qualification'] = {'path': 'compiler-negative/receipt.json',
+                'sha256': hashlib.sha256(compiler_path.read_bytes()).hexdigest(),
+                'ownership_status': compiler['status'], 'robustness_status': compiler['compiler_robustness_status'],
+                'compiler_abort_cases': compiler['compiler_abort_cases']}
+            receipt['behavior_status'] = 'passed'
+            if compiler['compiler_robustness_status'] == 'blocked': receipt['status'] = 'blocked'
+        except (OSError, KeyError, ValueError, TypeError) as error:
+            receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
     if receipt['status'] == 'passed' and args.lane in ('native', 'linux'):
         try:
             receipt['materialized_outcomes'] = materialized_outcomes(output)

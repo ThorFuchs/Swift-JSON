@@ -83,7 +83,8 @@ identity or presumes a copy-on-write refund.
 
 The pinned Swift 6.4 compiler aborts for some implicit captures at actual callback
 call sites: returned bound methods, returned closure containers, a bound method
-passed to a nonescaping helper and local functions implicitly capturing a scope.
+passed to a nonescaping helper, local functions implicitly capturing a scope and
+an escaping closure that captures only the borrowed root handle.
 Use explicit borrowing parameters for named helpers and explicit nonescaping closures, for example
 `try perform { try scope.checkpoint() }`, instead of a bound method reference.
 Qualification records aborts separately from semantic ownership rejections; an

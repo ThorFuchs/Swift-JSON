@@ -6,10 +6,25 @@ from qualify_composition import compiler_outcome
 
 class CompilerHarnessTests(unittest.TestCase):
     def test_expected_rejection(self):
-        self.assertEqual(compiler_outcome(1, "error: borrowed", False, 'borrowed'), 'rejected')
+        log = "/tmp/swift-json/Escape.swift:2:17: error: 'scope' cannot be captured by an escaping closure since it is a borrowed parameter"
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'Escape.swift'), 'rejected')
+
+    def test_module_cache_keyword_is_not_an_ownership_rejection(self):
+        log = """<unknown>:0: error: unable to open output file 'SwiftShims.pcm': 'Operation not permitted'
+Swift.swiftinterface:5:8: error: could not build Objective-C module 'SwiftShims'
+Swift.swiftinterface:3:1: note: compiler flags include -enable-experimental-feature BitwiseCopyable
+"""
+        self.assertEqual(compiler_outcome(1, log, False, 'Copyable', 'RootCopy.swift'), 'failed')
+
+    def test_expected_keyword_in_source_note_is_not_an_error(self):
+        log = """/tmp/RootCopy.swift:3:8: note: expected Copyable ownership rule
+Swift.swiftinterface:3:1: note: BitwiseCopyable
+"""
+        self.assertEqual(compiler_outcome(1, log, False, 'Copyable', 'RootCopy.swift'), 'failed')
 
     def test_missing_module_never_rejects(self):
-        self.assertEqual(compiler_outcome(1, "no such module JSON; borrowed", False, 'borrowed'), 'failed')
+        log = "/tmp/Escape.swift:2:17: error: no such module JSON; scope is borrowed"
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'Escape.swift'), 'failed')
 
     def test_signal_is_not_rejection(self):
         self.assertEqual(compiler_outcome(-6, "borrowed", False, 'borrowed'), 'compiler_abort')
@@ -28,11 +43,12 @@ class CompilerHarnessTests(unittest.TestCase):
         self.assertEqual(compiler_outcome(0, '', False), 'failed')
 
     def test_unrelated_error_is_not_rejection(self):
-        self.assertEqual(compiler_outcome(1, "error: invalid syntax", False, 'borrowed'), 'failed')
+        log = "/tmp/Escape.swift:2:17: error: invalid syntax"
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'Escape.swift'), 'failed')
 
 if __name__ == '__main__':
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(CompilerHarnessTests)
     result = unittest.TextTestRunner().run(suite)
-    passed = result.wasSuccessful() and result.testsRun == 8 and not result.skipped
-    if passed: print('COMPOSITION_COMPILER_HARNESS passed cases=8')
+    passed = result.wasSuccessful() and result.testsRun == 10 and not result.skipped
+    if passed: print('COMPOSITION_COMPILER_HARNESS passed cases=10')
     raise SystemExit(0 if passed else 1)

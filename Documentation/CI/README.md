@@ -179,8 +179,8 @@ memory-safety compilation of JSON, and a distinct-package JSON/JSONSchema consum
 in both modes (four positive and six negative outcomes). A Release public consumer
 performs 1,000 resolutions over 50,000-value trusted and parsed roots under balanced
 limits. Eighteen compiler negatives require semantic diagnostics with no object or
-compiler abort. Eight real call-site probes include three explicit-borrow positives
-and five forms that expose current compiler aborts. Eight Python cases verify
+compiler abort. Nine real call-site probes include three explicit-borrow positives
+and six forms that expose current compiler aborts. Ten Python cases verify
 that signals, fatal diagnostics and missing imports cannot pass as rejections.
 All commands, nonzero exits, source hashes and outcomes remain in receipts.
 

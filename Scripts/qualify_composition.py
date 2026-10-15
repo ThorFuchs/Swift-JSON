@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Compiler-negative public composition ownership checks (object emission required)."""
-import argparse, hashlib, json, pathlib, subprocess, tempfile
+import argparse, hashlib, json, pathlib, re, subprocess, tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
-def compiler_outcome(code, log, object_exists, diagnostic=None):
+def compiler_outcome(code, log, object_exists, diagnostic=None, source_name=None):
     """An abort never establishes an expected ownership rejection."""
     if 'no such module' in log:
         return 'failed'
@@ -12,7 +12,11 @@ def compiler_outcome(code, log, object_exists, diagnostic=None):
         return 'compiler_abort' if not object_exists else 'failed'
     if diagnostic is None:
         return 'compiled' if code == 0 and object_exists else 'failed'
-    return 'rejected' if code > 0 and not object_exists and diagnostic in log else 'failed'
+    if code <= 0 or object_exists or source_name is None:
+        return 'failed'
+    source_error = re.compile(
+        r'^(?:.*[/\\])?' + re.escape(source_name) + r':\d+:\d+:\s+error:\s*(.*)$', re.MULTILINE)
+    return 'rejected' if any(diagnostic in message for message in source_error.findall(log)) else 'failed'
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -45,18 +49,20 @@ def main():
             return dict(name=name, command=command, exit_code=run.returncode,
                 source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
                 expected_diagnostic=diagnostic,
-                outcome=compiler_outcome(run.returncode, log, source.with_suffix('.o').exists(), diagnostic))
+                outcome=compiler_outcome(run.returncode, log, source.with_suffix('.o').exists(),
+                    diagnostic, source.name if diagnostic is not None else None))
         for name, diagnostic in expected.items():
             record = compile_case(name, 'Negative', diagnostic)
             record['status'] = 'passed' if record['outcome'] == 'rejected' else 'failed'
             records.append(record)
         for name, diagnostic in [('ClosureBorrow', None), ('RootClosureBorrow', None), ('ExplicitBorrowParameters', None),
             ('MethodEscape', 'borrowed'), ('ContainerEscape', 'borrowed'),
-            ('MethodBorrow', None), ('RootContainerEscape', 'borrowed'), ('LocalFunctionBorrow', None)]:
+            ('MethodBorrow', None), ('RootContainerEscape', 'borrowed'), ('LocalFunctionBorrow', None),
+            ('RootOnlyEscape', 'borrowed')]:
             record = compile_case(name, 'Compiler', diagnostic)
             # Preserve these known call-site compiler bugs separately. A newer
             # compiler may diagnose the escapes or compile the nonescaping use.
-            known_abort = name in {'MethodEscape', 'ContainerEscape', 'MethodBorrow', 'RootContainerEscape', 'LocalFunctionBorrow'}
+            known_abort = name in {'MethodEscape', 'ContainerEscape', 'MethodBorrow', 'RootContainerEscape', 'LocalFunctionBorrow', 'RootOnlyEscape'}
             record['status'] = ('blocked' if known_abort and record['outcome'] == 'compiler_abort' else
                 'passed' if record['outcome'] == ('compiled' if diagnostic is None else 'rejected') else 'failed')
             callsites.append(record)
