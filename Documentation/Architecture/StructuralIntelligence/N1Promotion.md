@@ -1,3 +1,12 @@
+# Reconciled public-product gate
+
+The historical candidate decision below belongs to 5cf7897. Its no-transition
+statement records that earlier authorization boundary. The owner subsequently
+authorized one fresh-main Navigation integration and guarded merge after full
+current-source qualification and protected review. The reconciliation preserves
+all 56 declarations and adds no A0 interface. See [Integration](Integration.md)
+for source mapping and the current gate; tagging/publication remain separate.
+
 # N1 public-product candidate decision
 
 Approved for implementation: preserve all 56 existing public declarations, now

@@ -1,5 +1,21 @@
 # Native CI
 
+## Reconciled Navigation and composition increment
+
+Current source retains composition from main and adds the opt-in Navigation
+product. The discovery contract requires 597 native functions, 581 Linux functions
+and 493 WASI functions, including all 39 Navigation and 12 composition functions.
+Parameterized inventories remain 325 native/Linux and 288 WASI. Shared-state
+sanitizer expectations are 43 native and 42 Linux. All 126 restored maintenance
+identities and all 49 public capacity probes remain mandatory. Full ASan uses the
+current root inventory. Native has 33 commands, Linux 29; the separate composition
+lane retains its nine commands, five external functions, eight capacity cells and
+11 negative compiler cases. Navigation's focused lane retains five commands.
+Seven public library DocC catalogues include Navigation. These are acceptance
+expectations; source-bound receipts establish actual execution outcomes.
+
+The following dated sections retain their original source context.
+
 ## N1 product-candidate increment
 
 Promotion adds the JSONNavigation library product after a 56-declaration audit,
