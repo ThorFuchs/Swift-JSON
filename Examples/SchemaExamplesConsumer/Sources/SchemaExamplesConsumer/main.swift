@@ -10,6 +10,9 @@ private func schema(_ text: String, uri: String? = nil) throws -> JSONSchemaDocu
 
 @main struct SchemaExamplesConsumer {
     static func main() throws {
+        if CommandLine.arguments.count == 3, CommandLine.arguments[1] == "--g7-fuzz" {
+            try G7Qualification.run(path: CommandLine.arguments[2]); return
+        }
         if CommandLine.arguments.count == 2, CommandLine.arguments[1] == "--documentation" {
             let completed = try runSchemaExampleDocumentation()
             print("SCHEMA_EXAMPLES_DOCUMENTATION passed snippets=\(completed)")

@@ -19,6 +19,8 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'schema-examples-qualification':
+        return commands('schema-examples-advanced', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'matrix')]]
     if lane == 'schema-examples-advanced':
         return commands('schema-examples-construction', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'advanced')]]
     if lane in ('schema-examples-determinism', 'schema-examples-construction'):
@@ -126,6 +128,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py', '--output', str(output / 'schema-example-ownership')],
             ['python3', '-B', 'Scripts/qualify_schema_example_generation.py', '--output', str(output / 'schema-example-generation')],
             ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'schema-example-advanced')],
+            ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'schema-example-matrix')],
             ['python3', '-B', 'Scripts/qualify_distribution.py', '--output', str(output / 'distribution')],
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
@@ -175,7 +178,7 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 96] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
         if 'JSONSchemaExamplesTests' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'JSONSchemaExamplesTests': expected[0]} and events['parameter_case_invocations'] == 0
@@ -218,6 +221,8 @@ def check_result(command, code, log, events=None):
         targets = {t['name']: t for t in d['targets']}
         passed = passed and set(targets) == {'JSON', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_MATRIX passed schemas=64 certified=512 invalid=64 processes=2' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py']:
         passed = passed and 'SCHEMA_EXAMPLES_ADVANCED passed required=10 incomplete=8 profiles=2 seeds=4 per_process=144 processes=2 witnesses=155' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_generation.py']:
@@ -248,7 +253,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
