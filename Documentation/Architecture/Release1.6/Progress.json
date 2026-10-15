@@ -6,11 +6,11 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G1 implementation and individual native/consumer/safety/documentation checks passed; final combined receipt refresh pending",
+  "status": "G1 complete: qualified read-only plan bridge, optional candidate-verification product and real public consumer",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
-    "S3-G1": "implemented_pending_final_receipts",
+    "S3-G1": "passed_native_increment",
     "S3-G2": "not_started",
     "S3-G3": "not_started",
     "S3-G4": "not_started",
@@ -46,7 +46,7 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "Finish final G1 receipts, then G2 metered PRNG, deterministic construction, corpus and trace foundations",
+  "next_gate": "G2: versioned metered PRNG, stable construction ordering, corpus/snapshot/trace determinism; retain G1 certification authority",
   "limitations": [
     "G2-G8 remain open; this is not a qualified 1.6 release candidate",
     "G1 offers explicit candidates and static refs; general construction, random choices, richer profiles and corpus/trace APIs are not implemented",
@@ -68,7 +68,9 @@
     "documented_new_public_declarations": 42,
     "compiled_docc_catalogs": 7,
     "algorithm": "s3-g1-candidates-v1",
-    "random_draws_per_invocation": 0
+    "random_draws_per_invocation": 0,
+    "focused_native_lane_commands": 6,
+    "focused_safety_lane_commands": 3
   },
   "current_harness_requirements": {
     "native_root_functions": 440,
@@ -76,5 +78,7 @@
     "native_shared_state_functions": 16,
     "core_metrics": 49,
     "scope": "Full-lane requirements, distinct from the focused G1 observations"
-  }
+  },
+  "g1_implementation_commit": "6c19580dec99c9363bb4b4d1611af8b8a2bab266",
+  "g1_qualification_record": "Documentation/Architecture/Release1.6/G1Qualification.md"
 }

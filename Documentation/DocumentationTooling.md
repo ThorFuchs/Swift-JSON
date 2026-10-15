@@ -22,6 +22,12 @@ checks README Swift fences against their executable consumer source, runs that
 consumer, and compiles all seven DocC catalogs with warnings as errors. Zero public
 symbols, missing comments, stale examples or a failed catalog fail the lane.
 
+The lane also executes the standalone schema-examples consumer (12 cases and two
+expected compiler rejections). Every successful consumer value, including the
+offline-reference case, receives an independent native verdict and strict
+roundtrip check. Remaining work is derived from public limits and cumulative
+statistics; the consumer imports no private meters.
+
 | Output | Purpose |
 | --- | --- |
 | `.build/handoff/docc/JSON.doccarchive` | JSON API and exact values/native coding guide |

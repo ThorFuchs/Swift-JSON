@@ -11,8 +11,8 @@ The isolated branch is `codex/1.6-schema-examples`, pinned to main
 [source reconciliation](Reconciliation.md), [decisions](Decisions.md) and
 [progress](Progress.json). The initial orientation and compiler probes are complete. G1 now has a working
 explicit-candidate API, a package-only qualified plan bridge and a real public
-consumer; see [the accepted declarations and scope](G1API.md). Final G1 receipt
-closure precedes G2; broad generation is not implemented.
+consumer; see [the accepted declarations and scope](G1API.md). [G1 native qualification](G1Qualification.md) is complete; G2 is next. Broad
+generation is not implemented.
 
 ## Integration boundary
 

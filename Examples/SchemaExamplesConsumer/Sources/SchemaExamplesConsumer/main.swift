@@ -29,16 +29,25 @@ private func schema(_ text: String, uri: String? = nil) throws -> JSONSchemaDocu
             let expectedValue = try JSONParser().parse(expected)
             let native = try JSONSchemaCompiler().compile(document).validate(result.value)
             let roundtrip = try JSONParser().parse(JSONWriter().write(result.value))
+            let workCeiling = min(generator.options.limits[.workUnits], generator.options.validationOptions.limits[.workUnits])
             guard result.value == expectedValue, result.validation.isValid,
                   result.attempts == attempts, result.seed == 42,
                   result.statistics[.evaluationWorkUnits] > 0,
                   result.sourceSnapshotDigest == generator.sourceSnapshotDigest,
-                  native.isValid, roundtrip == result.value else { throw ConsumerFailure.mismatch(passed) }
+                  native.isValid, roundtrip == result.value,
+                  result.statistics[.workUnits] <= workCeiling else { throw ConsumerFailure.mismatch(passed) }
+            let remainingWork = workCeiling - result.statistics[.workUnits]
+            guard remainingWork < workCeiling else { throw ConsumerFailure.mismatch(passed) }
             passed += 1
         }
         let registry = try JSONSchemaRegistry(documents: [schema(#"{"const":"offline"}"#, uri: "https://e.test/value")])
         let prepared = try JSONSchemaExampleGenerator(document: schema(#"{"$ref":"https://e.test/value"}"#), registry: registry)
-        guard try prepared.generate().value == .string("offline") else { throw ConsumerFailure.mismatch(passed) }
+        let offline = try prepared.generate()
+        let offlinePlan = try JSONSchemaCompiler().compile(prepared.document, registry: registry)
+        let offlineValid = try offlinePlan.validate(offline.value).isValid
+        let offlineRoundtrip = try JSONParser().parse(JSONWriter().write(offline.value))
+        guard offline.value == .string("offline"), offline.validation.isValid,
+              offlineValid, offlineRoundtrip == offline.value else { throw ConsumerFailure.mismatch(passed) }
         passed += 1
         do {
             _ = try JSONSchemaExampleGenerator(document: schema("false")).generate()
