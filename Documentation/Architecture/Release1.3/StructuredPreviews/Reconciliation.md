@@ -72,3 +72,16 @@ separately from the earlier pinned return. Byte-identical HTML implementation/te
 assets retain their prior browser, physical-touch, VoiceOver and calibration evidence
 within its stated scope. The inherited approximately 11% streaming comparison and
 existing disposition remain unchanged. No PR merge, tag or publication is performed.
+
+
+## Final merge review: preserve the export lane
+
+Review against current main found that the earlier CLI reconciliation had dropped
+its existing `export` lane and event-reader I/O diagnostics. Restore the complete
+five-command export lane, including the native public consumer and three Apple SDK
+probes, while retaining the structured combined focused inventory `[1, 39]`.
+Restore missing-event error capture and both console/ABI parameter counts in receipts.
+Library, CLI, assets, fixtures, product policy and all counters remain unchanged.
+Fresh required hosted checks and actual export-lane execution qualify the harness
+correction. Earlier source-bound implementation/WASI evidence is retained through
+exact equivalence; no previous receipt is relabelled to the new head.

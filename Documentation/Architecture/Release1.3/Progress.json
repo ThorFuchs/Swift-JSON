@@ -409,6 +409,13 @@
       "qualification_policy": "Fresh combined-source receipts required; parent receipts immutable; unchanged HTML physical/browser evidence retains its scoped source identity.",
       "contract": "StructuredPreviews/Reconciliation.md",
       "merge_tag_publication_performed": false
+    },
+    "final_merge_review": {
+      "finding": "Existing main export lane and event I/O diagnostics were absent from the reconciled harness",
+      "resolution": "Restore main export commands/CLI choice and diagnostic receipt fields; retain combined [1,39] focused discovery guard",
+      "library_cli_asset_fixture_changes": false,
+      "qualification_policy": "Fresh hosted required checks and actual local export lane; unchanged implementation/WASI receipts retained through equivalence",
+      "merge_authorization": "Maintainer requested ready and merge after checks/reviews pass; tags/publication separate"
     }
   }
 }

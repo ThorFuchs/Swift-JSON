@@ -41,6 +41,14 @@ def commands(lane, output):
             ['swift', 'test', '-c', 'release', '--filter', 'qa'],
             ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/ci-address', '--filter', 'qa'],
         ]
+    if lane == 'export':
+        return [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/verify_html_assets.py'],
+            ['swift', 'test', '--filter', 'export|Export|apple'],
+            ['swift', 'test', '-c', 'release', '--filter', 'export|Export|apple'],
+            ['python3', '-B', 'Scripts/qualify_json_export.py', '--output', str(output / 'apple')],
+        ]
     if lane == 'browser':
         return [
             ['python3', '-B', 'Scripts/verify_html_assets.py'],
@@ -176,7 +184,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'cli'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -211,15 +219,21 @@ def main():
         log = log_path.read_text(errors='replace').replace(str(ROOT), '.')
         log_path.write_text(log)
         events = None
+        event_error = None
         try:
-            events = read_events(event_path.read_text()) if event_path is not None else None
+            if event_path is not None:
+                events = read_events(event_path.read_text())
             passed, counts = check_result(command, code, log, events=events)
-        except (KeyError, ValueError, TypeError):
+        except (OSError, KeyError, ValueError, TypeError) as error:
             passed, counts = False, []
+            event_error = str(error)
         entry = {'command': [x.replace(str(ROOT), '.') for x in command], 'exit_code': code, 'status': 'passed' if passed else 'failed', 'log': log_path.relative_to(ROOT).as_posix(), 'log_sha256': hashlib.sha256(log_path.read_bytes()).hexdigest(), 'swift_testing_function_counts': counts, 'parameterized_case_invocations': sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log))}
         if events is not None:
-            entry['swift_testing_events'] = dict(events, path=event_path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(event_path.read_bytes()).hexdigest())
+            entry['console_parameterized_case_invocations'] = entry['parameterized_case_invocations']
             entry['parameterized_case_invocations'] = events['parameter_case_invocations']
+            entry['swift_testing_events'] = dict(events, path=event_path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(event_path.read_bytes()).hexdigest())
+        if event_error is not None:
+            entry['event_error'] = event_error
         receipt['commands'].append(entry)
         print(json.dumps(entry), flush=True)
         if not passed:
