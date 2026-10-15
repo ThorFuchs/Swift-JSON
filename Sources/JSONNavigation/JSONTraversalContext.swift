@@ -17,24 +17,24 @@ package struct JSONTraversalContext: ~Copyable {
         }
     }
 
-    package func work(_ units: UInt64 = 1) throws {
+    package mutating func work(_ units: UInt64 = 1) throws {
         try perform { try $0.meter.work(units) }
     }
-    package func retain(_ bytes: UInt64) throws {
+    package mutating func retain(_ bytes: UInt64) throws {
         try perform { try $0.meter.retain(bytes) }
     }
-    package func release(_ bytes: UInt64) throws {
+    package mutating func release(_ bytes: UInt64) throws {
         try perform { try $0.meter.release(bytes) }
     }
-    package func checkpoint() throws { _ = try scope.check() }
-    package func recordFailure(_ error: any Error) throws {
+    package mutating func checkpoint() throws { _ = try scope.check() }
+    package mutating func recordFailure(_ error: any Error) throws {
         let state = try scope.check() // original terminal health takes precedence
         state.meter.recordFailure(error)
     }
-    package func equalKeys(_ lhs: JSONKey, _ rhs: JSONKey) throws -> Bool {
+    package mutating func equalKeys(_ lhs: JSONKey, _ rhs: JSONKey) throws -> Bool {
         try perform { try JSONComparison.textEquals(lhs.string, rhs.string, meter: &$0.meter) }
     }
-    package func arrayCount(_ value: JSON, at path: [JSONLocationComponent]) throws -> Int {
+    package mutating func arrayCount(_ value: JSON, at path: [JSONLocationComponent]) throws -> Int {
         try perform(at: path) { state in
             try state.meter.work()
             guard case .array(let array) = value else { throw JSONFailure(.typeMismatch, code: .wrongKind) }
@@ -42,12 +42,12 @@ package struct JSONTraversalContext: ~Copyable {
         }
     }
     /// Reserve an additional owned alias, not another text admission or key model.
-    package func retainKey(_ key: JSONKey) throws {
+    package mutating func retainKey(_ key: JSONKey) throws {
         try perform { state in
             for _ in key.string.utf8 { try state.meter.work(); try state.meter.retain(1) }
         }
     }
-    package func retainLocation(_ path: [JSONLocationComponent]) throws -> [JSONLocationComponent] {
+    package mutating func retainLocation(_ path: [JSONLocationComponent]) throws -> [JSONLocationComponent] {
         try perform(at: path) { state in
             for part in path {
                 try state.meter.work(); try state.meter.retain(JSONLogicalWeights.indexSlot)
@@ -58,13 +58,13 @@ package struct JSONTraversalContext: ~Copyable {
             return path
         }
     }
-    package func appending(_ part: JSONLocationComponent, to path: [JSONLocationComponent]) throws -> [JSONLocationComponent] {
-        try perform(at: path) { state in
-            let handle = try scope.append(part, to: path, state: state)
-            return try retainLocation(handle.components)
+    package mutating func appending(_ part: JSONLocationComponent, to path: [JSONLocationComponent]) throws -> [JSONLocationComponent] {
+        let handle = try perform(at: path) { state in
+            try scope.append(part, to: path, state: state)
         }
+        return try retainLocation(handle.components)
     }
-    package func sourceSpan(at path: [JSONLocationComponent]) throws -> JSONSourceSpan? {
+    package mutating func sourceSpan(at path: [JSONLocationComponent]) throws -> JSONSourceSpan? {
         try perform(at: path) { state in
             try scope.document?.sourceMap?.span(at: path, kind: .value, meter: &state.meter)
         }
