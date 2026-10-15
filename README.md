@@ -460,7 +460,7 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/),
 [JSONHTML](https://thorfuchs.github.io/Swift-JSON/JSONHTML/documentation/jsonhtml/) and
 [JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/).
-The site tracks `main` and publishes only after all three native CI lanes pass.
+The site tracks `main` and publishes only after all four native CI lanes pass.
 It includes unreleased APIs. For the exact released 1.5.0 interface, use its
 [tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.5.0/Sources)
 or its [compiled DocC asset](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.5.0).
