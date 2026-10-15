@@ -138,6 +138,7 @@ package struct CLIJobContext: ~Copyable {
         }
     }
     package mutating func charge(_ metric: CLIResourceMetric, _ amount: UInt64 = 1) throws {
+        try checkpoint() // Refund dead live capacities before computing the next charge.
         let (next, overflow) = used(metric).addingReportingOverflow(amount)
         guard !overflow else { let error = CLIError(.resource, "counterOverflow", metric: metric.rawValue, limit: limits[metric], overflow: true); latch(error); throw error }
         try require(metric, next)

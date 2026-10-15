@@ -1,0 +1,473 @@
+{
+  "schema": "https://rhoe.dev/schemas/rhoejson/jq-subset-conformance.v1.json",
+  "reference": {
+    "tool": "jq",
+    "minimumVersion": "1.7",
+    "mode": "behavioral-subset"
+  },
+  "cases": [
+    {
+      "id": "path-exact-field",
+      "status": "exact-compatible",
+      "filter": "path(.meta.source)",
+      "input": {
+        "meta": {
+          "source": "demo"
+        }
+      }
+    },
+    {
+      "id": "path-generated-field",
+      "status": "exact-compatible",
+      "filter": "path(.records[].name)",
+      "input": {
+        "records": [
+          {
+            "name": "Ada"
+          },
+          {
+            "name": "Grace"
+          }
+        ]
+      }
+    },
+    {
+      "id": "paths-scalars-truthy",
+      "status": "exact-compatible",
+      "filter": "paths(scalars)",
+      "input": {
+        "a": 1,
+        "b": [
+          true,
+          null,
+          false
+        ]
+      }
+    },
+    {
+      "id": "getpath-array",
+      "status": "exact-compatible",
+      "filter": "getpath([\"records\", 1, \"name\"])",
+      "input": {
+        "records": [
+          {
+            "name": "Ada"
+          },
+          {
+            "name": "Grace"
+          }
+        ]
+      }
+    },
+    {
+      "id": "setpath-array",
+      "status": "exact-compatible",
+      "filter": "setpath([\"meta\", \"kind\"]; \"fixture\")",
+      "input": {
+        "meta": {
+          "source": "demo"
+        }
+      }
+    },
+    {
+      "id": "delpaths-array",
+      "status": "exact-compatible",
+      "filter": "delpaths([[\"meta\", \"source\"], [\"records\", 1]])",
+      "input": {
+        "meta": {
+          "source": "demo",
+          "count": 2
+        },
+        "records": [
+          {
+            "name": "Ada"
+          },
+          {
+            "name": "Grace"
+          }
+        ]
+      }
+    },
+    {
+      "id": "iterator-update-assignment",
+      "status": "exact-compatible",
+      "filter": ".records[].score += 1",
+      "input": {
+        "records": [
+          {
+            "score": 95
+          },
+          {
+            "score": 88
+          }
+        ]
+      }
+    },
+    {
+      "id": "iterator-delete-field",
+      "status": "exact-compatible",
+      "filter": "del(.records[].active)",
+      "input": {
+        "records": [
+          {
+            "name": "Ada",
+            "active": true
+          },
+          {
+            "name": "Grace",
+            "active": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "variable-binding-generator",
+      "status": "exact-compatible",
+      "filter": ".records[] as $record | {source: .meta.source, name: $record.name}",
+      "input": {
+        "meta": {
+          "source": "demo"
+        },
+        "records": [
+          {
+            "name": "Ada"
+          },
+          {
+            "name": "Grace"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reduce-sum",
+      "status": "exact-compatible",
+      "filter": "reduce .records[] as $record (0; . + $record.score)",
+      "input": {
+        "records": [
+          {
+            "score": 95
+          },
+          {
+            "score": 88
+          }
+        ]
+      }
+    },
+    {
+      "id": "reduce-array-append",
+      "status": "exact-compatible",
+      "filter": "reduce .records[] as $record ([]; . + [$record.name])",
+      "input": {
+        "records": [
+          {
+            "name": "Ada"
+          },
+          {
+            "name": "Grace"
+          }
+        ]
+      }
+    },
+    {
+      "id": "foreach-running-total",
+      "status": "exact-compatible",
+      "filter": "foreach .records[] as $record (0; . + $record.score)",
+      "input": {
+        "records": [
+          {
+            "score": 95
+          },
+          {
+            "score": 88
+          }
+        ]
+      }
+    },
+    {
+      "id": "foreach-extract",
+      "status": "exact-compatible",
+      "filter": "foreach .records[] as $record (0; . + $record.score; {name: $record.name, total: .})",
+      "input": {
+        "records": [
+          {
+            "name": "Ada",
+            "score": 95
+          },
+          {
+            "name": "Grace",
+            "score": 88
+          }
+        ]
+      }
+    },
+    {
+      "id": "def-no-argument-filter",
+      "status": "exact-compatible",
+      "filter": "def active_name: select(.active) | .name; .records[] | active_name",
+      "input": {
+        "records": [
+          {
+            "name": "Ada",
+            "active": true
+          },
+          {
+            "name": "Grace",
+            "active": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "def-filter-argument",
+      "status": "exact-compatible",
+      "filter": "def twice(f): f | f; 1 | twice(. + 1)",
+      "input": null
+    },
+    {
+      "id": "def-multiple-filter-arguments",
+      "status": "exact-compatible",
+      "filter": "def clamp(lo; hi): if . < lo then lo elif . > hi then hi else . end; [1, 5, 10] | map(clamp(3; 7))",
+      "input": null
+    },
+    {
+      "id": "def-filter-argument-in-map",
+      "status": "exact-compatible",
+      "filter": "def project(f): .records | map(f); project({name, passed: (.score >= 90)})",
+      "input": {
+        "records": [
+          {
+            "name": "Ada",
+            "score": 95
+          },
+          {
+            "name": "Grace",
+            "score": 88
+          }
+        ]
+      }
+    },
+    {
+      "id": "def-forward-reference",
+      "status": "inspired",
+      "filter": "def outer: inner; def inner: . + 1; 4 | outer",
+      "input": null,
+      "rhoeExpected": [
+        5
+      ]
+    },
+    {
+      "id": "def-recursive-countdown",
+      "status": "exact-compatible",
+      "filter": "def walkdown: if . <= 0 then 0 else ., (. - 1 | walkdown) end; 3 | walkdown",
+      "input": null
+    },
+    {
+      "id": "try-catch-fallback",
+      "status": "exact-compatible",
+      "filter": "try (1 / 0) catch \"fallback\"",
+      "input": null
+    },
+    {
+      "id": "while-count-up",
+      "status": "exact-compatible",
+      "filter": "1 | while(. < 4; . + 1)",
+      "input": null
+    },
+    {
+      "id": "until-count-up",
+      "status": "exact-compatible",
+      "filter": "1 | until(. >= 4; . + 1)",
+      "input": null
+    },
+    {
+      "id": "recurse-default-numbers",
+      "status": "exact-compatible",
+      "filter": "[{a: [1, {b: 2}]} | recurse | numbers]",
+      "input": null
+    },
+    {
+      "id": "walk-number-transform",
+      "status": "exact-compatible",
+      "filter": "[1, [2], {\"a\": 3}] | walk(if type == \"number\" then . + 1 else . end)",
+      "input": null
+    },
+    {
+      "id": "destructuring-object-binding",
+      "status": "exact-compatible",
+      "filter": ".records[0] as {name: $name, score: $score} | \"\\($name)=\\($score)\"",
+      "input": {
+        "records": [
+          {
+            "name": "Ada",
+            "score": 95
+          }
+        ]
+      }
+    },
+    {
+      "id": "destructuring-array-binding",
+      "status": "exact-compatible",
+      "filter": "[1, 2] as [$a, $b] | $a + $b",
+      "input": null
+    },
+    {
+      "id": "regex-test-flags",
+      "status": "exact-compatible",
+      "filter": "test(\"abc\"; \"i\")",
+      "input": "ABC"
+    },
+    {
+      "id": "regex-match-global",
+      "status": "exact-compatible",
+      "filter": "match(\"foo\"; \"g\")",
+      "input": "foo bar foo"
+    },
+    {
+      "id": "regex-capture-named",
+      "status": "exact-compatible",
+      "filter": "capture(\"(?<a>[a-z]+)-(?<n>[0-9]+)\")",
+      "input": "xyzzy-14"
+    },
+    {
+      "id": "regex-scan-captures",
+      "status": "exact-compatible",
+      "filter": "scan(\"(a+)(b+)\")",
+      "input": "abaabbaaabbb"
+    },
+    {
+      "id": "regex-gsub",
+      "status": "exact-compatible",
+      "filter": "gsub(\"[0-9]+\"; \"#\")",
+      "input": "123abc456def"
+    },
+    {
+      "id": "string-interpolation-field",
+      "status": "exact-compatible",
+      "filter": "\"Hello \\(.name)\"",
+      "input": {
+        "name": "Ada"
+      }
+    },
+    {
+      "id": "string-interpolation-generator",
+      "status": "exact-compatible",
+      "filter": "\"name=\\(.records[].name)\"",
+      "input": {
+        "records": [
+          {
+            "name": "Ada"
+          },
+          {
+            "name": "Grace"
+          }
+        ]
+      }
+    },
+    {
+      "id": "string-interpolation-empty",
+      "status": "exact-compatible",
+      "filter": "\"before-\\(empty)-after\"",
+      "input": {
+        "name": "Ada"
+      }
+    },
+    {
+      "id": "string-ltrimstr",
+      "status": "exact-compatible",
+      "filter": "ltrimstr(\"prefix-\")",
+      "input": "prefix-value"
+    },
+    {
+      "id": "string-rtrimstr",
+      "status": "exact-compatible",
+      "filter": "rtrimstr(\"-suffix\")",
+      "input": "value-suffix"
+    },
+    {
+      "id": "string-explode-unicode",
+      "status": "exact-compatible",
+      "filter": "explode",
+      "input": "A😀"
+    },
+    {
+      "id": "string-implode-unicode",
+      "status": "exact-compatible",
+      "filter": "implode",
+      "input": [
+        82,
+        104,
+        111,
+        101,
+        128512
+      ]
+    },
+    {
+      "id": "format-json-array",
+      "status": "exact-compatible",
+      "filter": "[1, \"x\"] | @json",
+      "input": null
+    },
+    {
+      "id": "format-csv-row",
+      "status": "exact-compatible",
+      "filter": "[\"Ada\", \"Grace\", 42, null, true] | @csv",
+      "input": null
+    },
+    {
+      "id": "format-tsv-row",
+      "status": "exact-compatible",
+      "filter": "[\"a\\tb\", \"line\\n\", null] | @tsv",
+      "input": null
+    },
+    {
+      "id": "format-uri",
+      "status": "exact-compatible",
+      "filter": "\"a b+c?\" | @uri",
+      "input": null
+    },
+    {
+      "id": "format-html",
+      "status": "exact-compatible",
+      "filter": "\"<tag>&\\\"\" | @html",
+      "input": null
+    },
+    {
+      "id": "format-base64",
+      "status": "exact-compatible",
+      "filter": "\"RhoeJSON\" | @base64",
+      "input": null
+    },
+    {
+      "id": "format-base64d",
+      "status": "exact-compatible",
+      "filter": "\"UmhvZUpTT04=\" | @base64d",
+      "input": null
+    },
+    {
+      "id": "format-sh-array",
+      "status": "exact-compatible",
+      "filter": "[\"a b\", \"c'd\", 42] | @sh",
+      "input": null
+    },
+    {
+      "id": "format-uri-interpolated-string",
+      "status": "exact-compatible",
+      "filter": "@uri \"query=\\(.source)\"",
+      "input": {
+        "source": "demo"
+      }
+    },
+    {
+      "id": "math-deterministic-builtins",
+      "status": "exact-compatible",
+      "filter": "(-3 | abs), (1.8 | floor), (1.2 | ceil), (1.5 | round), (9 | sqrt), (0 | sin), (0 | cos), (0 | tan), (1 | log), (0 | exp)",
+      "input": null
+    },
+    {
+      "id": "error-catch-message",
+      "status": "exact-compatible",
+      "filter": "try error(\"boom\") catch .",
+      "input": null
+    }
+  ]
+}
