@@ -137,9 +137,9 @@ observations remain separate from automated SDK/API and portable execution.
 ## Independent composition proof
 
 `python3 Scripts/ci.py --lane composition` builds an unrelated SwiftPM test
-package against normal public JSON/JSONSchema products. It requires 25 functions
+package against normal public JSON/JSONSchema products. It requires 26 functions
 in both Debug and Release, the independent four-owner event ledger, two actually
-failing omitted-charge mutants, and 13 separate intended compiler failures.
+failing omitted-charge mutants, and 14 separate intended compiler failures.
 The two supplementary native functions exercise in-loop cancellation and the
 original continuation's health/identity. Root counts increased by exactly two;
 all 126 restored identities, 325 parameter invocations and 49 cap outcomes remain
