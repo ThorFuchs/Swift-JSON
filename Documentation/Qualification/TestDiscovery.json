@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "root_functions": {
+    "JSONTests": 190,
+    "JSONSchemaTests": 79,
+    "JSONRegexRuntimeTests": 16,
+    "JSONStreamingTests": 30,
+    "JSONPatchTests": 16,
+    "JSONIntegrationTests": 20,
+    "JSONHTMLTests": 97,
+    "JSONBridgesTests": 10,
+    "JSONCLITests": 88
+  },
+  "parameterized_invocations": 325,
+  "qa_functions": {
+    "JSONTests": 82,
+    "JSONSchemaTests": 13,
+    "JSONStreamingTests": 19,
+    "JSONPatchTests": 7,
+    "JSONRegexRuntimeTests": 4,
+    "JSONIntegrationTests": 20
+  },
+  "shared_state_functions": {
+    "JSONTests": 4,
+    "JSONSchemaTests": 3,
+    "JSONRegexRuntimeTests": 1,
+    "JSONStreamingTests": 16,
+    "JSONIntegrationTests": 10,
+    "JSONHTMLTests": 5,
+    "JSONBridgesTests": 1,
+    "JSONCLITests": 1
+  },
+  "coverage_unmapped": {
+    "Sources/JSON/Pointer/JSONLocationComponent.swift": "declaration-only enum",
+    "Sources/JSONSchema/Output/JSONValidationOutput.swift": "declaration-only enum",
+    "Sources/JSONSchema/Formats/JSONIDNAData.swift": "generated data, no executable mapping",
+    "Sources/JSONStreaming/JSONFraming.swift": "declaration-only enum",
+    "Sources/JSONStreaming/JSONTopLevelArrayEvent.swift": "declaration-only enum",
+    "Sources/JSONPatch/JSONPatchResult.swift": "declaration-only enum"
+  },
+  "coverage_generated": [
+    "Sources/JSONSchema/Formats/JSONIDNAData.swift",
+    "Sources/JSONRegexRuntime/RegexUnicodeTables.swift"
+  ],
+  "coverage_modules": [
+    "JSON",
+    "JSONSchema",
+    "JSONRegexRuntime",
+    "JSONStreaming",
+    "JSONPatch",
+    "JSONHTML",
+    "JSONBridges",
+    "JSONFilterRuntime",
+    "JSONCLIEngine",
+    "JSONCLI"
+  ],
+  "portable_root_functions": {
+    "JSONTests": 190,
+    "JSONSchemaTests": 79,
+    "JSONRegexRuntimeTests": 16,
+    "JSONStreamingTests": 30,
+    "JSONPatchTests": 16,
+    "JSONIntegrationTests": 20,
+    "JSONHTMLTests": 81,
+    "JSONBridgesTests": 10,
+    "JSONCLITests": 88
+  },
+  "wasi_root_functions": {
+    "JSONTests": 190,
+    "JSONSchemaTests": 79,
+    "JSONRegexRuntimeTests": 16,
+    "JSONStreamingTests": 30,
+    "JSONPatchTests": 16,
+    "JSONIntegrationTests": 20,
+    "JSONHTMLTests": 81,
+    "JSONBridgesTests": 10
+  },
+  "wasi_parameterized_invocations": 288,
+  "portable_shared_state_functions": {
+    "JSONTests": 4,
+    "JSONSchemaTests": 3,
+    "JSONRegexRuntimeTests": 1,
+    "JSONStreamingTests": 16,
+    "JSONIntegrationTests": 10,
+    "JSONHTMLTests": 4,
+    "JSONBridgesTests": 1,
+    "JSONCLITests": 1
+  },
+  "export_functions": {
+    "JSONSchemaTests": 1,
+    "JSONHTMLTests": 39
+  }
+}

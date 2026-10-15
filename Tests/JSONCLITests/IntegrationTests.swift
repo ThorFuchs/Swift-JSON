@@ -101,7 +101,8 @@ private func integrationDirectory() throws -> URL {
     #expect(context.used(.totalInputBytes) == 0)
     let version = try JSONParser().parse(CLIHelp.versionJSON)
     guard case .object(let metadata) = version else { Issue.record("Expected native JSON metadata"); return }
-    #expect(metadata[JSONKey("revision")] == .string("unknown"))
+    #expect(metadata[JSONKey("revisionKind")] == .string("source-sha256"))
+    #expect(metadata[JSONKey("revision")] == .string(CLIBuildIdentity.revision))
     #expect(metadata[JSONKey("platform")] != nil && metadata[JSONKey("architecture")] != nil)
 }
 
@@ -141,4 +142,16 @@ private func integrationDirectory() throws -> URL {
         #expect(throws: CancellationError.self) { try context.checkpoint() }
     }
     try await task.value
+}
+
+@Test func cliVersionIsDeterministicAndNeedsNoRepositoryOrInput() throws {
+    let metadata = try JSONParser().parse(CLIHelp.versionJSON)
+    #expect(try metadata.requiredMember("version") == .string("1.6.0-dev"))
+    #expect(try metadata.requiredMember("revisionKind") == .string("source-sha256"))
+    let revision = try #require(try metadata.requiredMember("revision").stringValue)
+    #expect(revision.hasPrefix("sha256:") && revision.utf8.count == 71)
+    #expect(revision.dropFirst(7).utf8.allSatisfy { (48...57).contains($0) || (97...102).contains($0) })
+    var context = try CLIJobContext()
+    _ = try CLIArguments(["--version", "--json"], context: &context)
+    #expect(context.used(.totalInputBytes) == 0)
 }

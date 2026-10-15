@@ -6,19 +6,24 @@ from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
-COUNTS = {'JSONTests': 119, 'JSONBridgesTests': 10, 'JSONSchemaTests': 69, 'JSONRegexRuntimeTests': 12,
-          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 81}
+from test_discovery import DISCOVERY
+COUNTS = DISCOVERY['wasi_root_functions']
 GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True)
+    parser.add_argument('--scope', choices=['full', 'root-qa'], default='full')
     args = parser.parse_args()
     output = ROOT / args.output; output.mkdir(parents=True, exist_ok=True)
     result = {'schema_version': 1, 'status': 'running', 'target': 'wasm32-unknown-wasip1',
               'sdk': SDK, 'commands': [], 'modules': [], 'root_counts': COUNTS,
               'wasmkit_scope': '14 public consumer functions, 49 caps, 20 rooted vectors, debug/release command parity',
               'node_scope': 'complete core/HTML debug/release root suites, caps, public consumers and independent qualification; CLI runtime disposition is separate'}
+    result['scope'] = args.scope
+    result['streaming_timeout_policy'] = 'Identical assertions; native/Linux one-minute traits, pinned WASI SDK cooperative-timer limitation uses an interruptible 120-second host watchdog.'
+    if args.scope == 'root-qa':
+        result.update(qa_counts=DISCOVERY['qa_functions'], wasmkit_scope='Exact affected QA only; no full root/corpus refresh claim', node_scope='Complete core/HTML roots and affected QA; no separate corpus refresh')
     def save():
         (output / 'wasi.json').write_text(json.dumps(result, indent=2) + '\n')
     def run(name, command, check=lambda c, t: c == 0, timeout=1800):
@@ -78,9 +83,14 @@ def main():
             roots = {name: binary(scratch, config, name + '-test-runner') for name in COUNTS}
             invocations = 0
             for name, count in COUNTS.items():
-                text = run('node-' + config + '-' + name, invoke('node', roots[name], 'tests'), tests(count))
+                text = run('node-' + config + '-' + name, invoke('node', roots[name], 'tests'), tests(count), timeout=120 if name in ('JSONStreamingTests', 'JSONIntegrationTests') else 1800)
                 invocations += sum(int(n) for n in re.findall(r'with (\d+) test cases passed', text))
-            if invocations != 288: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
+            if invocations != DISCOVERY['wasi_parameterized_invocations']: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
+            if args.scope == 'root-qa':
+                for name, count in DISCOVERY['qa_functions'].items():
+                    for engine in ['node', 'wasmkit']:
+                        run(engine + '-' + config + '-qa-' + name, invoke(engine, roots[name], 'tests', arguments=['--filter', 'qa']), tests(count), timeout=120 if name in ('JSONStreamingTests', 'JSONIntegrationTests') else 1800)
+                continue
             for package, name, scratch in [('Tools/WasmAudit', 'WasmAudit', '.build/wasm-audit-consumer'),
                                             ('Tools/Qualification', 'Qualification', '.build/wasm-qualification'),
                                             ('Tools/MCPReadiness', 'MCPReadiness', '.build/wasm-readiness')]:
@@ -121,6 +131,8 @@ def main():
                 for name,count in [('authored_public_semantics',82),('public_budget_and_counter_boundaries',9),('deterministic_malformed_utf8_replay',4396)]:
                     if authored[name]['observed'] != count or authored[name]['failed']: raise ValueError('Changed authored outcomes')
         run('strict-memory', [swift,'build','--swift-sdk',SDK,'--scratch-path','.build/wasm-strict','-Xswiftc','-strict-memory-safety','-Xswiftc','-warnings-as-errors'])
+        if args.scope == 'root-qa':
+            result['status'] = 'passed'; save(); return 0
         path = modules['release','WasmAudit']
         for engine in ['node','wasmkit']:
             run(engine + '-missing-resources', invoke(engine,path,'missing-resources',repo=False,resources=False), lambda c,t:c == 0 and 'MISSING_RESOURCES structured_metaSchema' in t)

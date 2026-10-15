@@ -58,28 +58,38 @@ package struct JSONSchemaEvaluation {
         let result = try JSONPointer.decodedTokens(tokens,meter: &meter)
         try meter.release(UInt64(tokens.count)*16); return result
     }
+    private struct DiagnosticOmission: Error {}
+    private func outputAdding(_ metric: JSONResourceMetric, _ current: UInt64, _ amount: UInt64,
+                              meter: inout JSONWorkMeter) throws -> UInt64 {
+        let (next, overflow) = current.addingReportingOverflow(amount)
+        // Optional diagnostic output must not latch a terminal meter failure.
+        // Overflow and every owned work/retention/annotation quota still throw.
+        if !overflow, metric == .diagnosticBytes, options.diagnosticPolicy == .bestEffort,
+           next > meter.limits[metric] { throw DiagnosticOmission() }
+        return try meter.adding(metric, current, amount)
+    }
     private func outputSize(_ keyword: Keyword?, frame: Frame, metric: JSONResourceMetric = .diagnosticBytes, meter: inout JSONWorkMeter) throws -> UInt64 {
         // Conservative encoded UTF-8 admission, including both Pointer locations and the absolute URI.
         var size: UInt64 = 64
         for component in frame.path {
-            try meter.work(); size = try meter.adding(metric,size,16 + 1)
+            try meter.work(); size = try outputAdding(metric,size,16 + 1,meter: &meter)
             switch component {
-            case .index: size = try meter.adding(metric,size,20)
+            case .index: size = try outputAdding(metric,size,20,meter: &meter)
             case .key(let key):
-                for byte in key.string.utf8 { try meter.work(); size = try meter.adding(metric,size,byte == 47 || byte == 126 ? 2 : 1) }
+                for byte in key.string.utf8 { try meter.work(); size = try outputAdding(metric,size,byte == 47 || byte == 126 ? 2 : 1,meter: &meter) }
             }
         }
         for key in frame.trace {
-            try meter.work(); size = try meter.adding(metric,size,17)
-            for byte in key.string.utf8 { try meter.work(); size = try meter.adding(metric,size,byte == 47 || byte == 126 ? 2 : 1) }
+            try meter.work(); size = try outputAdding(metric,size,17,meter: &meter)
+            for byte in key.string.utf8 { try meter.work(); size = try outputAdding(metric,size,byte == 47 || byte == 126 ? 2 : 1,meter: &meter) }
         }
         let node = plan.nodes[frame.node], root = plan.resources[node.resource].root
-        for _ in plan.resources[node.resource].uri.string.utf8 { try meter.work(); size = try meter.adding(metric,size,1) }
+        for _ in plan.resources[node.resource].uri.string.utf8 { try meter.work(); size = try outputAdding(metric,size,1,meter: &meter) }
         for key in node.pointer.tokens.dropFirst(plan.nodes[root].pointer.tokens.count) {
-            size = try meter.adding(metric,size,17)
-            for byte in key.string.utf8 { try meter.work(); size = try meter.adding(metric,size,byte == 47 || byte == 126 ? 6 : 3) }
+            size = try outputAdding(metric,size,17,meter: &meter)
+            for byte in key.string.utf8 { try meter.work(); size = try outputAdding(metric,size,byte == 47 || byte == 126 ? 6 : 3,meter: &meter) }
         }
-        if let keyword { for _ in keyword.rawValue.utf8 { try meter.work(); size = try meter.adding(metric,size,4) }; size = try meter.adding(metric,size,34) }
+        if let keyword { for _ in keyword.rawValue.utf8 { try meter.work(); size = try outputAdding(metric,size,4,meter: &meter) }; size = try outputAdding(metric,size,34,meter: &meter) }
         return size
     }
     private func locations(_ key: JSONKey?, frame: Frame, meter: inout JSONWorkMeter) throws -> (JSONPointer,JSONPointer,JSONSchemaURI) {
@@ -119,7 +129,7 @@ package struct JSONSchemaEvaluation {
         if options.output == .flag { return }
         let size: UInt64
         do { size = try outputSize(keyword,frame: frame,meter: &meter) }
-        catch let error as JSONFailure where error.resource?.metric == .diagnosticBytes && options.diagnosticPolicy == .bestEffort {
+        catch is DiagnosticOmission {
             frame.outcome.diagnosticsComplete = false; return
         }
         let fits = meter.used(.issues) < meter.limits[.issues] && size <= meter.limits[.diagnosticBytes] - min(meter.used(.diagnosticBytes),meter.limits[.diagnosticBytes])

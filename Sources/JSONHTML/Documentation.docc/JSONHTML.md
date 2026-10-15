@@ -1,20 +1,26 @@
 # ``JSONHTML``
 
-Complete, exact, highlighted JSON in a standalone HTML document.
+Exact JSON as structured forms/cards or highlighted syntax in a standalone HTML document.
 
-``JSONHTMLRenderer`` uses the strict JSON writer's token cursor. The expanded
-body preserves insertion order, decoded Unicode scalar sequences and original
-numeric lexemes. Constructed numbers use exact normalized decimal spelling.
-JSON escaping precedes HTML escaping; input never becomes markup or script.
+``JSONHTMLRenderer`` defaults to interactive structured inspection on unreleased
+main. Object fields, indexed arrays, scalar previews and native disclosures retain
+insertion order, decoded Unicode scalar identity and exact numeric lexemes. An
+explicit syntax layout uses the shared strict writer's token cursor. Generated
+markup is owned and allowlisted; arbitrary input is escaped, never trusted as HTML.
 
-The 1.3 development API provides formatted mode and an explicit interactive mode.
-Interactive documents use native disclosures plus fixed offline controls for outline
-navigation, literal search, exact JSON/Pointer copy and UTF-8 downloads. A separate
-complete formatted block serves printing independently of collapsed state.
-Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML are
-available in this development increment, with opt-in styled RTF for prepared items.
-Explicit main-actor PDF preparation uses the item’s own static HTML. Typed caller annotations attach to exact values or explicitly missing targets at their nearest existing parent. Coherent JSONDocument input adds original byte spans. See <doc:PreparedExport> for format
-selection, native text fidelity and finite RTF capacities.
+Inspection prefixes are labelled, and full originals/source remain accessible
+without JavaScript. Finite color, declared raster, inline formatting and atomic
+mini-math previews preserve unsupported spans literally. Exact JSON/Pointer copy,
+downloads and complete printing use native prepared bytes. See <doc:StructuredPreviews>.
+These structured previews extend the renderer released in 1.3.0 and are not part
+of the published 1.5.0 behavior.
+
+Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML,
+opt-in styled RTF and explicit main-actor PDF preparation are available since
+1.3.0. PDF consumes prepared static HTML; typed caller annotations attach to exact
+values or explicitly missing targets at their nearest existing parent. Coherent
+JSONDocument input adds original byte spans. See <doc:PreparedExport> for format
+selection, native text fidelity and finite capacities.
 
 Every call owns one cumulative finite core budget through admission, token
 formatting, escaping, fixed assets and metadata emission and final Data or String copying. The

@@ -79,3 +79,13 @@ immutable plan. Each match owns capture, retry and search state; work remains
 cumulative. No process-global regex cache, start-predicate prefilter or hidden
 fallback engine is selected. Performance observations and their limitations are
 in [the performance notes](../Performance/README.md).
+
+## Best-effort diagnostic omission
+
+The optional diagnostic-byte policy may omit an issue and mark the result's
+`diagnosticsComplete` false while preserving its invalid verdict. Admission checks
+for optional output must occur without latching terminal failure. Diagnostic
+arithmetic overflow, owned work/retention/annotation exhaustion and cancellation
+still throw; no caught error may reset the active ledger. Strict output throws
+on diagnostic capacity. The 1.5.1 maintenance repair restores this 1.2.1 behavior
+and its budget/ordinary-invalid versus operational-error regression cases.

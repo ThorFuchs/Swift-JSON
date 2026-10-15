@@ -25,3 +25,11 @@ and original frozen archives stay in ignored `Artifacts/`.
 
 `Scripts/qualify_ergonomics.py` is part of native/Linux CI: eight real-module
 compiler probes and three synchronized, executed public guide fences.
+
+The maintenance repair restores `--lane coverage` / `--lane linux-coverage` as
+explicit profiling tools, `--lane linux-qa` and `--lane wasm-qa` as scoped execution
+lanes. Their receipts retain precise scopes; preparation does not establish a pass.
+`Scripts/generate_cli_identity.py --check` rejects stale CLI source metadata.
+`Documentation/Qualification/TestDiscovery.json` is the reviewed exact root, QA,
+shared-state and portable inventory; it does not infer expected counts from the
+current test output. Native and Linux retain all 49 public cap outcomes.

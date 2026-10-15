@@ -1,19 +1,42 @@
 # Native CI
 
+This main-based forward-port retains seven products and restores the entire
+1.2.1 regression inventory. Current native root discovery is 546 functions and
+325 parameter invocations; Linux is 530/325. Full ASan uses the same roots;
+TSan checks 41 native or 40 Linux functions. QA requires the original 145-function
+maintenance subset. Exact per-module counts are in
+[the discovery contract](../Qualification/TestDiscovery.json); parameter-function
+identities remain independently checked from Swift Testing events. All 49 public
+cap outcomes remain required. Native runs 32 commands; Linux runs 28. The 126
+pinned maintenance function identities must all complete in full-root and QA runs. These are acceptance expectations, not a claim that
+a pending run passed. The dated counts below remain historical stage evidence.
+
+The restored ownership/reader probes identify only their own checkout; a clean
+source archive outside Git reports null rather than failing or borrowing a parent
+commit. Native/Linux also run the installed-resource consumer against intact,
+missing and same-size-corrupt bundles. CLI source identity is checked before build.
+Manual coverage lanes restore the complete instrumented-object denominator and
+reject a deliberately incomplete export. They do not imply branch/MC/DC coverage.
+
+
 The Native CI workflow uses GitHub-hosted arm64 `xcode-27` runners, documented
 by GitHub as macOS 27. It selects the installed Xcode 27.2 toolchain and runs
 preflight before any qualification. The actual OS, compiler, SDK and Xcode build
 are recorded; macOS/SDK 27 and Swift 6.4 remain minimums.
 
-Pushes to main, pull requests and manual dispatch run three lanes:
+Pushes to main, pull requests and manual dispatch run four lanes:
 
 - Native: public inventory, manifest/dependency graph, release build, debug and
-  release Swift Testing, five-product example, rooted JSON/JSONSchema consumer,
+  release Swift Testing, six-library example, rooted JSON/JSONSchema consumer,
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
+- Archive: deterministic source archive, Git-free extraction, the complete 32-command
+  native lane including real ownership/reader probes, and a byte-equal rebuild
+  after execution. The extracted receipt must have null Git identity and the same
+  complete source manifest.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, five native DocC catalogs with warnings as errors,
+  executed README examples, six native DocC catalogs with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -22,7 +45,7 @@ on failure, with 30-day retention. No secrets, private records, local archives,
 tagging, package-release publication or self-hosted workstation access is configured.
 
 On `main`, a separate Pages job publishes the exact documentation artifact only
-after all three matrix lanes pass. Its narrowly scoped `pages: write` and
+after all four matrix lanes pass. Its narrowly scoped `pages: write` and
 `id-token: write` permissions apply only to deployment. The `github-pages`
 environment admits only `main`. PRs verify the site without publishing it.
 The deployment runner does not establish any native gate; all compilation and
