@@ -1,3 +1,11 @@
+# N1 candidate platform scope
+
+This additive candidate proposes JSONNavigation as an eighth product (seven
+libraries plus CLI), with no external dependencies. Its public SwiftPM consumer
+and39 Navigation functions join the unchanged Linux lanes. Both actual ARM64 and
+x86_64 full/safety receipts are required for final qualification. The historical
+platform text below describes the original seven-product implementation.
+
 # Linux platform contract
 
 The six libraries and swift-json executable are qualified for 64-bit
