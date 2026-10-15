@@ -22,6 +22,9 @@ probes={
  'send':('func illegal(_ context: inout JSONTraversalContext) -> @Sendable () throws -> Void { { try context.checkpoint() } }','Sendable'),
  'forge':('func illegal() throws { let scope = try JSONReadScope(.init(root: .null), limits: .balanced); _ = JSONTraversalContext(scope: scope) }','inaccessible'),
  'store':('final class Box { var value: JSONTraversalContext? }; func illegal(_ context: inout JSONTraversalContext) -> Box { let b = Box(); b.value = consume context; return b }','inout'),
+ 'method-reference':('func illegal(_ context: inout JSONTraversalContext) -> () throws -> Void { context.checkpoint }','mutating'),
+ 'task':('func illegal(_ context: inout JSONTraversalContext) { Task { try context.checkpoint() } }','inout'),
+ 'global':('@MainActor var saved: JSONTraversalContext?; @MainActor func illegal(_ context: inout JSONTraversalContext) { saved = consume context }','inout'),
  'copy':('func illegal(_ context: inout JSONTraversalContext) { let a = copy context; _ = a }','copy'),
  'external':('func illegal(_ context: inout JSONTraversalContext) throws { try context.checkpoint() }','cannot find'),
 }
@@ -44,5 +47,5 @@ for config in configs:
 r['status']='passed' if all(c['status']=='passed' for c in r['commands']) else 'blocked'
 (O/'receipt.json').write_text(json.dumps(r,indent=2)+'\n')
 
-print("REDUCER_CODEGEN "+r["status"]+" positive=2 negative=14")
+print("REDUCER_CODEGEN "+r["status"]+" positive=2 negative=20")
 raise SystemExit(0 if r["status"]=="passed" else 1)
