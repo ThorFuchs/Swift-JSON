@@ -13,11 +13,12 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
+| swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters and private CLI engine/filter runtime; no public query library |
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are six public
-products and no external root-package dependencies. Runtime code uses no HTTP,
+JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are seven public products: six libraries and the swift-json executable,
+and no external root-package dependencies. Runtime code uses no HTTP,
 UI, MCP or documentation-tool dependencies.
 
 Immutable facades store value configuration. Every operation owns its mutable
