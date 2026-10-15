@@ -249,14 +249,19 @@ private func capture(_ body: () throws -> Void) -> (any Error)? {
 }
 
 @Test func acceptedInputHistorySurvivesRestriction() throws {
-    #expect(throws: JSONFailure.self) {
-        try JSON.withComposition { scope in
+    let error = capture {
+        _ = try JSON.withComposition { scope in
             _ = try scope.parseDocument(source)
+            // Retire the larger input count. The current input is now only four
+            // bytes; restriction must still consult accepted-capacity history.
+            _ = try scope.parseDocument(Data("null".utf8))
             var lower = JSONLimits.balanced; lower[.inputBytes] = UInt64(source.count - 1)
             do { try scope.restrict(to: lower) } catch { }
             return 0
         }
-    }
+    } as? JSONFailure
+    #expect(error?.code == .limitExceeded && error?.resource?.metric == .inputBytes)
+    #expect(error?.resource?.attemptedUsage == UInt64(source.count))
 }
 
 @Test func independentNestedInvocationCannotRestoreOuterHealth() throws {
