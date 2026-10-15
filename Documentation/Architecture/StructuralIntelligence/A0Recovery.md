@@ -40,3 +40,9 @@ The new capability is experimental and absent from the independent public
 Navigation integration. Subsequent inspection work must reuse it without adding
 an inner composition scope. All actual command/source/toolchain receipts remain
 bound to their own checkpoint; later source needs its own applicable qualification.
+
+Qualification provenance follows the established checkout_head helper: source
+archives and Git-ownership refusals record null Git identity, with exact source
+input hashes. They still execute the complete positive/negative codegen matrix.
+No global safe.directory or repository-trust setting is changed. The initial
+archive/container harness failures are preserved as failures in the return.

@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Experimental full-codegen capability lifetime matrix; a compiler crash fails."""
-import argparse,hashlib,json,os,pathlib,subprocess,sys
+import argparse,hashlib,json,os,pathlib,re,subprocess,sys
+from archive_candidate import files
+from qualify_release_1_1 import checkout_head
 ROOT=pathlib.Path(__file__).resolve().parents[1];W=ROOT
 parser=argparse.ArgumentParser();parser.add_argument('--output',required=True);args=parser.parse_args()
 O=ROOT/args.output;O.mkdir(parents=True,exist_ok=True)
 env=dict(os.environ)
-identity=ROOT.name.lower().replace('-','_').replace('.','_')
+identity=re.sub(r'[^a-zA-Z0-9_]', '_', ROOT.name.lower())
+if not identity or identity[0].isdigit(): identity='_'+identity
 positive='''import JSON
 import JSONNavigation
 struct Reducer: JSONTraversalOwnedReducer {
@@ -28,7 +31,20 @@ probes={
  'copy':('func illegal(_ context: inout JSONTraversalContext) { let a = copy context; _ = a }','copy'),
  'external':('func illegal(_ context: inout JSONTraversalContext) throws { try context.checkpoint() }','cannot find'),
 }
-r={'status':'running','source_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=W,text=True).strip(),'working_diff_sha256':hashlib.sha256(subprocess.check_output(['git','diff','HEAD'],cwd=W)).hexdigest(),'commands':[]}
+# A source archive is intentionally outside Git; a container may also refuse
+# repository ownership. Never borrow a parent checkout or alter Git trust/config.
+# Exact input hashes remain authoritative and every compiler case still executes.
+head=checkout_head(ROOT)
+working_diff=None
+if head is not None:
+ diff=subprocess.run(['git','diff','HEAD'],cwd=W,capture_output=True)
+ if diff.returncode == 0: working_diff=hashlib.sha256(diff.stdout).hexdigest()
+inputs=[{'path':p.relative_to(ROOT).as_posix(),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
+r={'status':'running','source_head':head,'working_diff_sha256':working_diff,
+   'git_identity_status':'available' if head is not None else 'unavailable_or_not_root_checkout',
+   'provenance_policy':'Only this root checkout; unavailable Git identity is null, never a parent SHA or a weakened safe.directory setting.',
+   'source_inputs':inputs,'source_manifest_sha256':hashlib.sha256(json.dumps(inputs,sort_keys=True).encode()).hexdigest(),
+   'commands':[]}
 configs=['debug','release']
 for config in configs:
  build=['swift','build','-c',config,'--target','JSONNavigation','-Xswiftc','-warnings-as-errors']
