@@ -115,6 +115,15 @@ private func resource(_ error: any Error, _ metric: JSONResourceMetric) -> Bool 
 }
 
 @Test func g2CorpusIsAdmittedExactOrderedAndImmutable() throws {
+    let syntheticText = #"[null,false,0,"example",[],{}]"#
+    for _ in 0..<32 {
+        let corpus = JSONSchemaExampleCorpus.synthetic
+        #expect(try JSONWriter().writeString(.array(corpus.values)) == syntheticText)
+        var local = corpus.values
+        local.append(.string("caller-only"))
+        #expect(local.count == 7 && corpus.values.count == 6)
+        #expect(JSONSchemaExampleOptions().corpus.values.count == 6)
+    }
     let one = try JSONParser().parse(#"{"é":1.0,"e\u0301":9007199254740993}"#)
     let two = try JSONParser().parse(#"{"e\u0301":9007199254740993,"é":1}"#)
     let a = try prepared("true", options: .init(corpus: .init(values: [one, .null])))

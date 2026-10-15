@@ -6,7 +6,7 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G7 main repairs reconciled; full Git-free native/safety, oracle and Apple/WASI qualification passed; full Linux native/safety blocked by local storage",
+  "status": "G8 preparation: hosted Linux ASan identified process-lifetime synthetic corpus allocations; caller-lifetime repair awaits exact-head hosted qualification",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
@@ -16,8 +16,8 @@
     "S3-G4": "passed_native_increment",
     "S3-G5": "passed_native_increment",
     "S3-G6": "passed_native_increment",
-    "S3-G7": "qualified_available_scopes_linux_blocked",
-    "S3-G8": "not_started"
+    "S3-G7": "reopened_for_corpus_lifetime_qualification",
+    "S3-G8": "review_preparation_in_progress"
   },
   "observed": {
     "packet_manifest_files": 26,
@@ -46,14 +46,13 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "Complete G7 Linux native/safety on sufficient storage or separately authorized host, then G8 review",
+  "next_gate": "Finish exact-head Linux/native safety after corpus lifetime repair, then integrate current-main composition/navigation and qualify combined-source G8 review",
   "limitations": [
-    "G7 Linux full native/safety remains blocked by local disk; seven commands including Release build passed before guest interruption (exit137), not a full test pass",
-    "No local native x86_64 Linux qualification; physical iPad deferred under existing simulator acceptance policy",
-    "G8 remains open and this increment is not a qualified 1.6 release candidate",
+    "Initial hosted Linux safety failed with 129 bytes in four stored synthetic-corpus allocations; replacement caller-lifetime getter requires refreshed qualification",
+    "Main has advanced through composition #35 and navigation #38; twelve metadata/harness/derived-identity conflicts remain to integrate before combined-source review",
+    "G8 remains open; no release-ready or merge-ready claim",
     "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
-    "No controlled throughput, heap/RSS or caller instruction guarantee",
-    "All exploratory/harness failures remain separate from later passed receipts; no push, PR, release or deployment"
+    "Logical retention is not RSS; no controlled performance or caller instruction guarantee"
   ],
   "push_merge_tag_or_publication_performed": false,
   "g1_observed": {
@@ -285,6 +284,29 @@
         "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
         "Historical exploratory/compiler/test/harness attempts are retained separately from final passed receipts"
       ]
+    },
+    {
+      "gate": "S3-G7-local",
+      "status": "G7 main repairs reconciled; full Git-free native/safety, oracle and Apple/WASI qualification passed; full Linux native/safety blocked by local storage",
+      "gates": {
+        "S3-G0": "passed_with_documented_fixture_amendment",
+        "S3-G1": "passed_native_increment",
+        "S3-G2": "passed_native_increment",
+        "S3-G3": "passed_native_increment",
+        "S3-G4": "passed_native_increment",
+        "S3-G5": "passed_native_increment",
+        "S3-G6": "passed_native_increment",
+        "S3-G7": "qualified_available_scopes_linux_blocked",
+        "S3-G8": "not_started"
+      },
+      "limitations": [
+        "G7 Linux full native/safety remains blocked by local disk; seven commands including Release build passed before guest interruption (exit137), not a full test pass",
+        "No local native x86_64 Linux qualification; physical iPad deferred under existing simulator acceptance policy",
+        "G8 remains open and this increment is not a qualified 1.6 release candidate",
+        "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
+        "No controlled throughput, heap/RSS or caller instruction guarantee",
+        "All exploratory/harness failures remain separate from later passed receipts; no push, PR, release or deployment"
+      ]
     }
   ],
   "g7_base_commit": "4368947c0db3831da988b9d8626055a38b42a7e3",
@@ -330,5 +352,8 @@
     "linux_full_native_or_safety_pass": false,
     "controlled_performance_claim": false,
     "public_signature_or_default_changes": false
-  }
+  },
+  "g8_initial_head": "c6291148f9ba31b48b9a879b0eb004087f567c96",
+  "g8_lifetime_record": "Documentation/Architecture/Release1.6/G8CorpusLifetime.md",
+  "g8_initial_linux_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38822602731"
 }

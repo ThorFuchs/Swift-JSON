@@ -45,7 +45,9 @@ does not mutate an existing preparation.
   produce the same value for every seed. Every raw rejected draw is charged.
 * `JSONSchemaExampleCorpus(values:)` stores exact ordered caller JSON without
   admission; preparation checks/normalizes it and rejects an empty corpus. The
-  synthetic ordered values are null, false, 0, "example", [], {}. Corpora are hints.
+  synthetic ordered values are null, false, 0, "example", [], {}. The read-only
+  `synthetic` property materializes these values per access; caller lifetime owns
+  their storage, before checked preparation. Corpora are hints.
 
 Candidate role order is **const, default, enum, examples** (ASCII keyword order).
 Array order is semantic. Discovery follows qualified alternatives/static edges;

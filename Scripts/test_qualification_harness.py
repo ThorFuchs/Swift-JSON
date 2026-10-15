@@ -108,6 +108,12 @@ class HarnessTests(unittest.TestCase):
         self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=14')[0])
         for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
+        lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
+        marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'
+        self.assertTrue(check_result(lifetime, 0, marker)[0])
+        self.assertFalse(check_result(lifetime, 1, marker)[0])
+        for stale in ['', marker.replace('128', '1'), marker.replace('exact=1', 'exact=0')]:
+            self.assertFalse(check_result(lifetime, 0, stale)[0])
         # Scoped portability lanes retain exact discovery and safety rather
         # than describing an exit-zero subset as full qualification.
         output = pathlib.Path(__file__).resolve().parents[1] / 'Artifacts/HarnessProbe'

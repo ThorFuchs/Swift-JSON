@@ -143,6 +143,7 @@ def commands(lane, output):
             ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/ci-address'],
             ['swift', 'test', '-c', 'release', '--sanitize', 'thread', '--scratch-path', '.build/ci-thread', '--filter', SHARED_TESTS],
             ['swift', 'build', '--scratch-path', '.build/ci-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py', '--output', str(output / 'corpus-lifetime')],
         ]
     if lane == 'r0':
         return [
@@ -223,6 +224,8 @@ def check_result(command, code, log, events=None):
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py']:
         passed = passed and 'SCHEMA_EXAMPLES_MATRIX passed schemas=64 certified=512 invalid=64 processes=2' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py']:
         passed = passed and 'SCHEMA_EXAMPLES_ADVANCED passed required=10 incomplete=8 profiles=2 seeds=4 per_process=144 processes=2 witnesses=155' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_generation.py']:

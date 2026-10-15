@@ -14,5 +14,9 @@ public struct JSONSchemaExampleCorpus: Sendable {
     /// - Parameter values: A nonempty corpus checked under preparation limits later.
     public init(values: [JSON]) { self.values = values }
     /// Version 1 synthetic corpus: null, false, zero, "example", empty array and empty object.
-    public static let synthetic = Self(values: [.null, .boolean(false), 0, .string("example"), .array([]), .object(.init(empty: ()))])
+    /// Materializes values for the caller's lifetime instead of retaining JSON payloads globally.
+    /// As with caller-authored corpora, preparation performs the checked admission later.
+    public static var synthetic: Self {
+        Self(values: [.null, .boolean(false), 0, .string("example"), .array([]), .object(.init(empty: ()))])
+    }
 }
