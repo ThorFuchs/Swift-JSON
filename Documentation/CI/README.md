@@ -144,3 +144,12 @@ The two supplementary native functions exercise in-loop cancellation and the
 original continuation's health/identity. Root counts increased by exactly two;
 all 126 restored identities, 325 parameter invocations and 49 cap outcomes remain
 required. These expectations do not assert an unexecuted platform pass.
+
+The additive borrowed-composition public consumer runs as `--lane composition`
+on the supported Mac and `--lane linux-composition` on actual qualified Linux.
+Both enforce 26 discovered functions in Debug/Release, two expected-failing
+missing-charge mutants and 14 intended compiler diagnostics. Reduced compiler
+crashes remain a separate investigation, not diagnostic successes. Existing
+native/Linux lane names, cardinalities, 49 cap probes and protection requirements
+are preserved. Native CI adds a composition job; each Linux behavior architecture
+runs the consumer after its complete platform lane.

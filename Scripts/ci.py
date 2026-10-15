@@ -18,7 +18,7 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
-    if lane == 'composition':
+    if lane in ('composition', 'linux-composition'):
         return [['python3', '-B', 'Scripts/qualify_composition.py', '--output', str(output / 'public')]]
     if lane == 'archive':
         return [['python3', '-B', 'Scripts/public_check.py'],
@@ -203,12 +203,12 @@ def check_result(command, code, log, events=None):
     if 'Scripts/test_qualification_harness.py' in command:
         passed = passed and 'HARNESS_TESTS passed cases=14' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_composition.py']:
-        passed = passed and 'COMPOSITION_PROOF passed public_tests=25 configurations=2 mutants_rejected=2 compiler_negative=13' in log.splitlines()
+        passed = passed and 'COMPOSITION_PROOF passed public_tests=26 configurations=2 mutants_rejected=2 compiler_negative=14' in log.splitlines()
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['composition', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['composition', 'linux-composition', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)

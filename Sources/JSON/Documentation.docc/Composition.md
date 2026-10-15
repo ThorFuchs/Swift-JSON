@@ -9,7 +9,7 @@ import Foundation
 import JSON
 import JSONSchema
 
-let report = try JSON.withComposition { scope in
+let report = try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
     let document = try scope.parseDocument(Data(#"{"count":9007199254740993}"#.utf8))
     try scope.reserveExternalLogicalBytes(64) // Adapter-declared output frame weight.
     try scope.chargeExternalWork(1)           // Before the adapter's corresponding work.
@@ -78,14 +78,20 @@ func visit(_ scope: borrowing JSONCompositionScope) throws {
 }
 ```
 
-Apple Swift 6.4.0.34.1 crashed during SIL generation for a nested local function
-that captured the borrowed scope, and for direct escaping-closure capture.
-Bound method references also trigger that verifier defect. These crashes are
-recorded compiler defects, not intended diagnostic passes. Use explicit helper
-calls rather than forming a method value.
-An explicit borrowed helper parameter compiles
-without changing the public ownership model. Avoid that compiler pattern until
-it is fixed. Separate expected-failing SwiftPM builds qualify the prohibited
-copy, escape, async, Sendable, construction, replacement and ledger-access forms.
-See the source qualification package for the exact
-executed scope; platform build results are evidence for their observed SDK only.
+Both Apple Swift 6.4.0.34.1 and Swift.org 6.4 reproduce an ownership-verifier
+crash when a nested helper captures an inferred closure parameter. Explicitly
+annotate `(scope: borrowing JSONCompositionScope)` as above: the nested synchronous
+helper compiles, shares the original ledger, and escaping capture receives the
+normal borrowed-parameter diagnostic. Ordinary calls also work through explicit
+borrowed helper parameters.
+
+Forming a bound method reference such as `scope.checkpoint` still crashes both
+observed compilers, including through an explicit borrowed helper. Call the method
+or a helper directly. Reduced reproducers with no JSON imports are retained in the
+qualification package. These are compiler defects, not intended negative-test
+passes; no experimental flags or weaker ownership model are used.
+
+Separate expected-failing SwiftPM builds qualify copying, explicit capture escape,
+async suspension, Sendable, construction, replacement and ledger-access attempts.
+See the qualification package for the exact executed scope. Cross-compilation is
+evidence for the observed SDK only and does not establish Linux runtime safety.

@@ -5,7 +5,7 @@ import JSONSchema
 
 /// Minimal ordinary public consumer, also compiled for supported Apple SDKs.
 public func compositionProbe(_ data: Data) throws -> JSONOperationReport<JSON> {
-    try JSON.withComposition { scope in
+    try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
         let document = try scope.parseDocument(data)
         try adapterStep(scope)
         let path = try scope.pointer(tokens: ["count"])

@@ -343,3 +343,28 @@ private func capture(_ body: () throws -> Void) -> (any Error)? {
         }
     }
 }
+
+@Test func explicitBorrowAllowsNestedSynchronousHelperOnTheSameLedger() throws {
+    // Independently counted: 2 entry units, 3 helper units, then 50 finalizer
+    // units; the helper's 8-byte frame overlaps the 424-byte report.
+    var limits = JSONLimits.balanced
+    limits[.workUnits] = 55; limits[.retainedBytes] = 432
+    let report = try JSON.withComposition(limits: limits) { (scope: borrowing JSONCompositionScope) in
+        func local() throws {
+            try scope.reserveExternalLogicalBytes(8)
+            try scope.chargeExternalWork(3)
+        }
+        try scope.chargeExternalWork(2)
+        try local()
+        return 7
+    }
+    #expect(report.result == 7 && report.statistics[.workUnits] == 55)
+    #expect(report.statistics[.retainedBytes] == 432)
+    limits[.workUnits] = 54
+    #expect(throws: JSONFailure.self) {
+        try JSON.withComposition(limits: limits) { (scope: borrowing JSONCompositionScope) in
+            func local() throws { try scope.chargeExternalWork(5) }
+            try local()
+        }
+    }
+}

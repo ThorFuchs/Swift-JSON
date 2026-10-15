@@ -57,3 +57,20 @@ retained separately as compiler limitations. Call an explicit borrowed helper
 instead of forming a method value. The return probe uses explicit `return`; an
 unused noncopyable expression can infer Void and does not attempt escape.
 The storage probe explicitly consumes to test the borrowed-value restriction.
+
+## Compiler investigation follow-up
+
+Reduced no-import reproducers reproduce the same SIL ownership verifier failures
+on Apple Swift 6.4.0.34.1 and the installed Swift.org 6.4 release. An explicit
+`(scope: borrowing JSONCompositionScope)` closure parameter fixes the nested local
+helper and changes escaping capture into the intended diagnostic. The public
+consumer now executes that nested form with an independent 55-work/432-byte ledger,
+exact and one-below work ceilings. A separate explicit-capture negative build joins
+the existing helper-escape probe: 26 public functions, two configurations, two
+rejected mutants and 14 intended diagnostic builds.
+
+Bound method references remain compiler defects even with explicit borrowing.
+The reduced compiler investigation is separate from intended negative builds;
+crashes never count as diagnostic passes. See the CompilerBugs catalog and its
+replay command. The final local report retains the prior frozen proof unchanged
+and binds successor evidence to this branch's final source identity.

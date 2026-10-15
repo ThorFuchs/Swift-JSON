@@ -6,10 +6,10 @@ from testing_events import read_events
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PACKAGE = 'Tools/CompositionQualification'
-EXPECTED_TESTS = 25
+EXPECTED_TESTS = 26
 NEGATIVE = {
     'Copy': ["'copy' cannot be applied to noncopyable types"], 'Construct': ['inaccessible'], 'Escape': ['borrowed'],
-    'Return': ['Copyable'], 'Sendable': ['Sendable'], 'Async': ['async', 'synchronous'],
+    'ExplicitEscape': ['borrowed'], 'Return': ['Copyable'], 'Sendable': ['Sendable'], 'Async': ['async', 'synchronous'],
     'Reset': ["no member 'reset'"], 'Fork': ["no member 'fork'"],
     'Refund': ["no member 'release'"], 'PackageMeter': ['inaccessible'],
     'RawMeter': ['JSONWorkMeter', 'cannot find'], 'Substitute': ['immutable'],
@@ -70,7 +70,7 @@ def main():
             assert not any(d in log for d in ['no such module','Please submit a bug report','Stack dump','SIL verification failed'])
             record.update(expected_diagnostics=diagnostics,fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest());save()
     receipt['status']='passed'; save()
-    print('COMPOSITION_PROOF passed public_tests=25 configurations=2 mutants_rejected=2 compiler_negative=13')
+    print('COMPOSITION_PROOF passed public_tests=26 configurations=2 mutants_rejected=2 compiler_negative=14')
     return 0
 
 if __name__=='__main__': raise SystemExit(main())
