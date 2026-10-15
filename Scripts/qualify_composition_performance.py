@@ -121,12 +121,12 @@ def main():
                     if sample['workload'] != workload: continue
                     row = next(r for r in sample['samples'] if r['name']==operation)
                     rows[sample['name']].extend(row['seconds'])
-                    counters[sample['name']].add((row.get('work'),row.get('peak'),row['inputBytes']))
+                    counters[sample['name']].add((row.get('work'),row.get('peak'),row.get('retained'),row['inputBytes']))
                 if len(counters['baseline'])!=1 or len(counters['candidate'])!=1:
                     raise ValueError('Nondeterministic accounting: '+operation)
                 base_count = next(iter(counters['baseline'])); candidate_count = next(iter(counters['candidate']))
                 if operation == 'composition-document':
-                    if candidate_count != (base_count[0]+50, base_count[1]+424, base_count[2]):
+                    if candidate_count != (base_count[0]+50, max(base_count[1], base_count[2]+424), base_count[2]+424, base_count[3]):
                         raise ValueError('Unexpected composition receipt delta')
                 elif counters['baseline'] != counters['candidate']:
                     raise ValueError('Changed old-API work/retention/input identity: '+operation)

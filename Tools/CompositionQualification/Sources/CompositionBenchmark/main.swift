@@ -10,6 +10,7 @@ struct Sample: Codable {
     let seconds: [Double]
     let work: UInt64?
     let peak: UInt64?
+    let retained: UInt64?
 }
 // Deterministic 512-field exact/scalar workload, not an external conformance corpus.
 let text = "{" + (0..<512).map { "\"field\($0)\":" + #"{"n":9007199254740993,"s":"é","a":[true,null,0.01]}"# }.joined(separator: ",") + "}"
@@ -24,7 +25,7 @@ let schemaProbe = try JSONSchemaCompiler().compileWithReport(schema)
 let compositionProbe = try JSON.withComposition(limits: .offline) { try $0.parseDocument(data) }
 let clock = ContinuousClock()
 func seconds(_ duration: Duration) -> Double { Double(duration.components.seconds) + Double(duration.components.attoseconds) / 1e18 }
-func measure(_ name: String, iterations: Int, work: UInt64? = nil, peak: UInt64? = nil, _ operation: () throws -> Void) throws -> Sample {
+func measure(_ name: String, iterations: Int, work: UInt64? = nil, peak: UInt64? = nil, retained: UInt64? = nil, _ operation: () throws -> Void) throws -> Sample {
     for _ in 0..<2 { for _ in 0..<iterations { try operation() } }
     var samples: [Double] = []
     for _ in 0..<9 {
@@ -32,7 +33,7 @@ func measure(_ name: String, iterations: Int, work: UInt64? = nil, peak: UInt64?
         for _ in 0..<iterations { try operation() }
         samples.append(seconds(start.duration(to: clock.now)) / Double(iterations))
     }
-    return Sample(name: name, inputBytes: bytes.count, iterations: iterations, seconds: samples, work: work, peak: peak)
+    return Sample(name: name, inputBytes: bytes.count, iterations: iterations, seconds: samples, work: work, peak: peak, retained: retained)
 }
 let samples = try [
     measure("parser-bytes-wide512", iterations: 8, work: parserProbe.statistics[.workUnits], peak: parserProbe.statistics.peakLogicalRetainedBytes) {
@@ -49,7 +50,7 @@ let samples = try [
         if realPath == nil { precondition(value.numberValue?.originalLexeme == "9007199254740993") }
         else { precondition(value.objectValue != nil) }
     },
-    measure("composition-document", iterations: 4, work: compositionProbe.statistics[.workUnits], peak: compositionProbe.statistics.peakLogicalRetainedBytes) {
+    measure("composition-document", iterations: 4, work: compositionProbe.statistics[.workUnits], peak: compositionProbe.statistics.peakLogicalRetainedBytes, retained: compositionProbe.statistics[.retainedBytes]) {
         let report = try JSON.withComposition(limits: .offline) { try $0.parseDocument(data) }
         precondition(report.result.sourceBytes == data)
     },

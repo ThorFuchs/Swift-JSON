@@ -58,7 +58,8 @@ The controlled Release comparison uses main 30631e8 as its full pinned baseline.
 Both existing PRs' comparisons against 037e735 remain historical. Identical public
 harnesses, runtime/resource paths and fixtures compare unchanged APIs and the
 composition document route. Existing API counters must match; composition's
-expected completion delta is exactly 50 work / 424 logical bytes. Five operations
+expected completion delta is exactly 50 work / 424 final logical bytes. Peak is
+max(previous peak, final retained plus report), rather than a sum of stage peaks. Five operations
 on two inputs, nine samples per process and ABBA ordering yield 18 samples per
 revision/row. Each pre/post admission requires three interval samples >=90% idle.
 The review trigger stays 10%; operational refusals and blocked/noisy timing are
