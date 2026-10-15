@@ -1,8 +1,8 @@
 # Building and maintaining the DocC catalogs
 
 Swift source comments are the API documentation authority. Native compiler symbol
-graphs supply the declarations and links for eight public-product Swift DocC catalogs plus a shared DSL structure reference. Each catalog
-combines the product reference with curated Topics and a focused usage guide.
+graphs supply the declarations and links for eight public-product Swift DocC catalogs plus a shared DSL structure reference. Each product catalog combines its reference with curated Topics and a focused
+usage guide; the supporting DSL catalog documents shared structural declarations.
 See the [Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
 ## Build locally
@@ -30,6 +30,9 @@ symbols, missing comments, stale examples or a failed catalog fail the lane.
 | `.build/handoff/docc/JSONHTML.doccarchive` | Exact formatted HTML API and rendering guide |
 | `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |
 | `.build/handoff/docc/JSONBridges.doccarchive` | Opt-in native numeric conversion and fidelity guide |
+| `.build/handoff/docc/JSONValueDSL.doccarchive` | Trusted value authoring API and guide |
+| `.build/handoff/docc/JSONSchemaDSL.doccarchive` | Trusted schema authoring API and guide |
+| `.build/handoff/docc/JSONDSLCore.doccarchive` | Shared structural reference; no standalone product |
 | `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |

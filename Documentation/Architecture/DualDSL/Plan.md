@@ -9,9 +9,8 @@ has no standalone product. Root dependencies, platforms and all 49 profiles rema
 
 The maintainer-supplied packet SHA-256 is
 `a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588`.
-Its 32-file manifest verified. Only its three DSL source roots and six negative
-fixtures are adapted. Neither signature shim is an engine input. Its sixteen
-positive cases are ported from XCTest to Swift Testing and real JSONLimits.
+Its 32-file manifest verified. Its three DSL source roots and six negative fixtures are adapted. Neither
+signature shim is an engine input. Its sixteen positive cases are ported from XCTest to Swift Testing and real JSONLimits.
 Original and adaptation contributions retain Apache-2.0.
 
 ## Gates and reviewable increments
@@ -30,8 +29,9 @@ Original and adaptation contributions retain Apache-2.0.
 6. **G6 final qualification:** exact-count native/safety/docs and real Linux lanes;
    public consumer, strict concurrency, source/diff/receipts and remaining limitations.
 
-Each coherent increment is committed locally. No push, PR, merge, tag or publication
-is authorized by this integration request. Existing release and sibling worktrees
+Each coherent increment is committed on the isolated feature branch. The maintainer
+authorized a branch push and existing ARM64/x86_64 Linux CI after native checks.
+PR creation, merging, tagging and release publication remain separate. Existing release and sibling worktrees
 are preserved. A passing shim or typecheck is never a semantic qualification claim.
 
 Private input and raw receipts live in ignored `Artifacts/DualDSLP1.2`; source identity,

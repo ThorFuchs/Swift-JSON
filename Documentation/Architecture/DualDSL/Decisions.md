@@ -57,12 +57,23 @@ new Boolean-schema overload aliases are deferred: existing Rule(Boolean), table 
 initializers and rawKeyword preserve the complete declaration without another surface.
 The identical prototype rawSchemaKeyword synonym is removed in favor of rawKeyword.
 
-## D5 — Compiler strategy (pending measurement)
+## D5 — Retain measured variadic composition
 
-The initial integration retains variadic buildBlock and conditional context conformances.
-G4 records actual Swift 6.4 timings, diagnostics and memory observations before selecting
-it over a pairwise buildPartialBlock alternative. Measurements under concurrent host load
-are observations, not a quiet-host or broad compiler-throughput guarantee.
+Native Swift 6.4 compiled both strategies against the real engine. The final
+comparison passed 41 commands, including 22 scaling probes: value/schema blocks
+of 16/64/128/256 declarations, nested depth 24, choices/loops and mixed inference.
+All six domain-negative fixtures rejected in both configurations, and ordinary
+and module-qualified consumers compiled with complete strict concurrency.
+
+The final 256-property schema typecheck took 3.765 s with variadic composition
+versus 5.304 s with pairwise partial blocks; compiler maximum resident sizes were
+122,929,152 and 137,789,440 bytes respectively. An earlier integration run measured
+1.097 s versus 5.513 s. All raw fixture hashes and measurements are retained; neither
+run was quiet (final load averages approximately 600/587/533). Some small branching
+fixtures favored partial composition. These observations justify retaining the
+working variadic strategy through the tested scale, not a general speed guarantee.
+Compiler RSS does not bound DSL staging, finalization retention or process RSS.
+The alternative modules remain experiment outputs and are not shipped code.
 
 ## D6 — Empty enum is distinct from malformed schema
 

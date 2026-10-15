@@ -236,6 +236,30 @@
         "Examples/DualDSL"
       ],
       "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Tests/DSLPrototypesTests/DSLPrototypeTests.swift",
+      "original_sha256": "57ea84d6729740abb326819a316cd72cd756aec2e4c7990a5b9bb2f61000f2b8",
+      "destination": "Tests/JSONDSLTests/DSLPrototypeTests.swift",
+      "disposition": "Ported all16 XCTest prototype cases to Swift Testing and actual JSONLimits; full schemas also compile and evaluate actual positive/negative or explicitly operational outcomes. No shim is used.",
+      "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
+      "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
+      "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Tests/DSLPrototypesTests/StressTypeCheckTests.swift",
+      "original_sha256": "56a803836cb115e84c35abe65c15a3800e082e11593096a4143b73f76f3ff98c",
+      "destination": "Tests/JSONDSLTests/StressTypeCheckTests.swift",
+      "disposition": "Ported all16 XCTest prototype cases to Swift Testing and actual JSONLimits; full schemas also compile and evaluate actual positive/negative or explicitly operational outcomes. No shim is used.",
+      "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
+      "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
+      "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
     }
   ],
   "original_implementation_notes": [

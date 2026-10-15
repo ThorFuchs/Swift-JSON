@@ -188,7 +188,10 @@ def main():
             receipt['transforms'].append(entry)
             if result.returncode:
                 raise ValueError('Native static-hosting transformation failed: ' + product)
-            for route in [product.lower(), 'documentation/' + GUIDES[product][1]]:
+            routes = [product.lower()]
+            if product in PRODUCTS:
+                routes.append('documentation/' + GUIDES[product][1])
+            for route in routes:
                 if not (site / product / 'documentation' / route / 'index.html').is_file():
                     raise ValueError('Missing product root or guide: ' + route)
             # DocC transforms its emitted routes but retains the original archive

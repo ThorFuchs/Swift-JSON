@@ -6,13 +6,26 @@
   "branch": "codex/dual-dsl-p1.2",
   "release_ready": false,
   "gates": {
-    "P1.2-G0": "in_progress",
-    "P1.2-G1": "in_progress",
-    "P1.2-G2": "in_progress",
-    "P1.2-G3": "in_progress",
-    "P1.2-G4": "pending",
-    "P1.2-G5": "pending",
-    "P1.2-G6": "pending"
+    "P1.2-G0": "passed",
+    "P1.2-G1": "passed",
+    "P1.2-G2": "passed",
+    "P1.2-G3": "passed",
+    "P1.2-G4": "passed",
+    "P1.2-G5": "in_progress",
+    "P1.2-G6": "in_progress"
   },
-  "scope": "Trusted authored staging; finite iterative shared-ledger finalization; no staging/RSS/caller-work claim"
+  "scope": "Trusted authored staging; finite iterative shared-ledger finalization; no staging/RSS/caller-work claim",
+  "observed": {
+    "baseline_native_commands": 17,
+    "dsl_tests_per_configuration": 47,
+    "native_root_functions": 343,
+    "baseline_parameter_invocations": 173,
+    "compiler_commands": 41,
+    "negative_rejections": 12,
+    "native_safety": "passed after retained transient PDF failure and unchanged full rerun",
+    "native_lane": "13 commands passed; downstream mobile tool build blocked by ENOSPC; full lane not passed",
+    "docs": "1005/1005 comments;9 catalogs passed; route fix privately verified, final lane pending",
+    "wasi": "real public release consumer passed Node and WasmKit; consumer scope only",
+    "linux": "authorized branch push/CI pending native completion or explicit changed-condition authorization"
+  }
 }

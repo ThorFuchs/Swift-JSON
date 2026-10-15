@@ -63,7 +63,7 @@ distribution, architecture or libc claims.
 
 `python3 Scripts/ci.py --lane wasm` requires the matching Swift.org 6.4.0 compiler,
 SDK and WasmKit plus Node. It records cross-build and runtime outcomes separately.
-Node executes the complete 256-function/173-parameter portable root suites,
+Node executes the current 329-function/173-parameter portable root suites,
 independent corpus policies and all 49 cap outcomes. Both hosts execute the frozen
 public consumer; WasmKit retains its separately recorded 14-function consumer scope. The
 [WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
@@ -77,9 +77,9 @@ Apple SDK declaration probes. It builds all five products in iPhoneOS and
 simulator consumers. A bounded offscreen WebPage region experiment remains outside
 the production API. The lane establishes native API/file transport and SDK builds,
 not share sheets or receiving-editor UI. Explicit paginated PDF and simulator/device execution have separate materialized receipts.
-Current root discovery is 270 functions on Mac (75 HTML) and 256 on Linux/WASI
-(61 HTML). The focused export lane requires 38 functions on Mac. Ten Mac shared
-functions, including independent PDF cancellation, run under Thread Sanitizer. All 49 cap checks
+Current root discovery is 343 functions on Mac (75 HTML, 47 DSL) and 329 on Linux/WASI
+(61 HTML, 47 DSL). The focused export lane requires 38 functions on Mac. Thirteen Mac shared
+functions, including independent PDF cancellation and DSL finalization, run under Thread Sanitizer. All 49 cap checks
 and the 173 baseline parameterized invocations remain required.
 
 ## Structured Swift Testing receipts
