@@ -1,0 +1,7 @@
+import JSON
+func borrowedLocalFunction() throws {
+    _ = try JSON.withComposition { scope in
+        func invoke() throws { try scope.checkpoint() }
+        try invoke()
+    }
+}

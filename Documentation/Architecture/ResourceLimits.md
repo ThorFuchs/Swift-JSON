@@ -132,9 +132,19 @@ accepted capacities and consumed work. JSONSchema adds offline URI operations
 through package access without a dependency from JSON to JSONSchema. URI identity
 and adapter reservations use core, never compiledPlanBytes or compileWorkUnits.
 
-The initial ownership policy is conservative: no public refunds or owner tokens.
+The ownership policy is conservative: no public refunds or transferable owner tokens.
 External reservations and native result ownership survive until scope completion;
-re-admitted roots and selected result graphs are reserved again even for aliases.
+arbitrary JSON inputs and selected result graphs are reserved again even for aliases.
+`withAdmittedRoot` admits an immutable root once and borrows a noncopyable,
+non-Sendable handle. `withParsedDocument` borrows a handle to the root already
+admitted by source-backed parsing. The handle adds one 16-byte logical frame slot;
+its graph and slot remain reserved until composition exit. It has no public
+constructor, value accessor, mutation or refund. The resolving scope checks exact
+private owner identity before navigation; a wrong-owner operation latches failure
+in the receiving invocation. Pointer work and each selected output graph still
+charge normally. An empty Pointer selecting the entire root reserves that graph
+again. This removes repeated input admission for handle-based lookups without
+relaxing arbitrary-JSON admission, output ownership or restriction history.
 The full Data-to-array reservation precedes allocation and remains charged
 alongside the root, source bytes, spans, resources and final result. Native scratch
 uses its existing release rules. The logical peak is a maximum of this single

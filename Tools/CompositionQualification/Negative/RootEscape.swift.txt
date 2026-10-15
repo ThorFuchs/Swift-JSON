@@ -1,0 +1,4 @@
+import JSON
+func rejected(_ root: borrowing JSONCompositionRoot, scope: borrowing JSONCompositionScope, pointer: JSONPointer) -> () throws -> JSON {
+    { try scope.resolve(pointer, in: root) }
+}

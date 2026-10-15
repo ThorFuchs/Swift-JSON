@@ -1,0 +1,4 @@
+import JSON
+func escapedMethod() throws -> () throws -> Void {
+    try JSON.withComposition { scope in scope.checkpoint }.result
+}

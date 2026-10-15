@@ -1,0 +1,4 @@
+import JSON
+func rejected(_ scope: borrowing JSONCompositionScope) throws -> JSONCompositionRoot {
+    try scope.withAdmittedRoot(.null) { root in return consume root }
+}

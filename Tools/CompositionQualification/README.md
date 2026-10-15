@@ -9,15 +9,31 @@ Run the complete focused gate from the repository root:
 python3 Scripts/ci.py --lane composition
 ```
 
-The gate executes 12 Swift Testing functions in Debug and Release, this consumer
-in both configurations (two positive and four negative outcomes each), and 11
-compiler-negative cases. Negative cases use object emission, which catches
+The gate executes 20 Swift Testing functions in Debug, Release and ASan, two
+concurrent-invocation functions with TSan, strict memory-safety JSON compilation,
+and this consumer in both configurations (four positive and six negative outcomes
+each). `CompositionRootScale` resolves 1,000 references over 50,000-value trusted
+and source-backed roots with balanced limits. The root is admitted once; selected
+outputs remain charged individually. The arbitrary-JSON overload retains its
+conservative repeated-root admission behavior.
+
+Eighteen compiler-negative cases use object emission, which catches
 ownership diagnostics deferred beyond typechecking. Missing imports never count
-as successful rejection. Copy, Sendable sharing, escape, direct construction,
+as successful rejection. Compiler signals, fatal diagnostics and emitted objects
+also cannot satisfy a negative case. Copy, Sendable sharing, escape, direct construction,
 return, scope swap/use/restore for exact work, retention and caught failures,
 double refund and cross-scope refund are rejected.
-The policy exposes no ownership token or refund, so those operations are invalid
-public programs rather than runtime token failures.
+The policy exposes no transferable owner token or refund. Borrowed root handles
+have no public constructor, value accessor or mutation; their private owner
+identity rejects use by another scope before navigation.
+
+Eight additional actual-callsite probes include three explicit-borrow positives and
+five forms exposing Swift 6.4 compiler aborts. Their outcomes are separate from
+the 18 semantic rejections. Eight Python harness cases check the distinction.
+The lane completes its checks, then exits 2 with overall `blocked` if known compiler
+aborts reproduce. Successful behavior and ownership results are recorded alongside
+the compiler robustness blocker. Use explicit nonescaping closures in supported
+code; do not turn a compiler crash into a rejection pass.
 
 ```sh
 swift run -c release --package-path Tools/CompositionQualification CompositionRegression

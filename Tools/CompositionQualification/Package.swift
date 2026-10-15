@@ -15,6 +15,8 @@ let package = Package(
     ]), .executableTarget(name: "CompositionConsumer", dependencies: [
         .product(name: "JSON", package: "Swift-JSON"),
         .product(name: "JSONSchema", package: "Swift-JSON")
+    ]), .executableTarget(name: "CompositionRootScale", dependencies: [
+        .product(name: "JSON", package: "Swift-JSON")
     ]), .executableTarget(name: "CompositionRegression", dependencies: [
         .product(name: "JSON", package: "Swift-JSON"),
         .product(name: "JSONSchema", package: "Swift-JSON")

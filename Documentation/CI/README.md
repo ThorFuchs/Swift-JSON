@@ -39,9 +39,9 @@ include that consumer alongside their existing gates; all 49 core cap outcomes a
 retain their original source context; actual source-bound receipts establish passes.
 
 This main-based forward-port retains seven products and restores the entire
-1.2.1 regression inventory. The experimental composition increment adds 12 functions; current native root discovery is 558 functions and
-325 parameter invocations; Linux is 542/325. Full ASan uses the same roots;
-TSan checks 42 native or 41 Linux functions. QA requires the original 145-function
+1.2.1 regression inventory. The experimental composition increment adds 20 functions; current native root discovery is 566 functions and
+325 parameter invocations; Linux is 550/325. Full ASan uses the same roots;
+TSan checks 43 native or 42 Linux functions. QA requires the original 145-function
 maintenance subset. Exact per-module counts are in
 [the discovery contract](../Qualification/TestDiscovery.json); parameter-function
 identities remain independently checked from Swift Testing events. All 49 public
@@ -173,16 +173,23 @@ observations remain separate from automated SDK/API and portable execution.
 
 ## Experimental composition lane
 
-`python3 Scripts/ci.py --lane composition` executes 12 composition functions in
-Debug and Release, a distinct-package JSON/JSONSchema consumer in both modes,
-five external reference-load functions in Debug/Release/ASan, eight separately classified scale cells,
-and 11 compiler-negative ownership fixtures. It supplements the full native,
-safety and docs lanes. On a CLT installation that does not discover TestingMacros,
+`python3 Scripts/ci.py --lane composition` executes 20 composition functions in
+Debug, Release and ASan, two concurrent-invocation functions with TSan, strict
+memory-safety compilation of JSON, and a distinct-package JSON/JSONSchema consumer
+in both modes (four positive and six negative outcomes). A Release public consumer
+performs 1,000 resolutions over 50,000-value trusted and parsed roots under balanced
+limits. Eighteen compiler negatives require semantic diagnostics with no object or
+compiler abort. Eight real call-site probes include three explicit-borrow positives
+and five forms that expose current compiler aborts. Eight Python cases verify
+that signals, fatal diagnostics and missing imports cannot pass as rejections.
+All commands, nonzero exits, source hashes and outcomes remain in receipts.
+
+The lane runs every check before reporting compiler robustness. Reproduced known
+aborts set overall status `blocked` and exit 2 while `behavior_status` and the
+ownership rejection results remain explicit. A crash is never a semantic pass.
+This lane uses actual Linux preflight when invoked on Linux; no Linux success is
+inferred from macOS execution. It supplements full native, safety and docs lanes.
+On a CLT installation that does not discover TestingMacros,
 set `SWIFT_JSON_TESTING_PLUGIN_PATH` to the installed testing plugin directory;
 CI records the explicit `-plugin-path` arguments and preserves the original failure.
 No language, SDK, platform, discovery or sanitizer baseline changes.
-
-The focused composition lane also runs on the Linux architecture jobs and Native / native.
-Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
-The qualification harness now has 15 regression functions, retaining its original 14.
-See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.

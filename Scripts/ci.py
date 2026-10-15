@@ -9,7 +9,7 @@ from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVO
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|sharedExportPreparationsHaveIndependentConcurrentState|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState'
-SHARED_TESTS += '|compositionIndependentScopesCanBeSharedAcrossTasks'
+SHARED_TESTS += '|compositionIndependentScopesCanBeSharedAcrossTasks|compositionRootIndependentScopesCanBeSharedAcrossTasks'
 SHARED_TESTS += '|qaStreaming|qaE2E(SharedPlan|RootImport|NDJSONImport|AwaitedSink|ExactWorkflow)'
 SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
@@ -22,14 +22,17 @@ def commands(lane, output):
     output = output.relative_to(ROOT)
     if lane == 'composition':
         result = [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/generate_cli_identity.py', '--check'],
+            ['python3', '-B', 'Scripts/test_composition_compiler_harness.py'],
             ['swift', 'test', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
             ['swift', 'test', '-c', 'release', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
+            ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/composition-address', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
+            ['swift', 'test', '-c', 'release', '--sanitize', 'thread', '--scratch-path', '.build/composition-thread', '--filter', 'composition.*IndependentScopesCanBeSharedAcrossTasks'],
+            ['swift', 'build', '--target', 'JSON', '--scratch-path', '.build/composition-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
             ['swift', 'run', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
-            ['swift', 'test', '--package-path', 'Tools/CompositionQualification'],
-            ['swift', 'test', '-c', 'release', '--package-path', 'Tools/CompositionQualification'],
-            ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/composition-address', '--package-path', 'Tools/CompositionQualification'],
-            ['python3', '-B', 'Scripts/qualify_composition_scale.py', '--output', str(output / 'scale')],
+            ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionRootScale'],
             ['python3', '-B', 'Scripts/qualify_composition.py', '--output', str(output / 'compiler-negative')],
         ]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
@@ -168,7 +171,7 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [DISCOVERY['composition_functions']] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [2] if 'composition.*IndependentScopesCanBeSharedAcrossTasks' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         if 'navigation' in command:
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
@@ -178,7 +181,7 @@ def check_result(command, code, log, events=None):
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
-        if 'thread' in command and events is not None:
+        if 'thread' in command and 'composition.*IndependentScopesCanBeSharedAcrossTasks' not in command and events is not None:
             passed = passed and events['module_function_counts'] == SHARED_COUNTS
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
@@ -217,7 +220,14 @@ def check_result(command, code, log, events=None):
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
     if command[:2] == ['swift', 'run'] and 'CompositionConsumer' in command:
-        passed = passed and bool(re.search(r'^COMPOSITION_CONSUMER passed positive=2 negative=4 work=[1-9][0-9]* peak=[1-9][0-9]* version=1$', log, re.MULTILINE))
+        passed = passed and bool(re.search(r'^COMPOSITION_CONSUMER passed positive=4 negative=6 work=[1-9][0-9]* peak=[1-9][0-9]* version=1$', log, re.MULTILINE))
+    if command[:2] == ['swift', 'run'] and 'CompositionRootScale' in command:
+        cases = re.findall(r'^ADMITTED_ROOT_SCALE path=(trusted|parsed) items=50000 bytes=250001 refs=1000 nodes=51001 work=([1-9][0-9]*) retained=([1-9][0-9]*) peak=([1-9][0-9]*)$', log, re.MULTILINE)
+        passed = passed and len(cases) == 2 and {c[0] for c in cases} == {'trusted', 'parsed'} and all(int(c[1]) < 1_000_000 and int(c[2]) < 6_000_000 for c in cases)
+    if 'Scripts/test_composition_compiler_harness.py' in command:
+        passed = passed and 'COMPOSITION_COMPILER_HARNESS passed cases=10' in log.splitlines()
+    if command[:2] == ['swift', 'test'] and 'Tools/CompositionQualification' in command and events is not None:
+        passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
     if command[:2] == ['swift', 'run'] and 'ProviderConsumer' in command:
         passed = passed and 'PROVIDER_CONSUMER passed cases=14' in log.splitlines()
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:

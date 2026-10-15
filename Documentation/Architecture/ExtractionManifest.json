@@ -274,6 +274,12 @@
     "1.5.1 restores 126 original Apache-2.0 test functions and qualification tools from Swift-JSON 1.2.1 (e8b687f822c577311156b13bf1d15c2d5620b84e), with file hashes and stable function identities in Qualification/Release1.5.1/Restoration.json. The diagnostic omission and Git-free provenance repairs are restored original code; current seven-product harness reconciliation and deterministic CLI identity are original contributions. No new upstream adaptation or dependency.",
     "Composition reference-load fixtures, serial descriptor staging, public-only adapter, capacity/terminal tests and strict CI receipt checks are original Apache-2.0 code. Generated JSON graphs introduce no upstream protocol fixtures, engine or dependency. Core public APIs, finite profiles and accounting weights are unchanged."
   ],
+  "composition_admitted_root_original_contributions": {
+    "license": "Apache-2.0",
+    "adapted_third_party_code": false,
+    "basis": "Independent ownership and repeated-admission review of 720da596; private review evidence excluded from source distribution.",
+    "scope": "Borrowed immutable admitted-root handles, private invocation identity, conservative selected-output reservations, boundary and scale consumers, compiler-callsite regressions and explicit compiler-abort classification. No root dependency or unsafe annotation added."
+  },
   "jsonhtml_export_original_contributions": {
     "license": "Apache-2.0",
     "adapted_third_party_code": false,

@@ -1,10 +1,26 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 
-private final class JSONCompositionState {
+fileprivate final class JSONCompositionState {
     var context: JSONOperationContext
     init(limits: JSONLimits) throws {
         context = try JSONOperationContext(limits: limits, domain: .core, trackAcceptedCapacities: true)
+    }
+}
+
+/// A borrowed immutable root admitted by one composition invocation.
+///
+/// Obtain this handle through ``JSONCompositionScope/withAdmittedRoot(_:_:)`` or
+/// ``JSONCompositionScope/withParsedDocument(_:_:)``. It has no public initializer,
+/// value accessor or refund. Only its owning scope may resolve against it. The
+/// borrowed noncopyable handle cannot be returned, substituted or sent to a task.
+public struct JSONCompositionRoot: ~Copyable {
+    fileprivate let owner: JSONCompositionState
+    fileprivate let value: JSON
+
+    fileprivate init(owner: JSONCompositionState, value: JSON) {
+        self.owner = owner
+        self.value = value
     }
 }
 
@@ -64,6 +80,60 @@ public struct JSONCompositionScope: ~Copyable {
         }
     }
 
+    /// Admits an immutable graph once and borrows an invocation-bound lookup handle.
+    ///
+    /// The root graph and one 16-byte logical handle slot remain reserved until
+    /// composition completion. Repeated lookups admit their Pointer and selected
+    /// result, without traversing or reserving this root again. Each new call to
+    /// this method admits a complete graph, including aliases of an earlier root.
+    /// - Parameters:
+    ///   - value: Trusted caller value; its prior construction is caller work.
+    ///   - body: Synchronous work borrowing the immutable admitted root.
+    /// - Returns: The callback result; the handle cannot be returned.
+    /// - Throws: Native terminal failure, cancellation or callback error.
+    public func withAdmittedRoot<Result>(_ value: JSON,
+        _ body: (borrowing JSONCompositionRoot) throws -> Result) throws -> Result {
+        try withMeter { try JSONAdmission.value(value, meter: &$0, owned: true) }
+        return try borrowingRoot(value, body)
+    }
+
+    /// Parses a source-backed document and borrows its already-admitted root.
+    ///
+    /// Parsing, source bytes, mapping and the root share this invocation's ledger.
+    /// The handle adds one logical slot and shares the parsed immutable graph;
+    /// it does not perform a second admission of the parsed root. The document
+    /// may be returned. Its existing reservation lasts until composition exit.
+    /// - Parameters:
+    ///   - data: Caller-owned strict UTF-8 input.
+    ///   - body: Synchronous work receiving the document and borrowing its root handle.
+    /// - Returns: The callback result, which may include the document or selected values.
+    /// - Throws: Native terminal failure, cancellation or callback error.
+    public func withParsedDocument<Result>(_ data: Data,
+        _ body: (JSONDocument, borrowing JSONCompositionRoot) throws -> Result) throws -> Result {
+        let document = try parseDocument(data)
+        return try borrowingRoot(document.root) { root in try body(document, root) }
+    }
+
+    private func borrowingRoot<Result>(_ value: JSON,
+        _ body: (borrowing JSONCompositionRoot) throws -> Result) throws -> Result {
+        try withMeter { meter in
+            try meter.work()
+            try meter.retain(JSONLogicalWeights.frame)
+        }
+        let root = JSONCompositionRoot(owner: state, value: value)
+        let original = state.context.meter.continuation
+        // No inout meter access spans caller code: nested native calls use the
+        // same invocation, and a caught owned failure still prevents this return.
+        do {
+            let result = try body(root)
+            try original.check(state.context.meter)
+            return result
+        } catch {
+            try original.check(state.context.meter)
+            throw error
+        }
+    }
+
     /// Constructs an exact Pointer using this invocation's remaining budget.
     /// - Parameter tokens: Caller-owned decoded tokens.
     /// - Returns: The admitted Pointer.
@@ -112,6 +182,27 @@ public struct JSONCompositionScope: ~Copyable {
             try JSONAdmission.value(value, meter: &meter, owned: true)
             let admitted = try JSONPointer.decodedTokens(pointer.tokens, meter: &meter)
             let result = try admitted.resolve(in: value, meter: &meter)
+            try JSONAdmission.value(result, meter: &meter, owned: true)
+            return result
+        }
+    }
+
+    /// Resolves against this invocation's admitted immutable root.
+    ///
+    /// Owner identity is checked before navigation. Pointer admission and native
+    /// navigation consume cumulative work; the selected result graph is reserved
+    /// anew, even for aliases or an empty Pointer selecting the entire root.
+    /// - Parameters:
+    ///   - pointer: Caller or scope-created exact Pointer.
+    ///   - root: Borrowed handle produced by this scope's root callback.
+    /// - Returns: The selected exact value with a conservative output reservation.
+    /// - Throws: Wrong-owner configuration failure, native failure or cancellation.
+    public func resolve(_ pointer: JSONPointer, in root: borrowing JSONCompositionRoot) throws -> JSON {
+        try withMeter(domain: .pointer) { meter in
+            try meter.work()
+            guard root.owner === state else { throw JSONFailure(.configuration, code: .invalidOperation) }
+            let admitted = try JSONPointer.decodedTokens(pointer.tokens, meter: &meter)
+            let result = try admitted.resolve(in: root.value, meter: &meter)
             try JSONAdmission.value(result, meter: &meter, owned: true)
             return result
         }
