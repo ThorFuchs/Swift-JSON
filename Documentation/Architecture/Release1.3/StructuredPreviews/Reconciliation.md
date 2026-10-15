@@ -40,3 +40,35 @@ source/fixture hashes, discovery events, exits, preservation comparisons and hos
 run identities are materialized in the separate reconciliation handoff. The unchanged
 HTML implementation retains its prior native browser/device/VoiceOver/calibration
 scope, including attributed manual observations and the reviewed performance policy.
+
+## Reconcile the approved JSONBridges baseline
+
+The maintainer explicitly approved retaining current main's JSONBridges while
+reconciling the advanced CLI base `aab19ce3414b80e5fef69ffd1d895bd0a2c2cadb`.
+This supersedes the earlier forward five-library inventory, preserving its history.
+The combined package has six libraries plus the swift-json executable, no external
+root dependencies, JSON-only HTML/Bridges dependencies and private regex/filter/CLI
+runtimes. Core does not re-export JSONBridges. The feature parent is
+`e1b82a583f66afffeec992a95a6e08ad36a1c3f0`; its receipts remain immutable.
+
+The five new resolutions retain the structured HTML and E2 API/release descriptions,
+all current README examples and both exact test inventories. JSONHTML test fixtures
+remain packaged. Core/Bridges/schema facade additions and the provider implementation
+are retained without source changes. No rendering behavior, preview ceiling, platform,
+metric meaning or existing fixture is changed by this synchronization.
+
+The required combined inventory is 419 Apple / 403 Linux functions, with 325 named
+parameter cases. Modules retain HTML 97/81 and CLI 87 while adding core 119,
+schema 69 and Bridges 10. Shared-state TSan requires 15 Apple / 14 Linux functions,
+including structured plans, providers, Apple PDF and both E2 sharing functions.
+The WASI root requires 316 functions and 288 parameter cases, including Bridges 10,
+core 119, schema 69 and HTML 81. All 49 caps, exact corpus policies, 19 event canaries,
+public consumers, six DocC catalogues and eight E2 compiler/import checks remain
+required. Discovery and execution receipts must confirm these inventories; expected
+counts alone are not qualification.
+
+New source-bound native, safety, docs, Linux and affected WASI receipts are recorded
+separately from the earlier pinned return. Byte-identical HTML implementation/tests/
+assets retain their prior browser, physical-touch, VoiceOver and calibration evidence
+within its stated scope. The inherited approximately 11% streaming comparison and
+existing disposition remain unchanged. No PR merge, tag or publication is performed.

@@ -45,3 +45,27 @@ The subsequent portable provider increment addresses the previously blocked CL07
 Its [separate provider record](Providers.md) and new source-bound receipts supersede
 that prerequisite blocker while preserving every reconciliation/archive observation
 above. It does not qualify Apple model/schema bridges or unrestricted WASI CLI IO.
+
+
+## E2 main reconciliation before stack merge
+
+Main e8c3e4bd9ae40d797f07a527ea98879acee3c057 includes the independently approved
+JSONBridges product and additive E2 entry points. PR23–PR27 preserve that complete
+source, tests and compiler consumers. The combined graph has six libraries plus
+swift-json, no external root dependency and the same private runtimes. CI requires
+395 Apple / 381 Linux functions and 199 parameter invocations, including 119 core,
+69 schema, 85 CLI and 10 bridge functions. TSan requires 14 Apple / 13 Linux shared
+functions. Six DocC catalogs, E2 compiler/import isolation, all 49 baseline caps,
+provider14/provider37 and the original suite/cardinality policies remain mandatory.
+
+The previous C5 successor c376073 passed all seven hosted checks, local native28,
+safety3 and docs1 commands, and clean CLI13 commands. Its immutable source archive
+is c452a30737c970c3ed3a99752de835cbd6feab98212f3635553f0572aa6768dc; its separate
+materialized evidence return is 58a5c8ca2f2d381820e37d472dc5de040f2774037f73858c8237c1aab3215001.
+It closes portable CL078/CL079, retaining Apple-provider and full CLI/WASI limits.
+
+The current merge review does not rewrite those receipts or claim they qualify new
+main composition. Fresh source-bound checks accompany the reconciled graph. Each
+prefix is reviewed against current main. The complete integration PR can land the
+preserved prefix commits together only after every prefix head and its required
+checks have passed. No protection bypass, release tag or package publication is used.

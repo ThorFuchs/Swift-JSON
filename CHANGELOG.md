@@ -7,6 +7,16 @@
   CLI policy. Native, browser and WASI evidence is recorded with remaining assistive
   and host qualification boundaries.
 
+- Add E2's shallow JSON parsing, checked object construction, decimal-text and
+  pre-parsed Pointer entry points; exact-key membership and three-state presence
+  composition; and direct validation from an immutable compiled schema plan.
+- Add the opt-in JSONBridges product with trusted integer construction, checked
+  integer projection, explicitly named Double round-trip-text admission and
+  policy-explicit Double/Foundation Decimal projection. Core imports remain
+  isolated. The generic JSON.number integer overload is deferred because it
+  changes existing literal overload resolution. Exact-binary source conversion,
+  Float-family and Decimal source bridges remain deferred.
+
 - Add typed caller diagnostics and coherent JSONDocument byte-span rendering to
   JSONHTML, with exact target identity, explicitly missing-parent attachment and
   finite cumulative annotation/path/message accounting. Rendering never asserts

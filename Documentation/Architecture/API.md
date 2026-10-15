@@ -1,7 +1,7 @@
 # Public API contract
 
 This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the five DocC catalogs. Examples
+graphs supply the complete declarations in the six DocC catalogs. Examples
 in the [README](../../README.md) are compiled and executed by the public consumer.
 
 ## Products and ownership
@@ -9,14 +9,16 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | Product | Main entry points | Owned implementation boundary |
 | --- | --- | --- |
 | JSON | JSON, JSONNumber, JSONObject, JSONParser, JSONWriter, JSONValueEncoder, JSONValueDecoder, JSONPointer, JSONDocument | Shared strict codec, exact decimal model, bounded traversal and native coding |
+| JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
-| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport | Shared exact formatting, offline interactive HTML, exact copy/download and cumulative bounded emission |
+| swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters and private CLI engine/filter runtime; no public query library |
+| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming, Patch and HTML depend on JSON. There are five public
-products and no external root-package dependencies. Runtime code uses no HTTP,
+JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are seven public products: six libraries and the swift-json executable,
+and no external root-package dependencies. Runtime code uses no HTTP,
 UI, MCP or documentation-tool dependencies.
 
 Immutable facades store value configuration. Every operation owns its mutable
@@ -24,6 +26,14 @@ context; every stream iterator requires exclusive access. Sendable follows the
 actual stored state and result types. See [concurrency](Concurrency.md).
 
 ## Exact values and construction
+
+The additive E2 development surface is documented in the
+[ergonomics crosswalk](../Ergonomics/README.md). JSON.parse forwards String, Data
+and byte arrays to their respective parser overloads; buildObject, number(parsing:)
+and value(at:) wrap one existing authority each. JSONObject.containsKey is an
+unmetered exact-key lookup; JSONPresence.map/fold preserve all three cases and
+rethrow caller errors. CompiledJSONSchema.validate evaluates its existing offline
+plan. No raw-string Pointer composition or generic number factory is added.
 
 JSON has six cases: object, array, string, number, boolean and null. Numbers compare
 mathematically, text/keys compare decoded Unicode scalars, and object equality

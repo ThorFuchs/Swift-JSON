@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Compiled README examples; checked by the documentation lane.
+import JSONBridges
 import JSON
 import Foundation
 import JSONSchema
@@ -26,6 +27,20 @@ where Source.Element == JSONByteChunk {
 }
 
 func runREADMEExamples() throws {
+    let quick = try JSON.parse(#"{"n":9007199254740993,"note":null}"#)
+    let quickCount = try quick.read { try $0["n"].requiredInteger(as: UInt64.self) }
+    precondition(quickCount == 9_007_199_254_740_993)
+    let quickDecimal = try JSON.number(parsing: "0.1")
+    precondition(quickDecimal.numberValue != nil)
+
+    let bridgeCount: UInt64 = 9_007_199_254_740_993
+    let bridgeNumber = bridgeCount.jsonNumber() // Trusted, unmetered integer construction.
+    let bridgeRecovered = try UInt64(jsonNumber: bridgeNumber)
+    precondition(bridgeRecovered == bridgeCount)
+    let bridgeTenth = try JSONNumber(parsing: "0.1")
+    let bridgeRounded = try Double(jsonNumber: bridgeTenth, policy: .rounded)
+    precondition(bridgeRounded == 0.1)
+
     let parser = JSONParser()
     let value = try parser.parse(#"{"count":9007199254740993,"note":null}"#)
     let count = try JSONPointer(parsing: "/count").resolve(in: value)

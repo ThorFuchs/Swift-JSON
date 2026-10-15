@@ -10,6 +10,19 @@ public struct CompiledJSONSchema: Sendable {
     public let document: JSONSchemaDocument
     package let plan: JSONSchemaPlan
     package init(document: JSONSchemaDocument, plan: JSONSchemaPlan) { self.document = document; self.plan = plan }
+    /// Evaluates an instance using this immutable offline plan without recompiling it.
+    ///
+    /// Delegates to `JSONSchemaValidator.validate(_:against:)`; each call owns its
+    /// state and one cumulative evaluation budget. Use the validator's report API
+    /// for successful accounting. Compilation options are not evaluation defaults.
+    /// - Parameters:
+    ///   - instance: The exact instance to admit and evaluate.
+    ///   - options: Evaluation, diagnostic and format policies forwarded unchanged.
+    /// - Returns: A completed verdict; false means ordinary schema invalidity.
+    /// - Throws: Operational evaluation, resource or configuration failure, or cancellation.
+    public func validate(_ instance: JSON, options: JSONSchemaOptions = .init()) throws -> JSONValidationResult {
+        try JSONSchemaValidator(options: options).validate(instance, against: self)
+    }
     /// Inspects one raw object or boolean declaration, optionally at a document Pointer.
     ///
     /// - Returns: Immediate declarations; compiled inspection may add initial reference targets.

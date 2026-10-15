@@ -53,7 +53,7 @@ with JSONParser and validate it with JSONSchemaValidator. Validation false diffe
 from thrown operational errors. Arbitrary streaming deltas and valid prefixes are
 not completed output. No OpenAI event-envelope client is added here.
 
-## Qualification and review
+## C5 qualification before E2 reconciliation
 
 Meaningful Swift Testing covers 13 schema functions and eight additional CLI functions:
 exact value/text/data/report parity, scalar keys, metadata, optional/null, closure,
@@ -84,3 +84,5 @@ native comparison. Compiler-driven fixes are recorded in private receipts; no te
 or supported baseline was weakened. Final source-bound native/safety/docs/Linux,
 archive/reproduction, exact commands/exits/counts and remaining limitations accompany
 the separate return. This document is not itself an assertion that a pending lane passed.
+
+The E2 main reconciliation retains this provider implementation and its cases unchanged. Its combined root inventory is 395 Apple / 381 Linux functions, with 199 parameter cases, 69 schema and 85 CLI functions. Shared TSan inventory is 14 Apple / 13 Linux. See [the reconciliation record](Reconciliation.md) and final source-bound merge receipts for the refreshed composition; the earlier counts above remain the qualified C5 snapshot.

@@ -6,9 +6,9 @@ from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
-COUNTS = {'JSONTests': 107, 'JSONSchemaTests': 65, 'JSONRegexRuntimeTests': 12,
+COUNTS = {'JSONTests': 119, 'JSONBridgesTests': 10, 'JSONSchemaTests': 69, 'JSONRegexRuntimeTests': 12,
           'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 81}
-GROUPS = {'core': 6, 'html': 6, 'resources': 1, 'schema': 2, 'streaming': 3}
+GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -63,7 +63,7 @@ def main():
         if preamble and not re.fullmatch(r"Another instance of SwiftPM .*waiting until that process has finished execution\.\.\.", preamble):
             raise ValueError('Unexpected manifest preamble: ' + preamble)
         manifest = json.loads(manifest_text[start:])
-        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
+        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONBridges', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):
             if engine == 'node':

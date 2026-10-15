@@ -64,9 +64,11 @@ Choose the products your application needs:
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
 | **JSONHTML** | Structured forms/cards, exact syntax, bounded native previews and prepared exports |
+| **swift-json** | Bounded command-line JSON workflows (1.4 development) |
+| **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (E2 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
-`JSONSchema`, `JSONStreaming`, `JSONPatch` and `JSONHTML` build on `JSON`. The package-private
+`JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
 `JSONRegexRuntime` is an implementation detail and has no public product. The root
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
@@ -99,9 +101,42 @@ Then add products to your target dependencies:
 
 Add `JSONStreaming`, `JSONPatch` and the 1.3 development product `JSONHTML` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [five-product consumer](Examples/Consumer) for a complete buildable
+releases. See the [six-product consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
+
+## Quick entry points and native bridges (E2 development)
+
+The E2 feature branch adds a shallow discovery hub. Existing parser/writer and
+report APIs remain the semantic authorities; no migration is required.
+
+```swift
+let quick = try JSON.parse(#"{"n":9007199254740993,"note":null}"#)
+let quickCount = try quick.read { try $0["n"].requiredInteger(as: UInt64.self) }
+precondition(quickCount == 9_007_199_254_740_993)
+let quickDecimal = try JSON.number(parsing: "0.1")
+precondition(quickDecimal.numberValue != nil)
+```
+
+Add the optional `JSONBridges` product dependency and import it explicitly:
+
+```swift
+import JSONBridges
+
+let bridgeCount: UInt64 = 9_007_199_254_740_993
+let bridgeNumber = bridgeCount.jsonNumber() // Trusted, unmetered integer construction.
+let bridgeRecovered = try UInt64(jsonNumber: bridgeNumber)
+precondition(bridgeRecovered == bridgeCount)
+let bridgeTenth = try JSONNumber(parsing: "0.1")
+let bridgeRounded = try Double(jsonNumber: bridgeTenth, policy: .rounded)
+precondition(bridgeRounded == 0.1)
+```
+
+Exact Double projection rejects decimal 0.1. A finite Double's round-trip decimal
+text is distinct from its exact binary rational. Read the
+[entry-point guide](Sources/JSON/Documentation.docc/QuickEntryPoints.md),
+[numeric fidelity guide](Sources/JSONBridges/Documentation.docc/NumericFidelity.md)
+and [before/after crosswalk](Documentation/Ergonomics/README.md).
 
 ## Parse, inspect and write exact values
 
@@ -401,11 +436,11 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The five DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The six DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all five catalogs on a supported native host:
+Build all six catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -458,7 +493,7 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Prospective 1.4 command-line tool
 
-This feature train adds `swift-json` beside the five libraries. Its compiling
+This feature train adds `swift-json` beside the six libraries. Its compiling
 foundation provides strict formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)

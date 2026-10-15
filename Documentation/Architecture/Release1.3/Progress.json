@@ -392,6 +392,23 @@
       "expected_wasi_functions": 290,
       "wasi_parameter_cases": 288,
       "merge_tag_publication_performed": false
+    },
+    "approved_bridges_cli_reconciliation": {
+      "feature_parent": "e1b82a583f66afffeec992a95a6e08ad36a1c3f0",
+      "cli_base": "aab19ce3414b80e5fef69ffd1d895bd0a2c2cadb",
+      "maintainer_approved_bridges": true,
+      "public_library_count": 6,
+      "public_executable_count": 1,
+      "expected_apple_functions": 419,
+      "expected_linux_functions": 403,
+      "root_parameter_cases": 325,
+      "expected_apple_shared_functions": 15,
+      "expected_linux_shared_functions": 14,
+      "expected_wasi_functions": 316,
+      "wasi_parameter_cases": 288,
+      "qualification_policy": "Fresh combined-source receipts required; parent receipts immutable; unchanged HTML physical/browser evidence retains its scoped source identity.",
+      "contract": "StructuredPreviews/Reconciliation.md",
+      "merge_tag_publication_performed": false
     }
   }
 }
