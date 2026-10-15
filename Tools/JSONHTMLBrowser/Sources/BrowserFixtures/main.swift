@@ -20,7 +20,7 @@ annotations.annotations = [
     .init(path: [.key("~1/a\u{0}\r\n"), .index(0), .key("0")], severity: .error, message: "Exact control path")]
 var formattedAnnotations = annotations; formattedAnnotations.presentation = .formatted
 let document = try JSONParser().parseDocument(JSONWriter(options: .init(indentation: 2, numberStyle: .preserved)).write(exact), source: "private-label-not-emitted")
-let fixtures: [(String, JSON, JSONHTMLRenderingOptions)] = [
+var fixtures: [(String, JSON, JSONHTMLRenderingOptions)] = [
     ("exact", exact, .init(title: "Exact offline JSON", presentation: .interactive)),
     ("hostile", hostile, .init(title: "</title><script>evil()</script>", presentation: .interactive)),
     ("deep", deep, .init(presentation: .interactive, initiallyExpandedDepth: 0)),
@@ -28,9 +28,29 @@ let fixtures: [(String, JSON, JSONHTMLRenderingOptions)] = [
     ("null", .null, .init(presentation: .interactive)),
     ("zero-query", exact, zero),
     ("no-outline", exact, .init(presentation: .interactive, outlineDepth: nil)),
-    ("formatted", exact, .init()),
+    ("formatted", exact, .init(layout: .syntax, presentation: .formatted)),
     ("annotated", exact, annotations),
     ("annotated-formatted", exact, formattedAnnotations)]
+let enrichmentURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("Tests/JSONHTMLTests/Fixtures/Enrichment/media.json")
+guard case .object(let media) = try JSONParser().parse(Array(Data(contentsOf: enrichmentURL))) else { fatalError("Missing pinned media object") }
+let previews = try object([
+    JSONMember("message", value: .string("**Bold** and *italic*, [inert link](https://example.invalid/a_(b)) and $x_i^2$.")),
+    JSONMember("color", value: .string("#3A7C8780")),
+    JSONMember("declared", value: media[JSONKey("declaredBarePNG")]!),
+    JSONMember("image", value: media[JSONKey("pngDataURI")]!),
+    JSONMember("jpeg", value: media[JSONKey("jpegDataURI")]!),
+    JSONMember("inlineImage", value: media[JSONKey("inlineSmallPNG")]!),
+    JSONMember("channels", value: try JSONParser().parse("[1,0,0,0.5]")),
+    JSONMember("long", value: .string(String(repeating: "😀", count: 513) + "ORIGINAL-TAIL-ONLY")),
+    JSONMember("unsupportedMath", value: .string("$x^12 + \\unknown$ **outside**")),
+    JSONMember("records", value: .array([try object([JSONMember("id", value: .number(9007199254740993)), JSONMember("name", value: .string("record"))]), .null]))])
+var previewOptions = JSONHTMLRenderingOptions(layout: .structured, presentation: .interactive)
+previewOptions.previewHints = [.init(path: [.key("declared")], kind: .embeddedImage(.png)), .init(path: [.key("channels")], kind: .color(units: .normalized, order: .rgba))]
+var staticPreview = previewOptions; staticPreview.presentation = .formatted
+var completePreview = staticPreview; completePreview.valueProfile = .complete
+fixtures += [("previews", previews, previewOptions), ("static-inspection", previews, staticPreview), ("complete", previews, completePreview),
+             ("syntax", previews, .init(layout: .syntax, presentation: .interactive)),
+             ("inspection-long", .string(String(repeating: "😀", count: 513) + "ORIGINAL-TAIL-ONLY"), .init(layout: .structured, presentation: .interactive))]
 var records: [JSON] = []
 for (name, root, options) in fixtures {
     let renderer = JSONHTMLRenderer(options: options)
@@ -41,6 +61,8 @@ for (name, root, options) in fixtures {
     records.append(try object([
         JSONMember("name", value: .string(name)),
         JSONMember("presentation", value: .string(options.presentation.rawValue)),
+        JSONMember("layout", value: .string(options.layout.rawValue)),
+        JSONMember("valueProfile", value: .string(options.valueProfile.rawValue)),
         JSONMember("annotations", value: .number(JSONNumber(integer: report.statistics.annotations))),
         JSONMember("nodes", value: .number(JSONNumber(integer: report.statistics.renderedJSONNodes))),
         JSONMember("domUpperBound", value: .number(JSONNumber(integer: report.statistics.domNodeUpperBound))),
@@ -50,4 +72,4 @@ for (name, root, options) in fixtures {
         JSONMember("logicalPeakBytes", value: .number(JSONNumber(integer: report.statistics.operation.peakLogicalRetainedBytes))) ]))
 }
 try JSONWriter(options: .init(indentation: 2)).write(.array(records)).write(to: output.appendingPathComponent("fixtures.json"))
-print("JSONHTML_BROWSER_FIXTURES passed count=10")
+print("JSONHTML_BROWSER_FIXTURES passed count=15")

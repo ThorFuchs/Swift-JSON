@@ -1,0 +1,411 @@
+{
+  "version": 1,
+  "scope": "Hand-authored structural gold cases; no native parser has run",
+  "cases": [
+    {
+      "id": "MT01",
+      "source": "x",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mi>x</mi></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT02",
+      "source": "2",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mn>2</mn></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT03",
+      "source": "123.45",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mn>123.45</mn></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT04",
+      "source": "x^2",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msup><mi>x</mi><mn>2</mn></msup></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT05",
+      "source": "x_i",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msub><mi>x</mi><mi>i</mi></msub></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT06",
+      "source": "x_i^2",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT07",
+      "source": "x^2_i",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT08",
+      "source": "x^{12}",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msup><mi>x</mi><mrow><mn>12</mn></mrow></msup></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT09",
+      "source": "x_{i+1}",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msub><mi>x</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT10",
+      "source": "\\frac{a}{b}",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mfrac><mrow><mi>a</mi></mrow><mrow><mi>b</mi></mrow></mfrac></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT11",
+      "source": "\\sqrt{x}",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><msqrt><mrow><mi>x</mi></mrow></msqrt></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT12",
+      "source": "\\alpha",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mi>α</mi></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT13",
+      "source": "\\pi",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mi>π</mi></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT14",
+      "source": "\\Delta",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mi>Δ</mi></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT15",
+      "source": "a\\times b",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mrow><mi>a</mi><mo>×</mo><mi>b</mi></mrow></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT16",
+      "source": "x\\le y",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mrow><mi>x</mi><mo>≤</mo><mi>y</mi></mrow></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT17",
+      "source": "\\frac{x}{0}",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mfrac><mrow><mi>x</mi></mrow><mrow><mn>0</mn></mrow></mfrac></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT18",
+      "source": "9007199254740993",
+      "expected": "converted",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\"><mn>9007199254740993</mn></math>",
+      "fallbackSource": null,
+      "reason": "Hand-authored expected tree; single-child groups may be unwrapped only by a documented canonicalization with equivalent tree semantics",
+      "status": "not_run"
+    },
+    {
+      "id": "MT19",
+      "source": "x^2+\\unknown{a}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x^2+\\unknown{a}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT20",
+      "source": "\\frac{a}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\frac{a}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT21",
+      "source": "\\frac{}{b}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\frac{}{b}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT22",
+      "source": "\\sqrt{}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\sqrt{}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT23",
+      "source": "x^",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x^",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT24",
+      "source": "x_",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x_",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT25",
+      "source": "x^12",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x^12",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT26",
+      "source": "x_ab",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x_ab",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT27",
+      "source": "x_i_j",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x_i_j",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT28",
+      "source": "x^2^3",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x^2^3",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT29",
+      "source": "{x",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "{x",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT30",
+      "source": "x}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT31",
+      "source": "\\alphabet",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\alphabet",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT32",
+      "source": "\\sum_{i=1}^{n}i",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\sum_{i=1}^{n}i",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT33",
+      "source": "\\int x",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\int x",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT34",
+      "source": "\\sin{x}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\sin{x}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT35",
+      "source": "\\text{hello}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\text{hello}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT36",
+      "source": "\\color{red}{x}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\color{red}{x}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT37",
+      "source": "\\href{javascript:alert(1)}{x}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\href{javascript:alert(1)}{x}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT38",
+      "source": "\\begin{matrix}a\\end{matrix}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\begin{matrix}a\\end{matrix}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT39",
+      "source": "\\sqrt[3]{x}",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\sqrt[3]{x}",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT40",
+      "source": "<script>alert(1)</script>",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "<script>alert(1)</script>",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT41",
+      "source": "x\n+y",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x\n+y",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT42",
+      "source": "x&y",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x&y",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT43",
+      "source": "x^2\\garbage",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "x^2\\garbage",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT44",
+      "source": "",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    },
+    {
+      "id": "MT45",
+      "source": "\\frac{a}{b}#",
+      "expected": "literal",
+      "mathml": null,
+      "fallbackSource": "\\frac{a}{b}#",
+      "reason": "Unsupported/malformed/ambiguous/trailing syntax; original entire delimited expression must remain literal",
+      "status": "not_run"
+    }
+  ]
+}

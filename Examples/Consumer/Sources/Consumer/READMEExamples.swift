@@ -115,20 +115,13 @@ func runREADMEExamples() throws {
     precondition(report.result.objectValue?["ready"] == true)
     precondition(report.statistics[.workUnits] > 0)
 
-    let interactiveHTML = try JSONHTMLRenderer(options: .init(
-        title: "Exact values", presentation: .interactive,
-        initiallyExpandedDepth: 2, outlineDepth: 3
-    )).renderWithReport(value)
+    let valueForHTML = try JSONParser().parse(#"{"amount":9007199254740993,"note":"**Hello** $x_i^2$"}"#)
+    let interactiveHTML = try JSONHTMLRenderer().renderWithReport(valueForHTML)
     precondition(interactiveHTML.statistics.copyJSONBytes > 0)
-
-    let exportReport = try JSONExportDocument.prepareWithReport(value)
-    let markdownItem = try exportReport.result.selecting([.markdown])
-    let markdownBytes = try markdownItem.data(for: .markdown)
-    precondition(exportReport.operation[.nodes] > 0 && !markdownBytes.isEmpty)
-
-    let richItem = try JSONExportDocument.prepare(value, options: .init(
-        formats: [.json, .plainText, .rtf]
-    )).selecting([.rtf])
-    let richBytes = try richItem.data(for: .rtf)
-    precondition(!richBytes.isEmpty)
+    let staticHTML = try JSONHTMLRenderer(options: .init(
+        layout: .structured, presentation: .formatted, valueProfile: .complete)
+    ).render(valueForHTML)
+    let syntaxHTML = try JSONHTMLRenderer(options: .init(
+        layout: .syntax, presentation: .formatted)
+    ).render(valueForHTML)
 }

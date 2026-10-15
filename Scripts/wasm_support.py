@@ -7,7 +7,7 @@ from archive_candidate import files
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SDK = 'swift-6.4.0-RELEASE_wasm'
 COUNTS = {'JSONTests': 119, 'JSONBridgesTests': 10, 'JSONSchemaTests': 69, 'JSONRegexRuntimeTests': 12,
-          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 61}
+          'JSONStreamingTests': 14, 'JSONPatchTests': 11, 'JSONHTMLTests': 81}
 GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
 
 def main():
@@ -53,7 +53,16 @@ def main():
         run('compiler', [swift, '--version'], lambda c, t: c == 0 and 'swift-6.4-RELEASE' in t)
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version']); run('node-version', [node, '--version'])
-        manifest = json.loads(run('root-manifest', [swift, 'package', 'dump-package']))
+        manifest_text = run('root-manifest', [swift, 'package', 'dump-package'])
+        # SwiftPM can write its lock-wait diagnostic before JSON on the merged log.
+        # Accept only that precise preamble; the decoded manifest and trailing bytes
+        # remain exact. The full diagnostic is retained in the command receipt.
+        start = manifest_text.find('{')
+        if start < 0: raise ValueError('Missing dump-package JSON')
+        preamble = manifest_text[:start].strip()
+        if preamble and not re.fullmatch(r"Another instance of SwiftPM .*waiting until that process has finished execution\.\.\.", preamble):
+            raise ValueError('Unexpected manifest preamble: ' + preamble)
+        manifest = json.loads(manifest_text[start:])
         if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONBridges', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):
@@ -71,7 +80,7 @@ def main():
             for name, count in COUNTS.items():
                 text = run('node-' + config + '-' + name, invoke('node', roots[name], 'tests'), tests(count))
                 invocations += sum(int(n) for n in re.findall(r'with (\d+) test cases passed', text))
-            if invocations != 173: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
+            if invocations != 288: raise ValueError('Changed root parameterized discovery: ' + str(invocations))
             for package, name, scratch in [('Tools/WasmAudit', 'WasmAudit', '.build/wasm-audit-consumer'),
                                             ('Tools/Qualification', 'Qualification', '.build/wasm-qualification'),
                                             ('Tools/MCPReadiness', 'MCPReadiness', '.build/wasm-readiness')]:

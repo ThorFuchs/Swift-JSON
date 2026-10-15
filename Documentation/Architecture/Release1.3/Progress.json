@@ -306,5 +306,116 @@
       "Representative calibration only; no maximum-workload/RSS/opaque SDK instruction guarantees",
       "Formatted audible speech not part of the new interactive annotation check"
     ]
+  },
+  "structured_preview_increment": {
+    "briefing_revision": "0.2",
+    "release_assignment": null,
+    "branch": "codex/jsonhtml-structured-previews",
+    "status": "L5/P5 scoped qualification complete; dependent draft PR remains unmerged",
+    "native_library_head": "76e4b262c4247ca3784b62b97bc21321e43d4044",
+    "source_preserving_cli_base": "aded3c9930f580bd4fb902bba002ab75ed199a7b",
+    "native_functions": 372,
+    "native_parameter_cases": 325,
+    "core_metric_count": 49,
+    "browser_cases": 76,
+    "supplemental_browser_contexts": 48,
+    "ipad_simulator_cases": 73,
+    "preview_policy_ceilings": 22,
+    "requirements": 110,
+    "scenarios": 88,
+    "calibration_configurations": 96,
+    "remaining": [],
+    "qualification_contract": "StructuredPreviews/Qualification.md",
+    "history_preserved": true,
+    "publication_performed": false,
+    "wasi": {
+      "source_head": "7fe0226",
+      "status": "passed",
+      "probes": 71,
+      "functions_per_configuration": 277,
+      "parameters_per_configuration": 288,
+      "public_consumer_functions": 14,
+      "cap_metrics": 49,
+      "mcp_server_claim": false
+    },
+    "qualification_follow_up": {
+      "source_head": "d89be60b66e753bb5f4be1b414710ab8c6155376",
+      "hosted_native_run": 38657093294,
+      "hosted_linux_run": 38657093290,
+      "hosted_checks_passed": 7,
+      "linux_architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "linux_functions_per_configuration": 356,
+      "linux_parameters_per_configuration": 325,
+      "physical_iphone_cases": 73,
+      "physical_iphone_artifacts": 8,
+      "native_safari_contexts": 16,
+      "native_safari_scope": "Accessibility/control smoke; selected five responsive widths, console/network; separate automated layout/zoom scope retained",
+      "voiceover": "Maintainer manually confirmed field/type/index, disclosure state and inline math; original off preference restored",
+      "additional_public_swift_testing_functions": 6,
+      "additional_search_cases": 9,
+      "history_preserved": true,
+      "library_changes": false
+    },
+    "qualification_touch_follow_up": {
+      "tested_source_head": "e0d5f0c26519c3eaa5faaa62f4104cc10ad5c419",
+      "hosted_native_run": 38673549572,
+      "hosted_linux_run": 38673549500,
+      "hosted_checks_passed": 7,
+      "requirements_passed": 110,
+      "scenarios_passed": 88,
+      "physical_iphone_consumer_cases": 73,
+      "physical_iphone_consumer_artifacts": 8,
+      "physical_touch": "Maintainer confirmed requested tab/disclosure/search, media, rotation and script-off access after fixture findings; bounded native observation supplements the manual result",
+      "fixture_findings": [
+        "Original 4x4 admission samples decode but are too small for recognizable visual QA",
+        "Inline expressions crossing the finite prefix or destination ceiling remain literal; compact 415-scalar image qualified"
+      ],
+      "library_changes": false,
+      "limits_widened": false,
+      "history_preserved": true,
+      "merge_tag_publication_performed": false
+    },
+    "advanced_cli_base_reconciliation": {
+      "feature_parent": "1fd32d19b4e16891073cb9fdba7ecdcc7660bf88",
+      "cli_base": "c3760730dc333a84810bba53cde4da339ada90af",
+      "contract": "StructuredPreviews/Reconciliation.md",
+      "source_reconciled": true,
+      "html_implementation_tests_consumers_unchanged": true,
+      "provider_implementation_tests_fixtures_preserved": true,
+      "qualification_policy": "Fresh combined-source CI receipts required; original qualified-source and physical-observation histories retained. Exact outcomes are materialized separately.",
+      "expected_apple_functions": 393,
+      "expected_linux_functions": 377,
+      "root_parameter_cases": 325,
+      "expected_wasi_functions": 290,
+      "wasi_parameter_cases": 288,
+      "merge_tag_publication_performed": false
+    },
+    "approved_bridges_cli_reconciliation": {
+      "feature_parent": "e1b82a583f66afffeec992a95a6e08ad36a1c3f0",
+      "cli_base": "aab19ce3414b80e5fef69ffd1d895bd0a2c2cadb",
+      "maintainer_approved_bridges": true,
+      "public_library_count": 6,
+      "public_executable_count": 1,
+      "expected_apple_functions": 419,
+      "expected_linux_functions": 403,
+      "root_parameter_cases": 325,
+      "expected_apple_shared_functions": 15,
+      "expected_linux_shared_functions": 14,
+      "expected_wasi_functions": 316,
+      "wasi_parameter_cases": 288,
+      "qualification_policy": "Fresh combined-source receipts required; parent receipts immutable; unchanged HTML physical/browser evidence retains its scoped source identity.",
+      "contract": "StructuredPreviews/Reconciliation.md",
+      "merge_tag_publication_performed": false
+    },
+    "final_merge_review": {
+      "finding": "Existing main export lane and event I/O diagnostics were absent from the reconciled harness",
+      "resolution": "Restore main export commands/CLI choice and diagnostic receipt fields; retain combined [1,39] focused discovery guard",
+      "library_cli_asset_fixture_changes": false,
+      "qualification_policy": "Fresh hosted required checks and actual local export lane; unchanged implementation/WASI receipts retained through equivalence",
+      "merge_authorization": "Maintainer requested ready and merge after checks/reviews pass; tags/publication separate"
+    }
   }
 }

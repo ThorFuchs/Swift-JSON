@@ -14,12 +14,12 @@ package struct CLIArguments: Sendable {
     private static let values: [String: Set<String>] = [
         "format": ["indent", "number-style"], "validate": ["schema", "resource", "max-issues"],
         "pointer": [], "patch": ["patch"], "stream": ["framing"], "schema": ["resource", "name", "description"],
-        "render": ["format", "presentation", "theme", "title", "html"],
+        "render": ["format", "presentation", "theme", "title", "html", "layout", "string-preview", "inline-formatting", "value-previews"],
         "query": ["filter-file", "input-framing", "indent", "number-style", "arg", "argjson", "rawfile", "slurpfile", "division-scale", "rounding"]
     ]
     private static let booleans: [String: Set<String>] = [
         "format": ["compact", "tab", "sort-keys"], "validate": [], "pointer": ["allow-missing"], "patch": [],
-        "stream": [], "schema": [], "render": [],
+        "stream": [], "schema": [], "render": ["full-values"],
         "query": ["null-input", "slurp", "raw-input", "compact", "tab", "sort-keys", "raw-output", "raw-output0", "join-output", "ascii-output", "exit-status", "unbuffered", "args", "jsonargs"]
     ]
     package init(_ argv: [String], admitted: Bool = false, context: inout CLIJobContext) throws {
@@ -88,7 +88,15 @@ package struct CLIArguments: Sendable {
             guard ["html", "markdown", "text"].contains(format) else { throw CLIError(.usage, "capabilityUnavailable") }
             if let presentation = options["presentation"], !["static", "interactive"].contains(presentation) { throw CLIError(.usage, "invalidPresentation") }
             if let theme = options["theme"], !["system", "light", "dark"].contains(theme) { throw CLIError(.usage, "invalidTheme") }
-            if format != "html" && (options["presentation"] != nil || options["theme"] != nil || options["title"] != nil) { throw CLIError(.usage, "htmlOnlyOption") }
+            let htmlOnly = ["presentation", "theme", "title", "layout", "string-preview", "full-values", "inline-formatting", "value-previews"]
+            if format != "html" && htmlOnly.contains(where: { options[$0] != nil }) { throw CLIError(.usage, "htmlOnlyOption") }
+            if let v = options["layout"], !["structured", "syntax"].contains(v) { throw CLIError(.usage, "invalidLayout") }
+            if let v = options["inline-formatting"], !["off", "declared", "automatic"].contains(v) { throw CLIError(.usage, "invalidInlineFormatting") }
+            if let v = options["value-previews"], !["off", "standard"].contains(v) { throw CLIError(.usage, "invalidValuePreviews") }
+            if options["string-preview"] != nil && options["full-values"] != nil { throw CLIError(.usage, "conflictingValueProfile") }
+            if let v = options["string-preview"] {
+                guard !v.isEmpty, v.utf8.allSatisfy({ (48...57).contains($0) }), let n = UInt64(v), n < UInt64(Int.max), !n.multipliedReportingOverflow(by: 4).overflow else { throw CLIError(.usage, "invalidStringPreview") }
+            }
         }
         if command == "query" {
             if let framing = options["input-framing"], !["document", "values", "ndjson"].contains(framing) { throw CLIError(.usage, "invalidInputFraming") }

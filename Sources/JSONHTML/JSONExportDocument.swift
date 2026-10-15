@@ -22,6 +22,8 @@ extension JSONExportReport: Sendable where Result: Sendable {}
 /// uses one cumulative meter. Transport and receiving-app work are outside it.
 public struct JSONExportDocument: Sendable {
     private let artifacts: [JSONExportFormat: Data]
+    /// Immutable policy of the already-prepared HTML; no source or renderer is retained.
+    public let htmlPolicy: JSONHTMLPreparedPolicy?
     private let maximumRepresentationBytes: UInt64
     private let maximumPreparedBytes: UInt64
     /// Exact artifact identifiers retained by this item, including hidden artifacts.
@@ -31,7 +33,8 @@ public struct JSONExportDocument: Sendable {
     /// Validated filename component; extensions are added per representation.
     public let filenameStem: String
 
-    private init(artifacts: [JSONExportFormat: Data], advertised: Set<JSONExportFormat>, filename: String, representationLimit: UInt64, preparedLimit: UInt64) {
+    private init(artifacts: [JSONExportFormat: Data], advertised: Set<JSONExportFormat>, filename: String, representationLimit: UInt64, preparedLimit: UInt64, htmlPolicy: JSONHTMLPreparedPolicy? = nil) {
+        self.htmlPolicy = htmlPolicy
         maximumRepresentationBytes = representationLimit; maximumPreparedBytes = preparedLimit
         self.artifacts = artifacts; availableFormats = Set(artifacts.keys)
         advertisedFormats = advertised; filenameStem = filename
@@ -88,7 +91,7 @@ public struct JSONExportDocument: Sendable {
         for format in JSONExportFormat.allCases where formats.contains(format) && !availableFormats.contains(format) {
             throw JSONExportFailure.unavailableFormat(format)
         }
-        return .init(artifacts: artifacts, advertised: formats, filename: filenameStem, representationLimit: maximumRepresentationBytes, preparedLimit: maximumPreparedBytes)
+        return .init(artifacts: artifacts, advertised: formats, filename: filenameStem, representationLimit: maximumRepresentationBytes, preparedLimit: maximumPreparedBytes, htmlPolicy: htmlPolicy)
     }
 
     package static func prepare(_ value: JSON, options: JSONExportOptions, meter: inout JSONWorkMeter) throws -> JSONExportReport<Self> {
@@ -156,9 +159,15 @@ public struct JSONExportDocument: Sendable {
         if options.formats.contains(.html) {
             var htmlLimits = options.htmlLimits
             htmlLimits.maxDocumentBytes = min(htmlLimits.maxDocumentBytes, options.limits.maxRepresentationBytes)
-            let renderer = JSONHTMLRenderer(options: .init(title: options.title, theme: options.theme,
+            var rendering = JSONHTMLRenderingOptions(title: options.title, theme: options.theme,
                 indentation: options.indentation, indentationUnit: options.indentationUnit,
-                tabWidth: options.tabWidth, limits: htmlLimits))
+                tabWidth: options.tabWidth, limits: htmlLimits, presentation: .formatted, outlineDepth: nil)
+            rendering.layout = options.layout; rendering.valueProfile = options.valueProfile
+            rendering.printValueProfile = options.printValueProfile; rendering.inlineFormatting = options.inlineFormatting
+            rendering.colorPreviews = options.colorPreviews; rendering.embeddedImagePreviews = options.embeddedImagePreviews
+            rendering.linkActivation = options.linkActivation; rendering.previewHints = options.previewHints
+            rendering.effectivePreviewHints = options.effectivePreviewHints; rendering.previewPolicy = options.previewPolicy
+            let renderer = JSONHTMLRenderer(options: rendering)
             let html = try renderer.renderAdmitted(value, meter: &meter)
             try install(html.bytes, as: .html, meter: &meter); try meter.release(UInt64(html.bytes.count))
         }
@@ -169,7 +178,7 @@ public struct JSONExportDocument: Sendable {
         try meter.retain(16); try meter.work()
         try meter.release(titleBytes)
         try meter.checkpoint()
-        return .init(result: .init(artifacts: artifacts, advertised: options.formats, filename: options.filenameStem, representationLimit: options.limits.maxRepresentationBytes, preparedLimit: options.limits.maxPreparedBytes),
+        return .init(result: .init(artifacts: artifacts, advertised: options.formats, filename: options.filenameStem, representationLimit: options.limits.maxRepresentationBytes, preparedLimit: options.limits.maxPreparedBytes, htmlPolicy: options.formats.contains(.html) ? .init(options: options) : nil),
                      operation: meter.statistics(), representationBytes: counts, preparedBytes: aggregate)
     }
 
@@ -183,7 +192,7 @@ public struct JSONExportDocument: Sendable {
     package func addingPDF(_ pdf: Data) -> Self {
         var copy = artifacts; copy[.pdf] = pdf
         return .init(artifacts: copy, advertised: advertisedFormats.union([.pdf]), filename: filenameStem,
-                     representationLimit: maximumRepresentationBytes, preparedLimit: maximumPreparedBytes)
+                     representationLimit: maximumRepresentationBytes, preparedLimit: maximumPreparedBytes, htmlPolicy: htmlPolicy)
     }
 
     private static func writing(_ value: JSON, indentation: Int?, options: JSONExportOptions, meter: inout JSONWorkMeter) throws -> [UInt8] {

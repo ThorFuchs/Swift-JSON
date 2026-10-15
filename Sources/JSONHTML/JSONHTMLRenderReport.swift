@@ -15,14 +15,23 @@ public struct JSONHTMLStatistics: Sendable, Equatable {
     public let outlineEntries: UInt64
     /// Emitted Base64 metadata bytes; distinct from complete document and raw copy bytes.
     public let metadataBytes: UInt64
-    /// Raw exact JSON bytes embedded for interactive copy/download; zero in formatted mode.
+    /// Raw exact JSON bytes embedded for exact download/copy; zero in legacy static syntax.
     public let copyJSONBytes: UInt64
     /// Accepted caller-supplied diagnostics; zero does not assert schema validity.
     public let annotations: UInt64
-    package init(operation: JSONOperationStatistics, nodes: UInt64, dom: UInt64, bytes: UInt64, outline: UInt64, metadata: UInt64, copyBytes: UInt64, annotations: UInt64) {
+    /// Whether at least one inspection prefix is shorter than its original source.
+    public let hasShortenedStrings: Bool
+    /// Bounded preview diagnostics; these are not schema-validation verdicts.
+    public let previewIssues: UInt64
+    /// Unique header-admitted raster previews, counted once across source/print copies.
+    public let imagePreviews: UInt64
+    /// Logical admitted raster bytes, not browser decoding or process RSS.
+    public let decodedImageBytes: UInt64
+    package init(operation: JSONOperationStatistics, nodes: UInt64, dom: UInt64, bytes: UInt64, outline: UInt64, metadata: UInt64, copyBytes: UInt64, annotations: UInt64, shortened: Bool = false, previewIssues: UInt64 = 0, imagePreviews: UInt64 = 0, imageBytes: UInt64 = 0) {
         self.operation = operation; renderedJSONNodes = nodes
         domNodeUpperBound = dom; documentBytes = bytes
         outlineEntries = outline; metadataBytes = metadata; copyJSONBytes = copyBytes; self.annotations = annotations
+        hasShortenedStrings = shortened; self.previewIssues = previewIssues; self.imagePreviews = imagePreviews; decodedImageBytes = imageBytes
     }
 }
 

@@ -13,7 +13,7 @@ assert.equal(version, '1.62.1', 'Qualification requires the pinned Playwright ve
 const fixtures = path.resolve(process.argv[2]), out = path.resolve(process.argv[3]);
 fs.mkdirSync(out, {recursive: true});
 const records = JSON.parse(fs.readFileSync(path.join(fixtures, 'fixtures.json')));
-assert.equal(records.length, 10);
+assert.equal(records.length, 15);
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const receipt = {status: 'running', playwright: version, fixtures: [], engines: [], cases: [], limitations: ['Screenshots are captured in Chromium; WebKit screenshots would inject a CSP-blocked synchronization stylesheet. WebKit DOM/layout/interaction checks still enforce CSP.', 'Playwright WebKit is not native Safari qualification.', 'Viewport tests do not qualify physical mobile browsers or VoiceOver.', 'Clipboard API acceptance is separate from platform clipboard transformations; exact downloads are independently compared.', 'Search chunking is not an instruction, CPU, heap or process RSS guarantee.']};
 for (const name of fs.readdirSync(fixtures).sort()) {
@@ -43,7 +43,7 @@ async function main() {
     }
     try { browser = await playwright[engine].launch(launch); }
     catch (error) {
-      receipt.engines.push({name: engine, status: 'blocked', error: error.message, executedCases: 0, unexecutedCases: engine === 'chromium' ? 16 : 15});
+      receipt.engines.push({name: engine, status: 'blocked', error: error.message, executedCases: 0, unexecutedCases: engine === 'chromium' ? 26 : 25});
       save(); continue;
     }
     activeBrowsers.push(browser);
@@ -62,7 +62,7 @@ async function main() {
         if (message.type() !== 'error') return;
         const text = message.text();
         if (engine === 'firefox' && text.includes('resource:///modules/FaviconLoader.sys.mjs') &&
-            text.includes(origin + '/favicon.ico') && text.includes('(img-src)') && text.includes("default-src 'none'")) {
+            text.includes(origin + '/favicon.ico') && text.includes('(img-src)') && (text.includes("default-src 'none'") || text.includes("img-src data:"))) {
           browserPolicyEvents.push({kind: 'browser_automatic_favicon_denied', message: text});
         } else errors.push(text);
       });
@@ -89,7 +89,7 @@ async function main() {
           assert.equal(await page.locator('#jh-tree .node').count(), record.nodes);
           assert.equal(await page.locator('#jh-toolbar').isVisible(), javaScriptEnabled);
           assert.ok(await page.locator('.pointer-actions').count() > 0);
-          assert.equal((await page.locator('.pointer-actions:visible').count()) > 0, javaScriptEnabled, 'Pointer actions require installed enhancement handlers');
+          assert.equal((await page.locator('.pointer-actions:visible').count()) > 0, javaScriptEnabled && record.layout !== 'syntax', 'Pointer actions appear in the active structured view after enhancement');
         }
         await action(page, context, record);
         if (javaScriptEnabled) {
@@ -133,17 +133,21 @@ async function main() {
     }
     await run('keyboard-outline', 'deep', 'http', true, async page => {
       await page.locator('.outline a').last().click();
-      assert.equal(await page.locator('details[open]').count(), 4);
+      assert.equal(await page.locator('#jh-tree details[open]').count(), 4);
       assert.equal(await page.evaluate(() => document.activeElement.id), 'jh-n-3');
       await page.getByRole('button', {name: 'Expand all', exact: true}).click(); await status(page, 'Expanded 40');
-      assert.equal(await page.locator('details[open]').count(), 40);
+      assert.equal(await page.locator('#jh-tree details[open]').count(), 40);
       await page.getByRole('button', {name: 'Collapse all', exact: true}).click(); await status(page, 'Collapsed 40');
-      assert.equal(await page.locator('details[open]').count(), 0);
+      assert.equal(await page.locator('#jh-tree details[open]').count(), 0);
     });
     await run('literal-search', 'wide', 'http', true, async page => {
       await page.locator('#jh-query').fill('[needle]'); await status(page, '150 matching nodes');
       assert.equal(await page.locator('#jh-results a').count(), 100);
-      assert.equal(await page.locator('.search-hit').count(), 150);
+      assert.equal(await page.locator('.search-hit').count(), 100);
+      await page.getByRole('button', {name: 'Previous match', exact: true}).click();
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'jh-n-100');
+      await page.getByRole('button', {name: 'Next match', exact: true}).click();
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'jh-n-1');
       const peakDOM = await page.evaluate(() => {let n = 0; const it = document.createTreeWalker(document, NodeFilter.SHOW_ALL); while (it.nextNode()) n++; return n;});
       assert.ok(peakDOM <= records.find(r => r.name === 'wide').domUpperBound);
       await page.locator('#jh-query').fill('Needle'); await status(page, '0 matching nodes');
@@ -173,9 +177,12 @@ async function main() {
       await page.locator('#jh-n-1 > summary [data-action="copy-pointer"]').click(); await status(page, 'Clipboard unavailable or rejected');
       // Textareas normalize CRLF; fallback is visibly manual and does not promise byte fidelity.
       assert.equal(await page.locator('#jh-manual-text').inputValue(), raw.replace(/\r\n/g, '\n'));
+      await page.keyboard.press('Escape');
+      await page.waitForFunction(() => document.activeElement.dataset.action === 'copy-pointer');
       await page.locator('#jh-n-1 > summary [data-action="copy-pointer-escaped"]').click();
       await page.waitForFunction(() => document.getElementById('jh-manual-text').value.startsWith('"'));
       assert.equal(await page.locator('#jh-manual-text').inputValue(), '"/~01~1a\\u0000\\u000d\\u000a"');
+      await page.getByRole('button', {name: 'Close', exact: true}).click();
       assert.equal(await page.locator('#jh-n-1').evaluate(n => n.open), true);
       await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {configurable: true, value: undefined}));
       await page.getByRole('button', {name: 'Copy JSON', exact: true}).click(); await status(page, 'Clipboard unavailable or rejected');
@@ -187,7 +194,7 @@ async function main() {
       assert.equal(await page.evaluate(() => typeof window.pwned), 'undefined');
       const download = await downloaded(page, '[data-action="download-json"]');
       assert.deepEqual(download.bytes, fs.readFileSync(path.join(fixtures, 'hostile.json')));
-      assert.equal(await page.locator('code[data-search]').textContent(), fs.readFileSync(path.join(fixtures, 'hostile.json'), 'utf8'));
+      assert.ok((await page.locator('#jh-tree [data-search]').textContent()).includes('\\u2028\\u2029\\u0000'));
     });
     await run('mobile-layout', 'exact', 'http', true, async page => {
       assert.ok(await page.getByRole('button', {name: 'Download JSON (UTF-8)', exact: true}).isVisible());
@@ -201,13 +208,20 @@ async function main() {
       if (engine === 'chromium') await page.screenshot({path: path.join(out, engine + '-desktop.png'), fullPage: true, caret: 'initial'});
     }, {viewport: {width: 390, height: 844}});
     await run('complete-print', 'deep', 'http', true, async page => {
-      assert.equal(await page.locator('details[open]').count(), 0);
+      assert.equal(await page.locator('#jh-tree details[open]').count(), 0);
+      await page.setViewportSize({width: 320, height: 900});
+      await page.locator('[data-action="expand"]').click();
+      assert.equal(await page.locator('#jh-tree details:not([open])').count(), 0);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'Expanded deep cards must stop accumulating indentation');
+      await page.locator('[data-action="collapse"]').click();
       await page.emulateMedia({media: 'print'});
       assert.equal(await page.locator('#jh-tree').isVisible(), false);
       assert.equal(await page.locator('.print-json').isVisible(), true);
-      assert.equal(await page.locator('.print-json code').textContent(), fs.readFileSync(path.join(fixtures, 'deep.json'), 'utf8'));
+      assert.equal(await page.locator('.print-json .node').count(), records.find(r => r.name === 'deep').nodes);
+      assert.ok((await page.locator('.print-json').textContent()).includes('last-sentinel'));
+      assert.equal(await page.locator('.print-json details:not([open])').count(), 0);
       if (engine === 'chromium') await page.pdf({path: path.join(out, 'chromium-complete.pdf'), format: 'A4'});
-      assert.equal(await page.locator('details[open]').count(), 0);
+      assert.equal(await page.locator('#jh-tree details[open]').count(), 0);
     });
     await run('query-limit-no-outline', 'zero-query', 'http', true, async page => {
       await page.locator('#jh-query').fill('é'); await status(page, 'exceeds the UTF-8 byte limit');
@@ -255,6 +269,73 @@ async function main() {
       await page.emulateMedia({media: 'print'});
       assert.ok(await page.locator('#jh-a-4').isVisible());
     });
+    await run('tabs-keyboard', 'previews', 'http', true, async page => {
+      assert.equal(await page.getByRole('tab', {name: 'Structured', exact: true}).getAttribute('aria-selected'), 'true');
+      await page.getByRole('tab', {name: 'Structured', exact: true}).focus(); await page.keyboard.press('ArrowRight');
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'jh-tab-syntax');
+      assert.equal(await page.locator('#jh-syntax').isVisible(), true);
+      await page.keyboard.press('Home'); assert.equal(await page.locator('#jh-structured').isVisible(), true);
+      await page.keyboard.press('End'); assert.equal(await page.locator('#jh-syntax').isVisible(), true);
+    });
+    await run('specialized-previews', 'previews', 'http', true, async page => {
+      assert.equal(await page.locator('#jh-tree img').count(), 4);
+      for (const image of await page.locator('#jh-tree img').all()) assert.equal(await image.evaluate(n => n.complete && n.naturalWidth === 4 && n.naturalHeight === 4), true);
+      assert.equal(await page.locator('#jh-tree svg.color-swatch').count(), 2);
+      assert.equal(await page.locator('#jh-tree math').count(), 1);
+      assert.equal(await page.locator('#jh-tree math msubsup').count(), 1);
+      assert.ok((await page.locator('#jh-tree').textContent()).includes('$x^12'));
+      assert.equal(await page.locator('#jh-tree a[href^="https:"]').count(), 0);
+      const ids = await page.locator('[id]').evaluateAll(nodes => nodes.map(n => n.id)); assert.equal(new Set(ids).size, ids.length);
+      const download = await downloaded(page, '[data-action="download-json"]'); assert.deepEqual(download.bytes, fs.readFileSync(path.join(fixtures, 'previews.json')));
+    });
+    for (const protocol of ['file', 'http']) await run('static-previews-' + protocol, 'static-inspection', protocol, false, async page => {
+      assert.equal(await page.locator('script').count(), 0); assert.equal(await page.locator('button,input').count(), 0);
+      assert.equal(await page.locator('#jh-tree math').count(), 1);
+      assert.equal(await page.locator('#jh-tree img').count(), 4);
+      await page.locator('#jh-tree .original-value').last().locator('summary').click();
+      assert.ok((await page.locator('#jh-tree').textContent()).includes('ORIGINAL-TAIL-ONLY'));
+      assert.equal(await page.locator('#jh-tree details.node:not([open])').count(), 0);
+      const d=await downloaded(page,'.source-download a');assert.deepEqual(d.bytes,fs.readFileSync(path.join(fixtures,'static-inspection.json')));
+    });
+    await run('no-script-both-views-math', 'previews', 'file', false, async page => {
+      assert.equal(await page.locator('#jh-structured').isVisible(), true); assert.equal(await page.locator('#jh-syntax').isVisible(), true);
+      assert.equal(await page.locator('#jh-tree math').isVisible(), true);
+      assert.equal(await page.locator('#jh-syntax pre code').textContent(), fs.readFileSync(path.join(fixtures, 'previews.json'), 'utf8'));
+    });
+    await run('cutoff-native-original', 'inspection-long', 'file', false, async page => {
+      assert.equal(await page.locator('#jh-tree .display-value').textContent(), '"' + '😀'.repeat(512) + '"');
+      assert.equal(await page.locator('#jh-tree .original-value code').isVisible(), false);
+      await page.locator('#jh-tree .original-value summary').click();
+      assert.ok((await page.locator('#jh-tree .original-value code').textContent()).endsWith('ORIGINAL-TAIL-ONLY"'));
+      assert.equal(await page.locator('#jh-tree .original-value code').isVisible(), true);
+    });
+    await run('search-displayed-preview-boundary', 'inspection-long', 'http', true, async page => {
+      await page.locator('#jh-query').fill('ORIGINAL-TAIL-ONLY'); await status(page, '0 matching nodes');
+      await page.getByRole('tab', {name: 'JSON source', exact: true}).click(); await status(page, '1 matching nodes');
+      await page.locator('#jh-query').press('Enter'); assert.equal(await page.evaluate(() => document.activeElement.id), 'jh-syntax');
+      await page.locator('#jh-query').focus(); await page.keyboard.press('Escape'); await status(page, '0 matching nodes');
+    });
+    await run('previews-320-css-200-percent', 'previews', 'http', true, async page => {
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      await page.evaluate(() => {document.body.style.zoom = '2';});
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      if (engine === 'chromium') await page.screenshot({path: path.join(out, 'chromium-previews-320-zoom.png'), fullPage: true, caret: 'initial'});
+      await page.evaluate(() => {document.body.style.zoom = '';});
+      if (engine === 'chromium') await page.screenshot({path: path.join(out, 'chromium-previews-320.png'), fullPage: true, caret: 'initial'});
+    }, {viewport: {width: 320, height: 900}});
+    await run('complete-structured-print-previews', 'complete', 'http', false, async page => {
+      await page.emulateMedia({media: 'print'});
+      assert.equal(await page.locator('#jh-tree').isVisible(), false); assert.equal(await page.locator('.print-json').isVisible(), true);
+      assert.equal(await page.locator('.print-json details:not([open])').count(), 0);
+      assert.equal(await page.locator('.print-json math').count(), 1); assert.equal(await page.locator('.print-json img').count(), 4);
+      assert.ok((await page.locator('.print-json').textContent()).includes('😀'.repeat(513) + 'ORIGINAL-TAIL-ONLY'));
+      if (engine === 'chromium') await page.pdf({path: path.join(out, 'chromium-previews-complete.pdf'), format: 'A4'});
+    });
+    await run('explicit-syntax-no-enrichment', 'syntax', 'file', true, async page => {
+      assert.equal(await page.locator('#jh-syntax').isVisible(), true);
+      assert.equal(await page.locator('math,img,svg.color-swatch').count(), 0);
+      assert.equal(await page.locator('#jh-syntax pre code').textContent(), fs.readFileSync(path.join(fixtures, 'syntax.json'), 'utf8'));
+    });
     if (engine === 'chromium') await run('native-browser-clipboard', 'exact', 'http', true, async (page, context) => {
       await context.grantPermissions(['clipboard-read', 'clipboard-write']);
       // Keep previous clipboard text in browser memory only; never put it in receipts.
@@ -273,12 +354,12 @@ async function main() {
     });
     await browser.close();
   }
-  receipt.expectedCases = 46; receipt.passedCases = receipt.cases.filter(c => c.status === 'passed').length;
+  receipt.expectedCases = 76; receipt.passedCases = receipt.cases.filter(c => c.status === 'passed').length;
   receipt.unexecutedCases = receipt.engines.reduce((sum, e) => sum + (e.unexecutedCases || 0), 0);
   if (receipt.unexecutedCases) {receipt.status = 'blocked'; save(); console.error('Browser startup blocked; unexecuted cases=' + receipt.unexecutedCases); process.exitCode = 2; return;}
-  assert.equal(receipt.cases.length, 46);
-  assert.equal(receipt.cases.filter(c => c.status === 'passed').length, 46);
-  receipt.status = 'passed'; receipt.expectedCases = 46; receipt.passedCases = 46; receipt.unexpectedSkips = 0;
-  save(); console.log('JSONHTML_BROWSER passed engines=3 cases=46 skips=0');
+  assert.equal(receipt.cases.length, 76);
+  assert.equal(receipt.cases.filter(c => c.status === 'passed').length, 76);
+  receipt.status = 'passed'; receipt.expectedCases = 76; receipt.passedCases = 76; receipt.unexpectedSkips = 0;
+  save(); console.log('JSONHTML_BROWSER passed engines=3 cases=76 skips=0');
 }
 main().catch(error => {receipt.status = 'failed'; receipt.error = error.stack; save(); console.error(error); process.exitCode = 1;}).finally(async () => {await Promise.all(activeBrowsers.map(b => b.close().catch(() => {}))); for (const data of isolatedDataDirectories) fs.rmSync(data, {recursive: true, force: true}); server.close();});

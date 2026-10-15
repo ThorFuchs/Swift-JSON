@@ -151,6 +151,14 @@ public struct JSONPDFPreparationReport: Sendable {
     public let pageCount: UInt64
     /// Actual backend identity: CoreText pagination or WebPage continuous capture.
     public let backend: String
+    /// Configured native HTML shape retained by the immutable input artifact.
+    public let htmlLayout: JSONHTMLLayout
+    /// Actual print profile used for capture.
+    public let valueProfile: JSONHTMLValueProfile
+    /// Native backend font readiness policy; no font download.
+    public let fontReadiness: String
+    /// Native backend awaits admitted print-image decoding before capture.
+    public let mediaReadiness: String
     /// Actual elapsed time, including platform waits; not an owned-work quota.
     public let elapsed: Duration
 }
@@ -165,6 +173,8 @@ package func pdfAdd(_ metric: JSONPDFResourceMetric, _ a: UInt64, _ b: UInt64, _
 }
 package enum JSONPDFStage: String, Sendable { case input, loading, layout, extraction, capture, composition, installation }
 package struct JSONPDFGeometry: Sendable { let width: Double; let height: Double; let lineHeight: Double }
+package struct JSONPDFFragment: Sendable { let top: Double; let bottom: Double }
+package enum JSONPDFFragmentStep: Sendable { case advance, span(JSONPDFFragment), end }
 package struct JSONPDFRectangle: Sendable { let x: Double; let y: Double; let width: Double; let height: Double }
 
 package struct JSONPDFTextRun: Sendable { let kind: String; let text: String }

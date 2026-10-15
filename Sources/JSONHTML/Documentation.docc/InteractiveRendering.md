@@ -13,7 +13,7 @@ let renderer = JSONHTMLRenderer(options: .init(
 let report = try renderer.renderWithReport(root)
 ```
 
-Formatted remains the default. Containers use native `details`/`summary` elements
+Structured interactive inspection is the direct renderer default; layout and presentation are independent. Containers use native `details`/`summary` elements
 without exclusive accordion grouping. Root is level zero; levels below the initial
 depth start open. Outline depth includes containers through that level; nil omits
 it. Generated ordinal identifiers are independent of keys and Pointer spelling.
@@ -38,7 +38,7 @@ manual text area. Browsers and platform clipboards may transform text, and texta
 normalize line endings. UTF-8 downloads preserve the independently tested bytes;
 “download requested” does not claim that a receiving application has saved them.
 
-Printing uses a second complete formatted block, hidden on screen and shown in print
+Printing uses a second complete representation in the configured layout, hidden on screen and shown in print
 media. Collapse/search state does not truncate it. Both copies, the original native
 JSON buffer, Pointer forms, Base64 metadata, outline records and final result copy
 share one cumulative meter. Root admission occurs once. Additional ceilings bound
@@ -57,4 +57,4 @@ Firefox and WebKit cases using file/local HTTP, scripting on/off, keyboard, sear
 exact downloads, clipboard outcomes, mobile viewports and complete print content.
 Playwright WebKit is not native Safari; viewports are not physical device tests.
 Native Safari, VoiceOver and the final 1.3 platform matrix remain separate release
-qualification. Annotation/source mapping and transfer/RTF/PDF APIs are not included.
+qualification. Typed diagnostics/source mapping and prepared transfer/RTF/PDF APIs are documented in <doc:DiagnosticAnnotations>, <doc:PreparedExport> and <doc:PDFPreparation>.

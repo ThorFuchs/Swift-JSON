@@ -14,7 +14,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
 | swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters and private CLI engine/filter runtime; no public query library |
-| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
+| JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are seven public products: six libraries and the swift-json executable,
@@ -212,6 +212,14 @@ JSONHTMLRenderer also accepts JSONDocument in its four rendering/report methods.
 Caller annotations use exact typed paths, explicit missing-parent attachment and
 coherent value byte spans without schema execution or source-byte archival.
 See [diagnostic rendering](Release1.3/DiagnosticAnnotations.md).
+
+## Structured HTML and previews
+
+Layout and presentation are orthogonal. Direct defaults are structured interactive
+inspection; prepared/transfer defaults are structured static complete values. Typed
+preview hints, the closed inline/MathML dialect and finite eligibility counters are
+defined in [the additive contract](Release1.3/StructuredPreviews/APIAndPolicy.md).
+Core exact values, native writer defaults and all 49 metrics retain their meanings.
 
 ## Provider-specific schema fragments (1.4 development)
 

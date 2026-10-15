@@ -190,6 +190,56 @@
       "evidence": "Scripts/ci.py: current native, safety and documentation receipts"
     },
     {
+      "repository": "ThorFuchs/Swift-JSON approved structured design",
+      "commit": "b078e86df3403d7f890107303066fdbc24414f70",
+      "original_path": "approved HTML/CSS/JS and enrichment gold fixtures in consolidated revision 0.2",
+      "destination": "Sources/JSONHTML/Assets and Tests/JSONHTMLTests/Fixtures/Enrichment",
+      "disposition": "Visual guidance and original native adaptation; enrichment test inputs copied byte-for-byte. No reference demo payload/runtime code is executed as a parser or shipped UI authority.",
+      "attribution": "Original project material, Apache-2.0; existing project/upstream notices retained.",
+      "fixture_files": [
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/README.md",
+          "sha256": "a471b445fa1f1492d01537c6774fd26c62389bf0630f456f00f2261be58c3aaa"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/base64-cases.json",
+          "sha256": "1e5a1db4a549db39042a94fd136b07143852d5206cf4451ef2693823f228f671"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/colors.json",
+          "sha256": "8b5e50d5a471f3ea116cf5cc30bc60c19f50e7a1c69e0067cae2b8696b7993e6"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/inline-cases.json",
+          "sha256": "dbb3a2c22c00cc9deb09266297364b92d3cfeaffa5e06735c6464e071ee65e27"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/math-cases.json",
+          "sha256": "7a69b554993ad67d6ed1886488ef3a90cdf570ff3fc0081c548632c9ea900e46"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/media.json",
+          "sha256": "eb6a8ae4188114e55b9ed29e6eb1e44e219c2d50cda9717f83b0733a44a1a331"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/oversized-header.png",
+          "sha256": "c0c9273e7eb56ec7db3669e2f894a31811a98bea731842465a5967d0ee5e3f62"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/sample.jpg",
+          "sha256": "cbfd30bbdf155b2fd1aa5e0253e2d47cc21c60bd508e4e3fb9d93be143b624f4"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/sample.png",
+          "sha256": "60d5457a4640d49877e80d18e52005f10ed9ae807688c97f6f1458ea4975147b"
+        },
+        {
+          "path": "Tests/JSONHTMLTests/Fixtures/Enrichment/strings.json",
+          "sha256": "6a4d6a8d46f6b48cd166eea7a8fe7ec5e6e2b463907fa3da12a90d294ffb0486"
+        }
+      ]
+    },
+    {
       "repository": "Swift-JSON original implementation",
       "scope": "JSONSchema portable provider profiles/checks, exact Responses fragments and CLI C5 adapters",
       "provenance": "Original Apache-2.0 code; frozen user-provided provider fixtures copied unchanged from JSONSchema-Provider-Bridges-Specification-v0.1; profile source URLs/dates and individual fixture hashes in Release1.4/ProviderProfiles.json. No upstream algorithm, SDK or network client adapted.",
@@ -207,11 +257,19 @@
     "Schema graph, explicit evaluator, exact sets/assertions and scalar format recognizers are original implementations from Draft 2020-12, RFC3986/3987/3339/3492/5321/5891/5892/5893/6531/6570/6901 and fixed Unicode13 data.",
     "Private FIPS 180-4 SHA-256 is an original Swift implementation with checked cumulative production accounting, bounded scratch and inner cancellation. The separate trusted fixture tool mirrors its primitive core byte-for-byte; public_check verifies parity. No CryptoKit fallback or runtime dependency is introduced.",
     "JSONHTML formatted rendering, original fixed CSS and shared strict-writer token classification are original Apache-2.0 code. No third-party renderer, browser numeric authority or runtime dependency is adapted.",
-    "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted.",
     "CLI foundation, argv parser, POSIX adapters, prepaid bounded diagnostics and shared-meter package adapters are original Apache-2.0 Swift code. No legacy filter engine or jq source is copied. See Release1.4/Foundation.md for native test-harness reuse provenance.",
-    "Tests/Fixtures/CLI/NewCases.json is the byte-identical 111-case authored CLI briefing fixture, SHA-256 6f863f3e98d2dea12e59018e7cf3a074ae0ebee5f1ab950a651df72e5eb18a4c. Fixture expected JSON texts use native exact comparison, not a floating-point oracle. The query compiler/VM and lifetime ledger are original Apache-2.0 implementations; no legacy eager evaluator or jq implementation is copied."
+    "Tests/Fixtures/CLI/NewCases.json is the byte-identical 111-case authored CLI briefing fixture, SHA-256 6f863f3e98d2dea12e59018e7cf3a074ae0ebee5f1ab950a651df72e5eb18a4c. Fixture expected JSON texts use native exact comparison, not a floating-point oracle. The query compiler/VM and lifetime ledger are original Apache-2.0 implementations; no legacy eager evaluator or jq implementation is copied.",
+    "JSONHTML typed annotations, iterative exact-path binding, static/interactive attachment and coherent JSONDocument span presentation are original Apache-2.0 code. No schema engine, third-party renderer, source archive or new dependency is adapted.",
+    "Structured forms/cards, finite prefix/preview staging, closed inline scanner, atomic mini-math MathML emitter, canonical PNG/JPEG header admission and line/media-bounded PDF pagination are original Apache-2.0 code. The approved structured concept informed the fixed CSS/JS; no demo Site content or external parser/renderer/codec engine is distributed."
   ],
   "policy": "Record actual adaptations and retain applicable upstream copyrights and licenses. Reference inputs and comparison experiments are not distributed runtime dependencies.",
+  "original_notes": [
+    "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied.",
+    "1.4 inherited CLI qualification fixtures are copied byte-for-byte: RhoePlatform/RhoeJSON pin 51d37acc137422065b07ebeb7e4ecdb2d02b99ee, 119 golden and 49 subset rows. Apache-2.0 license retained in Licenses/RhoeJSON-CLI-Fixtures-Apache-2.0.txt. PlanningDispositions labels are provisional, not evaluated successes. New explicit-stack CLI code is original; old eager JSONValue evaluator and arithmetic were not ported.",
+    "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied.",
+    "1.4 C5 stream/offline-schema adapters, checked sink handoff, command help and consumers are original Apache-2.0 code. Five NewInputs fixtures are copied byte-for-byte from the maintainer CLI briefing pack 43f8819c57e3d93bc6f7cf561d2d111442e089f2973cb7c62e16e3bd3fd73d0d; these authored data fixtures introduce no runtime dependency. Missing provider helper prerequisites remain blocked rather than adapted or silently rewritten.",
+    "1.4 checked schema resource lookup and its missing/quota/cancellation/install regressions are original Apache-2.0 code. Supported app/framework/command layouts retain all nine official resource pins; no unbounded directory scan, fallback engine or external dependency is introduced."
+  ],
   "jsonhtml_export_original_contributions": {
     "license": "Apache-2.0",
     "adapted_third_party_code": false,
@@ -220,12 +278,5 @@
     "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers plus a narrow explicit main-actor Apple PDF boundary using WebKit, CoreText, CoreGraphics and AppKit/UIKit paragraph styles. Core JSON imports none of these; no new root dependency.",
     "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation.",
     "pdf": "Original invocation-owned lifecycle, finite adapter accounting and visible-range pagination using Apple SDK APIs. PDFKit is independent qualification only; no third-party renderer adapted."
-  },
-  "original_notes": [
-    "1.4 C3 decimal magnitude, rational/quantization kernel, pull range and type-directed overloads are original Apache-2.0 code. The 738-case deterministic oracle uses Python integer/Fraction arithmetic; no jq/Rhoe arithmetic implementation was copied.",
-    "1.4 inherited CLI qualification fixtures are copied byte-for-byte: RhoePlatform/RhoeJSON pin 51d37acc137422065b07ebeb7e4ecdb2d02b99ee, 119 golden and 49 subset rows. Apache-2.0 license retained in Licenses/RhoeJSON-CLI-Fixtures-Apache-2.0.txt. PlanningDispositions labels are provisional, not evaluated successes. New explicit-stack CLI code is original; old eager JSONValue evaluator and arithmetic were not ported.",
-    "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied.",
-    "1.4 C5 stream/offline-schema adapters, checked sink handoff, command help and consumers are original Apache-2.0 code. Five NewInputs fixtures are copied byte-for-byte from the maintainer CLI briefing pack 43f8819c57e3d93bc6f7cf561d2d111442e089f2973cb7c62e16e3bd3fd73d0d; these authored data fixtures introduce no runtime dependency. Missing provider helper prerequisites remain blocked rather than adapted or silently rewritten.",
-    "1.4 checked schema resource lookup and its missing/quota/cancellation/install regressions are original Apache-2.0 code. Supported app/framework/command layouts retain all nine official resource pins; no unbounded directory scan, fallback engine or external dependency is introduced."
-  ]
+  }
 }

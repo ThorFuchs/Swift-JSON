@@ -119,7 +119,7 @@ public struct JSONHTMLRenderer: Sendable {
     }
     private func renderBody(_ value: JSON, admitted: Bool = false, document: JSONDocument? = nil, meter: inout JSONWorkMeter) throws -> JSONHTMLDocumentBuffer {
         try meter.checkpoint()
-        try options.limits.validate()
+        try options.limits.validate(); try options.previewPolicy.validate()
         guard (0...8).contains(options.indentation), (1...8).contains(options.tabWidth),
               options.initiallyExpandedDepth >= 0, options.outlineDepth.map({ $0 >= 0 }) ?? true else {
             throw JSONHTMLFailure.invalidConfiguration
@@ -133,8 +133,8 @@ public struct JSONHTMLRenderer: Sendable {
         if !admitted { try JSONAdmission.value(value, meter: &meter) }
         try JSONHTMLDocumentBuffer.require(.renderedJSONNodes, meter.used(.nodes), options.limits.maxRenderedJSONNodes)
         let annotations = try bindAnnotations(value, document: document, meter: &meter)
-        if options.presentation == .interactive {
-            let result = try renderInteractive(value, annotations: annotations, meter: &meter)
+        if options.presentation == .interactive || options.layout == .structured {
+            let result = try renderRichDocument(value, annotations: annotations, meter: &meter)
             try meter.release(UInt64(annotations.count) * 64)
             return result
         }
@@ -204,6 +204,10 @@ package struct JSONHTMLDocumentBuffer {
     private var metadata: UInt64 = 0
     private var annotations: UInt64 = 0
     private var copyBytes: UInt64 = 0
+    private var shortened = false
+    private var previewIssues: UInt64 = 0
+    private var imagePreviews: UInt64 = 0
+    private var imageBytes: UInt64 = 0
     private let limits: JSONHTMLLimits
     package init(limits: JSONHTMLLimits) { self.limits = limits }
     package static func require(_ metric: JSONHTMLResourceMetric, _ count: UInt64, _ limit: UInt64) throws {
@@ -222,6 +226,9 @@ package struct JSONHTMLDocumentBuffer {
     package mutating func addNode(meter: inout JSONWorkMeter) throws {
         try meter.work()
         nodes = try Self.adding(.renderedJSONNodes, nodes, 1, limits.maxRenderedJSONNodes)
+    }
+    package mutating func setPreviews(shortened: Bool, issues: UInt64, images: UInt64, imageBytes: UInt64) {
+        self.shortened = shortened; previewIssues = issues; imagePreviews = images; self.imageBytes = imageBytes
     }
     package mutating func setAnnotations(_ count: UInt64) { annotations = count }
     package mutating func setCopyBytes(_ count: UInt64) { copyBytes = count }
@@ -256,6 +263,6 @@ package struct JSONHTMLDocumentBuffer {
         }
     }
     package func statistics(_ operation: JSONOperationStatistics) -> JSONHTMLStatistics {
-        .init(operation: operation, nodes: nodes, dom: dom, bytes: UInt64(bytes.count), outline: outline, metadata: metadata, copyBytes: copyBytes, annotations: annotations)
+        .init(operation: operation, nodes: nodes, dom: dom, bytes: UInt64(bytes.count), outline: outline, metadata: metadata, copyBytes: copyBytes, annotations: annotations, shortened: shortened, previewIssues: previewIssues, imagePreviews: imagePreviews, imageBytes: imageBytes)
     }
 }

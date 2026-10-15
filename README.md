@@ -63,7 +63,7 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact HTML, offline exploration and immutable native transfer/export (1.3 development) |
+| **JSONHTML** | Structured forms/cards, exact syntax, bounded native previews and prepared exports |
 | **swift-json** | Bounded command-line JSON workflows (1.4 development) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (E2 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
@@ -381,70 +381,51 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
-## Standalone HTML (1.3 development)
+## Standalone HTML
 
-The additive `JSONHTML` product renders complete highlighted HTML from the same
-exact writer cursor. Formatted mode is script-free. Opt into interactive mode for
-native disclosures, a container outline, case-sensitive literal search and exact
-JSON/Pointer copy and downloads. All assets are embedded and hash-authorized;
-no network access or browser JSON number conversion is needed.
+`JSONHTML` presents the exact value as ordered object forms, indexed array cards and
+small scalar flow lists. The direct renderer defaults to interactive structured
+inspection. Static presentation is script-free; syntax is an explicit alternate.
 
 ```swift
+import JSON
 import JSONHTML
 
-let interactiveHTML = try JSONHTMLRenderer(options: .init(
-    title: "Exact values", presentation: .interactive,
-    initiallyExpandedDepth: 2, outlineDepth: 3
-)).renderWithReport(value)
+let valueForHTML = try JSONParser().parse(#"{"amount":9007199254740993,"note":"**Hello** $x_i^2$"}"#)
+let interactiveHTML = try JSONHTMLRenderer().renderWithReport(valueForHTML)
 precondition(interactiveHTML.statistics.copyJSONBytes > 0)
+let staticHTML = try JSONHTMLRenderer(options: .init(
+    layout: .structured, presentation: .formatted, valueProfile: .complete)
+).render(valueForHTML)
+let syntaxHTML = try JSONHTMLRenderer(options: .init(
+    layout: .syntax, presentation: .formatted)
+).render(valueForHTML)
 ```
 
-Every call shares one finite budget through admission, metadata, formatting and
-final copying. Downloads use native UTF-8 bytes, preserving numeric lexemes and
-scalar identity. Clipboard acceptance and manual copying depend on the browser;
-printing includes the full formatted JSON independently of disclosure state.
-Read the [formatted guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md)
-and [interactive guide](Sources/JSONHTML/Documentation.docc/InteractiveRendering.md)
-for limits and browser qualifications. Prepare immutable exact JSON, UTF-8 text,
-Markdown and static HTML together, then explicitly select the offered format:
+Inspection string prefixes are labelled and capped at 512 decoded scalars, 2048 UTF-8
+bytes and 512 escaped-display scalars. Original values and full JSON source remain
+accessible without JavaScript. Keys, numbers and node structure remain complete.
+Copy/download use exact native writer bytes. Complete printing expands all values
+independently of collapsed screen state or selected tab.
 
-```swift
-let exportReport = try JSONExportDocument.prepareWithReport(value)
-let markdownItem = try exportReport.result.selecting([.markdown])
-let markdownBytes = try markdownItem.data(for: .markdown)
-precondition(exportReport.operation[.nodes] > 0 && !markdownBytes.isEmpty)
-```
+The bounded native preview dialect adds supported sRGB swatches, declared canonical
+PNG/JPEG, star emphasis, inert links and atomic mini-math as MathML Core. It keeps
+unsupported/malformed spans literal. There is no full Markdown/TeX engine, remote
+media, raw markup or mandatory schema/browser dependency. Native image header admission
+is distinct from browser raster decoding and process memory.
 
-On Apple platforms, importing JSONHTML adds JSON's native Transferable conformance.
-Only strict JSON imports; presentation formats export. Default preparation uses one
-tab per level, LF and light static HTML, sharing one finite cumulative budget.
-Read the [prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md)
-and [architecture contract](Documentation/Architecture/JSONHTMLExport.md) for format
-selection, transport error wrapping and finite limits. Real receiving-app behavior
-is qualified separately from API/file transport. Opt into styled RTF for prepared
-items; its native decoded text preserves the pretty JSON body. Generation is
-actor-independent and uses finite style/UTF-16 caps alongside shared core quotas.
+Prepared export defaults to static structured complete values and light colors;
+JSON/text/Markdown/RTF bytes and strict JSON import retain their contracts. Explicit
+Apple PDF consumes prepared HTML, awaits fonts/media and reports its backend and
+page strategy. Generation and PDF preparation each have an explicit cumulative budget;
+transport, receiver and opaque SDK work are separate.
 
-```swift
-let richItem = try JSONExportDocument.prepare(value, options: .init(
-    formats: [.json, .plainText, .rtf]
-)).selecting([.rtf])
-let richBytes = try richItem.data(for: .rtf)
-precondition(!richBytes.isEmpty)
-```
-
-Prepare PDF explicitly on the main actor with `try await item.preparingPDF()` or
-`try await item.preparingPDFWithReport()`. This uses the item's own static HTML;
-success returns a new immutable item whose selected PDF transfers only completed
-bytes. Defaults are paginated A4, 36-point margins and a light Menlo profile.
-US Letter and an explicit continuous page are available. Finite limits and
-cancellation cover owned operations; opaque SDK work and allocation are separate.
-See the [PDF guide](Sources/JSONHTML/Documentation.docc/PDFPreparation.md).
-Caller-supplied `JSONHTMLAnnotation` values attach diagnostics by exact typed path.
-Rendering a coherent `JSONDocument` can show original value or parent UTF-8 byte
-spans; unmapped or replaced roots invent none. Rendering does not execute schema
-validation. See the [diagnostic guide](Sources/JSONHTML/Documentation.docc/DiagnosticAnnotations.md).
-Published 1.2 versions do not include JSONHTML.
+Read the [structured preview guide](Sources/JSONHTML/Documentation.docc/StructuredPreviews.md),
+[formatted syntax guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md),
+[prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md) and
+[API/policy freeze](Documentation/Architecture/Release1.3/StructuredPreviews/APIAndPolicy.md).
+The consolidated design revision is not a package release number. This feature branch
+has its own qualification record; published versions retain their existing contract.
 
 ## Documentation and examples
 
@@ -532,7 +513,7 @@ swift build -c release --product swift-json
 
 ### CLI development for 1.4
 
-The isolated 1.4 feature stack adds the `swift-json` executable beside the five
+The isolated 1.4 feature stack adds the `swift-json` executable beside the six
 libraries, with no external root dependencies. Build from the feature source
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.

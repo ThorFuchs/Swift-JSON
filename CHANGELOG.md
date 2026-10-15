@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add structured JSONHTML layouts with finite string, color, declared raster, inline
+  and atomic MathML previews; preserve exact source, complete export/print and shared
+  CLI policy. Native, browser and WASI evidence is recorded with remaining assistive
+  and host qualification boundaries.
+
 - Add E2's shallow JSON parsing, checked object construction, decimal-text and
   pre-parsed Pointer entry points; exact-key membership and three-state presence
   composition; and direct validation from an immutable compiled schema plan.
