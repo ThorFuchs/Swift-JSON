@@ -1,7 +1,7 @@
 {
   "schema": "swift-json-cli-acceptance/1",
   "prepared": "2026-10-14",
-  "implementation_status": "Native resource-fix successor qualified; final immutable return records close artifact/head rows. Mandatory providers remain blocked.",
+  "implementation_status": "C5 portable schema-provider increment implemented and native behavior-qualified; final current-head native/safety/docs/Linux receipts are tracked separately.",
   "requirements": [
     {
       "id": "CL001",
@@ -1188,15 +1188,20 @@
       "title": "Offline schema/provider commands",
       "verification": "Native schema check plus qualified local OpenAI helpers; schema object not quoted string, no network/key.",
       "obligation": "mandatory",
-      "status": "blocked",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "schema-provider-object-envelope"
       ],
-      "blocker": "Qualified schema-provider helpers absent; actual authored expectations 0/1 receive capabilityUnavailable exit2",
       "evidence": [
-        "Documentation/Architecture/Release1.4/Integration.md"
-      ]
+        "Documentation/Architecture/Release1.4/Providers.md",
+        "Documentation/Architecture/Release1.4/ProviderProfiles.json",
+        "Tests/JSONSchemaTests/ProviderBridgeTests.swift",
+        "Tests/JSONCLITests/ProviderCommandTests.swift",
+        "Tools/CLIQualification/Sources/ProviderConsumer/Main.swift",
+        "Scripts/qualify_schema_providers.py"
+      ],
+      "qualification": "Native 13 schema +8 new CLI functions, public14, authoredC5 six, provider process37 (32 focused +5 unchanged fixtures). Final-source broad/native/Linux receipts required before a release recommendation."
     },
     {
       "id": "CL079",
@@ -1204,15 +1209,20 @@
       "title": "Provider incompatibility and availability",
       "verification": "No constraint loss/lowering; compatibility false exit1; Apple signatures guarded and advertised only when qualified.",
       "obligation": "mandatory",
-      "status": "blocked",
+      "status": "passed",
       "evidence_required": true,
       "fixture_ids": [
         "schema-provider-optionality-reject"
       ],
-      "blocker": "Qualified schema-provider helpers absent; actual authored expectations 0/1 receive capabilityUnavailable exit2",
       "evidence": [
-        "Documentation/Architecture/Release1.4/Integration.md"
-      ]
+        "Documentation/Architecture/Release1.4/Providers.md",
+        "Documentation/Architecture/Release1.4/ProviderProfiles.json",
+        "Tests/JSONSchemaTests/ProviderBridgeTests.swift",
+        "Tests/JSONCLITests/ProviderCommandTests.swift",
+        "Tools/CLIQualification/Sources/ProviderConsumer/Main.swift",
+        "Scripts/qualify_schema_providers.py"
+      ],
+      "qualification": "Native 13 schema +8 new CLI functions, public14, authoredC5 six, provider process37 (32 focused +5 unchanged fixtures). Final-source broad/native/Linux receipts required before a release recommendation."
     },
     {
       "id": "CL080",

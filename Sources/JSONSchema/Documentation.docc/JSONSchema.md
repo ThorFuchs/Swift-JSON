@@ -64,6 +64,7 @@ Internal mutable meters remain private.
 ### Guides
 
 - <doc:OfflineValidation>
+- <doc:ProviderSchemas>
 
 ### Documents and plans
 - ``JSONSchemaDocument``
@@ -86,3 +87,13 @@ Internal mutable meters remain private.
 - ``JSONSchemaNodeView``
 - ``JSONDeclaredAnnotations``
 - ``JSONSchemaReferenceTarget``
+
+### Provider request fragments
+- ``OpenAIJSONSchemaBridge``
+- ``JSONSchemaProviderProfile``
+- ``JSONSchemaProviderLimits``
+- ``JSONSchemaProviderCompatibility``
+- ``JSONSchemaProviderIssue``
+- ``JSONSchemaProviderIssueCode``
+- ``JSONSchemaProviderMetric``
+- ``JSONSchemaProviderFailure``

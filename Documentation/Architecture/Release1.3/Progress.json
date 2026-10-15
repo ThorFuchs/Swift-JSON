@@ -377,6 +377,21 @@
       "limits_widened": false,
       "history_preserved": true,
       "merge_tag_publication_performed": false
+    },
+    "advanced_cli_base_reconciliation": {
+      "feature_parent": "1fd32d19b4e16891073cb9fdba7ecdcc7660bf88",
+      "cli_base": "c3760730dc333a84810bba53cde4da339ada90af",
+      "contract": "StructuredPreviews/Reconciliation.md",
+      "source_reconciled": true,
+      "html_implementation_tests_consumers_unchanged": true,
+      "provider_implementation_tests_fixtures_preserved": true,
+      "qualification_policy": "Fresh combined-source CI receipts required; original qualified-source and physical-observation histories retained. Exact outcomes are materialized separately.",
+      "expected_apple_functions": 393,
+      "expected_linux_functions": 377,
+      "root_parameter_cases": 325,
+      "expected_wasi_functions": 290,
+      "wasi_parameter_cases": 288,
+      "merge_tag_publication_performed": false
     }
   }
 }

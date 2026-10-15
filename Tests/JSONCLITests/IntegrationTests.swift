@@ -85,17 +85,17 @@ private func integrationDirectory() throws -> URL {
     #expect(bounded.committedResults == 0)
     #expect(try Data(contentsOf: output) == Data("1\n2\n3\n4\n".utf8))
 }
-@Test func cliHelpVersionAndUnavailablePrerequisitesAreTruthful() throws {
+@Test func cliHelpVersionAndProviderAvailabilityAreTruthful() throws {
     for argv in [["render", "--presentation", "bogus"], ["render", "--format", "text", "--theme", "dark"], ["query", "--input-framing", "bogus", "("]] {
         var context = try CLIJobContext()
         #expect(throws: CLIError.self) { _ = try CLIArguments(argv, context: &context) }
         #expect(context.used(.totalInputBytes) == 0)
     }
     #expect(try CLIHelp.text(for: "stream").contains("closing syntax"))
-    #expect(try !CLIHelp.text(for: "schema").contains("openai"))
+    #expect(try CLIHelp.text(for: "schema").contains("openai-format"))
     #expect(throws: CLIError.self) { _ = try CLIHelp.text(for: "server") }
     var context = try CLIJobContext()
-    let arguments = try CLIArguments(["schema", "provider", "openai-format", "not-opened.json", "--name", "sample"], context: &context)
+    let arguments = try CLIArguments(["schema", "provider", "apple-check", "not-opened.json", "--name", "sample"], context: &context)
     do { _ = try CLISchemaCommand.run(arguments, context: &context); Issue.record("Prerequisite is not integrated") }
     catch let error as CLIError { #expect(error.exit == 2 && error.code == "capabilityUnavailable") }
     #expect(context.used(.totalInputBytes) == 0)

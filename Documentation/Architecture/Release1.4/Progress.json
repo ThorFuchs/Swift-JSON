@@ -4,14 +4,14 @@
   "renderer_base": "3c1e8a1a1bc8d03699665b8ab98f5ece7962aff7",
   "main_at_orientation": "25fb04f747e583209b4c4511abf39e11ef5b4f80",
   "branch": "codex/1.4-json-cli-integration",
-  "status": "Reconciled onto main9517233; local native/safety/docs passed; final hosted receipts tracked separately",
+  "status": "Portable C5 providers implemented and native behavior-qualified; current-head broad native/safety/docs/Linux qualification and reproduction are recorded in the new return",
   "gates": {
     "C0": "partial",
     "C1": "passed",
     "C2": "passed",
     "C3": "passed",
     "C4": "passed",
-    "C5": "blocked"
+    "C5": "portable_behavior_qualified_final_head_pending"
   },
   "foundation_functions": 12,
   "foundation_parameter_cases": 4,
@@ -21,19 +21,14 @@
   "core_metrics": 49,
   "cli_metrics": 16,
   "publication_performed": false,
-  "root_test_functions": 348,
+  "root_test_functions": 369,
   "root_parameter_cases": 199,
-  "native_source_manifest_sha256": "792ade5810b9d8d2a43c3cd66fdebbe2895640fd1cea52ff19fef05cc36b0475",
-  "qualified_lanes": [
-    "native",
-    "safety",
-    "docs"
-  ],
+  "native_source_manifest_sha256": null,
+  "qualified_lanes": [],
   "remaining_foundation_requirements": [
-    "final restacked-head native/Linux hosted checks",
-    "main-aligned archive/reproduction binding",
-    "qualified schema-provider prerequisite",
-    "full WASI CLI host/signal qualification (limited disposition retained)"
+    "current provider-head native/safety/docs/Linux receipts and clean reproduction",
+    "full WASI CLI host/signal qualification remains a limited disposition",
+    "Apple GenerationSchema/DynamicGenerationSchema bridge is separate, unimplemented scope"
   ],
   "history": [
     {
@@ -104,6 +99,28 @@
       "root_test_functions": 298,
       "root_parameter_cases": 199,
       "archive_sha256": "d7789117654d298bc9fe5157d71fe525761b7122ba4b5c59d311220d8c5e2be5"
+    },
+    {
+      "branch": "codex/1.4-json-cli-integration",
+      "status": "Reconciled onto main9517233; local native/safety/docs passed; final hosted receipts tracked separately",
+      "gates": {
+        "C0": "partial",
+        "C1": "passed",
+        "C2": "passed",
+        "C3": "passed",
+        "C4": "passed",
+        "C5": "portable_behavior_qualified_final_head_pending"
+      },
+      "root_test_functions": 348,
+      "root_parameter_cases": 199,
+      "native_source_manifest_sha256": "792ade5810b9d8d2a43c3cd66fdebbe2895640fd1cea52ff19fef05cc36b0475",
+      "new_cases_observed": 111,
+      "new_cases_passed": 109,
+      "new_cases_blocked": 2,
+      "head": "aded3c9930f580bd4fb902bba002ab75ed199a7b",
+      "hosted_checks": 35,
+      "archive_sha256": "5c62427fd0f5a8f94884117fbc756e8c54e0ab7e45885d5dc7d0b53ba2b51639",
+      "return_sha256": "48a3fae0e1144f420d62fa552676a467cabc879605c3bdfc84d9f3e9e927ca15"
     }
   ],
   "query_functions": 24,
@@ -126,11 +143,16 @@
   "integration_functions": 6,
   "integration_subprocess_cases": 37,
   "new_cases_observed": 111,
-  "new_cases_passed": 109,
-  "new_cases_blocked": 2,
+  "new_cases_passed": 111,
+  "new_cases_blocked": 0,
   "release_ready": false,
   "freeze_closure": "Final source/archive and hosted receipts are recorded in the materialized return pack without rewriting this frozen source.",
   "main_reconciled": "9517233ef0a3c1b961b738df58fe3ee4081d780c",
-  "linux_root_test_functions": 334,
-  "main_conflicts_resolved": true
+  "linux_root_test_functions": 355,
+  "main_conflicts_resolved": true,
+  "provider_functions": 13,
+  "provider_cli_functions": 8,
+  "provider_public_consumer_cases": 14,
+  "provider_subprocess_cases": 37,
+  "provider_profile_revision": "2026-10-15.v1"
 }

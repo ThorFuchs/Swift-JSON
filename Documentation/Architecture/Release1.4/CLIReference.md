@@ -120,3 +120,17 @@ remain blocked. Portable HTML needs neither Apple PDF preparation nor transfer
 providers. WASI CLI feasibility is distinct from compiled libraries/private kernel;
 Node poll_oneoff currently fails with IO exit7, while five WasmKit commands pass; POSIX SIGINT bridging remains unavailable. Actual receipts
 and remaining mandatory gates determine release readiness.
+
+
+## Qualified portable provider increment
+
+`schema provider openai-format SCHEMA --name NAME` emits the exact native object for
+Responses text.format. `openai-tool` emits one flat Responses function tool, with
+strict true and object parameters. Both accept bounded `--description` and explicit
+`--resource URI=PATH`; external-reference export remains incompatible without a
+bundling policy. No network request, credential, model session or schema lowering
+occurs. Incompatibility/unverified declarations exit1 with bounded typed issues,
+while malformed schema/missing refs5, finite resource6, IO7 and cancellation130 remain
+errors. `apple-check` stays unavailable and is omitted from help. See
+[the actual helper/profile/consumer contract](Providers.md). Earlier unavailable
+provider observations in this file are preserved history, superseded by this increment.

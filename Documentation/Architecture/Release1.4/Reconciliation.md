@@ -39,3 +39,9 @@ threads and no-bypass protection are unchanged. No PR merge/tag/publication occu
 Provider CL078/CL079 remain blocked by the absent qualified helper declarations;
 WASI CLI keeps its explicit limited disposition. Main reconciliation does not
 convert these into successes or qualify MCP server/conformance behavior.
+
+
+The subsequent portable provider increment addresses the previously blocked CL078/79.
+Its [separate provider record](Providers.md) and new source-bound receipts supersede
+that prerequisite blocker while preserving every reconciliation/archive observation
+above. It does not qualify Apple model/schema bridges or unrestricted WASI CLI IO.

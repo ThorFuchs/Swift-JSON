@@ -46,6 +46,30 @@ def main():
                     passed=passed and b'9007199254740993' in result.stdout
                 if probe.get('assert_no_external_assets'):
                     passed=passed and not any(x in result.stdout.lower() for x in [b'src="http',b'src="//',b'@import',b'url(http'])
+                if provider and result.returncode in (0,1):
+                    source_path=next(pathlib.Path(x) for x in argv if x.endswith('.json') and pathlib.Path(x).is_file())
+                    original=source_path.read_bytes()
+                    if probe.get('assert_path_types'):
+                        payload=json.loads(result.stdout)
+                        for pointer,kind in probe['assert_path_types'].items():
+                            selected=payload
+                            for token in pointer.lstrip('/').split('/'):
+                                token=token.replace('~1','/').replace('~0','~')
+                                selected=selected[int(token)] if isinstance(selected,list) else selected[token]
+                            passed=passed and (isinstance(selected,dict) if kind=='object' else False)
+                        name=argv[argv.index('--name')+1]
+                        fragment=b'{"type":"json_schema","name":'+json.dumps(name).encode()+b',"strict":true,"schema":'+original.strip()+b'}'
+                        expected_bytes=json.dumps([fragment.decode('utf-8')],ensure_ascii=False).encode('utf-8')
+                        actual=directory/'provider-actual.json';expected=directory/'provider-expected.json'
+                        actual.write_bytes(result.stdout);expected.write_bytes(expected_bytes)
+                        checked=subprocess.run([str(comparator),str(actual),str(expected)],capture_output=True,timeout=30)
+                        comparison={'exit':checked.returncode,'stdout':checked.stdout.decode(),'stderr':checked.stderr.decode()};passed=passed and checked.returncode==0
+                    if probe.get('assert_no_lowering'):
+                        payload=json.loads(result.stdout)
+                        passed=passed and payload.get('compatible') is False and 'schema' not in payload and 'parameters' not in payload and any(x.get('code')=='allPropertiesRequired' for x in payload.get('issues',[])) and source_path.read_bytes()==original
+                    if probe.get('assert_no_network'):
+                        paths=list((ROOT/'Sources/JSONSchema/Providers').glob('*.swift'))+[ROOT/'Sources/JSONCLIEngine/CLISchemaCommand.swift']
+                        passed=passed and all(not any(token in path.read_text() for token in ['import FoundationNetworking','URLSession','URLRequest','import OpenAI','LanguageModelSession']) for path in paths)
                 if provider and result.returncode==2:
                     try:blocked=json.loads(result.stderr)['code']=='capabilityUnavailable' and not result.stdout
                     except (ValueError,KeyError,TypeError):blocked=False

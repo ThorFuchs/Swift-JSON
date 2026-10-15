@@ -238,6 +238,17 @@
           "sha256": "6a4d6a8d46f6b48cd166eea7a8fe7ec5e6e2b463907fa3da12a90d294ffb0486"
         }
       ]
+    },
+    {
+      "repository": "Swift-JSON original implementation",
+      "scope": "JSONSchema portable provider profiles/checks, exact Responses fragments and CLI C5 adapters",
+      "provenance": "Original Apache-2.0 code; frozen user-provided provider fixtures copied unchanged from JSONSchema-Provider-Bridges-Specification-v0.1; profile source URLs/dates and individual fixture hashes in Release1.4/ProviderProfiles.json. No upstream algorithm, SDK or network client adapted.",
+      "paths": [
+        "Sources/JSONSchema/Providers",
+        "Tests/Fixtures/Providers",
+        "Scripts/qualify_schema_providers.py",
+        "Tools/CLIQualification/Sources/ProviderConsumer"
+      ]
     }
   ],
   "original_implementation_notes": [
@@ -258,5 +269,14 @@
     "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied.",
     "1.4 C5 stream/offline-schema adapters, checked sink handoff, command help and consumers are original Apache-2.0 code. Five NewInputs fixtures are copied byte-for-byte from the maintainer CLI briefing pack 43f8819c57e3d93bc6f7cf561d2d111442e089f2973cb7c62e16e3bd3fd73d0d; these authored data fixtures introduce no runtime dependency. Missing provider helper prerequisites remain blocked rather than adapted or silently rewritten.",
     "1.4 checked schema resource lookup and its missing/quota/cancellation/install regressions are original Apache-2.0 code. Supported app/framework/command layouts retain all nine official resource pins; no unbounded directory scan, fallback engine or external dependency is introduced."
-  ]
+  ],
+  "jsonhtml_export_original_contributions": {
+    "license": "Apache-2.0",
+    "adapted_third_party_code": false,
+    "source": "Sources/JSONHTML/JSONExportDocument.swift; JSONExportOptions.swift; JSONTransferable.swift; JSONRTFWriter.swift; JSONPDFOptions.swift; JSONPDFPreparation.swift; JSONPDFBackend.swift",
+    "synthetic_fixture_pack_sha256": "5394fccbcd48244004e146189f4c764857cb83c05fd8a2a91380ca4f9d752105",
+    "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers plus a narrow explicit main-actor Apple PDF boundary using WebKit, CoreText, CoreGraphics and AppKit/UIKit paragraph styles. Core JSON imports none of these; no new root dependency.",
+    "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation.",
+    "pdf": "Original invocation-owned lifecycle, finite adapter accounting and visible-range pagination using Apple SDK APIs. PDFKit is independent qualification only; no third-party renderer adapted."
+  }
 }

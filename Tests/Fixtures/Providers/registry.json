@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {
+      "path": "fixtures/portable-summary-schema.json",
+      "sha256": "240e35a5e300003b58ddbda455e4d0af19aa7191add78fe0eb53270585c1f3a6",
+      "purpose": "Synthetic baseline for exact envelope and post-generation validation; native SDK/provider execution pending."
+    },
+    {
+      "path": "fixtures/optional-field-schema.json",
+      "sha256": "18bfd2748a3500923d20dadf06197b30c2f31c55df4db10b140673d076a69c2d",
+      "purpose": "Must fail strict OpenAI profile without an automatic required/null rewrite."
+    },
+    {
+      "path": "fixtures/boolean-schema.json",
+      "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74",
+      "purpose": "Valid native schema kind; must fail the strict OpenAI object-root profile."
+    },
+    {
+      "path": "fixtures/scalar-key-schema.json",
+      "sha256": "9bace13bae63652cd1c412e7fe5bdffe96eb5645dc3aa060d439ca378a5451ff",
+      "purpose": "Native keys remain distinct; Apple projection must preserve them through a qualified path or reject explicitly."
+    },
+    {
+      "path": "fixtures/exact-number-schema.json",
+      "sha256": "f8078228342835e88212a5b7dd4480546d199565b2309ec868da09d0550b3f68",
+      "purpose": "Native wire lexemes remain exact; Double-backed Apple bound projection requires exact-policy rejection or a qualified exact alternative."
+    }
+  ],
+  "native_execution": "not_run",
+  "live_provider_execution": "not_run"
+}

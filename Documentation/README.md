@@ -53,3 +53,5 @@ Original code is Apache-2.0. See the [license](../LICENSE), [notice](../NOTICE),
 [adaptation manifest](Architecture/ExtractionManifest.json) and
 [pinned inputs](Architecture/UpstreamPins.json). Qualification inputs are separate
 from the empty library dependency graph.
+
+- [Offline provider schemas and request fragments](Architecture/Release1.4/Providers.md), [frozen profile tables](Architecture/Release1.4/ProviderProfiles.json) and the [DocC guide](../Sources/JSONSchema/Documentation.docc/ProviderSchemas.md).

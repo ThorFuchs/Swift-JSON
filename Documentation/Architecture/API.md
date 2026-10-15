@@ -192,6 +192,17 @@ date; application migration needs an independent source of that information.
 Noncanonical Base64 with nonzero unused padding bits now rejects. These corrections
 restore the documented strict/native contracts; they do not add a permissive mode.
 
+## Additive 1.3 prepared export
+
+See the [export contract](JSONHTMLExport.md) for compiler-proven declarations,
+finite limits, selected-format transfer guards and the remaining RTF/PDF and
+receiving-app qualification boundaries.
+
+JSONHTMLRenderer also accepts JSONDocument in its four rendering/report methods.
+Caller annotations use exact typed paths, explicit missing-parent attachment and
+coherent value byte spans without schema execution or source-byte archival.
+See [diagnostic rendering](Release1.3/DiagnosticAnnotations.md).
+
 ## Structured HTML and previews
 
 Layout and presentation are orthogonal. Direct defaults are structured interactive
@@ -199,3 +210,13 @@ inspection; prepared/transfer defaults are structured static complete values. Ty
 preview hints, the closed inline/MathML dialect and finite eligibility counters are
 defined in [the additive contract](Release1.3/StructuredPreviews/APIAndPolicy.md).
 Core exact values, native writer defaults and all 49 metrics retain their meanings.
+
+## Provider-specific schema fragments (1.4 development)
+
+`OpenAIJSONSchemaBridge(profile:limits:)` in JSONSchema provides `check`/`checkWithReport`,
+`responseFormat`/`functionTool`, and their complete Data/String and WithReport forms.
+Profiles are `.openAIResponsesFormatV1` and `.openAIResponsesFunctionV1`; native JSON schemas,
+offline registries and exact typed issue paths stay authoritative. A compatible local check
+is neither native validation of an instance nor a service-acceptance guarantee. Finite limits
+and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
+[profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.

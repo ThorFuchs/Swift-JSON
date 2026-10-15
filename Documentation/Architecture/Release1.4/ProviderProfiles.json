@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "revision": "2026-10-15.v1",
+  "profiles": [
+    "openai.responses.text-format.v1",
+    "openai.responses.function.v1"
+  ],
+  "provider": "openai",
+  "capability_category": "documented-base-model-subset",
+  "scope": "Local unchanged-declaration export; no remote acceptance guarantee; fine-tuned and unspecified model categories are not qualified",
+  "sources": [
+    {
+      "url": "https://developers.openai.com/api/docs/guides/structured-outputs#supported-schemas",
+      "observed_date": "2026-10-15"
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/function-calling#defining-functions",
+      "observed_date": "2026-10-15"
+    },
+    {
+      "url": "https://developers.openai.com/api/reference/resources/responses/methods/create",
+      "observed_date": "2026-10-15"
+    }
+  ],
+  "supported_types": [
+    "object",
+    "array",
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "null"
+  ],
+  "supported_keywords": [
+    "type",
+    "properties",
+    "required",
+    "additionalProperties",
+    "items",
+    "anyOf",
+    "$ref",
+    "$defs",
+    "enum",
+    "description",
+    "title",
+    "pattern",
+    "format",
+    "minimum",
+    "maximum",
+    "exclusiveMinimum",
+    "exclusiveMaximum",
+    "multipleOf",
+    "minItems",
+    "maxItems"
+  ],
+  "formats": [
+    "date-time",
+    "time",
+    "date",
+    "duration",
+    "email",
+    "hostname",
+    "ipv4",
+    "ipv6",
+    "uuid"
+  ],
+  "rules": {
+    "root": "Explicit object type; no root anyOf/$ref or inferred shape",
+    "objects": "Explicit properties object (including empty); each declaration explicitly additionalProperties:false; required exactly covers declared properties",
+    "nullable": "One declared type plus null; no absent-to-null rewriting",
+    "references": "Native offline compilation; only local fragment references exported, productive recursion retained without expansion; unresolved references are operational errors",
+    "unknown": "Unverified declarations block strict export, including const, minLength/maxLength, $schema/$id/anchors and unknown annotations",
+    "combinations": "type with anyOf/$ref, or anyOf with $ref, is unverified in this local revision",
+    "enum": "Only scalar enum values; complex values unverified"
+  },
+  "provider_ceilings": {
+    "total_object_properties": 5000,
+    "nesting_levels": 10,
+    "counted_name_enum_const_characters": 120000,
+    "total_enum_values": 1000,
+    "single_enum_threshold": 250,
+    "single_large_enum_characters": 15000
+  },
+  "local_counting_rules": {
+    "text": "Conservative UTF-8 bytes across property/definition names and string enum values; const is unverified and cannot be exported. This is not a claim that provider characters mean UTF-8 bytes.",
+    "depth": "Schema declaration depth including primitive children; anyOf keeps depth, properties/items add one. Definitions checked independently plus acyclic reference expansion from root. Active-path recursion back edges are not unrolled; shared DAG targets are revisited at their incoming depth. This is a frozen local interpretation, not a universal provider reference-depth assertion.",
+    "format_name": "Nonempty ASCII letters/digits/underscore/dash, maximum 64 bytes, corresponding to the output-format name rule.",
+    "function_name": "Separately frozen conservative local ASCII/64-byte admission rule; no inference of all Responses function-name behavior from Chat Completions.",
+    "metadata": "Envelope name/description and schema title/description UTF-8 count against the same provider metadata capacity."
+  },
+  "local_presets": {
+    "conservative": {
+      "schemaNodes": 2000,
+      "referenceEdges": 4000,
+      "declarations": 20000,
+      "metadataBytes": 32768,
+      "json": "conservative"
+    },
+    "balanced": {
+      "schemaNodes": 10000,
+      "referenceEdges": 20000,
+      "declarations": 100000,
+      "metadataBytes": 262144,
+      "json": "balanced"
+    },
+    "offline": {
+      "schemaNodes": 100000,
+      "referenceEdges": 200000,
+      "declarations": 1000000,
+      "metadataBytes": 1048576,
+      "json": "offline"
+    }
+  },
+  "accounting": "Existing 49 JSON metrics unchanged; all graph work, native compilation, metadata, envelope, writer and result copies share one meter. Provider edge counts include actual repeated inspections during reference-depth walks. Retained bytes are logical weights, not process RSS. Extra cumulative provider quantities stay UInt64; large finite allowances do not allocate capacity or weaken native addressable limits.",
+  "foreign_boundary": "Platform Data/String allocation/encoding implementation instructions are not an RSS or instruction guarantee. No SDK/model/network call occurs.",
+  "apple": "GenerationSchema, DynamicGenerationSchema and GeneratedContent bridges not implemented or qualified by this C5 increment; no placeholder Apple-typed API; apple-check remains unavailable/omitted from help.",
+  "frozen_inputs": [
+    {
+      "path": "Tests/Fixtures/Providers/boolean-schema.json",
+      "sha256": "a17fcf0a2f50e2d495e4f90ce263410edc183add6c62699a2facbccf60410f74"
+    },
+    {
+      "path": "Tests/Fixtures/Providers/exact-number-schema.json",
+      "sha256": "f8078228342835e88212a5b7dd4480546d199565b2309ec868da09d0550b3f68"
+    },
+    {
+      "path": "Tests/Fixtures/Providers/optional-field-schema.json",
+      "sha256": "18bfd2748a3500923d20dadf06197b30c2f31c55df4db10b140673d076a69c2d"
+    },
+    {
+      "path": "Tests/Fixtures/Providers/portable-summary-schema.json",
+      "sha256": "240e35a5e300003b58ddbda455e4d0af19aa7191add78fe0eb53270585c1f3a6"
+    },
+    {
+      "path": "Tests/Fixtures/Providers/registry.json",
+      "sha256": "8a8376831bce17bfeb2ea7e7e8fcef0e3b695b4a67422768376c09f2cd580535"
+    },
+    {
+      "path": "Tests/Fixtures/Providers/scalar-key-schema.json",
+      "sha256": "9bace13bae63652cd1c412e7fe5bdffe96eb5645dc3aa060d439ca378a5451ff"
+    }
+  ]
+}

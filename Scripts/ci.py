@@ -7,8 +7,9 @@ from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedExportPreparationsHaveIndependentConcurrentState|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations'
-ROOT_COUNTS = {'JSONTests':107,'JSONSchemaTests':52,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':97 if sys.platform == 'darwin' else 81,'JSONCLITests':79}
+SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedExportPreparationsHaveIndependentConcurrentState|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedProviderBridgeHasIndependentConcurrentInvocations'
+ROOT_COUNTS = {'JSONTests':107,'JSONSchemaTests':65,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':97 if sys.platform == 'darwin' else 81,'JSONCLITests':87}
+SHARED_COUNTS = {'JSONTests':4,'JSONSchemaTests':2,'JSONRegexRuntimeTests':1,'JSONHTMLTests':5 if sys.platform == 'darwin' else 4,'JSONCLITests':1}
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -50,7 +51,7 @@ def commands(lane, output):
         return [['swift', 'build', '-c', 'release', '--product', 'swift-json'], ['swift', 'test', '--filter', 'cli|sharedFilterPlan'], ['python3', '-B', 'Scripts/qualify_cli.py', '--binary', '.build/release/swift-json', '--output', str(output / 'subprocess.json')],
             ['python3', '-B', 'Scripts/qualify_cli_integration.py', '--binary', '.build/release/swift-json', '--output', str(output / 'integration-subprocess.json')], ['python3', '-B', 'Scripts/qualify_cli_limits.py', '--binary', '.build/release/swift-json', '--output', str(output / 'cli-limits.json')], ['swift', 'build', '-c', 'release', '--package-path', 'Tools/CLIQualification', '--product', 'CLIExactCompare'], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C1', '--output', str(output / 'foundation-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C3', '--output', str(output / 'arithmetic-vectors.json')],
-            ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C4', '--output', str(output / 'advanced-vectors.json')]]
+            ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C4', '--output', str(output / 'advanced-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C5', '--output', str(output / 'integration-vectors.json')], ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CLIQualification', 'ProviderConsumer'], ['python3', '-B', 'Scripts/qualify_schema_providers.py', '--binary', '.build/release/swift-json', '--output', str(output / 'providers.json')]]
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -65,6 +66,9 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C1', '--output', str(output / 'foundation-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C3', '--output', str(output / 'arithmetic-vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C4', '--output', str(output / 'advanced-vectors.json')],
+            ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C5', '--output', str(output / 'integration-vectors.json')],
+            ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CLIQualification', 'ProviderConsumer'],
+            ['python3', '-B', 'Scripts/qualify_schema_providers.py', '--binary', '.build/release/swift-json', '--output', str(output / 'providers.json')],
             ['python3', '-B', 'Scripts/qualify_cli_ownership.py', '--output', str(output / 'cli-ownership')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
@@ -116,8 +120,10 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [79] if 'cli|sharedFilterPlan' in command else [13] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else [1, 1, 1, 4, 4] if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [87] if 'cli|sharedFilterPlan' in command else [1, 39] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
+        if 'thread' in command and events is not None:
+            passed = passed and events['module_function_counts'] == SHARED_COUNTS
         if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
                 passed = passed and events['module_function_counts'] == ROOT_COUNTS
@@ -136,10 +142,13 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_limits.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['observed'] == data['passed'] == 33 and data['failed'] == 0 and data['metrics'] == 16
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_providers.py'] and passed:
+        data = json.loads(log.strip().splitlines()[-1])
+        passed = data['status'] == 'passed' and (data['observed'], data['passed'], data['failed']) == (37, 37, 0) and data['input_unchanged'] and data['static_no_network_client_or_model_session'] and len(data['frozen_inputs']) == 6
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli_cases.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
-        expected = {'C1':12,'C2':38,'C3':17,'C4':38}[command[command.index('--gate')+1]]
-        passed = data['observed'] == data['passed'] == expected and data['failed'] == data['policy'] == 0
+        expected = {'C1':12,'C2':38,'C3':17,'C4':38,'C5':6}[command[command.index('--gate')+1]]
+        passed = data['observed'] == data['passed'] == expected and data['failed'] == data['policy'] == data['blocked'] == 0
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
         passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
@@ -148,8 +157,12 @@ def check_result(command, code, log, events=None):
         passed = passed and set(targets) == {'JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
+    if command[:2] == ['swift', 'run'] and 'ProviderConsumer' in command:
+        passed = passed and 'PROVIDER_CONSUMER passed cases=14' in log.splitlines()
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
         passed = passed and all(line in log.splitlines() for line in ['PUBLIC_BEHAVIOR passed fixtures=8', 'STREAM_CANCELLATION passed', 'DISK_PERSISTENCE passed containers=3 rows=8', 'MOBILE_QUALIFICATION passed cases=3'])
+    if command[:3] == ['python3', '-B', 'Scripts/verify_testing_events.py']:
+        passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=19' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/verify_html_assets.py']:
         passed = passed and 'JSONHTML_ASSETS passed count=2' in log.splitlines()
     if 'BrowserFixtures' in command:
@@ -222,7 +235,7 @@ def main():
     if receipt['status'] == 'passed' and args.lane == 'wasm':
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
-            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':107,'JSONSchemaTests':52,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':81}:
+            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':107,'JSONSchemaTests':65,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':81}:
                 raise ValueError('Missing WASI qualification boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:

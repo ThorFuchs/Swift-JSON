@@ -501,3 +501,13 @@ See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
 This feature stack is under review; provider prerequisites and any unqualified
 platform rows remain explicit release blockers. It does not change released tags.
+
+### Offline provider fragments (1.4 development)
+
+The development CLI supports `swift-json schema provider openai-format schema.json --name summary`
+and `openai-tool`. The public JSONSchema facade `OpenAIJSONSchemaBridge` checks a frozen strict
+Responses base-model subset and returns native request fragments, with exact values and finite
+cumulative reports. It makes no requests and never rewrites optional properties, keys or numbers.
+Incompatibility exits1; operational errors remain errors. Apple schema/model bridges are separate.
+See the [provider contract](Documentation/Architecture/Release1.4/Providers.md) and
+[compiled public consumer](Tools/CLIQualification/Sources/ProviderConsumer/Main.swift).
