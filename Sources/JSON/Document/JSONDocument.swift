@@ -41,6 +41,9 @@ extension JSONParser {
         if let source { try JSONAdmission.text(source, meter: &meter, owned: true) }
         var bytes: [UInt8] = []
         for byte in data { try meter.work(); try meter.require(.inputBytes, UInt64(bytes.count) + 1); try meter.retain(1); bytes.append(byte) }
+        return try parseDocument(bytes, source: source, meter: &meter)
+    }
+    package func parseDocument(_ bytes: [UInt8], source: String?, meter: inout JSONWorkMeter) throws -> JSONDocument {
         var machine = JSONTokenMachine(), assembler = JSONValueAssembler(), mapping = JSONSourceMapBuilder(), index = 0
         var result: JSON?
         while index < bytes.count {

@@ -27,6 +27,9 @@ public struct JSONPointer: Sendable, Hashable {
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public init(tokens: [String], limits: JSONLimits = .balanced) throws {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
+        self = try Self.fromStrings(tokens, meter: &meter)
+    }
+    package static func fromStrings(_ tokens: [String], meter: inout JSONWorkMeter) throws -> Self {
         var keys: [JSONKey] = []
         var encodedBytes: UInt64 = 0
         for token in tokens {
@@ -35,7 +38,7 @@ public struct JSONPointer: Sendable, Hashable {
             for byte in token.utf8 { try meter.work(); encodedBytes = try meter.adding(.pointerBytes, encodedBytes, byte == 47 || byte == 126 ? 2 : 1) }
             try meter.retain(16); keys.append(try JSONKey(token, meter: &meter))
         }
-        self = try Self.decodedTokens(keys, meter: &meter)
+        return try Self.decodedTokens(keys, meter: &meter)
     }
     package static func decodedTokens<S: Sequence>(_ tokens: S, meter: inout JSONWorkMeter) throws -> Self where S.Element == JSONKey {
         var keys: [JSONKey] = [], bytes: UInt64 = 0
@@ -152,6 +155,9 @@ public struct JSONPointer: Sendable, Hashable {
     ///   - limits: Finite inclusive capacities and work quotas for this call.
     public func appending(key: String, limits: JSONLimits = .balanced) throws -> Self {
         var meter = try JSONWorkMeter(limits: limits, domain: .pointer)
+        return try appending(key: key, meter: &meter)
+    }
+    package func appending(key: String, meter: inout JSONWorkMeter) throws -> Self {
         try meter.require(.pointerTokens, UInt64(tokens.count) + 1)
         var encoded: UInt64 = 1
         for byte in key.utf8 { try meter.work(); encoded = try meter.adding(.pointerBytes, encoded, byte == 47 || byte == 126 ? 2 : 1) }

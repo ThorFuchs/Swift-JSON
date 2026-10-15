@@ -57,6 +57,7 @@ belongs exclusively to each invocation.
 - <doc:QuickEntryPoints>
 - <doc:CommandLine>
 - <doc:ExactPersistence>
+- <doc:Composition>
 
 ### Exact model
 - ``JSON/JSON``
@@ -88,6 +89,7 @@ belongs exclusively to each invocation.
 - ``JSONResourceMetric``
 - ``JSONOperationStatistics``
 - ``JSONOperationReport``
+- ``JSONCompositionScope``
 
 ### Scoped reads
 

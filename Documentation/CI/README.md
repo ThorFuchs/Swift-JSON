@@ -1,8 +1,8 @@
 # Native CI
 
 This main-based forward-port retains seven products and restores the entire
-1.2.1 regression inventory. Current native root discovery is 546 functions and
-325 parameter invocations; Linux is 530/325. Full ASan uses the same roots;
+1.2.1 regression inventory. Current native root discovery is 548 functions and
+325 parameter invocations; Linux is 532/325. Full ASan uses the same roots;
 TSan checks 41 native or 40 Linux functions. QA requires the original 145-function
 maintenance subset. Exact per-module counts are in
 [the discovery contract](../Qualification/TestDiscovery.json); parameter-function
@@ -132,3 +132,15 @@ regex 12, streaming 14, patch 11 and portable HTML 61. Its public consumer requi
 remain required. The first failed inherited expectations are retained; no blanket
 nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
 observations remain separate from automated SDK/API and portable execution.
+
+
+## Independent composition proof
+
+`python3 Scripts/ci.py --lane composition` builds an unrelated SwiftPM test
+package against normal public JSON/JSONSchema products. It requires 25 functions
+in both Debug and Release, the independent four-owner event ledger, two actually
+failing omitted-charge mutants, and 13 separate intended compiler failures.
+The two supplementary native functions exercise in-loop cancellation and the
+original continuation's health/identity. Root counts increased by exactly two;
+all 126 restored identities, 325 parameter invocations and 49 cap outcomes remain
+required. These expectations do not assert an unexecuted platform pass.

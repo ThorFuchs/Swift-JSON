@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+import JSONSchema
+func illegal() async throws {
+ _ = try await JSON.withComposition { scope in await Task.yield(); try scope.checkpoint() }
+}
