@@ -48,7 +48,7 @@ and SDK explicitly; no system toolchain setting or baseline is changed.
   all eight product guides remain mandatory.
 - Matching Swift.org 6.4 WASI SDK: the real public release consumer built and
   passed in Node and WasmKit. This is consumer scope, not a new full WASI or
-  host-sanitizer claim. Linux execution remains a separately recorded gate.
+  host-sanitizer claim. Linux execution is recorded in [the separate results](LinuxResults.md).
 
 The first full ASan run recorded an unchanged PDF cancellation test receiving
 `JSONPDFFailure.timedOut` rather than cancellation on a heavily loaded host. The
@@ -80,3 +80,9 @@ Runtime throughput is not benchmarked by the compiler experiment. Its loaded-hos
 compiler elapsed time/RSS observations justify the retained strategy only through
 the tested scale. Projection, text-sequence framing, extra numeric coercions, online
 resolution and new schema semantics remain outside this wave.
+
+The final portable follow-up also executed all 47 new DSL functions in both
+configurations in Node, after compiling the portable root bundles. It preserves
+the limited WASI scope above for other suites and host sanitizers. Real public DSL
+consumer cross-builds passed iPhoneOS/iPhoneSimulator 27.2 SDKs at minimum iOS 27;
+these are build observations, separate from the native persistence tool and devices.

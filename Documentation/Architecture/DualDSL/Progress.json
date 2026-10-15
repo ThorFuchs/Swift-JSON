@@ -12,7 +12,7 @@
     "P1.2-G3": "passed",
     "P1.2-G4": "passed",
     "P1.2-G5": "passed",
-    "P1.2-G6": "in_progress"
+    "P1.2-G6": "passed"
   },
   "scope": "Trusted authored staging; finite iterative shared-ledger finalization; no staging/RSS/caller-work claim",
   "observed": {
@@ -25,9 +25,20 @@
     "native_safety": "passed after retained transient PDF failure and unchanged full rerun",
     "native_lane": "All19 production commands passed across retained13-command run plus6-command source-equivalent continuation after ENOSPC; no uninterrupted full-lane exit0 claimed",
     "docs": "passed:1005/1005 comments,9 catalogs,1530 routes,7636 links",
-    "wasi": "real public release consumer passed Node and WasmKit; consumer scope only",
-    "linux": "run38679209482:both safety lanes passed; both full lanes passed9 commands then failed Git ownership metadata before DSL compiler imports. Narrow exact-checkout trust/SHA verification added to ephemeral workflow; rerun pending.",
-    "completion": "passed:3 actual SourceKit-LSP contexts; interactive Xcode UI not claimed"
+    "wasi": "passed:47 new DSL tests Debug/Release in Node; portable root bundles compiled; public release consumer Node/WasmKit. No new execution of other root corpora or host sanitizers claimed",
+    "linux": "passed:run38680343090 at6f6bd90467aae0354dc5dcfdc7e125a5f6e8d2de; ARM64/x86_64 full16 and safety4 commands each;329 root functions/173 parameters,12 portable TSan; actual receipts and identical archive bytes verified",
+    "completion": "passed:3 actual SourceKit-LSP contexts; interactive Xcode UI not claimed",
+    "apple_sdk": "passed:iPhoneOS/iPhoneSimulator27.2 public DSL consumer builds at existing minimum27; SDK-only scope"
   },
-  "native_results": "Documentation/Qualification/DualDSL/NativeResults.md"
+  "native_results": "Documentation/Qualification/DualDSL/NativeResults.md",
+  "qualification_status": "passed",
+  "release_readiness_reason": "Qualified feature candidate; maintainer API/merge and release authorization remain separate, not a failed technical gate",
+  "qualified_ci_source": "6f6bd90467aae0354dc5dcfdc7e125a5f6e8d2de",
+  "linux_results": "Documentation/Qualification/DualDSL/LinuxResults.md",
+  "remaining_limitations": [
+    "Trusted authored staging/callbacks excluded from finalization work and retention accounting",
+    "No whole-DSL report, caller instruction quota or hard process RSS/throughput guarantee",
+    "Interactive Xcode UI and new physical-device execution not claimed",
+    "All other WASI corpus/sanitizer execution remains its separately qualified existing scope"
+  ]
 }
