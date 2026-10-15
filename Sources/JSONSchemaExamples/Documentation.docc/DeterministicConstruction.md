@@ -5,6 +5,10 @@ Retain exact values, seed choices explicitly and identify every input to a decis
 ## Choose a profile and corpus
 
 ```swift
+import JSON
+import JSONSchema
+import JSONSchemaExamples
+
 let corpus = JSONSchemaExampleCorpus(values: [.string("example"), .null])
 let prepared = try JSONSchemaExampleGenerator(
     document: JSONSchemaDocument(JSONParser().parse("true")),
@@ -51,7 +55,7 @@ native diagnostics. A successful trace is complete; exhaustion/cancellation thro
 without a certificate. Hash work and result metadata also fit before return.
 Logical retained bytes do not describe process RSS, and owned work quotas do not
 limit caller code. Native golden vectors and separate-process checks establish
-the native G4 increment; full Linux/WASI/mobile qualification remains G7.
+the native G5 increment; full Linux/WASI/mobile qualification remains G7.
 
 
 G3 adds conservative typed value requests to the trace and uses
@@ -62,3 +66,22 @@ reproducibility requires the same implementation and versioned inputs.
 
 G4 extends proposals while retaining the trace v2 grammar; its envelope binds
 s3-candidates-v4. Historical G3 witnesses/traces remain in the G3 source/archive.
+
+## Replay the same prepared inputs
+
+```swift
+let prepared = try JSONSchemaExampleGenerator(
+    document: JSONSchemaDocument(JSONParser().parse(#"{"type":"string","minLength":3}"#))
+)
+let first = try prepared.generate(seed: 42, profile: .demonstration)
+let second = try prepared.generate(seed: 42, profile: .demonstration)
+precondition(first.value == second.value && first.traceDigest == second.traceDigest)
+precondition(first.statistics == second.statistics)
+precondition(first.sourceSnapshotDigest == prepared.sourceSnapshotDigest)
+precondition(first.policyDigest == prepared.policyDigest && first.corpusDigest == prepared.corpusDigest)
+```
+
+Retain the implementation commit as well as algorithm ID, seed/profile, source,
+ordered registry, corpus and policies. Identical source digests alone do not bind
+evaluator policies; equal seeds need not produce different values. There is no
+locale, clock, system randomness, online lookup or process-randomized Hasher input.

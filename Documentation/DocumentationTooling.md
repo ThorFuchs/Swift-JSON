@@ -22,8 +22,9 @@ checks README Swift fences against their executable consumer source, runs that
 consumer, and compiles all seven DocC catalogs with warnings as errors. Zero public
 symbols, missing comments, stale examples or a failed catalog fail the lane.
 
-The lane also executes the standalone schema-examples consumer (12 cases and two
-expected compiler rejections). Every successful consumer value, including the
+The lane also executes the standalone schema-examples consumer (15 preserved cases and two
+expected compiler rejections), plus every Swift block in all five JSONSchemaExamples
+guides (ten independently scoped snippets, executed in two processes). Every successful consumer value, including the
 offline-reference case, receives an independent native verdict and strict
 roundtrip check. Remaining work is derived from public limits and cumulative
 statistics; the consumer imports no private meters.
@@ -32,7 +33,7 @@ statistics; the consumer imports no private meters.
 | --- | --- |
 | `.build/handoff/docc/JSON.doccarchive` | JSON API and exact values/native coding guide |
 | `.build/handoff/docc/JSONSchema.doccarchive` | Schema API and offline validation guide |
-| `.build/handoff/docc/JSONSchemaExamples.doccarchive` | G2 certified candidates, exact construction and deterministic provenance |
+| `.build/handoff/docc/JSONSchemaExamples.doccarchive` | Certified candidates, conservative construction, deterministic provenance and finite lifecycle |
 | `.build/handoff/docc/JSONStreaming.doccarchive` | Streaming API and completion/backpressure guide |
 | `.build/handoff/docc/JSONHTML.doccarchive` | Exact formatted HTML API and rendering guide |
 | `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |
@@ -124,3 +125,25 @@ Run native and safety lanes when code changes; required branch checks also run o
 public documentation PRs. Preserve published source/evidence identities and create
 a distinct successor archive when source content changes. Performance evidence is
 reused only when its measured implementation and workload remain applicable.
+
+### Keep schema example guides executable
+
+Every Swift fence in `Sources/JSONSchemaExamples/Documentation.docc/*.md` is counted,
+hashed and synchronized with the separate public consumer. The current contract is
+ten snippets across five guides, covering exact values/keys, offline definition
+selection, deterministic replay, format/default policy, remaining work and explicit
+search failure. The docs/native consumer qualifiers require both process completions
+and preserve all original 15 consumer cases and two compiler negatives.
+
+```sh
+python3 -B Scripts/schema_example_documentation.py --write
+python3 -B Scripts/verify_schema_example_documentation.py
+swift run --package-path Examples/SchemaExamplesConsumer SchemaExamplesConsumer --documentation
+```
+
+Review the generated DocumentationExamples.swift diff after editing a guide. Missing,
+extra, empty or foreign-import snippets and source drift fail qualification. The
+`#sourceLocation` directives map compiler errors to the authored guide. The root
+README has fourteen executable Swift fences in its separate seven-library consumer;
+installation fragments remain manifest examples, checked by real package manifests.
+Native DocC checks symbol links and the site verifies the new limits-guide route.

@@ -39,7 +39,8 @@ Compiled archives and public symbol graphs remain available in CI artifacts.
 
 ## Consumers, qualification and maintenance
 
-- [Five-product compiled example](../Examples/Consumer/README.md)
+- [Seven-library compiled example](../Examples/Consumer/README.md)
+- [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)
 - [Native CI lanes and receipts](CI/README.md)

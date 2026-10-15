@@ -50,3 +50,29 @@ a required success. The qualifier repeats in two processes and materializes each
 outcome, plus native verdicts for all 44 schemas/155 witness expectations. Failures
 carry no invented value or successful work report. General inversion, triggered
 dependency solving and constructive dynamic scope remain incomplete.
+
+## Compiled public documentation
+
+All ten Swift snippets across the five JSONSchemaExamples DocC guides execute as
+independent scopes in DocumentationExamples.swift, synchronized byte-for-byte from
+the authored guides. The exact examples cover scalar-distinct required/null keys,
+large integers, offline resource/definition selection and native revalidation,
+contains/pattern proposals, seeded replay, remaining work, unchanged format/default
+policy and honest incomplete search. No package-private state is imported.
+
+```sh
+python3 -B Scripts/schema_example_documentation.py
+swift run --package-path Examples/SchemaExamplesConsumer SchemaExamplesConsumer --documentation
+```
+
+The existing qualifier runs this mode twice and requires exactly ten completed
+snippets each time, in addition to the preserved 15 cases, two process repeatability
+vectors, independent transport oracle and two compiler negatives. Drift and count
+failures are rejected, without adding root package dependencies. See the current
+[API](../../Documentation/Architecture/Release1.6/API.md),
+[49-metric scope](../../Documentation/Architecture/Release1.6/SchemaExamplesLimits.md)
+and [compiled policy guide](../../Sources/JSONSchemaExamples/Documentation.docc/PoliciesAndLimits.md).
+
+JSONSchemaDSL is absent from this S3 source snapshot. Its independent train remains
+untouched; a DSL/handwritten equality example waits for an available integrated
+product. Native examples do not establish later Linux/WASI/mobile release gates.

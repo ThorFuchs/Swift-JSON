@@ -6,13 +6,18 @@ import JSONSchema
 public struct JSONSchemaExampleOptions: Sendable {
     /// Generation capacities; their intersection with validation limits governs each invocation.
     public var limits: JSONLimits
-    /// The positive finite ceiling on candidate validations, including invalid candidates.
+    /// The positive finite ceiling on completed candidate validations, including invalid candidates.
+    /// Defaults to 16; zero and UInt64.max are rejected at preparation. It is not
+    /// a completeness guarantee: unsupported construction may stop before this ceiling.
     public var maximumAttempts: UInt64
     /// Immutable ordered candidates admitted and hashed during preparation.
     public var corpus: JSONSchemaExampleCorpus
-    /// Compilation and snapshot preparation policy, separate from instance evaluation.
+    /// One compilation/snapshot/corpus/policy preparation budget, separate from generation.
+    /// Its format-assertion setting remains distinct from evaluation policy.
     public var compilationOptions: JSONSchemaOptions
     /// Unchanged evaluator policy; required vocabulary assertions remain authoritative.
+    /// Its limits intersect generation limits, while output, diagnostics, annotations
+    /// and explicit format assertion are forwarded unchanged to native validation.
     public var validationOptions: JSONSchemaOptions
 
     /// Creates policies checked when the generator is prepared.

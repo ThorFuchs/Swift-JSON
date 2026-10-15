@@ -262,3 +262,19 @@ success. See [the G3 constructive subset](Release1.6/G3Construction.md),
 [the capability ledger](Release1.6/Capabilities.json), [the G2 byte transports](Release1.6/G2Determinism.md), the historical
 [G1 API decision](Release1.6/G1API.md), and the
 [compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).
+
+## Optional verified schema examples (1.6 development)
+
+JSONSchemaExamples adds an immutable prepared generator over admitted documents and
+explicit offline registries. Every returned value has a completed native root verdict,
+with exact JSON semantics, cumulative generation statistics and versioned provenance.
+It does not alter JSON/JSONSchema APIs, policies, products or dependencies.
+
+See the [current public declarations and failures](Release1.6/API.md),
+[supported construction subset](../../Sources/JSONSchemaExamples/Documentation.docc/TypedConstruction.md),
+[resource scope](Release1.6/SchemaExamplesLimits.md) and
+[compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).
+Preparation and generation use separate finite ledgers. All attempts within a generation
+share one ledger; false verdicts consume work, operational errors/cancellation terminate
+without a candidate or successful report, and search exhaustion is not a proof.
+G7/G8 final release/platform qualification remains open.

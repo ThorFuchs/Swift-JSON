@@ -1,8 +1,12 @@
 # Verified candidates
 
-Compile once, retain explicit offline resources, and publish only a native valid verdict.
+Prepare an offline schema once and return exact JSON only after native validation succeeds.
 
-## A working exact example
+## Prepare and generate
+
+Add the optional JSONSchemaExamples product to your application target, then import
+JSON, JSONSchema and JSONSchemaExamples explicitly. This product is in 1.6 development;
+use the inspected feature checkout until a qualified release includes it.
 
 ```swift
 import JSON
@@ -14,71 +18,78 @@ let document = try JSONSchemaDocument(JSONParser().parse(
 ))
 let prepared = try JSONSchemaExampleGenerator(document: document)
 let result = try prepared.generate(seed: 42, profile: .minimal)
-precondition(result.validation.isValid)
 let text = try JSONWriter().writeString(result.value)
+precondition(result.validation.isValid && text == "9007199254740993")
+precondition(result.attempts == 1 && result.statistics[.evaluationWorkUnits] > 0)
 ```
 
-The large integer stays exact. The standalone `Examples/SchemaExamplesConsumer`
-package compiles this public shape, validates every returned value independently,
-and exercises scalar-distinct keys, static/offline references and failures.
+``JSONSchemaExampleGenerator`` retains the admitted document, explicit registry,
+compiled plan and policies. Each call owns independent mutable state. A successful
+``JSONSchemaExampleResult`` contains its exact value, actual native verdict,
+cumulative statistics and versioned provenance. Callers cannot initialize a
+certificate through a public initializer. The existing JSON model and
+JSONSchemaCompiler/JSONSchemaValidator remain the semantic authorities.
 
-## Current construction boundary
+## Select a definition and supply offline resources
 
-G3 offers active const, default, enum and examples in exact ASCII keyword
-order, then compiler-qualified static reference declarations in ASCII keyword
-order. Array order remains semantic. True and empty schemas offer null under
-minimal, or a seeded synthetic token under demonstration. Defaults and examples are merely candidates: an invalid candidate
-is rejected, without inserting defaults or repairing values. Reference siblings
-are enforced by validating against the original root. Dynamic construction and
-same-instance ancestor cycles fail explicitly. After declared candidates, G3
-constructs bounded typed proposals from compiler-qualified constraints. See <doc:TypedConstruction> for the qualified subset. This is neither full Draft 2020-12 generation nor a
-complete satisfiability solver.
+A document containing only `$defs` does not select an instance schema. Root the
+requested definition explicitly. Retrieval URIs identify resources; they never
+cause network access. Compilation uses only packaged meta-schemas and your registry.
 
-Minimal performs no random draws. Demonstration uses `splitmix64-v1` rejection
-sampling to pick a starting offset, followed by a circular scan without replacement.
-Every rejected draw and invalid candidate consumes the same invocation ledger.
-See <doc:DeterministicConstruction> for exact construction and provenance.
+```swift
+let parser = JSONParser()
+let resource = try JSONSchemaDocument(parser.parse(
+    #"{"$defs":{"count":{"type":"integer","minimum":9007199254740993}}}"#
+), retrievalURI: JSONSchemaURI("https://example.com/schemas/counts"))
+let registry = try JSONSchemaRegistry(documents: [resource])
+let root = try JSONSchemaDocument(parser.parse(
+    ##"{"$ref":"https://example.com/schemas/counts#/$defs/count"}"##
+))
+let prepared = try JSONSchemaExampleGenerator(document: root, registry: registry)
+let result = try prepared.generate()
+let plan = try JSONSchemaCompiler().compile(root, registry: registry)
+let independentlyValid = try plan.validate(result.value).isValid
+let exact = try JSONNumber(parsing: "9007199254740993")
+let roundtrip = try JSONParser().parse(JSONWriter().write(result.value))
+precondition(independentlyValid && result.value.numberValue == exact)
+precondition(roundtrip == result.value)
+```
 
-## Policies, errors and sharing
+The final verdict always evaluates the original prepared root, including reference
+siblings. Raw `$defs`, defaults, examples and unknown metadata are retained without
+inserting fields, repairing candidates or inferring requiredness. Static targets
+come from the compiler-qualified plan; construction does not implement another URI
+resolver. Reached dynamic scope and active same-instance cycles can fail explicitly.
 
-Preparation owns one compilation ledger, including source snapshot serialization
-and SHA-256. Generation owns a fresh invocation ledger shared by discovery and
-**all** candidate validations, including false verdicts. The effective capacities
-are the intersection of generation limits and evaluation limits. Compilation
-options and validation options remain separate; no format policy is changed.
-Required assertion vocabularies remain authoritative. Discarded validation ownership is released while work remains charged. Logical
-retention uses existing accounting weights and is not allocator memory or RSS.
+## Handle incomplete search separately from errors
 
-An ordinary false verdict may lead to another candidate. Native operational
-errors, exhaustion and cancellation terminate the invocation immediately. Typed
-construction errors distinguish unsupported features, search exhaustion, reviewed
-trivial unsatisfiability proofs and invalid generator configuration. No value
-accompanies a failed invocation. Reuse the immutable generator across tasks; each
-call owns its mutable search and evaluation state.
+A rejected candidate is an ordinary completed false verdict and consumes budget.
+An exhausted search can still have a valid witness outside the offered candidates.
+Only root false and an active root `not` of true/empty schema have trivial proofs.
+No search exhaustion, reference cycle or operational error establishes unsatisfiability.
 
-## Snapshot identity
+```swift
+let document = try JSONSchemaDocument(JSONParser().parse(
+    #"{"const":1,"type":"string"}"#
+))
+let prepared = try JSONSchemaExampleGenerator(document: document)
+var exhausted = false
+do {
+    _ = try prepared.generate()
+} catch JSONSchemaExampleFailure.searchExhausted(let attempts) {
+    precondition(attempts == 1)
+    exhausted = true
+}
+precondition(exhausted)
+```
 
-`swift-json-schema-snapshot-v1` hashes the admitted normalized root and explicit
-registry documents in caller order, including unambiguous retrieval identities.
-It uses compact scalar-key/normalized-number writer bytes and big-endian UInt64
-lengths. It excludes source maps and unavailable original source bytes. Policies
-are retained separately: equal source digests do not imply equal policy. This is
-not RFC8785/JCS and is not a raw-text digest. The result also binds
-the immutable corpus and all policies with separate versioned digests. The complete
-abstract trace includes every raw draw and native verdict, without raw schema or
-instance content. It throws on exhaustion rather than silently truncating. Full
-byte transports are in the repository's Release1.6/G2Determinism and G3Construction contracts.
+Other construction outcomes use ``JSONSchemaExampleFailure/unsupportedFeature(_:)``,
+``JSONSchemaExampleFailure/provenUnsatisfiable(_:)`` or
+``JSONSchemaExampleFailure/invalidConfiguration(_:)``. Native compilation/evaluation
+errors, resource errors and CancellationError propagate separately; catch them only
+when the application can handle them. A failure has no value or successful work report.
 
-## Cumulative accounting and lifecycle
-
-Generation charges discovery, staging, every completed native verdict and final
-trace hashing to one invocation ledger. False verdicts retain their work and
-diagnostic charges. Operational failure or cancellation ends the invocation; no
-retry receives a fresh quota. Independent calls can reuse the immutable preparation.
-
-The report snapshots logical reservations at certification, including the result
-and conservative staging scratch held through that boundary. Remaining invocation
-reservations end when ownership transfers to the caller, or on failure. This is
-not a measurement of returned heap size or RSS. Trace hashing retains its actual
-64-byte hex digest and never refunds unrelated reservations. G5 corrects an
-unmatched 32-byte refund from G4; the algorithm and trace bytes stay unchanged.
+See <doc:TypedConstruction>, <doc:AdvancedConstruction>, <doc:DeterministicConstruction>
+and <doc:PoliciesAndLimits> for the bounded construction and accounting contracts.
+Every Swift block in these guides is synchronized with and executed by the standalone
+Examples/SchemaExamplesConsumer package using public imports only.

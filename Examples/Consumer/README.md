@@ -23,3 +23,8 @@ The sixth optional product, JSONBridges, is imported explicitly for the E2 numer
 examples. Three synchronized guide fences execute alongside all README examples.
 Core-only and unsupported-Float compiler rejections are checked separately by
 Scripts/qualify_ergonomics.py in debug and release configurations.
+
+The seventh library, optional JSONSchemaExamples, executes the README's native-
+certified exact integer example. Adding this external consumer dependency creates
+no dependency in JSON or JSONSchema. The standalone SchemaExamplesConsumer additionally
+executes every S3 DocC Swift block and its native acceptance matrices.

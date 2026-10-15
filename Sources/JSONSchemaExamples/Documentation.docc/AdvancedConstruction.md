@@ -14,7 +14,7 @@ let result = try JSONSchemaExampleGenerator(document: document).generate(seed: 4
 precondition(result.validation.isValid)
 ```
 
-The native tests execute this composed shape. Contains hints request enough items
+The synchronized public guide consumer and native tests execute this composed shape. Contains hints request enough items
 and add the qualified contains child beside each applicable prefix/items child.
 Several conjunctions remain separate. Full native validation counts actual matches,
 checks maxima and propagates evaluated-item annotations. The constructor does not
@@ -50,4 +50,5 @@ generation ledger. Returned statistics describe successful calls only; no value
 or successful report is invented after a failure. Logical retained bytes are not
 RSS and caller qualification work is separate. Algorithm is s3-candidates-v4;
 the trace v2 grammar and source/corpus/policy v1 transports remain unchanged.
-G5-G8 lifecycle/platform/integration/release qualification remains separate.
+See <doc:PoliciesAndLimits> for the qualified native lifecycle. G7/G8 final
+platform/integration/release qualification remains separate.

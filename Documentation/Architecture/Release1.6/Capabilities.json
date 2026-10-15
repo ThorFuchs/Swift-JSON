@@ -324,6 +324,6 @@
   "limitations": [
     "No general satisfiability decision or universal must-generate promise outside the pinned subset",
     "No unqualified cross-platform, RSS or controlled-throughput claim",
-    "Main 1.5.1 integration and G5-G8 remain separate gates"
+    "Main 1.5.1 integration and G7/G8 remain separate gates"
   ]
 }

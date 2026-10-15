@@ -27,3 +27,8 @@ and original frozen archives stay in ignored `Artifacts/`.
 
 `Scripts/qualify_ergonomics.py` is part of native/Linux CI: eight real-module
 compiler probes and three synchronized, executed public guide fences.
+
+`schema_example_documentation.py` synchronizes all ten S3 DocC Swift blocks with
+their public consumer. `verify_schema_example_documentation.py` rejects count/import/
+drift and receipt mutations; the native/docs qualifiers execute the ten blocks in
+two actual processes. Root README fences execute in the seven-library consumer.

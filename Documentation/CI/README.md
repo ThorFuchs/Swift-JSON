@@ -133,3 +133,9 @@ compilation of the new target and dependencies. Native Swift 6.4's observed
 `--test-product JSONSchemaExamplesTests` selects the generated test product; this
 does not add a public library product or change full-lane cardinalities. No
 filtered lane substitutes for the full release/conformance/platform gates.
+
+The schema-examples consumer qualifier preserves its 15 public cases/two compiler
+negatives and additionally requires ten synchronized DocC snippets in two processes.
+The docs lane checks those source bytes before compilation. Exact marker/cardinality
+checks reject missing documentation outcomes; all 49 baseline cap probes and the
+96 generator/515 full-root/19 sharing-function requirements remain unchanged.

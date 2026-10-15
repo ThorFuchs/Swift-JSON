@@ -4,7 +4,9 @@ import JSON
 /// Immutable ordered synthetic candidates, admitted when a generator is prepared.
 ///
 /// Tokens never override schema semantics. The demonstration profile uses them
-/// for true/empty schemas; later constructive subsets may also consult them.
+/// for true/empty schemas and conservative string proposals. Corpus order and
+/// exact admitted contents contribute to deterministic identity. Preparation
+/// checks all tokens with its finite policy; storing the corpus alone is unmetered.
 public struct JSONSchemaExampleCorpus: Sendable {
     /// Exact ordered values; order contributes to corpus identity and seeded choices.
     public let values: [JSON]

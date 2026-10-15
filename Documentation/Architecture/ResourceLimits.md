@@ -121,3 +121,19 @@ so retained reusable scratch is zero. Live owned capacities still charge
 retainedBytes. Scalar scanning and immutable plan-local regex sharing remain the
 qualified choices; no SIMD or prefilter optimization is claimed. Native performance
 observations are separate from the logical policy in [performance notes](../Performance/README.md).
+
+## Optional schema example generation (1.6 development)
+
+JSONSchemaExamples uses the same 49 caps and logical weights, with a separate finite
+preparation budget and one cumulative generation/evaluation budget per invocation.
+All candidates, including false verdicts, share that generation ledger. Generation
+limits intersect validation limits without changing evaluator policy; a positive
+finite maximumAttempts (default 16) additionally bounds candidate checks.
+
+The [metric scope](Release1.6/SchemaExamplesLimits.md) distinguishes cumulative work,
+per-materialization capacities, logical reservations and metrics for operations the
+generator does not perform. The [compiled public guide](../../Sources/JSONSchemaExamples/Documentation.docc/PoliciesAndLimits.md)
+demonstrates checked remaining work. Certification statistics include conservative
+staging reservations; transfer or failure ends the invocation's ownership. A failed
+call returns no successful report. No independent peak sums, RSS/heap hard caps or
+caller instruction guarantees are implied. Default profiles are unchanged.

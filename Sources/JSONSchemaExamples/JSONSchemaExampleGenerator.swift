@@ -6,7 +6,10 @@ import JSONSchema
 ///
 /// Declared hints and conservative typed construction share one cumulative ledger.
 /// Every candidate is validated against the original compiled root. Dynamic scope
-/// and difficult interdependent constraints can still fail explicitly.
+/// and difficult interdependent constraints can still fail explicitly. Preparation
+/// has its own finite ledger; each generate call is independent and shares one
+/// cumulative ledger through all candidate checks. See <doc:VerifiedCandidates>
+/// and <doc:PoliciesAndLimits> for supported construction and lifecycle boundaries.
 public struct JSONSchemaExampleGenerator: Sendable {
     /// The admitted source document, including any caller-supplied source map.
     public let document: JSONSchemaDocument
@@ -56,6 +59,11 @@ public struct JSONSchemaExampleGenerator: Sendable {
     }
 
     /// Offers bounded exact candidates, returning only a completed native valid verdict.
+    ///
+    /// False candidate verdicts retain their work and diagnostic charges. An
+    /// operational error or cancellation ends the invocation without a candidate
+    /// or successful report. Reusing this prepared generator starts an independent
+    /// invocation; it does not continue an earlier call's remaining budget.
     /// - Parameters:
     ///   - seed: SplitMix64 initial state for demonstration choices; always bound into the trace.
     ///   - profile: Stable minimal order or seeded demonstration candidate selection.

@@ -37,8 +37,13 @@ def main():
         return text
 
     receipt = {'schema_version': 1, 'status': 'failed', 'public_cases': 15, 'negative_probes': 2,
-               'scope': 'G2 public consumer, independent digest oracle and process repeatability; not G7 platform qualification', 'commands': rows}
+               'scope': 'Public consumer, synchronized DocC snippets, independent digest oracle and process repeatability; not G7 platform qualification', 'commands': rows}
     try:
+        from schema_example_documentation import check
+        receipt['documentation'] = check()
+        harness = run('documentation-harness', ['python3', '-B', 'Scripts/verify_schema_example_documentation.py'])
+        if 'SCHEMA_EXAMPLES_DOC_HARNESS passed cases=11 metrics=49' not in harness.splitlines():
+            raise ValueError('Missing exact documentation harness outcomes')
         text = run('consumer', base + ['SchemaExamplesConsumer'])
         if 'SCHEMA_EXAMPLES_CONSUMER passed cases=15' not in text.splitlines():
             raise ValueError('Missing exact public consumer case count')
@@ -54,6 +59,12 @@ def main():
         second_vectors = [line for line in second.splitlines() if line.startswith('G2_VECTORS ')]
         if len(first_vectors) != 1 or first_vectors != second_vectors or 'SCHEMA_EXAMPLES_CONSUMER passed cases=15' not in second.splitlines():
             raise ValueError('Cross-process value/trace mismatch or missing consumer cases')
+        for index in range(2):
+            documentation = run('documentation-process-' + str(index),
+                                [str(bin_paths[0] / 'SchemaExamplesConsumer'), '--documentation'])
+            if 'SCHEMA_EXAMPLES_DOCUMENTATION passed snippets=10' not in documentation.splitlines():
+                raise ValueError('Missing exact compiled documentation snippet count')
+        receipt['documentation']['processes'] = 2
         run('independent-transport-oracle', ['python3', '-B', 'Scripts/check_schema_example_determinism.py',
                                             '--consumer-log', str(output / 'consumer.log')])
         # Inspect only this consumer's actual product directory, not nested safety caches.
@@ -75,6 +86,7 @@ def main():
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         receipt['error'] = str(error)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+    print('SCHEMA_EXAMPLES_DOCUMENTATION_COMPILER ' + receipt['status'] + ' snippets=10 processes=2')
     print('SCHEMA_EXAMPLES_COMPILER ' + receipt['status'] + ' public_cases=15 negatives=2')
     return 0 if receipt['status'] == 'passed' else 1
 

@@ -62,7 +62,7 @@ Choose the products your application needs:
 | --- | --- |
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
-| **JSONSchemaExamples** | Opt-in candidate verification for 1.6 development: exact declarations and offline static references, certified by the native validator |
+| **JSONSchemaExamples** | 1.6 development: deterministic exact candidates, conservative typed construction and native schema certification |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
 | **JSONHTML** | Structured forms/cards, exact syntax, bounded native previews and prepared exports |
 | **swift-json** | Bounded command-line JSON workflows (1.4 development) |
@@ -74,18 +74,16 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The 1.6 development product `JSONSchemaExamples` depends only on JSON and JSONSchema.
-Its current G4 increment offers explicit const/default/enum/examples candidates and
-compiler-resolved static references, returning a value only after completed native
-validation. Seeded demonstration choices, normalized exact construction and
-versioned snapshot/corpus/policy/trace digests are implemented. Conservative typed
-construction covers basic numeric/string bounds, required objects, arrays and
-compiler-qualified composition/reference hints. Every complete proposal still needs
-native root certification. G4 adds bounded contains and anchored ASCII-pattern
-proposals; complex constraints can still return explicit incomplete search. See the [runnable public consumer](Examples/SchemaExamplesConsumer/README.md)
-and [verified-candidate guide](Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md).
+The optional 1.6 development product `JSONSchemaExamples` depends only on JSON and
+JSONSchema. It prepares immutable offline resources and offers exact declared hints
+and conservative typed candidates. Every returned value has passed native validation
+against the original root. The supported subset includes exact numeric/string bounds,
+required objects, positional arrays, static references, composition hints, contains
+minima and bounded anchored ASCII-pattern proposals. Unsupported or exhausted search
+is explicit and does not establish unsatisfiability. See [generate verified examples](#generate-verified-schema-examples-16-development)
+and the [compiled public guide consumer](Examples/SchemaExamplesConsumer/README.md).
 
-The Linux development increment adds portable schema integrity for all four products
+The inherited Linux increment adds portable schema integrity for its qualified products
 without runtime dependencies. Its initial qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
@@ -94,7 +92,8 @@ The local WASI support increment targets full-language Swift 6.4
 `wasm32-unknown-wasip1`, with finite defaults and exact persistence. Its
 [platform contract](Documentation/Architecture/WebAssembly.md) documents resource
 packaging, execution hosts, qualification scope and safety limitations. Browser
-and Embedded Swift hosting require separate qualification.
+and Embedded Swift hosting require separate qualification. JSONSchemaExamples has native
+G1–G6 evidence on this branch; its Linux/WASI/mobile release gates remain open.
 
 ## Installation
 
@@ -113,7 +112,7 @@ Then add products to your target dependencies:
 
 Add `JSONStreaming`, `JSONPatch` and the 1.3 development product `JSONHTML` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [six-product consumer](Examples/Consumer) for a complete buildable
+releases. See the [seven-library consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 
@@ -301,6 +300,45 @@ u-equivalent behavior and unanchored searches. Compilation, candidate scanning,
 states, captures, matching work and cancellation are budgeted. Exact-spelling programs
 share immutable storage within a plan. See the [schema and regex contract](Documentation/Architecture/SchemaAndRegex.md)
 and [public consumer interface](Documentation/ConsumerInterface.md).
+
+## Generate verified schema examples (1.6 development)
+
+In the isolated 1.6 checkout, add the optional `JSONSchemaExamples` product to your
+target alongside JSON and JSONSchema. Existing released-version requirements above
+do not promise this development API. The generator is useful for deterministic test
+fixtures, documentation samples and schema-driven tooling; it is a conservative
+search, with complete native validation required for every returned value.
+
+```swift
+import JSONSchemaExamples
+
+let exampleSchema = try JSONSchemaDocument(JSONParser().parse(
+    #"{"type":"integer","minimum":9007199254740993}"#
+))
+let exampleGenerator = try JSONSchemaExampleGenerator(document: exampleSchema)
+let schemaExample = try exampleGenerator.generate(seed: 42, profile: .minimal)
+let exampleMinimum = try JSONNumber(parsing: "9007199254740993")
+precondition(schemaExample.validation.isValid)
+precondition(schemaExample.value.numberValue == exampleMinimum)
+precondition(schemaExample.statistics[.evaluationWorkUnits] > 0)
+```
+
+Preparation owns a separate finite compilation/snapshot ledger. Each generation
+shares one cumulative budget across discovery, staging, invalid candidates, native
+validation and final trace hashing. Defaults/examples are hints; no defaults,
+requiredness or format assertion are invented. A `$defs`-only document needs an
+explicit root `$ref` to the desired definition. Registries remain offline and
+immutable. `.demonstration` uses a versioned seeded synthetic corpus, without an
+AI service or network access.
+
+The result binds source, ordered corpus, policies, algorithm and complete trace
+identities. Search exhaustion or unsupported construction can occur for satisfiable
+schemas. Operational errors and cancellation terminate the call with no candidate
+or successful report. Logical retention snapshots certification and conservative
+staging reservations; it is not heap size or RSS. Read the [getting-started guide](Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md),
+[supported subset](Sources/JSONSchemaExamples/Documentation.docc/TypedConstruction.md),
+[policies and limits](Sources/JSONSchemaExamples/Documentation.docc/PoliciesAndLimits.md)
+and [current API contract](Documentation/Architecture/Release1.6/API.md).
 
 ## Apply transactional patches
 

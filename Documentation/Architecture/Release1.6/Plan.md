@@ -73,3 +73,11 @@ G5 qualifies [cumulative resources and lifecycle](G5Resources.md), with a correc
 trace reservation, terminal latching at the invocation boundary and 17 additional
 behavior cases. See [the native outcomes](G5Qualification.md). Candidate algorithm
 v4 and all trace/source/corpus/policy bytes stay unchanged; G6-G8 remain open.
+
+G6 synchronizes all ten Swift blocks in five S3 DocC guides with a real public
+consumer and compiles the new README fence in the seven-library consumer. The
+[current API](API.md), [49-metric scope](SchemaExamplesLimits.md), inline comments
+and guides describe the implemented subset and lifecycle. See [G6 qualification](G6Qualification.md)
+and [documentation contract](G6Documentation.md). Runtime/defaults remain unchanged;
+G7/G8 and main repair integration remain open. The conditional DSL example waits
+for an available integrated product without touching its independent train.

@@ -206,7 +206,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py']:
         passed = passed and 'SCHEMA_EXAMPLES_OWNERSHIP passed positive=1 negatives=8' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_examples.py']:
-        passed = passed and 'SCHEMA_EXAMPLES_COMPILER passed public_cases=15 negatives=2' in log.splitlines()
+        passed = passed and 'SCHEMA_EXAMPLES_COMPILER passed public_cases=15 negatives=2' in log.splitlines() and 'SCHEMA_EXAMPLES_DOCUMENTATION_COMPILER passed snippets=10 processes=2' in log.splitlines()
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
     if command[:2] == ['swift', 'run'] and 'ProviderConsumer' in command:

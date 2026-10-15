@@ -12,6 +12,7 @@ import sys
 import tarfile
 
 import documentation_catalog
+import schema_example_documentation
 from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -81,6 +82,7 @@ def main():
         receipt['coverage'] = coverage
         if coverage['errors']:
             raise ValueError('Incomplete authored public API documentation')
+        receipt['schema_examples_documentation'] = schema_example_documentation.check()
         example_source, example_count = documentation_catalog.readme_examples()
         example = ROOT / 'Examples/Consumer/Sources/Consumer/READMEExamples.swift'
         if example.read_text() != example_source:
