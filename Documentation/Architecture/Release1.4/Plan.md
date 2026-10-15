@@ -1,7 +1,7 @@
 # CLI release plan
 
 The maintainer-approved 1.4.0 train adds `swift-json` as an executable beside the
-five libraries. JSONFilterRuntime and JSONCLIEngine are package-private targets;
+six libraries, including the independently merged opt-in JSONBridges. JSONFilterRuntime and JSONCLIEngine are package-private targets;
 JSONRegexRuntime remains private. Root external dependencies remain empty.
 Historical four/five-product releases and their evidence are unchanged.
 
@@ -14,7 +14,7 @@ branches and draft PRs; it does not change the parallel transfer/PDF or 1.2 work
 | Gate | Cohesive implementation and acceptance |
 | --- | --- |
 | C0 | Source/protection/prerequisite audit, executable/private target shapes, one noncopyable job ledger |
-| C1 | Bounded argv/stdio/files, diagnostics/exits, atomic output, format/validate/Pointer/Patch, six-product inventory |
+| C1 | Bounded argv/stdio/files, diagnostics/exits, atomic output, format/validate/Pointer/Patch, seven-product inventory |
 | C2 | Original flat filter IR and pull VM, input framing, generators/paths/control/bindings/common builtins |
 | C3 | Private exact decimal arithmetic; explicit scale plus half-even division policy |
 | C4 | Qualified richer filters, lexical functions/reductions/path updates; explicit unsupported features |
@@ -38,3 +38,5 @@ host; WASI executable feasibility is separate from the already qualified librari
 Native and sanitizer receipts, subprocess outcomes, commands, toolchain, source and
 binary identities accompany every qualified milestone. All 49 baseline probes and
 independent-suite exclusions remain required and separate from CLI additions.
+
+Main reconciliation for merging PR23–PR27 preserves E2 main e8c3e4b and its public bridges, ergonomics behavior, six DocC catalogs and compiler consumers. Only the CLI executable is added to those six libraries. Exact combined module inventories and all 49 baseline probes remain mandatory.

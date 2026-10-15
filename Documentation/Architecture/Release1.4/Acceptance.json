@@ -19,15 +19,19 @@
     {
       "id": "CL002",
       "gate": "C0",
-      "title": "Six public products with correct kinds",
-      "verification": "Package dump contains five libraries plus swift-json executable; private targets have no products.",
+      "title": "Seven public products with correct kinds after E2 reconciliation",
+      "verification": "Package dump contains six libraries, including merged opt-in JSONBridges, plus swift-json executable; private targets have no products.",
       "obligation": "mandatory",
       "status": "passed",
       "evidence_required": true,
       "fixture_ids": [],
       "evidence": [
         "Documentation/Architecture/Release1.4/Qualification.md"
-      ]
+      ],
+      "historical_six_product_contract": {
+        "title": "Six public products with correct kinds",
+        "verification": "Package dump contains five libraries plus swift-json executable; private targets have no products."
+      }
     },
     {
       "id": "CL003",
@@ -1202,7 +1206,7 @@
     {
       "id": "CL090",
       "gate": "C5",
-      "title": "Six-product CI/documentation",
+      "title": "Combined E2/CLI product CI and documentation",
       "verification": "Existing native/safety/docs plus affected Linux lanes, exact product kinds and public CLI help/docs/examples.",
       "obligation": "mandatory",
       "status": "not_run",
@@ -1253,6 +1257,7 @@
   "notes": [
     "Package integrity is separate from native qualification.",
     "Optional extensions do not block the scoped candidate when not claimed.",
-    "WASI CLI supported/blocked/limited disposition is mandatory; full CLI support is separately earned."
+    "WASI CLI supported/blocked/limited disposition is mandatory; full CLI support is separately earned.",
+    "Main e8c3e4b added the approved JSONBridges product before CLI merge. Current integration preserves six libraries plus the CLI; original briefing/product evidence remains historical."
   ]
 }

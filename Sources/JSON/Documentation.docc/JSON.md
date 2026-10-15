@@ -54,6 +54,7 @@ belongs exclusively to each invocation.
 ### Guides
 
 - <doc:ExactValuesAndCoding>
+- <doc:QuickEntryPoints>
 - <doc:ExactPersistence>
 
 ### Exact model
