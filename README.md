@@ -17,6 +17,11 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
+This feature branch also contains an [experimental structural traversal target](Documentation/Architecture/StructuralIntelligence/API-DECISIONS.md).
+It preserves the seven released products. JSONNavigation product promotion remains
+gated; the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
+describes its many-node scope, exact locations, finite accounting and coverage.
+
 Published **1.5.0** provides six libraries and the CLI. This development branch
 retains main’s unreleased structured HTML previews and forward-ports the 1.5.1
 maintenance repairs: best-effort schema diagnostics, the complete 1.2.1 regression

@@ -8,6 +8,7 @@ Documentation/Architecture before changing behavior.
   JSONBridges and the swift-json executable. JSONFilterRuntime and JSONCLIEngine are package-private.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
   The approved CLI and E2 additions preserve historical product contracts.
+  JSONNavigation is experimental without a public product until its N1 release gate.
   JSONRegexRuntime is package-private. Root package dependencies remain empty.
 - Preserve exact bounded decimals, decoded Unicode scalar identity, ordered
   objects with order-independent equality, one strict UTF-8 grammar, native
