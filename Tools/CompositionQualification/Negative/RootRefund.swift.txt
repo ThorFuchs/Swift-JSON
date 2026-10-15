@@ -1,0 +1,2 @@
+import JSON
+func rejected(_ root: borrowing JSONCompositionRoot) throws { try root.release(1) }

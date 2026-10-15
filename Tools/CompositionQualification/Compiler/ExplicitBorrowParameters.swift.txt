@@ -1,0 +1,5 @@
+import JSON
+func invoke(_ scope: borrowing JSONCompositionScope) throws { try scope.checkpoint() }
+func borrowedParameter() throws {
+    _ = try JSON.withComposition { scope in try invoke(scope) }
+}

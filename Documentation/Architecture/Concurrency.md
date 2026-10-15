@@ -21,6 +21,14 @@ unchecked box. Operation reports are Sendable only when their result qualifies.
 Library work has no default MainActor isolation or CPU-offloading convenience.
 Synchronous calls use the caller executor.
 
+Experimental composition root handles are borrowed, noncopyable and non-Sendable.
+Their immutable graph is admitted once by the owning invocation; a private owner
+reference prevents another invocation from using that admission. Root callbacks
+hold no inout meter borrow across caller code. Handle lifetime never refunds
+logical ownership. Scope and handle captures remain subject to compiler ownership
+checks; the composition qualification records known Swift 6.4 call-site compiler
+aborts separately from expected semantic rejections.
+
 Cancellation checks occur at operation entry, before growth/suspension, on await
 return and at most 1024 owned charged units apart. Native tests must exercise
 inner numeric, codec and regex loops, not only wrapper cancellation. A clock

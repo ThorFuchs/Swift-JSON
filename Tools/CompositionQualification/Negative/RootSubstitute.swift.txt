@@ -1,0 +1,9 @@
+import JSON
+let _ = try JSON.withComposition { scope in
+    try scope.withAdmittedRoot(.null) { outer in
+        try scope.withAdmittedRoot(.null) { inner in
+            swap(&outer, &inner)
+            swap(&outer, &inner)
+        }
+    }
+}

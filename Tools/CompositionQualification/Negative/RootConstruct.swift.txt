@@ -1,0 +1,2 @@
+import JSON
+let root = JSONCompositionRoot()

@@ -54,4 +54,39 @@ zero[.workUnits] = 0
     }
     fatalError("caught native failure finalized")
 } catch let failure as JSONFailure { precondition(failure.category == .resource); negativeCount += 1 }
-print("COMPOSITION_CONSUMER passed positive=2 negative=\(negativeCount) work=\(probe.statistics[.workUnits]) peak=\(probe.statistics.peakLogicalRetainedBytes) version=\(probe.statistics.accountingVersion)")
+let rooted = try JSON.withComposition { scope in
+    try scope.withParsedDocument(data) { document, root in
+        let pointer = try scope.pointer(tokens: ["n"])
+        for _ in 0..<100 {
+            let selected = try scope.resolve(pointer, in: root)
+            precondition(selected.numberValue?.originalLexeme == "9007199254740993")
+        }
+        return document
+    }
+}
+precondition(rooted.result.sourceBytes == data)
+let trusted = try JSON.withComposition { scope in
+    try scope.withAdmittedRoot(.array([true])) { root in
+        try scope.resolve(scope.pointer(tokens: ["0"]), in: root)
+    }
+}
+precondition(trusted.result == true)
+for wrongOwner in [false, true] {
+    do {
+        _ = try JSON.withComposition { scope in
+            try scope.withAdmittedRoot(.array([true])) { root in
+                let pointer = try scope.pointer(tokens: [wrongOwner ? "0" : "9"])
+                if wrongOwner {
+                    return try JSON.withComposition { other in
+                        do { _ = try other.resolve(pointer, in: root) } catch { }
+                        return 0
+                    }.result
+                }
+                do { _ = try scope.resolve(pointer, in: root) } catch { }
+                return 0
+            }
+        }
+        fatalError("invalid admitted-root operation finalized")
+    } catch is JSONFailure { negativeCount += 1 }
+}
+print("COMPOSITION_CONSUMER passed positive=4 negative=\(negativeCount) work=\(probe.statistics[.workUnits]) peak=\(probe.statistics.peakLogicalRetainedBytes) version=\(probe.statistics.accountingVersion)")

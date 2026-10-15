@@ -1,18 +1,17 @@
 # Native CI
 
-## Reconciled Navigation and composition increment
+## Current release source
 
-Current source retains composition from main and adds the opt-in Navigation
-product. The discovery contract requires 597 native functions, 581 Linux functions
-and 493 WASI functions, including all 39 Navigation and 12 composition functions.
-Parameterized inventories remain 325 native/Linux and 288 WASI. Shared-state
-sanitizer expectations are 43 native and 42 Linux. All 126 restored maintenance
-identities and all 49 public capacity probes remain mandatory. Full ASan uses the
-current root inventory. Native has 33 commands, Linux 29; the separate composition
-lane retains its nine commands, five external functions, eight capacity cells and
-11 negative compiler cases. Navigation's focused lane retains five commands.
-Seven public library DocC catalogues include Navigation. These are acceptance
-expectations; source-bound receipts establish actual execution outcomes.
+Current source includes the bounded composition API and the opt-in JSONNavigation
+product. The discovery contract requires 605 native functions, 589 Linux functions
+and 581 WASI functions, including 39 Navigation and 20 composition functions.
+Parameterized inventories remain 325 native/Linux and 288 WASI. All 126 restored
+maintenance identities and 49 public capacity probes remain mandatory. Full ASan
+uses the current root inventory. Native has 33 commands, Linux 29; the focused
+composition lane has 16 commands, five external adapter functions, eight capacity
+cells and 18 semantic-negative compiler cases. Navigation's focused lane retains
+five commands. Seven public library DocC catalogues include Navigation. These are
+acceptance expectations; source-bound receipts establish actual execution outcomes.
 
 The following dated sections retain their original source context.
 
@@ -39,9 +38,9 @@ include that consumer alongside their existing gates; all 49 core cap outcomes a
 retain their original source context; actual source-bound receipts establish passes.
 
 This main-based forward-port retains seven products and restores the entire
-1.2.1 regression inventory. The experimental composition increment adds 12 functions; current native root discovery is 558 functions and
-325 parameter invocations; Linux is 542/325. Full ASan uses the same roots;
-TSan checks 42 native or 41 Linux functions. QA requires the original 145-function
+1.2.1 regression inventory. The experimental composition increment adds 20 functions; current native root discovery is 566 functions and
+325 parameter invocations; Linux is 550/325. Full ASan uses the same roots;
+TSan checks 43 native or 42 Linux functions. QA requires the original 145-function
 maintenance subset. Exact per-module counts are in
 [the discovery contract](../Qualification/TestDiscovery.json); parameter-function
 identities remain independently checked from Swift Testing events. All 49 public
@@ -65,7 +64,7 @@ are recorded; macOS/SDK 27 and Swift 6.4 remain minimums.
 Pushes to main, pull requests and manual dispatch run four lanes:
 
 - Native: public inventory, manifest/dependency graph, release build, debug and
-  release Swift Testing, six-library example, rooted JSON/JSONSchema consumer,
+  release Swift Testing, seven-library example, rooted JSON/JSONSchema consumer,
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
@@ -74,7 +73,7 @@ Pushes to main, pull requests and manual dispatch run four lanes:
   after execution. The extracted receipt must have null Git identity and the same
   complete source manifest.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, six native DocC catalogs with warnings as errors,
+  executed README examples, seven native DocC catalogs with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -171,18 +170,35 @@ remain required. The first failed inherited expectations are retained; no blanke
 nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
 observations remain separate from automated SDK/API and portable execution.
 
-## Experimental composition lane
+## Composition qualification lane
 
-`python3 Scripts/ci.py --lane composition` executes 12 composition functions in
-Debug and Release, a distinct-package JSON/JSONSchema consumer in both modes,
-five external reference-load functions in Debug/Release/ASan, eight separately classified scale cells,
-and 11 compiler-negative ownership fixtures. It supplements the full native,
-safety and docs lanes. On a CLT installation that does not discover TestingMacros,
+`python3 Scripts/ci.py --lane composition` runs 20 core composition functions in
+Debug, Release and ASan, two concurrent-invocation functions with TSan, strict
+memory-safety compilation of JSON, and distinct-package consumers. The public
+consumer has four positive and six negative outcomes in both configurations. The
+external reference adapter retains its five Debug/Release/ASan tests and eight
+scale cells, including three explicit finite-quota refusals. A separate Release
+consumer performs 1,000 resolutions over 50,000-value trusted and parsed roots
+under balanced limits, checking the admitted-root path and per-selection accounting.
+
+Eighteen compiler ownership negatives require source-local diagnostics and no
+object emission. Nine actual call-site probes include three borrowing positives
+and six forms that expose current Swift 6.4 compiler aborts, including a root-only
+escaping capture. Ten Python cases verify that module-cache false positives,
+signals, fatal diagnostics and missing imports cannot pass as rejections. All
+commands, nonzero exits, source hashes and outcomes remain in receipts.
+
+The lane runs every check before reporting compiler robustness. Reproduced known
+aborts set overall status `blocked` and exit 2 while `behavior_status` and the
+ownership rejection results remain explicit. A crash is never a semantic pass.
+This lane uses actual Linux preflight when invoked on Linux; no Linux success is
+inferred from macOS execution. It supplements full native, safety and docs lanes.
+The focused lane also runs in the native and both Linux architecture workflows.
+On a CLT installation that does not discover TestingMacros,
 set `SWIFT_JSON_TESTING_PLUGIN_PATH` to the installed testing plugin directory;
 CI records the explicit `-plugin-path` arguments and preserves the original failure.
 No language, SDK, platform, discovery or sanitizer baseline changes.
 
-The focused composition lane also runs on the Linux architecture jobs and Native / native.
-Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
-The qualification harness now has 15 regression functions, retaining its original 14.
-See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.
+The full native/Linux behavior lanes discover and run the new root functions.
+The standalone composition lane adds the independent public compiler harness,
+reference-heavy adapter matrix and the large repeated-root consumer.

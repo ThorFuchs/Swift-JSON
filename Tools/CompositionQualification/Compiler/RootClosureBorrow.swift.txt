@@ -1,0 +1,10 @@
+import JSON
+func callNow(_ operation: () throws -> JSON) throws -> JSON { try operation() }
+func borrowedRoot() throws -> JSON {
+    try JSON.withComposition { scope in
+        let pointer = try scope.pointer(tokens: [])
+        return try scope.withAdmittedRoot(.null) { root in
+            try callNow { try scope.resolve(pointer, in: root) }
+        }
+    }.result
+}
