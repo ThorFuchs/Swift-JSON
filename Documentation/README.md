@@ -51,3 +51,11 @@ Original code is Apache-2.0. See the [license](../LICENSE), [notice](../NOTICE),
 [adaptation manifest](Architecture/ExtractionManifest.json) and
 [pinned inputs](Architecture/UpstreamPins.json). Qualification inputs are separate
 from the empty library dependency graph.
+
+## Optional authored DSLs (P1.2 development)
+
+- [Integration plan and source boundary](Architecture/DualDSL/Plan.md)
+- [Resource, naming and compiler decisions](Architecture/DualDSL/Decisions.md)
+- [Real-engine acceptance mapping](Qualification/DualDSL/README.md)
+- [Typed value guide](../Sources/JSONValueDSL/Documentation.docc/AuthoredValues.md)
+- [Typed schema guide](../Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md)

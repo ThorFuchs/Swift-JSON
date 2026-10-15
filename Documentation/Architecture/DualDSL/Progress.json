@@ -1,0 +1,18 @@
+{
+  "wave": "P1.2",
+  "base_commit": "e8c3e4bd9ae40d797f07a527ea98879acee3c057",
+  "packet_baseline": "9517233ef0a3c1b961b738df58fe3ee4081d780c",
+  "packet_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+  "branch": "codex/dual-dsl-p1.2",
+  "release_ready": false,
+  "gates": {
+    "P1.2-G0": "in_progress",
+    "P1.2-G1": "in_progress",
+    "P1.2-G2": "in_progress",
+    "P1.2-G3": "in_progress",
+    "P1.2-G4": "pending",
+    "P1.2-G5": "pending",
+    "P1.2-G6": "pending"
+  },
+  "scope": "Trusted authored staging; finite iterative shared-ledger finalization; no staging/RSS/caller-work claim"
+}

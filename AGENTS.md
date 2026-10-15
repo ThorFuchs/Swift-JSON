@@ -4,9 +4,11 @@ Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
-- Keep six public products: JSON, JSONSchema, JSONStreaming, JSONPatch, JSONHTML and JSONBridges.
+- Keep eight public products: JSON, JSONSchema, JSONStreaming, JSONPatch, JSONHTML, JSONBridges, JSONValueDSL and JSONSchemaDSL.
   JSONHTML depends on JSON only; the maintainer-approved 1.3 addition preserves historical four-product releases.
   The E2-approved opt-in JSONBridges depends on JSON only and is never re-exported by core.
+  The P1.2-approved optional DSL products use JSONDSLCore without a standalone core product.
+  Trusted authored DSL staging is outside finalization quotas; never imply a staging/RSS bound.
   JSONRegexRuntime is package-private. Root package dependencies remain empty.
 - Preserve exact bounded decimals, decoded Unicode scalar identity, ordered
   objects with order-independent equality, one strict UTF-8 grammar, native
