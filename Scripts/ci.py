@@ -9,6 +9,7 @@ from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVO
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|sharedExportPreparationsHaveIndependentConcurrentState|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState'
+SHARED_TESTS += '|compositionIndependentScopesCanBeSharedAcrossTasks'
 SHARED_TESTS += '|qaStreaming|qaE2E(SharedPlan|RootImport|NDJSONImport|AwaitedSink|ExactWorkflow)'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
@@ -18,6 +19,14 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'composition':
+        return [
+            ['swift', 'test', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
+            ['swift', 'test', '-c', 'release', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
+            ['swift', 'run', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
+            ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
+            ['python3', '-B', 'Scripts/qualify_composition.py', '--output', str(output / 'compiler-negative')],
+        ]
     if lane == 'archive':
         return [['python3', '-B', 'Scripts/public_check.py'],
                 ['python3', '-B', 'Scripts/qualify_native_reproduction.py', '--output', str(output / 'reproduction')]]
@@ -145,7 +154,7 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
@@ -184,6 +193,8 @@ def check_result(command, code, log, events=None):
         passed = passed and set(targets) == {'JSON', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
+    if command[:2] == ['swift', 'run'] and 'CompositionConsumer' in command:
+        passed = passed and bool(re.search(r'^COMPOSITION_CONSUMER passed positive=2 negative=4 work=[1-9][0-9]* peak=[1-9][0-9]* version=1$', log, re.MULTILINE))
     if command[:2] == ['swift', 'run'] and 'ProviderConsumer' in command:
         passed = passed and 'PROVIDER_CONSUMER passed cases=14' in log.splitlines()
     if command[:2] == ['swift', 'run'] and 'Tools/MobileQualification' in command:
@@ -204,7 +215,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['composition', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -223,6 +234,9 @@ def main():
         return 2
     receipt['status'] = 'running'
     for index, command in enumerate(commands(args.lane, output)):
+        plugin_path = os.environ.get('SWIFT_JSON_TESTING_PLUGIN_PATH')
+        if command[:2] == ['swift', 'test'] and plugin_path:
+            command += ['-Xswiftc', '-plugin-path', '-Xswiftc', plugin_path]
         event_path = output / ('command-%02d.events.jsonl' % index) if command[:2] == ['swift', 'test'] else None
         if event_path is not None:
             event_path.unlink(missing_ok=True)

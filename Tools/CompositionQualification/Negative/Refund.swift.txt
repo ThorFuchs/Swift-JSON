@@ -1,0 +1,6 @@
+import JSON
+func rejected(_ scope: inout JSONCompositionScope) throws {
+    let token = try scope.reserveExternalLogicalBytes(1)
+    try scope.release(token)
+    try scope.release(token)
+}

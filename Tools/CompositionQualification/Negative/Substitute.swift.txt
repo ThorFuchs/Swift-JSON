@@ -1,0 +1,12 @@
+import JSON
+func rejected() throws {
+    _ = try JSON.withComposition { outer in
+        _ = try JSON.withComposition { inner in
+            swap(&outer, &inner)
+            do { try outer.chargeExternalWork(UInt64.max) } catch { }
+            swap(&outer, &inner)
+            return 0
+        }
+        return 0
+    }
+}
