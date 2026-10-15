@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "source_tag": "1.2.1",
+  "source_commit": "e8b687f822c577311156b13bf1d15c2d5620b84e",
+  "restored_test_functions": 126,
+  "files": [
+    {
+      "path": "Tests/JSONIntegrationTests/PublicWorkflowTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "13526269586d14536ea2158b899b82d79ac0ac54cc11548acb0ff50cab4450fd"
+    },
+    {
+      "path": "Tests/JSONIntegrationTests/SeededReplayTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "e285f5e0b3da3ca27f941a2100f0bc2ce0c6a610817a8861864a11b4db9a56d3"
+    },
+    {
+      "path": "Tests/JSONIntegrationTests/StagedImportTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "0cb208939be2dce60806fa838d1be5664f2c04a7c2097bc942c8046ac56fb9ce"
+    },
+    {
+      "path": "Tests/JSONPatchTests/CoverageGapTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "8f7959fbab6aee9a2a2fedce79ad9a2416c2e024c657ba557c0a82e5ff0fcd8b"
+    },
+    {
+      "path": "Tests/JSONRegexRuntimeTests/CoverageGapTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "ec5db364a9563014a4137d9b82b5f29427fa2be36fd41e27710101e8f763a22a"
+    },
+    {
+      "path": "Tests/JSONSchemaTests/CoverageGapTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "b1cc5d17435ec2169c718eae5d3e8c7f5e373887e55873ae54e33824c7ee9203"
+    },
+    {
+      "path": "Tests/JSONStreamingTests/CompletionMatrixTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "4d0b1cb14b25b67eed7970b50b0efa92ce7cfebc4dc9afd5ae44aa169c663dfa"
+    },
+    {
+      "path": "Tests/JSONStreamingTests/ControlledStreamingTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "e9b7958f6013c2c912bf276b9ba3192786fb6ddfcb2387cf59cdbb9d38a1a3df"
+    },
+    {
+      "path": "Tests/JSONStreamingTests/CoverageGapTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "da2935077ccdd326a56e5f47dda53c5930dfe0031ee2173cb35caf4481f6cbde"
+    },
+    {
+      "path": "Tests/JSONStreamingTests/StreamingTestPolicy.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "bb14c9d3bea9b437e812175c265b06f10bc80fe2a2bc3390820a51990bf7338d"
+    },
+    {
+      "path": "Tests/JSONTests/CodableContainerTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "3550d1f1cc4965719065bae2936bcf6724988b6ef572ee04f19664a69a35188e"
+    },
+    {
+      "path": "Tests/JSONTests/CoreClosureTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "8a96815a1e7b7d41eca391776f1f862908ac7fa00731a4294c6b502d7bf2092d"
+    },
+    {
+      "path": "Tests/JSONTests/CoverageGapTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "aff45a2acdfaae9e4efa478e3831705942537b38063ae2ad90d5da5165462fbd"
+    },
+    {
+      "path": "Tests/JSONTests/ForeignCodableTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "92763abf0009eedc1541ca16702357c66db6e618f1901aa9b0fbaa4fd14c0ce7"
+    },
+    {
+      "path": "Tests/JSONTests/Integer128ProbeTests.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "1056ccae60424daa12723ee88b61843a4d6edb4eaef179dcae93856c2445cb60"
+    },
+    {
+      "path": "Scripts/test_discovery.py",
+      "source_tag": "1.2.1",
+      "source_sha256": "e154f937efb6a69aec25510175b868d8516d9775ba4cd146352a31a9028b18b5"
+    },
+    {
+      "path": "Scripts/coverage.py",
+      "source_tag": "1.2.1",
+      "source_sha256": "0403bcc68a38bfa4bd06562a7b401793ffaa1f6ad7aa91667af7cdc63a7262b6"
+    },
+    {
+      "path": "Scripts/test_qualification_harness.py",
+      "source_tag": "1.2.1",
+      "source_sha256": "8b730fd870368473cd61ec4e1b2007705f49d173b1234cbf6c043649c5a9c0de"
+    },
+    {
+      "path": "Scripts/qualify_distribution.py",
+      "source_tag": "1.2.1",
+      "source_sha256": "c04eba2df23aa58e0dcd12153cc21cb2275a4924c957bb3aac38fa58e30e0f22"
+    },
+    {
+      "path": "Tools/DistributionAcceptance/Package.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "6c4ae7930c27180e6d226e5aa345810468d232d9144d81fccd18815f9da8fd49"
+    },
+    {
+      "path": "Tools/DistributionAcceptance/Sources/DistributionAcceptance/main.swift",
+      "source_tag": "1.2.1",
+      "source_sha256": "9c2f3b167b5652e691f6c66b9c7ee3c8889163be6a50d40b1ecb4dce9642018e"
+    }
+  ],
+  "policy": "Original Apache-2.0 tests/harness restored and reconciled with the seven-product contract; receipts identify actual subsequent execution.",
+  "restored_function_names": [
+    "JSONIntegrationTests.qaE2EAnnotationsFromFailedBranchesDoNotAuthorizeProperties()",
+    "JSONIntegrationTests.qaE2EAwaitedSinkCancellationKeepsOnlyAcceptedBytes()",
+    "JSONIntegrationTests.qaE2EAwaitedSinkFailureNeverCertifiesAcceptedPrefix()",
+    "JSONIntegrationTests.qaE2EBuiltinRegistryHasAllPinnedOfflineIdentities()",
+    "JSONIntegrationTests.qaE2ECumulativeWorkSucceedsAtNAndFailsAtNMinusOne()",
+    "JSONIntegrationTests.qaE2EExactScalarAndIntegerConstraintsRejectNearMatches()",
+    "JSONIntegrationTests.qaE2EExactWorkflowHasIndependentGoldenOutput()",
+    "JSONIntegrationTests.qaE2EMinimizedMalformedReplaysHavePreciseFailures()",
+    "JSONIntegrationTests.qaE2ENDJSONImportFailuresKeepAcceptedPrefixWithoutCommit()",
+    "JSONIntegrationTests.qaE2ENDJSONImportStrictFramingCommitsOnlyAtEOF()",
+    "JSONIntegrationTests.qaE2EOfflineReferenceRequiresExplicitRegistry()",
+    "JSONIntegrationTests.qaE2EPatchRollbackRootAbsenceAndMergeNullRemainDistinct()",
+    "JSONIntegrationTests.qaE2ERootImportCancellationAfterProvisionalAcceptanceIsTerminal()",
+    "JSONIntegrationTests.qaE2ERootImportCommitsOnlyAfterCertifiedCompletion()",
+    "JSONIntegrationTests.qaE2ERootImportMalformedTailDoesNotCommitAcceptedElements()",
+    "JSONIntegrationTests.qaE2ERootImportQuotaStopsBeforeCommitAndFurtherPulls()",
+    "JSONIntegrationTests.qaE2ESeededModelsMatchOrderedMemberAndIntegerOracles()",
+    "JSONIntegrationTests.qaE2ESharedPlanRecoversAfterIndependentFailures()",
+    "JSONIntegrationTests.qaE2EUnknownEnvelopeVersionIsCorruption()",
+    "JSONIntegrationTests.qaE2EVersionOneEnvelopePreservesExactInnerState()",
+    "JSONPatchTests.qaPatchMalformedDeclarationsRefuseBeforeApplication()",
+    "JSONPatchTests.qaPatchMoveUnrelatedPrefixAndCopyToRootHaveRFCResults()",
+    "JSONPatchTests.qaPatchNestedArrayEditsRebuildAncestorsAndRefuseScalarParentsTransactionally()",
+    "JSONPatchTests.qaPatchRemovedRootRefusesEveryOperationRequiringPresence()",
+    "JSONPatchTests.qaPatchSamePathMoveRequiresExistingSourceAndChargesCumulatively()",
+    "JSONRegexRuntimeTests.qaRegexControlHexAndAstralEscapesHaveFixedScalarOracles()",
+    "JSONRegexRuntimeTests.qaRegexEscapeCompilationQuotaAndCancellationAreOperational()",
+    "JSONRegexRuntimeTests.qaRegexEscapedCaptureNamesAndUnmatchedReferencesRetainScalarIdentity()",
+    "JSONRegexRuntimeTests.qaRegexMalformedEscapesAreInvalidPatternsRatherThanNoMatch()",
+    "JSONSchemaTests.qaSchemaBestEffortByteRefusalPreservesInvalidityAndExactAccounting()",
+    "JSONSchemaTests.qaSchemaBestEffortDiagnosticsCannotSwallowOwnedWorkOrAnnotations()",
+    "JSONSchemaTests.qaSchemaEmptyArrayAndNonStringAnnotationApplicability()",
+    "JSONSchemaTests.qaSchemaEscapedDiagnosticPathsIdentifyExactScalarMembers()",
+    "JSONSchemaTests.qaSchemaMalformedAnchorsAndReferencesHaveExactFailureCategories()",
+    "JSONSchemaTests.qaSchemaMalformedStandardKeywordShapesAreOperationalFailures()",
+    "JSONSchemaTests.qaSchemaRegistryConflictingNormalizedIDsCannotReplaceAPlan()",
+    "JSONSchemaTests.qaSchemaURIFormatsExerciseIPvFutureAuthorityAndPrivateIRIRanges()",
+    "JSONSchemaTests.qaSchemaURIIdentityFragmentRemovalAndRelativeResolutionAreOffline()",
+    "JSONSchemaTests.qaSchemaURITemplatePrefixLimitsAndPercentVariablesUseStrictGrammar()",
+    "JSONStreamingTests.qaStreamingCancellationAfterHeldAcceptanceKeepsOnlyAcceptedBytes()",
+    "JSONStreamingTests.qaStreamingCancellationWhileEOFHeldSuppressesCompletion()",
+    "JSONStreamingTests.qaStreamingClosingSyntaxAndWhitespacePrecedeCompletion()",
+    "JSONStreamingTests.qaStreamingEveryRootEndingCompletesWithTheSelectedFramingAtEverySplit()",
+    "JSONStreamingTests.qaStreamingFirstElementReturnDoesNotAwaitAnotherSourceChunk()",
+    "JSONStreamingTests.qaStreamingHeldSinkFailureKeepsAcceptedPrefixAndStopsHandoffs()",
+    "JSONStreamingTests.qaStreamingHeldSinkHasOneOutstandingHandoffUntilAcceptance()",
+    "JSONStreamingTests.qaStreamingMalformedTailNeverCompletesAndStopsPulling()",
+    "JSONStreamingTests.qaStreamingOutputQuotaRefusalFollowsHeldChunkAcceptance()",
+    "JSONStreamingTests.qaStreamingRootCompletionWaitsForEOF()",
+    "JSONStreamingTests.qaStreamingSeparatedEventsFinishAtEOFExactlyOnce()",
+    "JSONStreamingTests.qaStreamingSingleValueAndFinalNDJSONRecordWaitForEOF()",
+    "JSONStreamingTests.qaStreamingSourceErrorAfterElementRemainsOperationalAndTerminal()",
+    "JSONStreamingTests.qaStreamingWriterExactChunkAndIndentationBoundsHaveFiniteReports()",
+    "JSONStreamingTests.qaStreamingWriterFacadePreservesGoldenChunksWithoutEmptyHandoffs()",
+    "JSONStreamingTests.qaStreamingWriterInvalidConfigurationNeverCallsSink()",
+    "JSONTests.qaCodableAllKeysCannotTurnExhaustionIntoAnEmptySuccessfulModel()",
+    "JSONTests.qaCodableAllNonthrowingKeyedChildRequestsLatchTheFirstFailure()",
+    "JSONTests.qaCodableAllNonthrowingUnkeyedChildRequestsLatchTheFirstFailure()",
+    "JSONTests.qaCodableCallerErrorRemainsDistinctFromOwnedFailures()",
+    "JSONTests.qaCodableCaughtContainerCancellationRemainsTerminal()",
+    "JSONTests.qaCodableConflictingNonthrowingRootContainersDoNotReturnAValue()",
+    "JSONTests.qaCodableContainsCannotTurnExhaustionIntoAbsenceOrSuccess()",
+    "JSONTests.qaCodableEmptyContainersAreValuesWithoutPlaceholderNulls()",
+    "JSONTests.qaCodableFloatRangeFailureCarriesNestedPath()",
+    "JSONTests.qaCodableKeyEnumerationUnknownKeysAndNullPresenceAreDistinct()",
+    "JSONTests.qaCodableKeyedNestedAndNamedSuperContainersMatchGolden()",
+    "JSONTests.qaCodableNestedContainerWrongKindIdentifiesItsBoundary()",
+    "JSONTests.qaCodableNestedDecodingSharesOneInclusiveWorkLedger()",
+    "JSONTests.qaCodableNestedEncodingSharesOneInclusiveWorkLedger()",
+    "JSONTests.qaCodableNestedInexactIntegerHasConversionCauseAndFullPath()",
+    "JSONTests.qaCodableNestedMissingKeyHasParentPathAndExactMissingKey()",
+    "JSONTests.qaCodableNestedWrongKindHasCompleteTypedCodingPath()",
+    "JSONTests.qaCodableReusedKeyedContainerReplacesWithoutReordering()",
+    "JSONTests.qaCodableSingleNilAndExactGenericPayloadPreserveKinds()",
+    "JSONTests.qaCodableSingleValuePrimitiveOverloadsHaveIndependentExpectedValues()",
+    "JSONTests.qaCodableUnkeyedNestedAndSuperContainersMatchGolden()",
+    "JSONTests.qaCodableUnkeyedNilIndexAndOrdinaryErrorsRemainRecoverable()",
+    "JSONTests.qaCodableUnsetRootReportsAnEncodingFailure()",
+    "JSONTests.qaCoreBinaryZeroSubnormalAndNonfiniteConversionsHaveExactOutcomes()",
+    "JSONTests.qaCoreCustomModelCanDelegateExactNumberCodingWithoutForeignProjection()",
+    "JSONTests.qaCoreFiniteDoubleRoundTripsAndDecimalOverflowHaveExplicitFidelity()",
+    "JSONTests.qaCoreIntegerKeyDictionaryProjectionKeepsItsNumericKeys()",
+    "JSONTests.qaCoreJSONKeyForeignAndNativeCodablePreserveScalarSpelling()",
+    "JSONTests.qaCoreMalformedBase64ReleasesScratchAndKeepsScopeWorkCumulative()",
+    "JSONTests.qaCoreMalformedBase64ReportsSyntaxAtTheNestedField()",
+    "JSONTests.qaCoreMalformedISO8601IsCorruptionRatherThanWrongKind()",
+    "JSONTests.qaCoreMappedErrorConstructionSharesWorkAndCannotMaskQuotaFailure()",
+    "JSONTests.qaCoreNativeDataDateAndIntegerWrongKindsKeepNestedPaths()",
+    "JSONTests.qaCoreNumericTextPreservesLexemesAndFallsBackUnderInclusiveOutputCaps()",
+    "JSONTests.qaCorePayloadFieldEncodingSharesEveryNativeWorkBoundary()",
+    "JSONTests.qaCoreRemovingAbsentMemberPreservesSmallAndIndexedObjectsButStillAdmits()",
+    "JSONTests.qaCoreReusedUnkeyedContainersShareStateAndDoubleSingleWritesFail()",
+    "JSONTests.qaCoreScalarSortedPrefixKeysHaveIndependentGoldenAndCumulativeWork()",
+    "JSONTests.qaCoreSourceDocumentFinishesNumbersAtEOFWithCoherentSpans()",
+    "JSONTests.qaCoreSourceMapDistinguishesTypedKeyAndIndexPaths()",
+    "JSONTests.qaCoreValueMemberAndPresenceRefusalsKeepKindsDistinct()",
+    "JSONTests.qaCoreWideEncodingRefusesEveryInsufficientWorkBudgetAndAcceptsTheBoundary()",
+    "JSONTests.qaCoreWriterRejectsInvalidIndentationBeforeOutput()",
+    "JSONTests.qaDecodeConvenienceReportPreservesExactIntegerAndWorkRefusal()",
+    "JSONTests.qaForeignCoderFidelityCannotRecoverPreviouslyChangedNumbers()",
+    "JSONTests.qaForeignDecimalSinkErrorIsWrappedWithItsNestedPathAndCause()",
+    "JSONTests.qaForeignExactDecimalLimitsRejectFractionalUnderflowAndLongPrecision()",
+    "JSONTests.qaForeignIntegerSinkErrorPropagatesWithoutTryingAnotherRepresentation()",
+    "JSONTests.qaForeignJSONObjectBridgePreservesOrderAndRejectsNonobjects()",
+    "JSONTests.qaForeignNaNDecimalNeverBecomesJSONOrABinaryFallback()",
+    "JSONTests.qaForeignNumberDecodingSelectsInt64UInt64ThenDecimalWithoutDouble()",
+    "JSONTests.qaForeignNumberEncodingUsesExactRepresentationsWithoutBinaryFallback()",
+    "JSONTests.qaForeignPayloadFieldSinkFailurePropagatesWithoutReturningAnEnvelope()",
+    "JSONTests.qaForeignRejectedIntegerCandidatesUseOnlyTheDecimalFallback()",
+    "JSONTests.qaForeignSingleContainerAcquisitionErrorPropagatesUnchanged()",
+    "JSONTests.qaForeignSixKindsAndNestedScalarKeysMatchIndependentGolden()",
+    "JSONTests.qaForeignUnrepresentableNumbersRejectInsteadOfRounding()",
+    "JSONTests.qaInt128ExactJSONAndVersion1PayloadAreSupportedAlternatives()",
+    "JSONTests.qaInt128ExactProjectionsCoverSignedAndUnsignedBoundaries()",
+    "JSONTests.qaInt128NativeCodableDecodingRefusesEvenRepresentableValues()",
+    "JSONTests.qaInt128NativeCodableEncodingRefusesWithoutLossyCoercion()",
+    "JSONTests.qaInt128ProjectionOverflowIsExactConversionFailure()",
+    "JSONTests.qaPointerCompositionPreservesLiteralTokensAndInclusiveLimits()",
+    "JSONTests.qaPointerFragmentRefusalsAndNavigationHavePreciseCauses()",
+    "JSONTests.qaPreviewInvalidOptionsAreConfigurationFailures()",
+    "JSONTests.qaPreviewOmissionKeepsUTF8WholeAtEveryScalarByteBoundary()",
+    "JSONTests.qaPreviewScalarEscapesAndNormalizedNumbersAreStrictWhenComplete()",
+    "JSONTests.qaReadFailedDecimalProjectionReleasesTemporaryRetention()",
+    "JSONTests.qaReadRawAndTypedPresenceUseLiteralScalarKeys()",
+    "JSONTests.qaReadWrongKindProjectionsRecoverWithinOneScope()",
+    "JSONTests.qaValueHashLawsCoverEveryKindAndExactObjectIdentity()"
+  ]
+}

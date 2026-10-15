@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Exercise the real CLI subprocess, exact bytes, exits, stderr and atomic files."""
-import argparse, hashlib, json, os, pathlib, signal, subprocess, tempfile, time
+import argparse, hashlib, json, os, pathlib, re, signal, subprocess, tempfile, time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(); parser.add_argument('--binary', required=True); parser.add_argument('--output', required=True)
     args = parser.parse_args(); binary = (ROOT / args.binary).resolve(); rows = []
-    def run(name, argv, data=b'', exit=0, expected=None, check=None):
-        command = [str(binary), *argv]; process = subprocess.run(command, input=data, capture_output=True, timeout=30)
+    def run(name, argv, data=b'', exit=0, expected=None, check=None, cwd=None):
+        command = [str(binary), *argv]; process = subprocess.run(command, input=data, capture_output=True, timeout=30, cwd=cwd)
         ok = process.returncode == exit and (expected is None or process.stdout == expected)
         if check: ok = ok and check(process)
         rows.append({'id': name, 'command': ['swift-json', *[a if isinstance(a,str) else {'bytes_hex':a.hex()} for a in argv]], 'exit_code': process.returncode, 'expected_exit': exit,
@@ -24,8 +24,11 @@ def main():
         def limit(**caps): return file('limits.json', json.dumps({'version':1,'cli':caps}).encode())
         run('help', ['--help'], check=lambda p: b'format' in p.stdout and not p.stderr)
         run('invalid-argv-utf8', ['format', b'\xff'], exit=2, expected=b'', check=lambda p: b'invalidArgvUTF8' in p.stderr)
-        run('version', ['--version'], expected=b'swift-json 1.4.0-dev\n')
-        run('version-json', ['--version','--json'], check=lambda p: json.loads(p.stdout)['revision'] == 'unknown')
+        version = re.search(r'value = "([^"]+)"', (ROOT / 'Sources/JSONCLIEngine/CLIReleaseVersion.swift').read_text()).group(1)
+        from generate_cli_identity import rendered
+        revision = re.search(r'revision = "([^"]+)"', rendered()).group(1)
+        run('version', ['--version'], expected=('swift-json ' + version + '\n').encode(), cwd=temp)
+        run('version-json', ['--version','--json'], check=lambda p: json.loads(p.stdout)['version'] == version and json.loads(p.stdout)['revision'] == revision and json.loads(p.stdout)['revisionKind'] == 'source-sha256', cwd=temp)
         run('missing-command', [], exit=2, expected=b'')
         run('unknown-option', ['format','--unknown'], exit=2, expected=b'')
         run('usage-json-diagnostic', ['format','--diagnostics=json','--unknown'], exit=2, expected=b'', check=lambda p: json.loads(p.stderr)['kind'] == 'diagnostic' and json.loads(p.stderr)['category'] == 'usage')

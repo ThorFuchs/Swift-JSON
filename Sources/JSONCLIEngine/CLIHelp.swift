@@ -20,7 +20,7 @@ package enum CLIHelp {
         #else
         let architecture = "unknown"
         #endif
-        return "{\"version\":\"1.4.0-dev\",\"revision\":\"unknown\",\"platform\":\"\(platform)\",\"architecture\":\"\(architecture)\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"query\",\"stream\",\"schema-check\",\"openai-format\",\"openai-tool\",\"render-html\",\"render-markdown\",\"render-text\"],\"dialect\":\"swift-json-filter/1\"}\n"
+        return "{\"version\":\"\(CLIReleaseVersion.value)\",\"revision\":\"\(CLIBuildIdentity.revision)\",\"revisionKind\":\"\(CLIBuildIdentity.kind)\",\"platform\":\"\(platform)\",\"architecture\":\"\(architecture)\",\"features\":[\"format\",\"validate\",\"pointer\",\"patch\",\"query\",\"stream\",\"schema-check\",\"openai-format\",\"openai-tool\",\"render-html\",\"render-markdown\",\"render-text\"],\"dialect\":\"swift-json-filter/1\"}\n"
     }
     package static func text(for command: String?) throws -> String {
         let common = """

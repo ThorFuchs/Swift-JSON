@@ -7,12 +7,12 @@ body preserves insertion order, decoded Unicode scalar sequences and original
 numeric lexemes. Constructed numbers use exact normalized decimal spelling.
 JSON escaping precedes HTML escaping; input never becomes markup or script.
 
-The 1.3 development API provides formatted mode and an explicit interactive mode.
+The API released in 1.3.0 provides formatted mode and an explicit interactive mode.
 Interactive documents use native disclosures plus fixed offline controls for outline
 navigation, literal search, exact JSON/Pointer copy and UTF-8 downloads. A separate
 complete formatted block serves printing independently of collapsed state.
 Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML are
-available in this development increment, with opt-in styled RTF for prepared items.
+available since 1.3.0, with opt-in styled RTF for prepared items.
 Explicit main-actor PDF preparation uses the item’s own static HTML. Typed caller annotations attach to exact values or explicitly missing targets at their nearest existing parent. Coherent JSONDocument input adds original byte spans. See <doc:PreparedExport> for format
 selection, native text fidelity and finite RTF capacities.
 

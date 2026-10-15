@@ -17,6 +17,7 @@ let package = Package(
     targets: [
         .target(name: "JSON"),
         .target(name: "JSONBridges", dependencies: ["JSON"]),
+        .testTarget(name: "JSONIntegrationTests", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch"]),
         .testTarget(name: "JSONBridgesTests", dependencies: ["JSONBridges", "JSON"]),
         .target(name: "JSONRegexRuntime", dependencies: ["JSON"]),
         .target(name: "JSONSchema", dependencies: ["JSON", "JSONRegexRuntime"], resources: [.copy("Resources/Draft2020-12")]),
