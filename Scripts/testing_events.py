@@ -4,6 +4,7 @@ import collections
 import json
 
 ROOT_PARAMETER_CASES = {
+    'cliConflictingAndUnknownOptionsReject(argv:)': 4,
     'equivalentDecimalSpellings(text:)': 4, 'inclusiveAdmission(attempt:)': 3,
     'numberGrammarIsStrict(text:)': 10, 'exactDivisibilityUsesDecimalMathematics(a:b:expected:)': 6,
     'strictArrayIndexGrammar(text:)': 5, 'malformedUTF8(bytes:)': 4,

@@ -64,6 +64,7 @@ Choose the products your application needs:
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
 | **JSONHTML** | Exact HTML, offline exploration and immutable native transfer/export (1.3 development) |
+| **swift-json** | Bounded command-line JSON workflows (1.4 development) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (E2 development) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
@@ -454,11 +455,11 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The five DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The six DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all five catalogs on a supported native host:
+Build all six catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -508,3 +509,19 @@ following [SECURITY](SECURITY.md); see [SUPPORT](SUPPORT.md) for maintenance and
 Original code is licensed under [Apache-2.0](LICENSE). Adapted code and qualification
 inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PARTY_NOTICES.md),
 [licenses](Licenses) and [extraction provenance](Documentation/Architecture/ExtractionManifest.json).
+
+## Prospective 1.4 command-line tool
+
+This feature train adds `swift-json` beside the six libraries. Its compiling
+foundation provides strict formatting, validation, Pointer selection, staged
+Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
+and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
+for command semantics, cumulative budgets and qualification boundaries. Query and
+provider commands are advertised only after their separate gates pass.
+
+```sh
+swift build -c release --product swift-json
+.build/release/swift-json format --compact input.json
+.build/release/swift-json validate --schema schema.json input.json
+.build/release/swift-json render input.json --output inspection.html
+```

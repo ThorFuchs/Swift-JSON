@@ -54,7 +54,7 @@ def main():
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version']); run('node-version', [node, '--version'])
         manifest = json.loads(run('root-manifest', [swift, 'package', 'dump-package']))
-        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONBridges', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming']:
+        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONBridges', 'JSONHTML', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):
             if engine == 'node':

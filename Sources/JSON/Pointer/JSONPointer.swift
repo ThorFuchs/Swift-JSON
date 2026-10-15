@@ -209,8 +209,33 @@ public struct JSONPointer: Sendable, Hashable {
         }
         return current
     }
+    /// Package composition distinguishes absence from malformed array-index grammar.
+    /// Present JSON null is a non-nil value; wrong-kind/resource errors still throw.
+    package func resolveIfPresent(in value: JSON, meter: inout JSONWorkMeter) throws -> JSON? {
+        try meter.require(.pointerTokens, UInt64(tokens.count))
+        var current = value
+        for token in tokens {
+            try meter.work()
+            switch current {
+            case .object(let object):
+                guard let child = try object.lookup(token.string, meter: &meter) else { return nil }
+                current = child
+            case .array(let values):
+                let index = try Self.decodedArrayIndex(token.string, meter: &meter)
+                guard index < UInt64(values.count) else { return nil }
+                current = values[Int(index)]
+            default: throw JSONFailure(.typeMismatch, code: .wrongKind)
+            }
+        }
+        return current
+    }
     package static func arrayIndex(_ text: String, count: Int, allowEnd: Bool, meter: inout JSONWorkMeter) throws -> Int {
         if text == "-" && allowEnd { return count }
+        let index = try Self.decodedArrayIndex(text, meter: &meter)
+        guard index < UInt64(count) || (allowEnd && index == UInt64(count)) else { throw JSONFailure(.pointer, code: .invalidIndex) }
+        return Int(index)
+    }
+    package static func decodedArrayIndex(_ text: String, meter: inout JSONWorkMeter) throws -> UInt64 {
         var index: UInt64 = 0, digits = 0
         for byte in text.utf8 {
             try meter.work()
@@ -221,7 +246,7 @@ public struct JSONPointer: Sendable, Hashable {
             guard !overflow2 else { throw JSONFailure(.pointer, code: .invalidIndex) }
             index = sum; digits += 1
         }
-        guard digits > 0, index < UInt64(count) || (allowEnd && index == UInt64(count)) else { throw JSONFailure(.pointer, code: .invalidIndex) }
-        return Int(index)
+        guard digits > 0 else { throw JSONFailure(.pointer, code: .invalidIndex) }
+        return index
     }
 }

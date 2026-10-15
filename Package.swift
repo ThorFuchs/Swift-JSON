@@ -11,7 +11,8 @@ let package = Package(
         .library(name: "JSONStreaming", targets: ["JSONStreaming"]),
         .library(name: "JSONPatch", targets: ["JSONPatch"]),
         .library(name: "JSONHTML", targets: ["JSONHTML"]),
-        .library(name: "JSONBridges", targets: ["JSONBridges"])
+        .library(name: "JSONBridges", targets: ["JSONBridges"]),
+        .executable(name: "swift-json", targets: ["JSONCLI"])
     ],
     targets: [
         .target(name: "JSON"),
@@ -22,6 +23,10 @@ let package = Package(
         .target(name: "JSONStreaming", dependencies: ["JSON"]),
         .target(name: "JSONPatch", dependencies: ["JSON"]),
         .target(name: "JSONHTML", dependencies: ["JSON"], exclude: ["Assets"]),
+        .target(name: "JSONFilterRuntime", dependencies: ["JSON"]),
+        .target(name: "JSONCLIEngine", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch", "JSONHTML", "JSONFilterRuntime"]),
+        .executableTarget(name: "JSONCLI", dependencies: ["JSONCLIEngine"]),
+        .testTarget(name: "JSONCLITests", dependencies: ["JSONCLIEngine", "JSONFilterRuntime", "JSON", "JSONPatch", "JSONSchema", "JSONHTML"]),
         .testTarget(name: "JSONHTMLTests", dependencies: ["JSONHTML", "JSON"]),
         .testTarget(name: "JSONTests", dependencies: ["JSON"], exclude: ["ImplementationPlan.md"]),
         .testTarget(name: "JSONSchemaTests", dependencies: ["JSONSchema"], exclude: ["ImplementationPlan.md"]),

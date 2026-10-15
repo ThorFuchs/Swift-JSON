@@ -20,7 +20,7 @@ package struct JSONWorkMeter: ~Copyable {
     package private(set) var limits: JSONLimits
     private let health = JSONMeterHealth()
     private let trackAcceptedCapacities: Bool
-    package let domain: JSONOperationDomain
+    package private(set) var domain: JSONOperationDomain
     private var counters: [UInt64]
     private var retired: [UInt64]
     private var peak: UInt64 = 0
@@ -30,6 +30,12 @@ package struct JSONWorkMeter: ~Copyable {
     /// lets native tests rendezvous at an actual owned checkpoint without clocks.
     /// Observer execution itself is trusted test code, outside owned work quotas.
     package var checkpointObserver: (@Sendable (UInt64) -> Void)?
+    /// Switches a composed invocation's accounting domain without replacing its ledger.
+    /// Work already consumed and terminal health remain unchanged.
+    package mutating func operationDomain(_ domain: JSONOperationDomain) throws {
+        try checkpoint()
+        self.domain = domain
+    }
     package mutating func schemaEvaluationPhase(_ active: Bool) { compilingEvaluation = active }
     package init(limits: JSONLimits, domain: JSONOperationDomain, trackAcceptedCapacities: Bool = false) throws {
         try Task.checkCancellation()
@@ -148,6 +154,17 @@ package struct JSONWorkMeter: ~Copyable {
         for metric in JSONResourceMetric.allCases where metric != .cancellationQuantum {
             let live = metric == .retainedBytes || metric == .regexRetainedBytes || metric == .annotationBytes || metric == .compiledPlanBytes
             try require(metric, live ? used(metric) : max(used(metric), health.observed[metric.index]))
+        }
+        sinceCancellationCheck = 0
+    }
+    /// Bootstrap configuration preserves all admission history and the same terminal ledger.
+    /// Unlike a public scope restriction, this permits explicit finite policy overrides.
+    package mutating func configure(_ requested: JSONLimits) throws {
+        try checkpoint(); try requested.validate()
+        guard trackAcceptedCapacities else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        limits = requested
+        for metric in JSONResourceMetric.allCases where metric != .cancellationQuantum {
+            try require(metric, max(used(metric), health.observed[metric.index]))
         }
         sinceCancellationCheck = 0
     }

@@ -99,7 +99,7 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <div class="nav-links"><a href="{REPOSITORY}#installation">Get started</a><a href="{REPOSITORY}">GitHub</a><a href="{REPOSITORY}/issues">Support</a></div></nav></header>
 <main id="content" class="container"><div class="eyebrow">Public Swift documentation</div>
 <h1>Exact JSON. Clear contracts.</h1>
-<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore five Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
+<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore six Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>

@@ -29,6 +29,9 @@ public struct JSONPatch: Sendable {
     ///   - options: The value configuration used by this facade or operation.
     public init(json: JSON, options: JSONPatchOptions = .init()) throws {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .patch)
+        try self.init(json: json, meter: &meter)
+    }
+    package init(json: JSON, meter: inout JSONWorkMeter) throws {
         try JSONAdmission.value(json, meter: &meter)
         guard case .array(let values) = json else { throw JSONFailure(.patch, code: .invalidOperation) }
         try meter.require(.operations, UInt64(values.count))
@@ -88,6 +91,11 @@ public struct JSONPatch: Sendable {
     ///   - options: The value configuration used by this facade or operation.
     public func applyingWithReport(to initial: JSONPatchResult, options: JSONPatchOptions = .init()) throws -> JSONOperationReport<JSONPatchResult> {
         var meter = try JSONWorkMeter(limits: options.limits, domain: .patch)
+        let result = try applying(to: initial, meter: &meter)
+        return .init(result: result, statistics: meter.statistics())
+    }
+    package func applying(to initial: JSONPatchResult, meter: inout JSONWorkMeter) throws -> JSONPatchResult {
+        let retainedAtEntry = meter.used(.retainedBytes)
         var staged: JSON?
         if case .document(let value) = initial { staged = value; try JSONAdmission.value(value, meter: &meter, owned: true) }
         for operation in operations {
@@ -130,7 +138,7 @@ public struct JSONPatch: Sendable {
                     }
                     if identical {
                         // The selected value and path already exist; no staged graph changes.
-                        try meter.release(meter.used(.retainedBytes))
+                        try meter.release(meter.used(.retainedBytes) - retainedAtEntry)
                         if let staged { try meter.resetValueBounds(); try JSONAdmission.value(staged,meter: &meter,owned: true) }
                         continue
                     }
@@ -144,10 +152,10 @@ public struct JSONPatch: Sendable {
             }
             // Operation-local Pointer, comparison, writer and replaced ancestor state is gone.
             // Rebase the invocation-owned staged value; lifetime work/admissions are not refunded.
-            try meter.release(meter.used(.retainedBytes))
+            try meter.release(meter.used(.retainedBytes) - retainedAtEntry)
             if let staged { try meter.resetValueBounds(); try JSONAdmission.value(staged,meter: &meter,owned: true) }
         }
         let result: JSONPatchResult = staged.map { .document($0) } ?? .removed
-        return .init(result: result, statistics: meter.statistics())
+        return result
     }
 }
