@@ -82,7 +82,7 @@ package enum CLIEngine {
         }
         if arguments.command == "--version" {
             guard arguments.positionals.isEmpty || arguments.positionals == ["--json"] else { throw CLIError(.usage, "invalidVersionOption") }
-            let version = arguments.positionals.isEmpty ? "swift-json 1.4.0-dev\n" : CLIHelp.versionJSON
+            let version = arguments.positionals.isEmpty ? "swift-json \(CLIReleaseVersion.value)\n" : CLIHelp.versionJSON
             return try text(version, arguments: arguments, context: &context)
         }
         if arguments.command == "query" { return try CLIQueryCommand.run(arguments, context: &context) }

@@ -18,8 +18,9 @@ in the [README](../../README.md) are compiled and executed by the public consume
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are seven public products: six libraries and the swift-json executable,
-and no external root-package dependencies. Runtime code uses no HTTP,
-UI, MCP or documentation-tool dependencies.
+and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
+uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
+value, schema, Patch and streaming contracts do not acquire UI semantics.
 
 Immutable facades store value configuration. Every operation owns its mutable
 context; every stream iterator requires exclusive access. Sendable follows the
@@ -27,7 +28,7 @@ actual stored state and result types. See [concurrency](Concurrency.md).
 
 ## Exact values and construction
 
-The additive E2 development surface is documented in the
+The ergonomic surface released through the 1.4.0 tag and 1.5.0 release is documented in the
 [ergonomics crosswalk](../Ergonomics/README.md). JSON.parse forwards String, Data
 and byte arrays to their respective parser overloads; buildObject, number(parsing:)
 and value(at:) wrap one existing authority each. JSONObject.containsKey is an
@@ -230,3 +231,16 @@ offline registries and exact typed issue paths stay authoritative. A compatible 
 is neither native validation of an instance nor a service-acceptance guarantee. Finite limits
 and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
 [profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.
+
+## Best-effort diagnostics and versioned CLI identity
+
+With best-effort schema output, an optional diagnostic-byte refusal returns ordinary
+invalidity with `diagnosticsComplete == false`; it does not poison the active work
+ledger. Work, retention, annotation exhaustion and cancellation remain operational
+errors. Strict diagnostic output still throws on the same byte bound.
+
+The CLI's human version reports the candidate/release source version. JSON metadata
+includes `revisionKind: "source-sha256"` and `revision: "sha256:<hex>"`. This is the
+SHA-256 of the ordered Package.swift plus Sources content manifest, excluding only
+the generated identity file itself. It is not a Git commit, binary digest or claim
+of publication. Generation/checking needs no Git, time, environment or network.
