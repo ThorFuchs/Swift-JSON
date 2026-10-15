@@ -4,8 +4,9 @@ Maintainer: @ThorFuchs. Version tags use semantic versions such as `1.0.0`.
 Publication requires an explicit maintainer instruction; CI never creates tags
 or releases. Published version tags are protected against updates and deletion.
 
-1. Require passed native, safety and documentation lanes for the exact candidate
-   commit on macOS/SDK 27+ and Swift 6.4+ with language mode 6.
+1. Require passed native, safety, documentation and Git-free archive lanes for
+   the exact candidate commit on macOS/SDK 27+ and Swift 6.4+ with language mode 6.
+   Retain both ARM64 and x86_64 Linux behavior/safety receipts for portable changes.
 2. Review seven public products (six libraries, including opt-in JSONBridges, plus swift-json), the empty root dependency graph, compiled external
    consumers, populated pinned suites, policy exclusions, all 49 finite caps,
    schema/regex behavior and cancellation boundaries.
@@ -18,7 +19,8 @@ or releases. Published version tags are protected against updates and deletion.
 5. Update CHANGELOG.md and compatibility notes, then run
    `python3 Scripts/archive_candidate.py --output Artifacts/Swift-JSON-public-candidate.tar.gz`.
    Verify embedded hashes, byte-equal rebuild and a clean extracted build/test with
-   `Scripts/ci.py --lane native`.
+   `Scripts/ci.py --lane native`. The automated `--lane archive` performs the
+   complete native lane outside Git and verifies a byte-equal extracted rebuild.
 6. Retain source identity, environment, command exits, nonzero counts and receipts.
    Verify private reporting, support routes and branch protections.
 7. Create an annotated version tag at the exact qualified commit. Check its target

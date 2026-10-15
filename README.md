@@ -1,6 +1,6 @@
 # Swift-JSON
 
-**Exact JSON values, offline JSON Schema validation, transactional patches and pull-driven streams for modern Swift.**
+**Exact JSON values, offline schema validation, transactional patches, pull streams, HTML exports and bounded queries for modern Swift.**
 
 Swift-JSON gives applications one consistent JSON model from input bytes to validated,
 transformed and encoded output. It keeps decimal values exact, preserves the identity
@@ -16,6 +16,11 @@ partially read document would change the meaning of your data.
 Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
+
+This branch prepares the **1.5.1 maintenance candidate** from released 1.5.0.
+The candidate repairs best-effort schema diagnostics, restores the 1.2.1
+regression suites and makes qualification work outside Git. It does not include
+main’s unreleased structured HTML previews. See the [repair record](Documentation/Qualification/Release1.5.1/README.md).
 
 ## Why Swift-JSON?
 
@@ -63,9 +68,9 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact HTML, offline exploration and immutable native transfer/export (1.3 development) |
-| **swift-json** | Bounded command-line JSON workflows (1.4 development) |
-| **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (E2 development) |
+| **JSONHTML** | Exact HTML, offline exploration and immutable native transfer/export (available since 1.3.0) |
+| **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
+| **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -73,12 +78,12 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The Linux development increment adds portable schema integrity for all four products
+Linux supports the six libraries and CLI with portable schema integrity
 without runtime dependencies. Its initial qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
 for execution gates and limits. Apple platform requirements remain unchanged.
 
-The local WASI support increment targets full-language Swift 6.4
+The separately qualified WASI core scope targets full-language Swift 6.4
 `wasm32-unknown-wasip1`, with finite defaults and exact persistence. Its
 [platform contract](Documentation/Architecture/WebAssembly.md) documents resource
 packaging, execution hosts, qualification scope and safety limitations. Browser
@@ -89,7 +94,7 @@ and Embedded Swift hosting require separate qualification.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.1.0")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.5.0")
 ```
 
 Then add products to your target dependencies:
@@ -99,15 +104,15 @@ Then add products to your target dependencies:
 .product(name: "JSONSchema", package: "swift-json")
 ```
 
-Add `JSONStreaming`, `JSONPatch` and the 1.3 development product `JSONHTML` in the same way when needed. A local checkout can
+Add `JSONStreaming`, `JSONPatch` and `JSONHTML` and opt-in `JSONBridges` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
 releases. See the [six-product consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 
-## Quick entry points and native bridges (E2 development)
+## Quick entry points and native bridges (available in the 1.4.0 tag and 1.5.0 release)
 
-The E2 feature branch adds a shallow discovery hub. Existing parser/writer and
+The released ergonomic entry points provide a shallow discovery hub. Existing parser/writer and
 report APIs remain the semantic authorities; no migration is required.
 
 ```swift
@@ -381,9 +386,9 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
-## Standalone HTML (1.3 development)
+## Standalone HTML (available since 1.3.0)
 
-The additive `JSONHTML` product renders complete highlighted HTML from the same
+The `JSONHTML` product renders complete highlighted HTML from the same
 exact writer cursor. Formatted mode is script-free. Opt into interactive mode for
 native disclosures, a container outline, case-sensitive literal search and exact
 JSON/Pointer copy and downloads. All assets are embedded and hash-authorized;
@@ -452,8 +457,13 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSON](https://thorfuchs.github.io/Swift-JSON/JSON/documentation/json/),
 [JSONSchema](https://thorfuchs.github.io/Swift-JSON/JSONSchema/documentation/jsonschema/),
 [JSONStreaming](https://thorfuchs.github.io/Swift-JSON/JSONStreaming/documentation/jsonstreaming/) and
-[JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/).
+[JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/),
+[JSONHTML](https://thorfuchs.github.io/Swift-JSON/JSONHTML/documentation/jsonhtml/) and
+[JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/).
 The site tracks `main` and publishes only after all three native CI lanes pass.
+It includes unreleased APIs. For the exact released 1.5.0 interface, use its
+[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.5.0/Sources)
+or its [compiled DocC asset](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.5.0).
 
 The [documentation index](Documentation/README.md) links the behavior contracts. The six DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
@@ -510,10 +520,9 @@ Original code is licensed under [Apache-2.0](LICENSE). Adapted code and qualific
 inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PARTY_NOTICES.md),
 [licenses](Licenses) and [extraction provenance](Documentation/Architecture/ExtractionManifest.json).
 
-## Prospective 1.4 command-line tool
+## Command-line tool (released in 1.5.0)
 
-This feature train adds `swift-json` beside the six libraries. Its compiling
-foundation provides strict formatting, validation, Pointer selection, staged
+`swift-json` accompanies the six libraries. It provides strict formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
 for command semantics, cumulative budgets and qualification boundaries. The pull
@@ -521,7 +530,8 @@ query increment adds navigation, generators, control, bindings and exact decimal
 arithmetic; see the [query](Documentation/Architecture/Release1.4/QueryCore.md) and
 [arithmetic](Documentation/Architecture/Release1.4/Arithmetic.md) contracts. The [advanced filter increment](Documentation/Architecture/Release1.4/Advanced.md)
 adds lexical functions, reductions, bounded collections/strings, path mutation and
-interpolation. Final platform/provider/distribution qualification remains open.
+interpolation. Apple and Linux qualification is recorded in the release assets. Full CLI/WASI
+execution and Apple model/schema helpers remain outside the qualified scope.
 
 ```sh
 swift build -c release --product swift-json
@@ -530,10 +540,10 @@ swift build -c release --product swift-json
 .build/release/swift-json render input.json --output inspection.html
 ```
 
-### CLI development for 1.4
+### Run exact pull queries
 
-The isolated 1.4 feature stack adds the `swift-json` executable beside the five
-libraries, with no external root dependencies. Build from the feature source
+The package has six libraries plus the executable, with no external root
+dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
 
@@ -553,12 +563,14 @@ compatibility claim. It never executes shell filters or fetches references.
 See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [integration contract](Documentation/Architecture/Release1.4/Integration.md) and
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
-This feature stack is under review; provider prerequisites and any unqualified
-platform rows remain explicit release blockers. It does not change released tags.
+The frozen 1.5.0 CLI reports `1.4.0-dev` and revision `unknown`, as disclosed in
+its release notes. This 1.5.1 candidate reports its actual candidate version and a
+deterministic source digest; see the [CLI guide](Documentation/CLI.md).
+Versioned release assets identify the exact qualified platform and source scope.
 
-### Offline provider fragments (1.4 development)
+### Offline provider fragments (available since 1.5.0)
 
-The development CLI supports `swift-json schema provider openai-format schema.json --name summary`
+The released CLI supports `swift-json schema provider openai-format schema.json --name summary`
 and `openai-tool`. The public JSONSchema facade `OpenAIJSONSchemaBridge` checks a frozen strict
 Responses base-model subset and returns native request fragments, with exact values and finite
 cumulative reports. It makes no requests and never rewrites optional properties, keys or numbers.

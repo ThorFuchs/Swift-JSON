@@ -1,16 +1,45 @@
 # Changelog
 
-## Unreleased
+## Unreleased — 1.5.1 maintenance candidate
+
+- Restore best-effort schema diagnostic omission without latching terminal failure;
+  strict diagnostic, work, retention, annotation and cancellation errors still throw.
+- Restore all 126 test functions from the separately published 1.2.1 maintenance
+  line, public integration/resource consumers and exact discovery/safety inventories.
+- Qualify extracted archives without requiring or borrowing a parent Git checkout.
+- Replace stale CLI development metadata with an explicit version and reproducible
+  source digest; preserve empty dependencies, all seven products and 49 core caps.
+- Reconcile README, support/platform guidance, release history and DocC navigation.
+  Structured HTML previews on main remain outside this patch candidate.
+
+## 1.5.0 — 2026-10-15
+
+- Ship the bounded swift-json CLI: strict formatting/validation, Pointer, staged
+  Patch, exact pull queries/arithmetic, advanced filters, streaming and HTML/text/
+  Markdown rendering. Add offline strict Responses schema fragment helpers.
+- Preserve the six libraries and add only the executable; no root dependencies.
+- Qualify native and ARM64/x86_64 Linux behavior/safety, source reproduction,
+  public consumers and six DocC catalogues. Full CLI/WASI and Apple model helpers
+  remain unqualified/unavailable. Frozen CLI metadata reports 1.4.0-dev/unknown,
+  explicitly disclosed in the release notes and repaired in the next candidate.
+
+## 1.4.0 tag — 2026-10-15
+
+The protected public version tag exists; its separate GitHub release remains draft.
+These additive APIs are also included in the published 1.5.0 release.
 
 - Add E2's shallow JSON parsing, checked object construction, decimal-text and
   pre-parsed Pointer entry points; exact-key membership and three-state presence
   composition; and direct validation from an immutable compiled schema plan.
+
 - Add the opt-in JSONBridges product with trusted integer construction, checked
   integer projection, explicitly named Double round-trip-text admission and
   policy-explicit Double/Foundation Decimal projection. Core imports remain
   isolated. The generic JSON.number integer overload is deferred because it
   changes existing literal overload resolution. Exact-binary source conversion,
   Float-family and Decimal source bridges remain deferred.
+
+## 1.3.0 — 2026-10-14
 
 - Add typed caller diagnostics and coherent JSONDocument byte-span rendering to
   JSONHTML, with exact target identity, explicitly missing-parent attachment and
@@ -36,9 +65,24 @@
 - Add opt-in JSONHTML interactive disclosure, container outline, literal search,
   native-byte JSON/Pointer copy and downloads, and complete print content; qualify
   three browser engines separately from Safari/device/accessibility release gates.
+
 - Develop JSONHTML as the fifth product for 1.3: exact formatted standalone HTML,
   shared strict-writer token formatting, literal tab indentation, cumulative
   finite reports, bounded script-free output and a fifth native DocC catalogue.
+
+## 1.2.1 — 2026-10-14
+
+Published from the separate 1.2 maintenance branch. Add 126 behavior/conformance
+functions, public integration and missing/corrupt-resource acceptance, complete
+coverage export and explicit performance disposition. Repair best-effort schema
+diagnostics and Git-free qualification identity. These two repairs and the added
+suites were absent from 1.3.0 through 1.5.0; the 1.5.1 candidate restores them.
+Historical qualification and performance receipts retain their original scope.
+
+## 1.2.0 — 2026-10-13
+
+- Add Swift 6.4 Ubuntu 24.04/glibc ARM64/x86_64 builds and portable schema integrity.
+
 - Add local full-language wasm32 WASI support, preserving all four products and
   the empty root dependency graph. Twelve cumulative UInt64 quotas can exceed
   Int.max without changing profiles; allocation capacities retain Int guards.
@@ -46,10 +90,13 @@
   resources beside the WASI command and throw structured missing-resource errors.
   Add exact portable qualification with explicit host/safety scope.
 
+## 1.1.1 — 2026-10-13
+
 - Keep object-schema construction and document admission within one cumulative
   budget, including live retention and terminal owned failures/cancellation.
   Tight limits that previously fit each phase separately can now fail the composed
   call. Public signatures and finite default profiles are unchanged.
+
 - Update release documentation for the published 1.1.0 package and its macOS,
   iOS and iPadOS 27 baseline.
 

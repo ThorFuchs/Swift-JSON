@@ -10,10 +10,15 @@ in that line; users of older 1.x versions should upgrade. The `main` branch trac
 development and receives best-effort maintenance. No paid support, response-time SLA or older-line
 backport commitment is implied.
 
-The package requires Swift tools/compiler 6.4+, Swift language mode 6 and
-macOS/SDK 27+. Native qualification began on Apple Silicon; other platforms or
-architectures are not claimed qualified. Reports should include the resolved
-commit/version, native toolchain, resource profile and a minimal reproducible input.
+The package requires Swift tools/compiler 6.4+ and Swift language mode 6.
+Apple deployment minima are macOS 27 and iOS/iPadOS 27, with SDK 27+.
+Linux qualification covers Swift 6.4 on 64-bit Ubuntu 24.04/glibc, ARM64 and x86_64.
+WASI core libraries have a separate host-specific qualification scope; this does
+not claim full CLI/WASI support. Apple PDF and native transfer are Apple-only.
+See the [Linux](Documentation/Architecture/Linux.md) and
+[WASI](Documentation/Architecture/WebAssembly.md) contracts and the exact release assets.
+Reports should include resolved commit/version, OS/architecture, compiler/SDK,
+resource profile and a minimal reproducible input.
 
 Within 1.x, changes follow semantic versioning: compatible fixes in patch releases,
 compatible additions in minor releases, and breaking public-contract changes in a

@@ -9,7 +9,7 @@ separate from the dependency-free library. Native lanes fail on unsupported host
 | `python3 Scripts/preflight.py` | Actual native OS/compiler/SDK receipt |
 | `python3 Scripts/ci.py --lane native` | Manifests, builds, Swift Testing, consumers and suites |
 | `python3 Scripts/ci.py --lane safety` | Address/Thread Sanitizer and strict memory safety |
-| `python3 Scripts/ci.py --lane linux` | Actual Linux preflight, all six products, exact root/cap/corpus/consumer counts |
+| `python3 Scripts/ci.py --lane linux` | Actual Linux preflight, all seven products, exact root/cap/corpus/consumer counts |
 | `python3 Scripts/ci.py --lane linux-safety` | Linux Address/Thread Sanitizer and strict memory safety |
 | `python3 Scripts/ci.py --lane wasm` | Matched Swift 6.4 WASI debug/release, exact root/corpus/cap/consumer counts, two-host public parity and structured resource failures |
 | `python3 Scripts/qualify_linux_reproduction.py --output PATH` | Actual source archive, byte-equal rebuild, clean extraction, build/tests and public consumer |
@@ -25,3 +25,11 @@ and original frozen archives stay in ignored `Artifacts/`.
 
 `Scripts/qualify_ergonomics.py` is part of native/Linux CI: eight real-module
 compiler probes and three synchronized, executed public guide fences.
+
+The maintenance repair restores `--lane coverage` / `--lane linux-coverage` as
+explicit profiling tools, `--lane linux-qa` and `--lane wasm-qa` as scoped execution
+lanes. Their receipts retain precise scopes; preparation does not establish a pass.
+`Scripts/generate_cli_identity.py --check` rejects stale CLI source metadata.
+`Documentation/Qualification/TestDiscovery.json` is the reviewed exact root, QA,
+shared-state and portable inventory; it does not infer expected counts from the
+current test output. Native and Linux retain all 49 public cap outcomes.

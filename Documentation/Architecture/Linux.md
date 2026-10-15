@@ -1,13 +1,15 @@
 # Linux platform contract
 
-This additive development branch prepares all four public products for 64-bit
+The six libraries and swift-json executable are qualified for 64-bit
 Linux with Swift tools/compiler 6.4+ and Swift language mode 6. Initial execution
 qualification targets Ubuntu 24.04 with glibc on ARM64 and x86_64. A platform
 preflight identifies the actual runtime; cross-compilation alone cannot qualify
 behavior or safety. Architecture-specific receipts must pass before claiming
 that architecture qualified. Apple minimums remain macOS/SDK 27 and iOS/SDK 27.
 
-The root manifest keeps an empty dependency graph and the same four products.
+The root manifest keeps an empty dependency graph and seven products.
+Apple PDF and native transfer APIs retain their platform availability; portable
+HTML has no WebKit requirement.
 Linux does not need a SwiftPM deployment-platform entry. Foundation file/resource
 access remains platform infrastructure; JSON semantics come from the package's
 strict codec, exact decimal model and decoded scalar identity.
@@ -51,7 +53,7 @@ continues on the supported Mac toolchain.
 The pinned Swift 6.4 Linux runtime leaks from an empty XCTest runner and
 Foundation's `Data(contentsOf:)` empty-file read. Isolated sanitizer probes
 reproduce both with no JSON imports. Linux safety starts only Swift Testing
-(all 180 functions and 173 invocations remain) and trusted fixture I/O uses
+(exact current discoveries and parameter invocations remain required) and trusted fixture I/O uses
 explicitly closed FileHandle reads, including the zero-byte JSON rejection case.
 Address/Leak Sanitizer and Thread Sanitizer remain enabled without suppressions.
 Diagnostic upstream failures are recorded separately from package behavior.
@@ -62,7 +64,7 @@ uses resourceURL so it retains the platform's bundle Contents layout. Both layou
 retain the same frozen definition/vector bytes and all 20 explicitly rooted cases.
 Linux qualification also verifies a byte-equal source archive, extracts it into a
 clean directory, builds all products and executes six integrity/resource cases
-and the four-product public consumer from that extracted source.
+and the current public consumer from that extracted source.
 
 WebAssembly, browser hosting, other distributions, musl deployment and 32-bit
 profile calibration require separate qualification. This change adds none of

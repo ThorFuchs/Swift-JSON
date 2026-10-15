@@ -81,5 +81,6 @@ def read_events(text):
         raise ValueError('Ambiguous parameterized function name')
     return {'event_records': records, 'module_function_counts': dict(sorted(modules.items())),
             'bundle_counts': sorted(modules.values()), 'function_count': len(identifiers), 'suite_count': len(suites),
+            'function_names': sorted(k.split('.')[0] + '.' + tests[k]['name'] for k in identifiers),
             'parameter_case_invocations': sum(case_ended.values()),
             'parameterized_functions': dict(sorted(parameters.items()))}
