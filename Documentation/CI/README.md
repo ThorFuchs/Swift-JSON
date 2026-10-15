@@ -1,5 +1,15 @@
 # Native CI
 
+## N1 product-candidate increment
+
+Promotion adds the JSONNavigation library product after a 56-declaration audit,
+with a real external SwiftPM consumer in Debug/Release. Two new P07 tests preserve
+source-admission-first precedence. Focused discovery is now 39 functions; all37
+N1 identities remain. Exact roots are 585 native/569 Linux and 481 WASI, with the
+same325/288 parameter inventories and42/41 shared functions. Seven public DocC
+catalogues include Navigation; private borrowed interfaces are never public API.
+Actual receipts establish passes. Earlier stage counts below retain their source.
+
 ## Experimental N1 branch
 
 The Structural Intelligence branch adds exactly 37 Navigation functions and one

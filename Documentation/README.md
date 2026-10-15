@@ -6,7 +6,7 @@ behavioral contracts and native qualification procedure.
 
 ## API references and guided reading
 
-The six native DocC catalogs combine inline API documentation with focused guides:
+The seven candidate native DocC catalogs combine inline API documentation with focused guides:
 
 | Product | Catalog source | Guide |
 | --- | --- | --- |
@@ -15,6 +15,7 @@ The six native DocC catalogs combine inline API documentation with focused guide
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
 | JSONHTML | [JSONHTML](../Sources/JSONHTML/Documentation.docc/JSONHTML.md) | [Formatted rendering](../Sources/JSONHTML/Documentation.docc/FormattedRendering.md) |
 | JSONBridges | [JSONBridges](../Sources/JSONBridges/Documentation.docc/JSONBridges.md) | [Numeric fidelity](../Sources/JSONBridges/Documentation.docc/NumericFidelity.md) |
+| JSONNavigation | [JSONNavigation](../Sources/JSONNavigation/Documentation.docc/JSONNavigation.md) | [Exact traversal](../Sources/JSONNavigation/Documentation.docc/Traversal.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
 
 [Browse the public documentation](https://thorfuchs.github.io/Swift-JSON/) or
