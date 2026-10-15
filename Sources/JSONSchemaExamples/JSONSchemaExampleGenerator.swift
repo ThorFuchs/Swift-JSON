@@ -64,6 +64,47 @@ public struct JSONSchemaExampleGenerator: Sendable {
     public func generate(seed: UInt64 = 0, profile: JSONSchemaExampleProfile = .minimal) throws -> JSONSchemaExampleResult {
         let limits = try options.limits.intersection(options.validationOptions.limits)
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
+        return try generate(seed: seed, profile: profile, meter: &meter)
+    }
+
+    // Internal qualification seam, also used by the public entry. The caller must
+    // supply the actual effective policy; no fresh meter or mutable callback is
+    // introduced inside search. Successful statistics describe certification,
+    // before ownership transfers to the caller and invocation reservations end.
+    func generate(seed: UInt64 = 0, profile: JSONSchemaExampleProfile = .minimal,
+                  meter: inout JSONWorkMeter) throws -> JSONSchemaExampleResult {
+        try meter.checkpoint()
+        let retained = meter.used(.retainedBytes), annotations = meter.used(.annotationBytes)
+        let regex = meter.used(.regexRetainedBytes)
+        do {
+            guard meter.limits == (try options.limits.intersection(options.validationOptions.limits)),
+                  meter.domain == .core else { throw JSONFailure(.configuration, code: .invalidOperation) }
+            let result = try search(seed: seed, profile: profile, meter: &meter)
+            try endScope(retained: retained, annotations: annotations, regex: regex, meter: &meter)
+            return result
+        } catch {
+            // Includes evaluator errors that do not originate in the meter and
+            // incomplete search. Cleanup is allowed after cancellation/exhaustion;
+            // it cannot refund work or clear the original terminal health.
+            meter.recordFailure(error)
+            try endScope(retained: retained, annotations: annotations, regex: regex, meter: &meter)
+            throw error
+        }
+    }
+
+    private func endScope(retained: UInt64, annotations: UInt64, regex: UInt64,
+                          meter: inout JSONWorkMeter) throws {
+        let (bytes, badBytes) = meter.used(.retainedBytes).subtractingReportingOverflow(retained)
+        let (annotationBytes, badAnnotations) = meter.used(.annotationBytes).subtractingReportingOverflow(annotations)
+        let (regexBytes, badRegex) = meter.used(.regexRetainedBytes).subtractingReportingOverflow(regex)
+        guard !badBytes, !badAnnotations, !badRegex else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        try meter.releaseAnnotationState(annotationBytes)
+        try meter.releaseRegexState(regexBytes)
+        try meter.release(bytes)
+    }
+
+    private func search(seed: UInt64, profile: JSONSchemaExampleProfile,
+                        meter: inout JSONWorkMeter) throws -> JSONSchemaExampleResult {
         var random = SchemaExampleRandom(seed: seed)
         var trace = try SchemaExampleTrace(snapshot: sourceSnapshotDigest, corpus: corpusDigest,
                                           policy: policyDigest, seed: seed, profile: profile, meter: &meter)

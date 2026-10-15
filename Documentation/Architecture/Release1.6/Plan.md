@@ -68,3 +68,8 @@ still require complete validation against the original immutable compiled root.
 G4 implements [conservative advanced proposals](G4Construction.md): contains
 minima and bounded anchored ASCII patterns. The ten advanced required and eight
 may-fail fixtures receive separate per-case native evidence. [G4 native qualification](G4Qualification.md) is complete; G5-G8 and main repair integration remain separate.
+
+G5 qualifies [cumulative resources and lifecycle](G5Resources.md), with a corrected
+trace reservation, terminal latching at the invocation boundary and 17 additional
+behavior cases. See [the native outcomes](G5Qualification.md). Candidate algorithm
+v4 and all trace/source/corpus/policy bytes stay unchanged; G6-G8 remain open.

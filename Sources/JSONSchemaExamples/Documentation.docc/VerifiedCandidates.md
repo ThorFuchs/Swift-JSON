@@ -68,3 +68,17 @@ the immutable corpus and all policies with separate versioned digests. The compl
 abstract trace includes every raw draw and native verdict, without raw schema or
 instance content. It throws on exhaustion rather than silently truncating. Full
 byte transports are in the repository's Release1.6/G2Determinism and G3Construction contracts.
+
+## Cumulative accounting and lifecycle
+
+Generation charges discovery, staging, every completed native verdict and final
+trace hashing to one invocation ledger. False verdicts retain their work and
+diagnostic charges. Operational failure or cancellation ends the invocation; no
+retry receives a fresh quota. Independent calls can reuse the immutable preparation.
+
+The report snapshots logical reservations at certification, including the result
+and conservative staging scratch held through that boundary. Remaining invocation
+reservations end when ownership transfers to the caller, or on failure. This is
+not a measurement of returned heap size or RSS. Trace hashing retains its actual
+64-byte hex digest and never refunds unrelated reservations. G5 corrects an
+unmatched 32-byte refund from G4; the algorithm and trace bytes stay unchanged.

@@ -98,15 +98,22 @@ struct SchemaExampleTrace: ~Copyable {
         self.transport = consume transport
     }
     mutating func event(_ code: UInt8, _ a: UInt64, _ b: UInt64, meter: inout JSONWorkMeter) throws {
-        guard !finished else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        guard !finished else {
+            let failure = JSONFailure(.configuration, code: .invalidOperation)
+            meter.recordFailure(failure); throw failure
+        }
         try transport.append(code, meter: &meter)
         try transport.integer(a, meter: &meter); try transport.integer(b, meter: &meter)
         events = try meter.adding(.workUnits, events, 1)
     }
     mutating func digest(meter: inout JSONWorkMeter) throws -> String {
-        guard !finished else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        guard !finished else {
+            let failure = JSONFailure(.configuration, code: .invalidOperation)
+            meter.recordFailure(failure); throw failure
+        }
         finished = true
-        try meter.release(JSONLogicalWeights.arraySlot * 2)
+        // The transport owns exactly its bytes. There is no array-slot
+        // reservation here to refund; SHA-256 retains its 64-byte hex result.
         return try transport.digest(meter: &meter)
     }
 }

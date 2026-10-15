@@ -31,7 +31,7 @@ private func requireResource(_ error: any Error, _ metric: JSONResourceMetric) {
         let validator = JSONSchemaValidator(options: options.validationOptions)
         for witness in try #require(c["witnesses"]?.arrayValue) {
             let instance = try #require(witness.objectValue?["instance"])
-            let expected = try #require(witness.objectValue?["valid"]?.booleanValue)
+            let expected = try #require(witness.objectValue?["valid"]?.booleanValue as Bool?)
             #expect(try validator.validate(instance, against: independent).isValid == expected, "\(id) witness")
             witnesses += 1
         }

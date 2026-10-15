@@ -37,7 +37,7 @@ private func resource(_ error: any Error, _ metric: JSONResourceMetric) -> Bool 
         let plan = try JSONSchemaCompiler(options: options.compilationOptions).compile(generator.document, registry: generator.registry)
         let validator = JSONSchemaValidator(options: options.validationOptions)
         for witness in try #require(c["witnesses"]?.arrayValue) {
-            #expect(try validator.validate(#require(witness.objectValue?["instance"]), against: plan).isValid == #require(witness.objectValue?["valid"]?.booleanValue))
+            #expect(try validator.validate(#require(witness.objectValue?["instance"]), against: plan).isValid == #require(witness.objectValue?["valid"]?.booleanValue as Bool?))
             witnesses += 1
         }
         var valid = 0, unsupported = 0, exhausted = 0

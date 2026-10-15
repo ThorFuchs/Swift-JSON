@@ -49,3 +49,12 @@ Full generation accounting, cross-platform deterministic goldens, cancellation
 behavior and support classifications remain unqualified until their gates execute.
 Finite candidate search does not decide arbitrary schema satisfiability. Profiles
 are preferences, with no globally minimal witness or universal generation guarantee.
+
+G5 closes decision 3 for the qualified native increment. The existing package-only
+compiler/evaluator meter bridge is sufficient; no new public accumulator or error
+report API is added. A generator-internal borrowed entry is the actual public
+execution path and allows deterministic terminal-state/cleanup qualification.
+Conservative staging reservations live through proposal/invocation boundaries;
+reports snapshot certification before result ownership transfers. See G5Resources.md.
+G5 removes an unmatched 32-byte trace refund without changing logical weights,
+candidate choices or transport versions. Later full/platform gates remain open.

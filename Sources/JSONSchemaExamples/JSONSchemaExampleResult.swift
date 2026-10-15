@@ -48,6 +48,8 @@ public struct JSONSchemaExampleResult: Sendable {
     /// The shared invocation ledger, including all completed candidate checks.
     ///
     /// evaluationWorkUnits is included in workUnits. Preparation is separate.
-    /// Discarded validation ownership is released without refunding work; bytes are not RSS.
+    /// Discarded validation ownership is released without refunding work. Retained bytes
+    /// snapshot certification, including conservative staging reservations; ownership
+    /// transfers to the caller after that snapshot. Logical bytes are not heap size or RSS.
     public let statistics: JSONOperationStatistics
 }
