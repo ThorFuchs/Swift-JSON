@@ -20,16 +20,16 @@ func probe(_ walk: JSONTraversal) throws -> UInt64 { var reducer = Reducer(); re
 '''
 probes={
  'positive':(positive,None),
- 'return':('func illegal(_ context: inout JSONTraversalContext) -> JSONTraversalContext { consume context }','inout'),
- 'escape':('func illegal(_ context: inout JSONTraversalContext) -> () throws -> Void { { try context.checkpoint() } }','escaping closure captures'),
- 'send':('func illegal(_ context: inout JSONTraversalContext) -> @Sendable () throws -> Void { { try context.checkpoint() } }','Sendable'),
- 'forge':('func illegal() throws { let scope = try JSONReadScope(.init(root: .null), limits: .balanced); _ = JSONTraversalContext(scope: scope) }','inaccessible'),
- 'store':('final class Box { var value: JSONTraversalContext? }; func illegal(_ context: inout JSONTraversalContext) -> Box { let b = Box(); b.value = consume context; return b }','inout'),
- 'method-reference':('func illegal(_ context: inout JSONTraversalContext) -> () throws -> Void { context.checkpoint }','mutating'),
- 'task':('func illegal(_ context: inout JSONTraversalContext) { Task { try context.checkpoint() } }','inout'),
- 'global':('@MainActor var saved: JSONTraversalContext?; @MainActor func illegal(_ context: inout JSONTraversalContext) { saved = consume context }','inout'),
- 'copy':('func illegal(_ context: inout JSONTraversalContext) { let a = copy context; _ = a }','copy'),
- 'external':('func illegal(_ context: inout JSONTraversalContext) throws { try context.checkpoint() }','cannot find'),
+ 'return':('func illegal(_ context: inout JSONTraversalContext) -> JSONTraversalContext { consume context }','missing reinitialization of inout parameter'),
+ 'escape':('func illegal(_ context: inout JSONTraversalContext) -> () throws -> Void { { try context.checkpoint() } }',"escaping closure captures 'inout' parameter"),
+ 'send':('func illegal(_ context: inout JSONTraversalContext) -> @Sendable () throws -> Void { { try context.checkpoint() } }',"capture of 'context' with non-Sendable type"),
+ 'forge':('func illegal() throws { let scope = try JSONReadScope(.init(root: .null), limits: .balanced); _ = JSONTraversalContext(scope: scope) }','initializer is inaccessible'),
+ 'store':('final class Box { var value: JSONTraversalContext? }; func illegal(_ context: inout JSONTraversalContext) -> Box { let b = Box(); b.value = consume context; return b }','missing reinitialization of inout parameter'),
+ 'method-reference':('func illegal(_ context: inout JSONTraversalContext) -> () throws -> Void { context.checkpoint }',"cannot reference 'mutating' method as function value"),
+ 'task':('func illegal(_ context: inout JSONTraversalContext) { _ = Task { try context.checkpoint() } }',"escaping closure captures 'inout' parameter"),
+ 'global':('@MainActor var saved: JSONTraversalContext?; @MainActor func illegal(_ context: inout JSONTraversalContext) { saved = consume context }','missing reinitialization of inout parameter'),
+ 'copy':('func illegal(_ context: inout JSONTraversalContext) { let a = copy context; _ = a }',"'copy' cannot be applied to noncopyable types"),
+ 'external':('func illegal(_ context: inout JSONTraversalContext) throws { try context.checkpoint() }',"cannot find type 'JSONTraversalContext' in scope"),
 }
 # A source archive is intentionally outside Git; a container may also refuse
 # repository ownership. Never borrow a parent checkout or alter Git trust/config.
@@ -57,8 +57,11 @@ for config in configs:
   cmd=['swiftc','-swift-version','6','-warnings-as-errors','-package-name',package,'-module-name','ReducerOwnershipProbe','-I',str(mod),'-O' if config=='release' else '-Onone','-parse-as-library','-c',str(file),'-o',str(O/(config+'-'+name+'.o'))]
   p=subprocess.run(cmd,cwd=W,env=env,capture_output=True,timeout=60);data=p.stdout+p.stderr;log=O/(config+'-'+name+'.log');log.write_bytes(data)
   crash=p.returncode<0 or any(t in data for t in [b'Stack dump:',b'Assertion failed',b'fatal error encountered during compilation',b'Found ownership error'])
-  passed=not crash and (p.returncode==0 if expected is None else p.returncode>0 and expected.lower().encode() in data.lower())
-  r['commands'].append(dict(name=config+'-'+name,command=cmd,exit=p.returncode,source_sha256=hashlib.sha256(file.read_bytes()).hexdigest(),log=str(log.relative_to(ROOT)),log_sha256=hashlib.sha256(data).hexdigest(),compiler_crash=crash,expected=expected,status='passed' if passed else 'failed'))
+  # Match actual primary diagnostics, never echoed source text or an unrelated
+  # warning promoted by -warnings-as-errors (notably an unused throwing Task).
+  diagnostics=re.findall(r': error: ([^\n]+)',data.decode(errors='replace'))
+  passed=not crash and (p.returncode==0 if expected is None else p.returncode>0 and any(expected.lower() in d.lower() for d in diagnostics))
+  r['commands'].append(dict(name=config+'-'+name,command=cmd,exit=p.returncode,source_sha256=hashlib.sha256(file.read_bytes()).hexdigest(),log=str(log.relative_to(ROOT)),log_sha256=hashlib.sha256(data).hexdigest(),compiler_crash=crash,expected=expected,primary_diagnostics=diagnostics,status='passed' if passed else 'failed'))
   print(config,name,p.returncode,'PASS' if passed else 'FAIL',flush=True)
 r['status']='passed' if all(c['status']=='passed' for c in r['commands']) else 'blocked'
 (O/'receipt.json').write_text(json.dumps(r,indent=2)+'\n')
