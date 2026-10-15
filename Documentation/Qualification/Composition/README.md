@@ -74,3 +74,24 @@ The reduced compiler investigation is separate from intended negative builds;
 crashes never count as diagnostic passes. See the CompilerBugs catalog and its
 replay command. The final local report retains the prior frozen proof unchanged
 and binds successor evidence to this branch's final source identity.
+
+## Controlled native performance replay
+
+`python3 Scripts/qualify_composition_performance.py --output .build/composition-performance`
+compares the approved full main base 037e735dc6224789e4d04d2c18d15b8d27440198
+and the current source. Both use the same Swift 6.4+ compiler, native Release
+build engine, benchmark source, runtime path and identical schema resource bytes.
+Two warmup sets precede nine samples per process; ABBA ordering yields 18 samples
+per source/row. Four operations run for wide512 and the pinned frozen JSON input.
+`schema-only` always compiles the same small schema, not the frozen definitions.
+Standalone Data/document and Pointer reports are unavailable and remain null.
+
+Every process requires at least 90% idle before and immediately after timing.
+A bounded settling period precedes runs; a failed post-run probe invalidates the
+controlled result. The 10% review trigger is unchanged. Exit 2 means blocked and
+exit 3 requires review; neither is a performance pass or automatic exception.
+Logical retention and owned work remain distinct from RSS and caller instructions.
+The Composition performance workflow executes this exact harness when its benchmark
+files change in a PR, or through optional manual dispatch after default-branch
+availability, on an independent native runner, retaining source/fixture/binary/log identities.
+It changes no existing required check name, protection or release workflow.

@@ -13,7 +13,10 @@ struct Sample: Codable {
 }
 // Deterministic 512-field exact/scalar workload, not an external conformance corpus.
 let text = "{" + (0..<512).map { "\"field\($0)\":" + #"{"n":9007199254740993,"s":"é","a":[true,null,0.01]}"# }.joined(separator: ",") + "}"
-let bytes = Array(text.utf8), data = Data(text.utf8)
+let realPath = ProcessInfo.processInfo.environment["JCOMP_BENCHMARK_INPUT"]
+let data = try realPath.map { try Data(contentsOf: URL(fileURLWithPath: $0)) } ?? Data(text.utf8)
+let bytes = Array(data)
+let expectedMembers = realPath == nil ? 512 : 2
 let root = try JSONParser().parse(bytes)
 let schema = try JSONSchemaDocument(JSONParser().parse(#"{"type":"object","properties":{"n":{"type":"integer"},"s":{"type":"string"}},"required":["n"]}"#))
 let parserProbe = try JSONParser().parseWithReport(bytes)
@@ -33,16 +36,17 @@ func measure(_ name: String, iterations: Int, work: UInt64? = nil, peak: UInt64?
 let samples = try [
     measure("parser-bytes-wide512", iterations: 8, work: parserProbe.statistics[.workUnits], peak: parserProbe.statistics.peakLogicalRetainedBytes) {
         let parsed = try JSONParser().parse(bytes)
-        precondition(parsed.objectValue?.count == 512)
+        precondition(parsed.objectValue?.count == expectedMembers)
     },
     measure("parser-document-data-wide512", iterations: 6) {
         let value = try JSONParser().parseDocument(data)
         precondition(value.sourceBytes == data)
     },
     measure("pointer-wide512", iterations: 30) {
-        let pointer = try JSONPointer(tokens: ["field511"]).appending(key: "n")
+        let pointer = try JSONPointer(tokens: realPath == nil ? ["field511", "n"] : ["$defs", "Request"])
         let value = try pointer.resolve(in: root)
-        precondition(value.numberValue?.originalLexeme == "9007199254740993")
+        if realPath == nil { precondition(value.numberValue?.originalLexeme == "9007199254740993") }
+        else { precondition(value.objectValue != nil) }
     },
     measure("schema-only", iterations: 3, work: schemaProbe.statistics[.workUnits], peak: schemaProbe.statistics.peakLogicalRetainedBytes) {
         _ = try JSONSchemaCompiler().compile(schema)
