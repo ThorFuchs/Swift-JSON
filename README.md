@@ -75,13 +75,14 @@ SwiftPM dependency graph is empty. Qualification and benchmark tools are separat
 packages.
 
 The 1.6 development product `JSONSchemaExamples` depends only on JSON and JSONSchema.
-Its current G3 increment offers explicit const/default/enum/examples candidates and
+Its current G4 increment offers explicit const/default/enum/examples candidates and
 compiler-resolved static references, returning a value only after completed native
 validation. Seeded demonstration choices, normalized exact construction and
 versioned snapshot/corpus/policy/trace digests are implemented. Conservative typed
 construction covers basic numeric/string bounds, required objects, arrays and
 compiler-qualified composition/reference hints. Every complete proposal still needs
-native root certification; advanced construction remains under development. See the [runnable public consumer](Examples/SchemaExamplesConsumer/README.md)
+native root certification. G4 adds bounded contains and anchored ASCII-pattern
+proposals; complex constraints can still return explicit incomplete search. See the [runnable public consumer](Examples/SchemaExamplesConsumer/README.md)
 and [verified-candidate guide](Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md).
 
 The Linux development increment adds portable schema integrity for all four products

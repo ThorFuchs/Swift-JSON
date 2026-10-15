@@ -19,7 +19,7 @@ private func generator(_ text: String, options: JSONSchemaExampleOptions = .init
         #expect(result.validation.isValid && result.validation.diagnosticsComplete)
         #expect(result.attempts == 1 && result.seed == 42)
         #expect(result.statistics[.evaluationWorkUnits] > 0)
-        #expect(result.generatorVersion == "s3-candidates-v3")
+        #expect(result.generatorVersion == "s3-candidates-v4")
         let native = try JSONSchemaCompiler().compile(prepared.document).validate(result.value)
         #expect(native.isValid == result.validation.isValid)
     }

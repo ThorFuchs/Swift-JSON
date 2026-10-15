@@ -136,7 +136,14 @@ enum SchemaExampleConstructor {
         return mask
     }
     static let typeNames: [(String, UInt8)] = [("null",1),("boolean",2),("integer",4),("number",12),("string",16),("array",32),("object",64)]
-    static let hints: [JSONSchemaPlan.Keyword] = [.type,.minimum,.maximum,.exclusiveMinimum,.exclusiveMaximum,.multipleOf,.minLength,.maxLength,.pattern,.format,.required,.properties,.minProperties,.maxProperties,.items,.prefixItems,.minItems,.maxItems]
+    static let hints: [JSONSchemaPlan.Keyword] = [.type,.minimum,.maximum,.exclusiveMinimum,.exclusiveMaximum,.multipleOf,.minLength,.maxLength,.pattern,.format,.required,.properties,.minProperties,.maxProperties,.items,.prefixItems,.minItems,.maxItems,.contains]
+    static func containsMinimum(_ c: SchemaExampleConstraint, meter: inout JSONWorkMeter) throws -> UInt64? {
+        guard try c.value(.contains, meter: &meter) != nil else { return nil }
+        if let number = try c.value(.minContains, meter: &meter)?.numberValue {
+            return try number.integer(as: UInt64.self, meter: &meter)
+        }
+        return 1
+    }
     static func construct(nodes: [JSONSchemaQualifiedNode], variation: UInt64,
                           profile: JSONSchemaExampleProfile, corpus: [JSON], assertion: Bool,
                           random: inout SchemaExampleRandom, trace: inout SchemaExampleTrace,
@@ -192,9 +199,18 @@ enum SchemaExampleConstructor {
                     let container = try meter.adding(.maxDepth, depth, 1)
                     guard let bounds = try SchemaExamplePrimitives.size(constraints, minimum: .minItems, maximum: .maxItems,
                                                                          capacity: .arrayItems, meter: &meter) else { return nil }
-                    var unique = false
-                    for c in constraints { if try c.value(.uniqueItems, meter: &meter)?.booleanValue == true { unique = true } }
-                    try push(.array(.init(constraints: constraints, count: bounds.minimum, depth: container, variation: ordinal, unique: unique)), meter: &meter)
+                    var unique = false, count = bounds.minimum
+                    for c in constraints {
+                        if try c.value(.uniqueItems, meter: &meter)?.booleanValue == true { unique = true }
+                        if let minimum = try containsMinimum(c, meter: &meter) {
+                            try meter.require(.arrayItems, minimum)
+                            if let maximum = try c.value(.maxContains, meter: &meter)?.numberValue,
+                               try maximum.integer(as: UInt64.self, meter: &meter) < minimum { return nil }
+                            count = max(count, minimum)
+                        }
+                    }
+                    guard count <= bounds.maximum else { return nil }
+                    try push(.array(.init(constraints: constraints, count: count, depth: container, variation: ordinal, unique: unique)), meter: &meter)
                 default:
                     let container = try meter.adding(.maxDepth, depth, 1)
                     guard let keys = try objectKeys(constraints, meter: &meter) else { return nil }
@@ -226,6 +242,9 @@ enum SchemaExampleConstructor {
                     let prefix = try c.value(.prefixItems, meter: &meter)?.arrayValue
                     let kind: JSONSchemaPlan.Keyword = index < UInt64(prefix?.count ?? 0) ? .prefixItems : .items
                     try appendNodes(c.children(kind, token: kind == .prefixItems ? token : nil, meter: &meter), to: &nodes, meter: &meter)
+                    if let minimum = try containsMinimum(c, meter: &meter), index < minimum {
+                        try appendNodes(c.children(.contains, meter: &meter), to: &nodes, meter: &meter)
+                    }
                 }
                 let ordinal = try meter.adding(.workUnits, state.variation, state.unique ? index : 0)
                 let depth = state.depth; state.awaiting = true

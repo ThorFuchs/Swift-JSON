@@ -52,7 +52,7 @@ def main():
             report = json.loads(report_lines[0], parse_float=Decimal)
             assert report['ids'] == expected_ids and report['witnesses'] == 90
             assert report['proofs'] == manifest['g3_sound_proof_ids']
-            assert report['algorithm'] == 's3-candidates-v3' and len(report['results']) == 192
+            assert report['algorithm'] == 's3-candidates-v4' and len(report['results']) == 192
             expected = {(name, profile, seed) for name in expected_ids for profile in ['minimal','demonstration'] for seed in [0,1,42,2**64-1]}
             observed = {(r['id'],r['profile'],r['seed']) for r in report['results']}
             assert observed == expected

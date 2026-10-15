@@ -180,8 +180,8 @@ private func resource(_ error: any Error, _ metric: JSONResourceMetric) -> Bool 
 @Test func g2CompleteTraceGoldensBindSeedProfileSourceCorpusAndPolicy() throws {
     let g = try prepared("true"), minimal = try g.generate(seed: 42)
     let demo = try g.generate(seed: 42, profile: .demonstration)
-    #expect(minimal.traceDigest == "eef3e6a2c114cb4cbad5b53f52ccb0ea76a9a8b2ea44204121e662558ab3e15a")
-    #expect(demo.traceDigest == "ddb57b177e19dc0e5fdeade2e03936fe30110264ff3be3255ebcc3a8eb53720c")
+    #expect(minimal.traceDigest == "b2fecfe6b1cbeeab34f0513708c31e19aa8e61ddf25d603447572b22d4fdd2f1")
+    #expect(demo.traceDigest == "21735803f7ea97cf7b18d6ab9b23c32fbc7b06ddc200878ae1ddb161bc5525c5")
     #expect(minimal.randomDraws == 0 && minimal.traceEventCount == 4)
     #expect(demo.randomDraws == 1 && demo.traceEventCount == 5 && demo.value == .boolean(false))
     #expect(minimal.schemaDigestAlgorithm == "swift-json-schema-snapshot-v1")

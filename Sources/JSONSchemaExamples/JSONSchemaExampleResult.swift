@@ -15,7 +15,7 @@ public struct JSONSchemaExampleResult: Sendable {
     public let seed: UInt64
     /// The requested candidate preference.
     public let profile: JSONSchemaExampleProfile
-    /// The versioned candidate algorithm, currently s3-candidates-v3.
+    /// The versioned candidate algorithm, currently s3-candidates-v4.
     public let generatorVersion: String
     /// SHA-256 of the documented normalized source/registry transport, not original text or JCS.
     public let sourceSnapshotDigest: String

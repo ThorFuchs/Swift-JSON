@@ -64,3 +64,7 @@ G3 advances the candidate algorithm to `s3-candidates-v3` and complete trace to
 The [capability ledger](Capabilities.json) distinguishes the 24 G3 must-generate
 cases and two sound proofs from the 18 remaining G4 cases. All returned witnesses
 still require complete validation against the original immutable compiled root.
+
+G4 implements [conservative advanced proposals](G4Construction.md): contains
+minima and bounded anchored ASCII patterns. The ten advanced required and eight
+may-fail fixtures receive separate per-case native evidence. [G4 native qualification](G4Qualification.md) is complete; G5-G8 and main repair integration remain separate.

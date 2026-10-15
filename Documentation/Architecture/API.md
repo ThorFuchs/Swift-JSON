@@ -232,7 +232,7 @@ is neither native validation of an instance nor a service-acceptance guarantee. 
 and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
 [profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.
 
-## Schema examples (1.6 G3 development)
+## Schema examples (1.6 G4 development)
 
 The optional JSONSchemaExamples product prepares an immutable document/explicit
 registry/compiled-plan snapshot. `JSONSchemaExampleGenerator(document:registry:options:)`
@@ -242,7 +242,10 @@ for the original root. Minimal scans stable exact declarations; demonstration
 uses metered SplitMix64 rejection sampling and circular scans. An immutable exact
 `JSONSchemaExampleCorpus` supplies candidates for true/empty schemas. Returned
 objects/numbers use scalar order and normalized exact spelling. Conservative
-typed construction covers the qualified foundational subset. General constraint
+typed construction covers the qualified foundational subset. G4 adds conservative
+contains minima and a small anchored ASCII pattern-proposal grammar. Native
+validation retains conditional, dependency, regex and evaluated-location semantics.
+General constraint
 solving, arbitrary regex inversion and dynamic construction remain incomplete.
 
 `JSONSchemaExampleFailure` distinguishes unsupported construction, searchExhausted,
@@ -255,6 +258,7 @@ The result binds the versioned snapshot, ordered corpus, all generation/compiler
 evaluator caps and flags, and complete abstract trace with SHA-256 digests. Trace
 bytes share diagnosticBytes with native diagnostics; exhaustion never truncates a
 success. See [the G3 constructive subset](Release1.6/G3Construction.md),
+[the G4 advanced boundary](Release1.6/G4Construction.md),
 [the capability ledger](Release1.6/Capabilities.json), [the G2 byte transports](Release1.6/G2Determinism.md), the historical
 [G1 API decision](Release1.6/G1API.md), and the
 [compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).

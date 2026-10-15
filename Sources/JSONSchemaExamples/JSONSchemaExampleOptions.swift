@@ -45,7 +45,7 @@ public enum JSONSchemaExampleUnsupportedFeature: Sendable, Equatable {
     case candidateConstruction
     /// Construction would need evaluation-scope-aware dynamic reference navigation.
     case dynamicReference
-    /// Candidate discovery revisited a compiled node without finding a witness.
+    /// Construction revisited an active same-instance ancestor without progress.
     case cyclicReference
 }
 

@@ -67,7 +67,7 @@ enum G3Acceptance {
         guard observed == expectedIDs, observed.count == 24, results.count == 192, proofs.count == 2,
               witnessCount == 90 else { throw G3AcceptanceFailure.mismatch }
         let report = try JSONObject(members: [
-            .init("algorithm", value: .string("s3-candidates-v3")), .init("ids", value: .array(observed)),
+            .init("algorithm", value: .string("s3-candidates-v4")), .init("ids", value: .array(observed)),
             .init("results", value: .array(results)), .init("proofs", value: .array(proofs)), .init("witnesses", value: 90)
         ])
         print("G3_RECEIPT " + (try JSONWriter().writeString(.object(report))))

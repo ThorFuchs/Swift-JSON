@@ -3,7 +3,7 @@ import JSON
 import JSONSchema
 
 enum SchemaExampleVersion {
-    static let generator = "s3-candidates-v3"
+    static let generator = "s3-candidates-v4"
     static let rng = "splitmix64-v1"
     static let snapshot = "swift-json-schema-snapshot-v1"
     static let corpus = "swift-json-example-corpus-v1"

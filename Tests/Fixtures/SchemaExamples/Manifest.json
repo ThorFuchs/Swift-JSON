@@ -36,5 +36,27 @@
   ],
   "other_gate_cases": 18,
   "case_count": 44,
-  "amended_witnesses": 155
+  "amended_witnesses": 155,
+  "g4_must_generate_ids": [
+    "array-contains",
+    "condition-then-else",
+    "dependent-required",
+    "dependent-schema",
+    "pattern-properties",
+    "property-names",
+    "unevaluated-properties-composition",
+    "simple-regex",
+    "mincontains-with-prefixitems",
+    "array-mixed-evaluation"
+  ],
+  "g4_may_fail_ids": [
+    "oneof-overlap",
+    "recursive-tree",
+    "dynamic-ref",
+    "conflicting-allof",
+    "unfulfillable-unique-enum",
+    "external-offline-ref",
+    "not-string",
+    "oneof-overlap-limited"
+  ]
 }

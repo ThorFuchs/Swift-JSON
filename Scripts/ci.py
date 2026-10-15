@@ -7,9 +7,9 @@ from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedExportPreparationsHaveIndependentConcurrentState|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations'
-ROOT_COUNTS = {'JSONTests':119,'JSONSchemaTests':69,'JSONSchemaExamplesTests':61,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':97 if sys.platform == 'darwin' else 81,'JSONCLITests':87,'JSONBridgesTests':10}
-SHARED_COUNTS = {'JSONTests':4,'JSONSchemaTests':3,'JSONSchemaExamplesTests':2,'JSONRegexRuntimeTests':1,'JSONHTMLTests':5 if sys.platform == 'darwin' else 4,'JSONCLITests':1,'JSONBridgesTests':1}
+SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedExportPreparationsHaveIndependentConcurrentState|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations'
+ROOT_COUNTS = {'JSONTests':119,'JSONSchemaTests':69,'JSONSchemaExamplesTests':79,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONRegexRuntimeTests':12,'JSONHTMLTests':97 if sys.platform == 'darwin' else 81,'JSONCLITests':87,'JSONBridgesTests':10}
+SHARED_COUNTS = {'JSONTests':4,'JSONSchemaTests':3,'JSONSchemaExamplesTests':3,'JSONRegexRuntimeTests':1,'JSONHTMLTests':5 if sys.platform == 'darwin' else 4,'JSONCLITests':1,'JSONBridgesTests':1}
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -18,6 +18,8 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'schema-examples-advanced':
+        return commands('schema-examples-construction', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'advanced')]]
     if lane in ('schema-examples-determinism', 'schema-examples-construction'):
         # G2 changes only the opt-in generator. Reuse unchanged-core schema receipts;
         # keep the broader schema-examples lane and every full release gate intact.
@@ -29,7 +31,7 @@ def commands(lane, output):
     if lane == 'schema-examples-safety':
         return [
             ['swift', 'test', '-c', 'release', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests', '--sanitize', 'address', '--scratch-path', '.build/schema-examples-address'],
-            ['swift', 'test', '-c', 'release', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests', '--sanitize', 'thread', '--scratch-path', '.build/schema-examples-thread', '--filter', 'g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations'],
+            ['swift', 'test', '-c', 'release', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests', '--sanitize', 'thread', '--scratch-path', '.build/schema-examples-thread', '--filter', 'g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations'],
             ['swift', 'build', '--target', 'JSONSchemaExamples', '--jobs', '2', '--scratch-path', '.build/schema-examples-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
         ]
     if lane == 'schema-examples':
@@ -107,6 +109,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output / 'schema-examples')],
             ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py', '--output', str(output / 'schema-example-ownership')],
             ['python3', '-B', 'Scripts/qualify_schema_example_generation.py', '--output', str(output / 'schema-example-generation')],
+            ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'schema-example-advanced')],
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
@@ -155,7 +158,7 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [69] if 'JSONSchemaTests' in command else [2 if 'thread' in command else 61] if 'JSONSchemaExamplesTests' in command else [87] if 'cli|sharedFilterPlan' in command else [1, 39] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [69] if 'JSONSchemaTests' in command else [3 if 'thread' in command else 79] if 'JSONSchemaExamplesTests' in command else [87] if 'cli|sharedFilterPlan' in command else [1, 39] if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else [2, 3, 3, 11] if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         passed = passed and sorted(counts) == expected
         if 'JSONSchemaExamplesTests' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'JSONSchemaExamplesTests': expected[0]} and events['parameter_case_invocations'] == 0
@@ -196,6 +199,8 @@ def check_result(command, code, log, events=None):
         targets = {t['name']: t for t in d['targets']}
         passed = passed and set(targets) == {'JSON', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_ADVANCED passed required=10 incomplete=8 profiles=2 seeds=4 per_process=144 processes=2 witnesses=155' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_generation.py']:
         passed = passed and 'SCHEMA_EXAMPLES_GENERATION passed cases=24 profiles=2 seeds=4 per_process=192 processes=2 proofs=2' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py']:
@@ -222,7 +227,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction'], required=True)
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -290,7 +295,7 @@ def main():
     if receipt['status'] == 'passed' and args.lane == 'wasm':
         try:
             wasi = json.loads((output / 'probes/wasi.json').read_text())
-            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':119,'JSONBridgesTests':10,'JSONSchemaTests':69,'JSONSchemaExamplesTests':61,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':81}:
+            if wasi['status'] != 'passed' or wasi['root_counts'] != {'JSONTests':119,'JSONBridgesTests':10,'JSONSchemaTests':69,'JSONSchemaExamplesTests':79,'JSONRegexRuntimeTests':12,'JSONStreamingTests':14,'JSONPatchTests':11,'JSONHTMLTests':81}:
                 raise ValueError('Missing WASI qualification boundary')
             receipt['materialized_wasi'] = {'path':'probes/wasi.json','sha256':hashlib.sha256((output / 'probes/wasi.json').read_bytes()).hexdigest()}
         except (OSError,KeyError,ValueError,TypeError) as error:

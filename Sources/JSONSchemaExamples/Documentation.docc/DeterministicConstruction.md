@@ -36,7 +36,7 @@ state belong to each call.
 
 ## Versioned identities
 
-`s3-candidates-v3` records `splitmix64-v1`, seed and profile. Snapshot, ordered
+`s3-candidates-v4` records `splitmix64-v1`, seed and profile. Snapshot, ordered
 corpus, all policy caps/flags and complete abstract trace have independent versioned
 SHA-256 identities. See the Release1.6/G2Determinism and G3Construction contracts for the byte formats.
 These transports use compact scalar-key normalized-number strict JSON, not JCS
@@ -51,7 +51,7 @@ native diagnostics. A successful trace is complete; exhaustion/cancellation thro
 without a certificate. Hash work and result metadata also fit before return.
 Logical retained bytes do not describe process RSS, and owned work quotas do not
 limit caller code. Native golden vectors and separate-process checks establish
-the native G3 increment; full Linux/WASI/mobile qualification remains G7.
+the native G4 increment; full Linux/WASI/mobile qualification remains G7.
 
 
 G3 adds conservative typed value requests to the trace and uses
@@ -59,3 +59,6 @@ G3 adds conservative typed value requests to the trace and uses
 at v1. Historical G2 vectors retain their earlier IDs in source history and the
 immutable G2 review archive. A new algorithm version can change witnesses/traces;
 reproducibility requires the same implementation and versioned inputs.
+
+G4 extends proposals while retaining the trace v2 grammar; its envelope binds
+s3-candidates-v4. Historical G3 witnesses/traces remain in the G3 source/archive.

@@ -82,6 +82,11 @@ enum SchemaExamplePrimitives {
                        meter: inout JSONWorkMeter) throws -> String? {
         guard let bounds = try size(constraints, minimum: .minLength, maximum: .maxLength,
                                     capacity: .stringBytes, meter: &meter) else { return nil }
+        for c in constraints {
+            if let pattern = try c.value(.pattern, meter: &meter)?.stringValue,
+               let proposal = try SchemaExamplePattern.propose(pattern, variation: variation, minimum: bounds.minimum,
+                                                               maximum: bounds.maximum, meter: &meter) { return proposal }
+        }
         var email = false
         for c in constraints {
             if c.view.formatAssertion || assertion,

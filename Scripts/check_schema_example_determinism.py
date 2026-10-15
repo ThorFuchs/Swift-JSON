@@ -43,7 +43,7 @@ def vectors():
     policy = digest(b'SwiftJSON-example-policy-v1\n' + u64(16) + record * 3 + bytes([0, 1, 0, 0]) * 2)
     result = {'snapshot': snapshot, 'corpus': corpus, 'policy': policy}
     for name, profile in [('minimal', 0), ('demonstration', 1)]:
-        trace = b'SwiftJSON-example-trace-v2\n' + b''.join(field(s.encode()) for s in ['s3-candidates-v3', snapshot, corpus, policy]) + u64(42) + bytes([profile])
+        trace = b'SwiftJSON-example-trace-v2\n' + b''.join(field(s.encode()) for s in ['s3-candidates-v4', snapshot, corpus, policy]) + u64(42) + bytes([profile])
         events = [(1, 0, 0)]
         index = 0
         if profile:
