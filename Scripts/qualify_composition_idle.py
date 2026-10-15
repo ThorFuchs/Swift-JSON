@@ -7,8 +7,10 @@ quiet admission. No library, PR head, protection, release or dependency pin chan
 """
 import argparse,datetime,hashlib,json,math,os,pathlib,platform,re,statistics,subprocess,time
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-TREES={kind:ROOT/'.build/composition-idle-inputs'/name for kind,name in [('baseline','before'),('candidate','after_')]}
-PACKAGES={kind:ROOT/'.build/composition-idle-probes'/name for kind,name in [('baseline','before'),('candidate','after_')]}
+# SwiftPM identities use directory basenames. Consumer and dependency must have
+# distinct identities, while the two revisions retain equal-length paths.
+TREES={kind:ROOT/'.build/composition-idle-inputs'/('source-'+name) for kind,name in [('baseline','before'),('candidate','after_')]}
+PACKAGES={kind:ROOT/'.build/composition-idle-probes'/('probe-'+name) for kind,name in [('baseline','before'),('candidate','after_')]}
 PINS={'baseline':'037e735dc6224789e4d04d2c18d15b8d27440198','candidate':'73efb65189f3f7e08e878a3b0fb6030f34524e4b'}
 ORDER=[['baseline','candidate'],['candidate','baseline'],['baseline','candidate']]
 EXPECTED={'parser-bytes':40,'parser-document-data':30,'pointer':200,'schema-only':3}
