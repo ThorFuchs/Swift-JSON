@@ -20,6 +20,9 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'composition-compiler':
+        composition = commands('composition', ROOT / output)
+        return composition[:3] + [['swift', 'build', '--target', 'JSON']] + [composition[-1]]
     if lane == 'composition':
         result = [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -254,7 +257,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['composition', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive', 'navigation'], required=True)
+    parser.add_argument('--lane', choices=['composition', 'composition-compiler', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive', 'navigation'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -263,7 +266,7 @@ def main():
     repository = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
     is_checkout = repository.returncode == 0 and pathlib.Path(repository.stdout.strip()).resolve() == ROOT.resolve()
     commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True) if is_checkout else None
-    environment = collect_linux() if args.lane.startswith('linux') or (args.lane == 'composition' and sys.platform == 'linux') else collect()
+    environment = collect_linux() if args.lane.startswith('linux') or (args.lane in ('composition', 'composition-compiler') and sys.platform == 'linux') else collect()
     receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit is not None and commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
@@ -318,7 +321,7 @@ def main():
             shutil.rmtree(ROOT / '.build/composition-thread', ignore_errors=True)
     else:
         receipt['status'] = 'passed'
-    if receipt['status'] == 'passed' and args.lane == 'composition':
+    if receipt['status'] == 'passed' and args.lane in ('composition', 'composition-compiler'):
         try:
             compiler_path = output / 'compiler-negative/receipt.json'
             compiler = json.loads(compiler_path.read_text())
@@ -329,7 +332,7 @@ def main():
                 'ownership_status': compiler['status'], 'robustness_status': compiler['compiler_robustness_status'],
                 'compiler_abort_cases': compiler['compiler_abort_cases'],
                 'unsupported_callsite_cases': compiler['unsupported_callsite_cases']}
-            receipt['behavior_status'] = 'passed'
+            receipt['behavior_status'] = 'passed' if args.lane == 'composition' else 'not_run'
             if compiler['compiler_robustness_status'] == 'blocked': receipt['status'] = 'blocked'
         except (OSError, KeyError, ValueError, TypeError) as error:
             receipt['status'] = 'failed'; receipt['evidence_error'] = str(error)
@@ -381,7 +384,7 @@ def main():
         receipt['status'] = 'failed'
     receipt['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     save()
-    if args.lane == 'composition' and receipt['status'] == 'blocked':
+    if args.lane in ('composition', 'composition-compiler') and receipt['status'] == 'blocked':
         return 2
     return 0 if receipt['status'] == 'passed' else 1
 

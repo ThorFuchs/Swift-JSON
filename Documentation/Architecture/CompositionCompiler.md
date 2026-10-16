@@ -65,3 +65,10 @@ The remaining inferred captures still require an upstream compiler correction.
 The gate stays blocked on those aborts and the unsupported bound-method positive;
 the explicit spelling is a source workaround, not a claim that the compiler gate
 has passed.
+
+For toolchain comparisons, run `python3 Scripts/ci.py --lane composition-compiler`.
+This builds the JSON module with the selected compiler, runs the classifier tests,
+and checks all 18 semantic negatives and 14 call sites with their existing
+expectations. It records runtime behavior as `not_run`; the full composition lane
+remains the runtime, sanitizer, adapter and scale qualification gate. Compiler
+aborts and rejected positive call sites keep either lane blocked with exit 2.
