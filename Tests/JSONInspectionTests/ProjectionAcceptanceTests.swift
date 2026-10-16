@@ -7,7 +7,10 @@ import JSONNavigation
 @testable import JSONInspection
 
 private func projectionFixture(_ name: String) throws -> Data {
-    let url = try #require(Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "ProjectionFixtures"))
+    // WASI Foundation's named-resource search can truncate the extension.
+    // Match the existing JSONHTML fixture loader using the exact copied path.
+    let root = try #require(Bundle.module.resourceURL)
+    let url = URL(fileURLWithPath: root.path + "/ProjectionFixtures/" + name + ".json")
     return try Data(contentsOf: url)
 }
 private func projectionDocument(_ text: String) throws -> JSONDocument {
