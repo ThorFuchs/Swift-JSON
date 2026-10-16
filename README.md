@@ -21,6 +21,11 @@ reproducible builds; `main` tracks ongoing development.
 examples and structural traversal, structured HTML previews and bounded native
 composition. Exact JSON and offline schema validation remain the semantic authorities.
 The CLI reports `1.6.0` and a deterministic source-content digest.
+The [published 1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0)
+is pinned to `f975ac1c5a18af9b422db0994cbc551fd37eee2f`; JSONNavigation
+is included, with eight library DocC catalogs. Historical N0/N1 plans and later
+unmerged candidates are distinguished in the
+[source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the
@@ -104,8 +109,10 @@ The separately qualified WASI core scope targets full-language Swift 6.4
 [platform contract](Documentation/Architecture/WebAssembly.md) documents resource
 packaging, execution hosts, qualification scope and safety limitations. Browser
 and Embedded Swift hosting require separate qualification. JSONSchemaExamples has native
-source-bound G1–G7 and caller-lifetime repair evidence. Fresh combined-source
-qualification is tracked in [G8 integration](Documentation/Architecture/Release1.6/G8Integration.md).
+source-bound G1–G7 and caller-lifetime repair evidence. The released combined-source
+qualification is recorded in [G8 integration](Documentation/Architecture/Release1.6/G8Integration.md)
+and the [1.6.0 qualification notes](Documentation/Qualification/Release1.6.0.md);
+earlier stage receipts retain their original source and unfinished gates.
 
 ## Installation
 
@@ -504,7 +511,9 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 The site tracks `main` and publishes only after all four native CI lanes pass.
 For the exact 1.6.0 interface, use its
 [tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0/Sources).
-Matching compiled catalogs accompany the GitHub release when published. Known
+Matching compiled catalogs accompany the published 1.6.0 GitHub release. Preserved
+draft-preparation receipts retain their historical status and are not new release
+claims. Known
 web-client limitations and direct-link/reload guidance are recorded in the
 [qualification notes](Documentation/Qualification/Release1.6.0.md#documentation).
 
@@ -631,4 +640,7 @@ Add the JSONNavigation product and import it explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
-opt-in in 1.6.0; one-node lookup remains in JSON. Deeper N2 inspection is deferred.
+opt-in in the published 1.6.0 release; one-node lookup remains in JSON. N2 inspection,
+N3 snapshots and private P1 projections remain separate unmerged candidates;
+see the [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
+They do not expand the released Navigation API or promote public E11 projection.

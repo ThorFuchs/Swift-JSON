@@ -6,7 +6,9 @@ behavioral contracts and native qualification procedure.
 
 ## API references and guided reading
 
-The eight native DocC catalogs combine inline API documentation with focused guides:
+The published 1.6.0 package provides eight libraries plus the `swift-json` executable.
+JSONNavigation is included. The eight native DocC catalogs combine inline API
+documentation with focused guides:
 
 | Product | Catalog source | Guide |
 | --- | --- | --- |
@@ -45,7 +47,8 @@ Online references track main; tagged releases include matching compiled catalogu
 
 - [Seven-library compiled example](../Examples/Consumer/README.md)
 - [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
-- [Experimental N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md) and [gated traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md); JSONNavigation is not a released product.
+- [Published Navigation and historical N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md), [original traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md) and [N1 promotion history](Architecture/StructuralIntelligence/N1Promotion.md). JSONNavigation is released in 1.6.0; the original N0/N1 stage gates remain dated history.
+- The source authority map separates unmerged N2 inspection, N3 snapshots and private P1 projections from composition accounting, root reuse, DSL and deployment candidates. Their own source-bound qualification and approval boundaries remain separate from the released API.
 
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)

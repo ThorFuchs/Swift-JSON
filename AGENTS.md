@@ -10,7 +10,7 @@ Documentation/Architecture before changing behavior.
   JSONFilterRuntime and JSONCLIEngine are package-private.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
   The approved CLI and E2 additions preserve historical product contracts.
-  JSONNavigation is an opt-in product candidate depending on JSON only; merge/release remain human-gated.
+  JSONNavigation is a released opt-in product depending on JSON only; future merge/release remain human-gated.
   JSONRegexRuntime is package-private. Root package dependencies remain empty.
 - Preserve exact bounded decimals, decoded Unicode scalar identity, ordered
   objects with order-independent equality, one strict UTF-8 grammar, native

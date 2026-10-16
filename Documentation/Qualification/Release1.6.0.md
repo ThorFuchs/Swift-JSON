@@ -1,5 +1,25 @@
 # Swift-JSON 1.6.0 qualification and compatibility
 
+## Publication-status annotation — 16 October 2026
+
+[Version 1.6.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0) was
+published on 16 October 2026 at 16:12:42 UTC (GitHub release `415067610`). Its tag
+resolves to `f975ac1c5a18af9b422db0994cbc551fd37eee2f`, tree
+`31de4dcd167c03af721c1b18594490e051a8a695`. The publication record verified the
+seven existing assets, including the exact source, evidence and eight compiled
+DocC catalogs. Publication changed no library implementation or platform scope.
+
+This clarification supersedes draft-preparation status only. The original text
+below, frozen `Qualification-1.6.0.json` asset, source archives and prepublication
+receipts retain their original identities, counts, failures and approval limits.
+They are historical evidence, not files to rewrite after publication. Required
+checks remain source-bound; no new feature, runtime or performance gate is approved.
+
+The DocC browser issues below are retained observations, not claims of fresh browser
+verification. SPI release/README refresh and its build backlog were observed after
+publication on 16 October; their current state requires a new external observation.
+No present SPI success, failure or browser repair is inferred here.
+
 Version 1.6.0 combines the optional JSONSchemaExamples and JSONNavigation products,
 bounded native composition, structured HTML previews and the 1.5.1 maintenance
 repairs. Eight libraries and swift-json retain an empty root dependency graph.
