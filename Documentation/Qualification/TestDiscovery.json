@@ -11,6 +11,7 @@
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
     "JSONNavigationTests": 47,
+    "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 17
   },
   "parameterized_invocations": 325,
@@ -33,6 +34,7 @@
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
     "JSONNavigationTests": 1,
+    "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 1
   },
   "coverage_unmapped": {
@@ -50,6 +52,7 @@
   "coverage_modules": [
     "JSON",
     "JSONSchema",
+    "JSONSchemaExamples",
     "JSONRegexRuntime",
     "JSONStreaming",
     "JSONPatch",
@@ -72,6 +75,7 @@
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
     "JSONNavigationTests": 47,
+    "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 17
   },
   "wasi_root_functions": {
@@ -84,6 +88,7 @@
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONNavigationTests": 47,
+    "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 17
   },
   "wasi_parameterized_invocations": 288,
@@ -97,6 +102,7 @@
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
     "JSONNavigationTests": 1,
+    "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 1
   },
   "export_functions": {

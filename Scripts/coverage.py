@@ -46,7 +46,7 @@ def shared_objects(bin_directory):
 
 def without_schema_objects(objects):
     # Integration imports schema too, including the private regex implementation.
-    omitted = {'JSONSchemaTests/runner', 'JSONSchemaTests', 'JSONSchema',
+    omitted = {'JSONSchemaExamplesTests/runner', 'JSONSchemaExamplesTests', 'JSONSchemaExamples', 'JSONSchemaTests/runner', 'JSONSchemaTests', 'JSONSchema',
                'JSONIntegrationTests/runner', 'JSONIntegrationTests', 'JSONCLITests/runner', 'JSONCLITests', 'JSONCLIEngine', 'swift-json/runner'}
     return {name:path for name,path in objects.items() if name not in omitted}
 
