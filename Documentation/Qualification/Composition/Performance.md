@@ -41,8 +41,13 @@ and thermal snapshots are outside measurement windows; a failed post window
 additionally captures diagnostics without changing the failure. Paging between
 the pre/post windows now also blocks a comparison. No workload is stopped.
 
-Executable replacement, binary digest checks and preparation precede pre-run
-admission. The first post-run native snapshot precedes JSON decoding, hashing
+Executable replacement, binary digest checks and a separately labelled preparation
+launch precede pre-run admission for every process, equally for both revisions.
+Preparation outputs are retained and checked for discovery/nonfinite values but
+are never qualification samples. This lets first-launch cache/resource setup
+settle before admission; it does not establish which service caused an old burst.
+The measured processes still each perform their original two warmup sets and
+nine samples. The first post-run native snapshot precedes JSON decoding, hashing
 or receipt serialization. Eight harness tests reject omitted/changed workloads,
 nonfinite/incomplete timings, malformed counters and sub-threshold intervals,
 and preserve completion's non-additive peak-retention oracle. This Python

@@ -39,7 +39,7 @@ def main():
         'source_inputs':inputs, 'source_manifest_sha256':hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(),
         'configuration':'release', 'build_system':'native', 'review_trigger_percent':10,
         'minimum_pre_and_post_idle_percent':90, 'host_sampler':'Darwin HOST_CPU_LOAD_INFO; three one-second intervals; no process enumeration',
-        'commands':[], 'host_checks':[], 'observer_experiment':[], 'runs':[],
+        'commands':[], 'host_checks':[], 'observer_experiment':[], 'preparations':[], 'runs':[],
         'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
     def save(): (output/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
     def run(name, command, env=None):
@@ -150,6 +150,13 @@ def main():
                 shutil.copy2(binaries[name],runtime/'CompositionBenchmark')
                 if digest(runtime/'CompositionBenchmark') != receipt['binaries'][name]['sha256']:
                     raise ValueError('Changed runtime binary')
+                # A separately labelled first launch precedes admission. This
+                # prepares Foundation/resources and OS executable caches equally
+                # for both revisions. Its samples are never qualification data.
+                prepared = json.loads(run(label+'-prepare', [str(runtime/'CompositionBenchmark')], env))
+                check_samples(prepared)
+                receipt['preparations'].append(dict(workload=workload, name=name,
+                    log=label+'-prepare.log', qualification_samples=False))
                 before_swap = swap(label+'-before')
                 # A bounded settling period is allowed before a measurement.
                 # Post-run eligibility is checked immediately, with no waiting to hide noise.

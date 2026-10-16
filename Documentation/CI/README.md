@@ -1,5 +1,20 @@
 # Native CI
 
+## Current composition proof
+
+The additive composition proof retains current main's Navigation product and
+adds two native boundary functions: exact discovery is 599 native / 583 Linux /
+495 WASI functions, with the same 325 native/Linux and 288 WASI parameter cases.
+Shared-state expectations remain 43 native / 42 Linux. Native/Linux still require
+33/29 commands, all 126 restored identities and 49 cap probes. The separate
+composition-proof lane additionally checks 26 public functions in both modes,
+two rejected omitted-charge mutants and 14 normal compiler rejections. Known
+compiler crashes remain separate limitations. Native CI now has five matrix
+lanes including composition-proof; protected names/settings are unchanged.
+The [controlled performance contract](../Qualification/Composition/Performance.md)
+requires genuine pre/post idle admission on its isolated native runner. The
+following counts retain their original stage context; receipts establish passes.
+
 ## Reconciled Navigation and composition increment
 
 Current source retains composition from main and adds the opt-in Navigation
