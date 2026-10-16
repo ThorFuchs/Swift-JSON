@@ -6,7 +6,7 @@
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
     "JSONPatchTests": 16,
-    "JSONIntegrationTests": 32,
+    "JSONIntegrationTests": 34,
     "JSONHTMLTests": 97,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
@@ -67,7 +67,7 @@
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
     "JSONPatchTests": 16,
-    "JSONIntegrationTests": 32,
+    "JSONIntegrationTests": 34,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
@@ -80,7 +80,7 @@
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 30,
     "JSONPatchTests": 16,
-    "JSONIntegrationTests": 32,
+    "JSONIntegrationTests": 34,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONNavigationTests": 39,
@@ -102,5 +102,6 @@
   "export_functions": {
     "JSONSchemaTests": 1,
     "JSONHTMLTests": 39
-  }
+  },
+  "composition_public_functions": 26
 }

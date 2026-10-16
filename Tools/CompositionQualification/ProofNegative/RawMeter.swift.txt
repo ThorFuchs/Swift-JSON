@@ -1,0 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+import JSONSchema
+let meter = try JSONWorkMeter(limits: .balanced, domain: .core)

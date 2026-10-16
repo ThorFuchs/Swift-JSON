@@ -48,11 +48,25 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 39)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
+            # Keep the 32 main integration cases plus PR36's two boundary cases.
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 34)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 1)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
+        output = pathlib.Path(__file__).resolve().parents[1] / 'Artifacts/HarnessProbe'
+        proof = commands('composition-proof', output)
+        self.assertEqual(len(proof), 3)
+        self.assertEqual(proof[0][2:4], ['--filter', 'jcompOwned|jcompOriginal'])
+        self.assertIn('Scripts/qualify_composition_proof.py', proof[2])
+        for count in (1, 3):
+            self.assertFalse(check_result(proof[0], 0, 'Test run with '+str(count)+' tests in 0 suites passed')[0])
+        schema = commands('schema-examples-qualification', output)
+        self.assertEqual(len(schema), 10)
+        self.assertEqual({c[2] for c in schema if c[:2] == ['python3', '-B']}, {
+            'Scripts/public_check.py', 'Scripts/qualify_schema_examples.py',
+            'Scripts/qualify_schema_example_ownership.py', 'Scripts/qualify_schema_example_generation.py',
+            'Scripts/qualify_schema_example_advanced.py', 'Scripts/qualify_schema_example_matrix.py'})
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -148,6 +162,12 @@ class HarnessTests(unittest.TestCase):
         self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
         for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
+        proof = ['python3', '-B', 'Scripts/qualify_composition_proof.py']
+        summary = 'COMPOSITION_PROOF passed public_tests=26 configurations=2 mutants_rejected=2 compiler_negative=14'
+        self.assertTrue(check_result(proof, 0, summary)[0])
+        for broken in ['', summary.replace('26', '25'), summary.replace('rejected=2', 'rejected=0'), summary.replace('negative=14', 'negative=13')]:
+            self.assertFalse(check_result(proof, 0, broken)[0])
+        self.assertFalse(check_result(proof, 1, summary)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'
         self.assertTrue(check_result(lifetime, 0, marker)[0])

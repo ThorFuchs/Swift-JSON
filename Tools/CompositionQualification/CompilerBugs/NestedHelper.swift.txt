@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+func reproducer() throws {
+    _ = try JSON.withComposition { scope in
+        func local() throws { try scope.chargeExternalWork(1) }
+        try local()
+    }
+}
