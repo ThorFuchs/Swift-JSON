@@ -176,7 +176,7 @@ private func snapshotFailure(_ body: () throws -> Void) -> JSONFailure? {
     let baseline = try JSONStructuralSnapshotBuilder(document: document, limits: limits).build()
     for threshold in [admissionWork + 10, baseline.statistics[.workUnits] - 5] {
         let observed = Mutex(false), invalidated = Mutex(false)
-        let task = Task {
+        let task = Task { @Sendable [document, limits, threshold] in
             var builder = JSONStructuralSnapshotBuilder(document: document, limits: limits)
             builder.checkpointObserver = { work in
                 if work >= threshold { observed.withLock { $0 = true }; withUnsafeCurrentTask { $0?.cancel() } }
