@@ -4,6 +4,7 @@ import JSONBridges
 import JSON
 import Foundation
 import JSONSchema
+import JSONSchemaExamples
 import JSONPatch
 import JSONStreaming
 import JSONHTML
@@ -96,6 +97,16 @@ func runREADMEExamples() throws {
 
     let output = try result.output()
     precondition(output.objectValue?["valid"] == true)
+
+    let exampleSchema = try JSONSchemaDocument(JSONParser().parse(
+        #"{"type":"integer","minimum":9007199254740993}"#
+    ))
+    let exampleGenerator = try JSONSchemaExampleGenerator(document: exampleSchema)
+    let schemaExample = try exampleGenerator.generate(seed: 42, profile: .minimal)
+    let exampleMinimum = try JSONNumber(parsing: "9007199254740993")
+    precondition(schemaExample.validation.isValid)
+    precondition(schemaExample.value.numberValue == exampleMinimum)
+    precondition(schemaExample.statistics[.evaluationWorkUnits] > 0)
 
     let patch = try JSONPatch(operations: [
         .replace(path: JSONPointer(parsing: "/count"), value: 42)
