@@ -2,6 +2,7 @@
 import Foundation
 import CryptoKit
 import JSON
+import JSONSchema
 
 private struct Fixtures: Decodable {
     struct Item: Decodable {
@@ -17,6 +18,25 @@ private struct Fixtures: Decodable {
     static func main() throws {
         precondition(CommandLine.arguments.count == 3)
         let phase = CommandLine.arguments[1]
+        if phase == "uri-probe" {
+            let base = URL(string: "urn:swift-json:root")!
+            let reference = "#/$defs/value"
+            let foundation = URL(string: reference, relativeTo: base)!.absoluteURL.absoluteString
+            FileHandle.standardError.write(Data("FOUNDATION_URI_REFERENCE actual=\(foundation) expected=urn:swift-json:root#/$defs/value\n".utf8))
+            let vectors = [
+                ("urn:swift-json:root", reference, "urn:swift-json:root#/$defs/value"),
+                ("urn:example:root?revision=1#old", "#new", "urn:example:root?revision=1#new"),
+                ("urn:example:root?revision=1#old", "", "urn:example:root?revision=1"),
+                ("https://e.test/path?revision=1#old", "#new", "https://e.test/path?revision=1#new"),
+                ("https://e.test/path?revision=1#old", "", "https://e.test/path?revision=1"),
+                ("urn:example:root", "#%C3%A9", "urn:example:root#%C3%A9")]
+            for (input, fragment, expected) in vectors {
+                let result = try JSONSchemaURI(fragment, relativeTo: JSONSchemaURI(input))
+                precondition(result.string == expected)
+            }
+            print("URI_COMPATIBILITY passed cases=6")
+            return
+        }
         let directory = URL(fileURLWithPath: CommandLine.arguments[2], isDirectory: true)
         let fixtureURL = Bundle.module.url(forResource: "version1", withExtension: "json")!
         let fixtures = try JSONDecoder().decode(Fixtures.self, from: Data(contentsOf: fixtureURL))

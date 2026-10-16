@@ -92,6 +92,9 @@ def main():
 
     def execute(sdk, prefix, label):
         products = bundle / sdk
+        text = run(label + '-uri', prefix + [str(products / 'DiskPayload'), 'uri-probe', str(out / 'unused')])
+        if 'URI_COMPATIBILITY passed cases=6' not in text.splitlines():
+            raise ValueError('Incomplete URI compatibility proof')
         for name in CONSUMERS:
             text = run(label + '-' + name, prefix + [str(products / name)])
             if not all(marker in text for marker in MARKERS[name]):
@@ -107,7 +110,7 @@ def main():
         if len(list(disk.glob('payload-*.plist'))) != 8:
             raise ValueError('Expected eight materialized payloads')
         receipt['runtime_results'].append(dict(label=label, status='passed', consumers=3,
-            schema_examples_cases=15, navigation_cases=18, disk_fixtures=8, disk_processes=3))
+            schema_examples_cases=15, navigation_cases=18, disk_fixtures=8, disk_processes=3, uri_cases=6))
         save()
 
     save()

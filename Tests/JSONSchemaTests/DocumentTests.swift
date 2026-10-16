@@ -25,6 +25,16 @@ import JSONSchema
     #expect(try JSONSchemaURI("#/$defs/name", relativeTo: base).fragment == "/$defs/name")
     #expect(throws: JSONSchemaCompilationFailure.self) { try JSONSchemaURI("https://example.test/%ZZ") }
     #expect(throws: JSONSchemaCompilationFailure.self) { try JSONSchemaURI("relative") }
+    for (base, reference, expected) in [
+        ("urn:swift-json:root", "#/$defs/value", "urn:swift-json:root#/$defs/value"),
+        ("urn:example:root?revision=1#old", "#new", "urn:example:root?revision=1#new"),
+        ("urn:example:root?revision=1#old", "", "urn:example:root?revision=1"),
+        ("https://e.test/path?revision=1#old", "#new", "https://e.test/path?revision=1#new"),
+        ("https://e.test/path?revision=1#old", "", "https://e.test/path?revision=1"),
+        ("urn:example:root", "#%C3%A9", "urn:example:root#%C3%A9")
+    ] {
+        #expect(try JSONSchemaURI(reference, relativeTo: JSONSchemaURI(base)).string == expected)
+    }
 }
 @Test func pinnedOfficialMetaSchemasLoadAsImmutableResources() throws {
     let registry = try JSONSchemaRegistry.draft2020_12()

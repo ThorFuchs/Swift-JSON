@@ -40,9 +40,25 @@ public struct JSONSchemaURI: Sendable, Hashable {
         }
         // Pre-admit the bounded Foundation URI transformation before invoking it.
         try meter.retain(expanded)
-        guard let resolved = URL(string: text, relativeTo: base.flatMap { URL(string: $0.string) })?.absoluteURL,
-              resolved.scheme != nil else { throw JSONSchemaCompilationFailure(.identifier) }
-        let absolute = resolved.absoluteString
+        let absolute: String
+        if let base, text.isEmpty || text.utf8.first == 35 {
+            // RFC 3986 section 5.2: an empty reference or a fragment inherits
+            // the entire base path and query. Older Foundation versions lose
+            // an opaque URN path here. Keep resource identity platform-neutral.
+            // The pre-admitted scratch above covers these two bounded copies.
+            var bytes: [UInt8] = []
+            for byte in base.string.utf8 {
+                try meter.work()
+                if byte == 35 { break }
+                bytes.append(byte)
+            }
+            for byte in text.utf8 { try meter.work(); bytes.append(byte) }
+            absolute = String(decoding: bytes, as: UTF8.self)
+        } else {
+            guard let resolved = URL(string: text, relativeTo: base.flatMap { URL(string: $0.string) })?.absoluteURL,
+                  resolved.scheme != nil else { throw JSONSchemaCompilationFailure(.identifier) }
+            absolute = resolved.absoluteString
+        }
         var absoluteBytes: UInt64 = 0
         for _ in absolute.utf8 { try meter.work(); absoluteBytes += 1; try meter.require(.stringBytes, absoluteBytes) }
         let normalized = try JSONSchemaURINormalization.normalize(absolute, meter: &meter)

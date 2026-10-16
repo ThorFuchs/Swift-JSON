@@ -116,3 +116,19 @@ supplements the native Swift Testing, safety, conformance, documentation and
 archive lanes; it does not reclassify those compiler/SDK requirements. The
 runtime scope is a public-consumer and disk-envelope acceptance matrix, not a
 claim that the entire native Swift Testing suite ran on every older OS.
+
+The first actual macOS 14/15 runs exposed a schema-reference compatibility
+failure despite successful minimum-target builds: the general consumer passed,
+but schema examples raised an operational `missingResource`. Fragment-only and
+empty references now inherit the complete base path/query with a finite metered
+RFC 3986 construction, including opaque URNs. Platform Foundation resolution is
+recorded by the runtime probe beside six explicit identity vectors. Existing
+Swift Testing URI and recursive-reference cases add query, encoded fragment,
+positive and ordinary-invalid instances; no original assertion is removed.
+All schema tests run before producing the runtime bundle. The initial failing
+receipts remain distinct from subsequent qualification.
+
+Hosted image versions are observed at execution. macOS 14 hosted runners are
+[scheduled for retirement](https://github.com/actions/runner-images/issues/13518);
+their availability is not a permanent support guarantee. The verified bundle
+and explicit runtime command also support a separately supplied older Mac.

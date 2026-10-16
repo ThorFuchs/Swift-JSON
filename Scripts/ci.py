@@ -23,6 +23,7 @@ def commands(lane, output):
     output = output.relative_to(ROOT)
     if lane == 'apple-runtime-build':
         return [['python3', '-B', 'Scripts/test_qualification_harness.py'],
+                ['swift', 'test', '--test-product', 'JSONSchemaTests'],
                 ['python3', '-B', 'Scripts/apple_runtime.py', 'build', '--output', str(output / 'producer')]]
     if lane == 'apple-deployment':
         return [['python3', '-B', 'Scripts/qualify_apple_deployment.py', '--output', str(output / 'probes')]]
