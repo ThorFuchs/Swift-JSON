@@ -35,7 +35,7 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 41, ['swift', 'test', '--filter', 'inspection']),
+            ('JSONInspectionTests', 44, ['swift', 'test', '--filter', 'inspection']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
@@ -49,12 +49,12 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 47)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 41)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 44)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 1)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 2)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 3)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
 
     def setUp(self):
