@@ -1,3 +1,10 @@
+# NAV6 integrated inspection candidate
+
+Adds Inspection to schema-example-enabled main: ten products, nine libraries,
+720 native / 704 Linux / 616 WASI functions, 48 native / 47 Linux shared functions.
+All 49 caps, 126 maintenance identities and schema/composition lanes remain.
+These are discovery expectations; receipts establish execution.
+
 # Combined S3 / composition / Navigation qualification
 
 The current inventory requires 695 Mac / 679 Linux / 591 WASI functions,
@@ -11,6 +18,28 @@ all retained. Counts specify requirements; source-bound receipts establish passe
 See [G8 reconciliation](../Architecture/Release1.6/G8Integration.md).
 
 The following sections preserve their original increment histories.
+
+# NAV5 public inspection candidate
+
+The candidate adds JSONInspection as the ninth product (eight libraries plus CLI).
+Its existing I01-I17 identities, root discovery, 49 cap probes and 126 restored
+maintenance identities are unchanged. Native/Linux invoke the external inspection
+consumer and compiled guide/negative import proofs through qualify_inspection.py.
+Eight public DocC catalogues include Inspection. The original 2-positive/20-negative
+owned-reducer code-generation matrix remains unchanged. Candidate qualification
+must bind to current source; historical counts below retain their original scope.
+
+## Experimental inspection branch
+
+This isolated N2 branch retains the eight-product Navigation integration and adds
+an experimental JSONInspection target, with no product. A0 adds eight Navigation
+functions (47 total); I01–I17 add 17 inspection functions. Current roots are 622
+native, 606 Linux and 518 WASI; parameters remain 325/288. Shared-state expectations
+are 44 native/43 Linux, including I17. All 49 caps and 126 maintenance identities
+remain mandatory. Native/Linux add the full-codegen ownership matrix: two positive
+and twenty ordinary negative outcomes, with signals/assertions rejected. The
+inspection lane enforces six commands including Debug/Release, ASan and strict
+memory compilation. Earlier sections retain their original source identities.
 
 # Native CI
 
