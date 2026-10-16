@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 import Testing
+#if canImport(os)
+import os
+#else
 import Synchronization
+#endif
 #if canImport(Dispatch)
 import Dispatch
 #endif
@@ -29,7 +33,11 @@ import JSON
 }
 #if canImport(Dispatch)
 private final class RegexCancellationProgress: Sendable {
+    #if canImport(os)
+    let ready = OSAllocatedUnfairLock(initialState: false)
+    #else
     let ready = Mutex(false)
+    #endif
     let resume = DispatchSemaphore(value: 0)
     func checkpoint(_ work: UInt64) {
         guard work >= 4096 else { return }
