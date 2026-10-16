@@ -2,9 +2,9 @@
 
 Exact, synchronous, bounded exploration of many nodes in one canonical JSON source.
 
-JSONNavigation is an opt-in library product candidate on this development branch.
+JSONNavigation is an opt-in library product introduced in Swift-JSON 1.6.0.
 Add its SwiftPM product and import it explicitly; core JSON does not re-export it.
-Product visibility does not establish a published version or approval to merge.
+One-node reads remain available directly from JSON.
 
 The core JSON module continues to own one-node lookup, exact numbers and keys,
 presence and RFC 6901 Pointer. Use ``JSONTraversal`` for deterministic DFS preorder,

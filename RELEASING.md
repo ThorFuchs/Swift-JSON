@@ -7,7 +7,8 @@ or releases. Published version tags are protected against updates and deletion.
 1. Require passed native, safety, documentation and Git-free archive lanes for
    the exact candidate commit on macOS/SDK 27+ and Swift 6.4+ with language mode 6.
    Retain both ARM64 and x86_64 Linux behavior/safety receipts for portable changes.
-2. Review seven public products (six libraries, including opt-in JSONBridges, plus swift-json), the empty root dependency graph, compiled external
+2. Review nine public products (eight libraries, including opt-in JSONBridges,
+   JSONNavigation and JSONSchemaExamples, plus swift-json), the empty root dependency graph, compiled external
    consumers, populated pinned suites, policy exclusions, all 49 finite caps,
    schema/regex behavior and cancellation boundaries.
 3. Review licenses, provenance, public file inventory and documentation links.

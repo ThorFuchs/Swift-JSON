@@ -5,8 +5,8 @@ Prepare an offline schema once and return exact JSON only after native validatio
 ## Prepare and generate
 
 Add the optional JSONSchemaExamples product to your application target, then import
-JSON, JSONSchema and JSONSchemaExamples explicitly. This product is in 1.6 development;
-use the inspected feature checkout until a qualified release includes it.
+JSON, JSONSchema and JSONSchemaExamples explicitly. This product is introduced in 1.6.0;
+use the matching versioned source and compiled documentation for its exact contract.
 
 ```swift
 import JSON

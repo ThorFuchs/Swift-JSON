@@ -17,16 +17,15 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-This branch combines main’s bounded composition and opt-in structural traversal with
-the proposed JSONSchemaExamples product: eight libraries and the CLI.
-Release remains human-gated; the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
-describes its many-node scope, exact locations, finite accounting and coverage.
+**1.6.0** provides eight libraries and the CLI. It adds opt-in verified schema
+examples and structural traversal, structured HTML previews and bounded native
+composition. Exact JSON and offline schema validation remain the semantic authorities.
+The CLI reports `1.6.0` and a deterministic source-content digest.
 
-Published **1.5.0** provides six libraries and the CLI. This development branch
-retains main’s unreleased structured HTML previews and forward-ports the 1.5.1
-maintenance repairs: best-effort schema diagnostics, the complete 1.2.1 regression
-suites and Git-free qualification. Its CLI identifies itself as `1.6.0-dev`; this
-is not a published version. See the [repair record](Documentation/Qualification/Release1.5.1/README.md).
+The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
+the complete 1.2.1 regression suites and Git-free qualification. See the
+[1.6 qualification and compatibility notes](Documentation/Qualification/Release1.6.0.md)
+for source-bound evidence, finite-capacity boundaries and known DocC limitations.
 
 ## Why Swift-JSON?
 
@@ -73,12 +72,12 @@ Choose the products your application needs:
 | --- | --- |
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
-| **JSONSchemaExamples** | 1.6 development: deterministic exact candidates, conservative typed construction and native schema certification |
+| **JSONSchemaExamples** | Opt-in deterministic exact candidates, conservative typed construction and native schema certification, introduced in 1.6.0 |
 | **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
-| **JSONHTML** | Exact HTML and immutable exports since 1.3.0; structured forms/cards and bounded previews on unreleased main |
+| **JSONHTML** | Exact HTML and immutable exports; structured forms/cards and bounded previews in 1.6.0 |
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
-| **JSONNavigation** | Unreleased candidate: exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage |
+| **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -86,13 +85,13 @@ Choose the products your application needs:
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
 packages.
 
-The optional 1.6 development product `JSONSchemaExamples` depends only on JSON and
+The optional `JSONSchemaExamples` product depends only on JSON and
 JSONSchema. It prepares immutable offline resources and offers exact declared hints
 and conservative typed candidates. Every returned value has passed native validation
 against the original root. The supported subset includes exact numeric/string bounds,
 required objects, positional arrays, static references, composition hints, contains
 minima and bounded anchored ASCII-pattern proposals. Unsupported or exhausted search
-is explicit and does not establish unsatisfiability. See [generate verified examples](#generate-verified-schema-examples-16-development)
+is explicit and does not establish unsatisfiability. See [generate verified examples](#generate-verified-schema-examples)
 and the [compiled public guide consumer](Examples/SchemaExamplesConsumer/README.md).
 
 The inherited Linux increment adds portable schema integrity for its qualified products
@@ -113,7 +112,7 @@ qualification is tracked in [G8 integration](Documentation/Architecture/Release1
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.5.0")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.6.0")
 ```
 
 Then add products to your target dependencies:
@@ -123,7 +122,8 @@ Then add products to your target dependencies:
 .product(name: "JSONSchema", package: "swift-json")
 ```
 
-Add `JSONStreaming`, `JSONPatch` and `JSONHTML` and opt-in `JSONBridges` in the same way when needed. A local checkout can
+Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`
+or `JSONSchemaExamples` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
 releases. See the [seven-library consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
@@ -314,11 +314,10 @@ states, captures, matching work and cancellation are budgeted. Exact-spelling pr
 share immutable storage within a plan. See the [schema and regex contract](Documentation/Architecture/SchemaAndRegex.md)
 and [public consumer interface](Documentation/ConsumerInterface.md).
 
-## Generate verified schema examples (1.6 development)
+## Generate verified schema examples
 
-In the isolated 1.6 checkout, add the optional `JSONSchemaExamples` product to your
-target alongside JSON and JSONSchema. Existing released-version requirements above
-do not promise this development API. The generator is useful for deterministic test
+Add the optional `JSONSchemaExamples` product to your target alongside JSON and
+JSONSchema, using version 1.6.0 or later. The generator is useful for deterministic test
 fixtures, documentation samples and schema-driven tooling; it is a conservative
 search, with complete native validation required for every returned value.
 
@@ -444,7 +443,7 @@ hard RSS or throughput guarantees. Read the [resource contract](Documentation/Ar
 [machine-readable profiles](Documentation/Architecture/ResourceProfiles.json) and
 [49-cap ownership matrix](Documentation/Qualification/LimitsMatrix.json).
 
-## Standalone HTML (structured previews on unreleased main)
+## Standalone HTML
 
 `JSONHTML` presents the exact value as ordered object forms, indexed array cards and
 small scalar flow lists. The direct renderer defaults to interactive structured
@@ -487,28 +486,33 @@ Read the [structured preview guide](Sources/JSONHTML/Documentation.docc/Structur
 [formatted syntax guide](Sources/JSONHTML/Documentation.docc/FormattedRendering.md),
 [prepared export guide](Sources/JSONHTML/Documentation.docc/PreparedExport.md) and
 [API/policy freeze](Documentation/Architecture/Release1.3/StructuredPreviews/APIAndPolicy.md).
-The consolidated design revision is not a package release number. These structured
-previews are on unreleased main; published 1.5.0 retains the prior renderer contract.
+The consolidated design revision is not a package release number. Version 1.6.0
+adds these structured previews; choose the explicit syntax layout when upgrading
+an application that requires the earlier syntax-first presentation.
 
 ## Documentation and examples
 
 Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSON](https://thorfuchs.github.io/Swift-JSON/JSON/documentation/json/),
 [JSONSchema](https://thorfuchs.github.io/Swift-JSON/JSONSchema/documentation/jsonschema/),
+[JSONSchemaExamples](https://thorfuchs.github.io/Swift-JSON/JSONSchemaExamples/documentation/jsonschemaexamples/),
 [JSONStreaming](https://thorfuchs.github.io/Swift-JSON/JSONStreaming/documentation/jsonstreaming/) and
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/),
 [JSONHTML](https://thorfuchs.github.io/Swift-JSON/JSONHTML/documentation/jsonhtml/) and
-[JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/).
+[JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/) and
+[JSONNavigation](https://thorfuchs.github.io/Swift-JSON/JSONNavigation/documentation/jsonnavigation/).
 The site tracks `main` and publishes only after all four native CI lanes pass.
-It includes unreleased APIs. For the exact released 1.5.0 interface, use its
-[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.5.0/Sources)
-or its [compiled DocC asset](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.5.0).
+For the exact 1.6.0 interface, use its
+[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0/Sources).
+Matching compiled catalogs accompany the GitHub release when published. Known
+web-client limitations and direct-link/reload guidance are recorded in the
+[qualification notes](Documentation/Qualification/Release1.6.0.md#documentation).
 
 The [documentation index](Documentation/README.md) links the behavior contracts. The eight DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all eight candidate catalogs on a supported native host:
+Build all eight catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -561,7 +565,7 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Command-line tool (released in 1.5.0)
 
-`swift-json` accompanies the six libraries. It provides strict formatting, validation, Pointer selection, staged
+`swift-json` accompanies the eight libraries. It provides strict formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
 for command semantics, cumulative budgets and qualification boundaries. The pull
@@ -581,7 +585,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-The development package has eight libraries plus the executable, with no external root
+The package has eight libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
@@ -603,7 +607,7 @@ See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [integration contract](Documentation/Architecture/Release1.4/Integration.md) and
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
 The frozen 1.5.0 CLI reports `1.4.0-dev` and revision `unknown`, as disclosed in
-its release notes. This 1.5.1 candidate reports its actual candidate version and a
+its release notes. Version 1.6.0 reports its source version and a
 deterministic source digest; see the [CLI guide](Documentation/CLI.md).
 Versioned release assets identify the exact qualified platform and source scope.
 
@@ -617,7 +621,7 @@ Incompatibility exits1; operational errors remain errors. Apple schema/model bri
 See the [provider contract](Documentation/Architecture/Release1.4/Providers.md) and
 [compiled public consumer](Tools/CLIQualification/Sources/ProviderConsumer/Main.swift).
 
-## Exact structural navigation (unreleased candidate)
+## Exact structural navigation
 
 `JSONNavigation` adds many-node DFS preorder over a captured canonical document,
 with insertion-order object members, increasing array indices and exact typed
@@ -626,5 +630,5 @@ bounded metadata collection and coverage share one finite cumulative core budget
 Add the JSONNavigation product and import it explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
-and [real external SwiftPM consumer](Tools/NavigationQualification). This branch
-prepares nine products; published 1.5.0 and its seven-product contract are unchanged.
+and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
+opt-in in 1.6.0; one-node lookup remains in JSON. Deeper N2 inspection is deferred.
