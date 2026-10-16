@@ -70,7 +70,7 @@ jobs:
           name: apple-runtime-binaries
           path: .runtime-bundle
       # Artifact transport does not preserve executable modes; it preserves bytes.
-      - run: chmod +x .runtime-bundle/macosx/{Consumer,SchemaExamplesConsumer,NavigationConsumer,DiskPayload}
+      - run: chmod +x .runtime-bundle/macosx/{Consumer,SchemaExamplesConsumer,NavigationConsumer,DiskPayload,swift-json}
       - run: python3 -B Scripts/apple_runtime.py macos --bundle .runtime-bundle --output .build/ci/apple-runtime --expected-os '${{ matrix.os }}'
       - if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

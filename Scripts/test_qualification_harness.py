@@ -31,9 +31,10 @@ class HarnessTests(unittest.TestCase):
         payload.write_text('corrupted')
         with self.assertRaises(ValueError): verify_bundle(bundle, [dict(path='fixture', sha256='abc')])
         command = ['python3', '-B', 'Scripts/apple_runtime.py', 'build']
-        marker = 'APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9'
+        marker = 'APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9 uri_cases=54 cli_cases=53'
         self.assertTrue(check_result(command, 0, marker)[0])
-        for partial in ['', marker.replace('consumers=3', 'consumers=2'), marker.replace('disk_fixtures=8', 'disk_fixtures=0')]:
+        for partial in ['', marker.replace('consumers=3', 'consumers=2'), marker.replace('disk_fixtures=8', 'disk_fixtures=0'),
+                        marker.replace('uri_cases=54', 'uri_cases=6'), marker.replace('cli_cases=53', 'cli_cases=0')]:
             self.assertFalse(check_result(command, 0, partial)[0])
         self.assertFalse(check_result(command, 1, marker)[0])
 

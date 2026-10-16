@@ -208,7 +208,7 @@ def check_result(command, code, log, events=None):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if command[:4] == ['python3', '-B', 'Scripts/apple_runtime.py', 'build']:
-        passed = passed and 'APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9' in log.splitlines()
+        passed = passed and 'APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9 uri_cases=54 cli_cases=53' in log.splitlines()
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
         expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())

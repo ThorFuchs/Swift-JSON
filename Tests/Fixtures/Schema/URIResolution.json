@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "source": "RFC 3986 sections 5.4.1 and 5.4.2, strict resolution; plus authored opaque/query/empty-component regression cases",
+  "source_url": "https://www.rfc-editor.org/rfc/rfc3986#section-5.4",
+  "cases": [
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g:h",
+      "expected": "g:h"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g",
+      "expected": "http://a/b/c/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "./g",
+      "expected": "http://a/b/c/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g/",
+      "expected": "http://a/b/c/g/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "/g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "//g",
+      "expected": "http://g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "?y",
+      "expected": "http://a/b/c/d;p?y"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g?y",
+      "expected": "http://a/b/c/g?y"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "#s",
+      "expected": "http://a/b/c/d;p?q#s"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g#s",
+      "expected": "http://a/b/c/g#s"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g?y#s",
+      "expected": "http://a/b/c/g?y#s"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": ";x",
+      "expected": "http://a/b/c/;x"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g;x",
+      "expected": "http://a/b/c/g;x"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g;x?y#s",
+      "expected": "http://a/b/c/g;x?y#s"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "",
+      "expected": "http://a/b/c/d;p?q"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": ".",
+      "expected": "http://a/b/c/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "./",
+      "expected": "http://a/b/c/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "..",
+      "expected": "http://a/b/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../",
+      "expected": "http://a/b/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../g",
+      "expected": "http://a/b/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../..",
+      "expected": "http://a/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../../",
+      "expected": "http://a/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../../g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../../../g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "../../../../g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "/./g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "/../g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g.",
+      "expected": "http://a/b/c/g."
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": ".g",
+      "expected": "http://a/b/c/.g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g..",
+      "expected": "http://a/b/c/g.."
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "..g",
+      "expected": "http://a/b/c/..g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "./../g",
+      "expected": "http://a/b/g"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "./g/.",
+      "expected": "http://a/b/c/g/"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g/./h",
+      "expected": "http://a/b/c/g/h"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g/../h",
+      "expected": "http://a/b/c/h"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g;x=1/./y",
+      "expected": "http://a/b/c/g;x=1/y"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g;x=1/../y",
+      "expected": "http://a/b/c/y"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g?y/./x",
+      "expected": "http://a/b/c/g?y/./x"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g?y/../x",
+      "expected": "http://a/b/c/g?y/../x"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g#s/./x",
+      "expected": "http://a/b/c/g#s/./x"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "g#s/../x",
+      "expected": "http://a/b/c/g#s/../x"
+    },
+    {
+      "base": "http://a/b/c/d;p?q",
+      "reference": "http:g",
+      "expected": "http:g"
+    },
+    {
+      "base": "urn:swift-json:root",
+      "reference": "#/$defs/value",
+      "expected": "urn:swift-json:root#/$defs/value"
+    },
+    {
+      "base": "urn:example:root?revision=1#old",
+      "reference": "#new",
+      "expected": "urn:example:root?revision=1#new"
+    },
+    {
+      "base": "urn:example:root?revision=1#old",
+      "reference": "",
+      "expected": "urn:example:root?revision=1"
+    },
+    {
+      "base": "https://e.test/path?revision=1#old",
+      "reference": "#new",
+      "expected": "https://e.test/path?revision=1#new"
+    },
+    {
+      "base": "https://e.test/path?revision=1#old",
+      "reference": "",
+      "expected": "https://e.test/path?revision=1"
+    },
+    {
+      "base": "urn:example:root",
+      "reference": "#%C3%A9",
+      "expected": "urn:example:root#%C3%A9"
+    },
+    {
+      "base": "urn:example:root",
+      "reference": "child",
+      "expected": "urn:child"
+    },
+    {
+      "base": "urn:example:root",
+      "reference": "https://e.test/other",
+      "expected": "https://e.test/other"
+    },
+    {
+      "base": "http://a",
+      "reference": "g",
+      "expected": "http://a/g"
+    },
+    {
+      "base": "http://a/b",
+      "reference": "//g?y#s",
+      "expected": "http://g?y#s"
+    },
+    {
+      "base": "https://e.test/path?old#old",
+      "reference": "?",
+      "expected": "https://e.test/path?"
+    },
+    {
+      "base": "https://e.test/path?old#old",
+      "reference": "#",
+      "expected": "https://e.test/path?old#"
+    }
+  ]
+}

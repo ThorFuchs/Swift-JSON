@@ -100,6 +100,10 @@ bundle and its source manifest before execution; artifact transport restores
 executable permissions without modifying bytes. Neither an SDK cross-build nor
 an omitted consumer can become a runtime pass.
 
+On macOS the same bundle also includes the actual `swift-json` executable. The
+existing 53-case subprocess acceptance matrix checks its exact output, exits,
+diagnostics, finite limits, strict input and atomic files on each runtime.
+
 The separate `Apple Runtime Compatibility` workflow runs these exact binaries on
 the observed macOS 14 and 15 hosted images, a supplementary rolling macOS 26
 image, and both an iPhone and an iPad on an available iOS 17 simulator. Receipts
@@ -119,12 +123,20 @@ claim that the entire native Swift Testing suite ran on every older OS.
 
 The first actual macOS 14/15 runs exposed a schema-reference compatibility
 failure despite successful minimum-target builds: the general consumer passed,
-but schema examples raised an operational `missingResource`. Fragment-only and
-empty references now inherit the complete base path/query with a finite metered
-RFC 3986 construction, including opaque URNs. Platform Foundation resolution is
-recorded by the runtime probe beside six explicit identity vectors. Existing
-Swift Testing URI and recursive-reference cases add query, encoded fragment,
-positive and ordinary-invalid instances; no original assertion is removed.
+but schema examples raised an operational `missingResource`. The diagnostic on
+macOS 15 resolved the sample as `urn://#/$defs/value`. A fragment-only correction
+was insufficient for the full opaque/query matrix. URI admission now uses native
+RFC 3986 component resolution, followed by the existing syntax normalization;
+Foundation URL is no longer its authority. Work checks, scratch admission and
+cancellation share the original invocation meter. Scratch weights describe logical
+retention, not actual process RSS or a Foundation/caller instruction quota.
+
+The frozen `Tests/Fixtures/Schema/URIResolution.json` contains all 42 strict
+normal/abnormal RFC 3986 examples plus 12 authored opaque/query/empty-component
+cases. Existing Swift Testing URI and recursive-reference cases add the 54
+identities and positive/ordinary-invalid compiled instances; no original assertion
+is removed. Runtime probes record the platform Foundation result and all 54 public
+identities beside the unchanged schema-example consumer.
 All schema tests run before producing the runtime bundle. The initial failing
 receipts remain distinct from subsequent qualification.
 

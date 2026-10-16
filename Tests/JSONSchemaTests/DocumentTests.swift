@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import Testing
+import Foundation
 import JSON
 import JSONSchema
 @Test func schemaDocumentsPreserveExactRawDeclarations() throws {
@@ -34,6 +35,17 @@ import JSONSchema
         ("urn:example:root", "#%C3%A9", "urn:example:root#%C3%A9")
     ] {
         #expect(try JSONSchemaURI(reference, relativeTo: JSONSchemaURI(base)).string == expected)
+    }
+    let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("Fixtures/Schema/URIResolution.json")
+    let cases = try #require(JSONParser().parse(Data(contentsOf: fixture)).objectValue?["cases"]?.arrayValue)
+    #expect(cases.count == 54)
+    for item in cases {
+        let object = try #require(item.objectValue)
+        let origin = try #require(object["base"]?.stringValue)
+        let reference = try #require(object["reference"]?.stringValue)
+        let expected = try #require(object["expected"]?.stringValue)
+        #expect(try JSONSchemaURI(reference, relativeTo: JSONSchemaURI(origin)).string == expected)
     }
 }
 @Test func pinnedOfficialMetaSchemasLoadAsImmutableResources() throws {

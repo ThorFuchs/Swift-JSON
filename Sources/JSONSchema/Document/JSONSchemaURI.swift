@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-import Foundation
 import JSON
 /// A normalized absolute RFC 3986 schema identity resolved during compilation.
 ///
@@ -33,36 +32,21 @@ public struct JSONSchemaURI: Sendable, Hashable {
         guard percent == 0, try JSONSchemaFormats.test(text,name: base == nil ? .uri : .uriReference,meter: &meter) else { throw JSONSchemaCompilationFailure(.identifier) }
         var baseBytes: UInt64 = 0
         if let base { for _ in base.string.utf8 { try meter.work(); baseBytes += 1 } }
-        let sum = try meter.adding(.retainedBytes, count, baseBytes)
+        // A relative path can insert one slash after an authority with no path.
+        let sum = try meter.adding(.retainedBytes, try meter.adding(.retainedBytes, count, baseBytes), 1)
         let (expanded, overflow) = sum.multipliedReportingOverflow(by: 3)
         guard !overflow else {
             throw JSONFailure(.resource, code: .counterOverflow, resource: .init(domain: meter.domain, metric: .retainedBytes, limit: meter.limits[.retainedBytes], attemptedUsage: nil, overflow: true))
         }
-        // Pre-admit the bounded Foundation URI transformation before invoking it.
+        // Admit two input arrays, merged bytes/string and component metadata.
+        // These are logical scratch weights, not a process allocation/RSS cap.
         try meter.retain(expanded)
-        let absolute: String
-        if let base, text.isEmpty || text.utf8.first == 35 {
-            // RFC 3986 section 5.2: an empty reference or a fragment inherits
-            // the entire base path and query. Older Foundation versions lose
-            // an opaque URN path here. Keep resource identity platform-neutral.
-            // The pre-admitted scratch above covers these two bounded copies.
-            var bytes: [UInt8] = []
-            for byte in base.string.utf8 {
-                try meter.work()
-                if byte == 35 { break }
-                bytes.append(byte)
-            }
-            for byte in text.utf8 { try meter.work(); bytes.append(byte) }
-            absolute = String(decoding: bytes, as: UTF8.self)
-        } else {
-            guard let resolved = URL(string: text, relativeTo: base.flatMap { URL(string: $0.string) })?.absoluteURL,
-                  resolved.scheme != nil else { throw JSONSchemaCompilationFailure(.identifier) }
-            absolute = resolved.absoluteString
-        }
+        try meter.retain(256)
+        let absolute = try JSONSchemaURIResolution.resolve(text, relativeTo: base?.string, meter: &meter)
         var absoluteBytes: UInt64 = 0
         for _ in absolute.utf8 { try meter.work(); absoluteBytes += 1; try meter.require(.stringBytes, absoluteBytes) }
         let normalized = try JSONSchemaURINormalization.normalize(absolute, meter: &meter)
-        try meter.release(expanded + count)
+        try meter.release(expanded + count + 256)
         return try Self(admitted: normalized, meter: &meter)
     }
     private init(admitted text: String, meter: inout JSONWorkMeter) throws { string = text; identity = try JSONKey(text, meter: &meter) }

@@ -23,18 +23,19 @@ private struct Fixtures: Decodable {
             let reference = "#/$defs/value"
             let foundation = URL(string: reference, relativeTo: base)!.absoluteURL.absoluteString
             FileHandle.standardError.write(Data("FOUNDATION_URI_REFERENCE actual=\(foundation) expected=urn:swift-json:root#/$defs/value\n".utf8))
-            let vectors = [
-                ("urn:swift-json:root", reference, "urn:swift-json:root#/$defs/value"),
-                ("urn:example:root?revision=1#old", "#new", "urn:example:root?revision=1#new"),
-                ("urn:example:root?revision=1#old", "", "urn:example:root?revision=1"),
-                ("https://e.test/path?revision=1#old", "#new", "https://e.test/path?revision=1#new"),
-                ("https://e.test/path?revision=1#old", "", "https://e.test/path?revision=1"),
-                ("urn:example:root", "#%C3%A9", "urn:example:root#%C3%A9")]
-            for (input, fragment, expected) in vectors {
-                let result = try JSONSchemaURI(fragment, relativeTo: JSONSchemaURI(input))
+            let url = Bundle.module.url(forResource: "URIResolution", withExtension: "json")!
+            let cases = try JSONParser().parse(Data(contentsOf: url)).objectValue!["cases"]!.arrayValue!
+            precondition(cases.count == 54)
+            for item in cases {
+                let object = item.objectValue!
+                let input = object["base"]!.stringValue!, fragment = object["reference"]!.stringValue!
+                let expected = object["expected"]!.stringValue!
+                let admitted = try JSONSchemaURI(input)
+                let result = try JSONSchemaURI(fragment, relativeTo: admitted)
+                FileHandle.standardError.write(Data("URI_CASE base=\(admitted.string) reference=\(fragment) actual=\(result.string) expected=\(expected)\n".utf8))
                 precondition(result.string == expected)
             }
-            print("URI_COMPATIBILITY passed cases=6")
+            print("URI_COMPATIBILITY passed cases=54")
             return
         }
         let directory = URL(fileURLWithPath: CommandLine.arguments[2], isDirectory: true)

@@ -93,7 +93,7 @@ def main():
     def execute(sdk, prefix, label):
         products = bundle / sdk
         text = run(label + '-uri', prefix + [str(products / 'DiskPayload'), 'uri-probe', str(out / 'unused')])
-        if 'URI_COMPATIBILITY passed cases=6' not in text.splitlines():
+        if 'URI_COMPATIBILITY passed cases=54' not in text.splitlines():
             raise ValueError('Incomplete URI compatibility proof')
         for name in CONSUMERS:
             text = run(label + '-' + name, prefix + [str(products / name)])
@@ -109,8 +109,15 @@ def main():
                 raise ValueError('Incomplete disk proof')
         if len(list(disk.glob('payload-*.plist'))) != 8:
             raise ValueError('Expected eight materialized payloads')
+        if sdk == 'macosx':
+            text = run(label + '-cli', [sys.executable, '-B', 'Scripts/qualify_cli.py',
+                       '--binary', str(products / 'swift-json'), '--output', str(out / (label + '-cli.json'))])
+            result = json.loads(text.strip().splitlines()[-1])
+            if (result['observed'], result['passed'], result['failed']) != (53, 53, 0):
+                raise ValueError('Incomplete older-runtime CLI acceptance')
         receipt['runtime_results'].append(dict(label=label, status='passed', consumers=3,
-            schema_examples_cases=15, navigation_cases=18, disk_fixtures=8, disk_processes=3, uri_cases=6))
+            schema_examples_cases=15, navigation_cases=18, disk_fixtures=8, disk_processes=3,
+            uri_cases=54, cli_cases=53 if sdk == 'macosx' else 0))
         save()
 
     save()
@@ -135,9 +142,10 @@ def main():
             disk_source.mkdir()
             shutil.copyfile(ROOT / 'Tools/AppleDeploymentQualification/DiskPayload.swift', disk_source / 'DiskPayload.swift')
             shutil.copyfile(ROOT / 'Tools/MobileQualification/Sources/ProbeCases/Fixtures/version1.json', disk_source / 'version1.json')
+            shutil.copyfile(ROOT / 'Tests/Fixtures/Schema/URIResolution.json', disk_source / 'URIResolution.json')
             dependencies = ', '.join('.product(name: "' + name + '", package: "Swift-JSON")' for name in LIBRARIES)
             targets = ',\n'.join('.executableTarget(name: "' + name + '", dependencies: [' + dependencies + ']'
-                + (', resources: [.copy("version1.json")]' if name == 'DiskPayload' else '') + ')' for name in PROGRAMS)
+                + (', resources: [.copy("version1.json"), .copy("URIResolution.json")]' if name == 'DiskPayload' else '') + ')' for name in PROGRAMS)
             (package / 'Package.swift').write_text('// swift-tools-version: 6.4\nimport PackageDescription\n'
                 'let package = Package(name: "AppleRuntimeConsumer", platforms: [.macOS("14.0"), .iOS("17.0")],'
                 'dependencies: [.package(name: "Swift-JSON", path: ' + json.dumps(str(ROOT)) + ')],'
@@ -153,6 +161,17 @@ def main():
                 products = pathlib.Path(run(sdk + '-bin-path', command + ['--show-bin-path']).strip())
                 dest = bundle / sdk
                 dest.mkdir()
+                if sdk == 'macosx':
+                    cli_command = ['swift', 'build', '--product', 'swift-json', '--scratch-path', str(out / 'build-cli'),
+                        '--jobs', '2', '--disable-index-store', '-debug-info-format', 'none',
+                        '--triple', triple, '--sdk', sdkpath,
+                        '-Xlinker', '-rpath', '-Xlinker', '@executable_path/Frameworks']
+                    run('cli-build', cli_command)
+                    cli_products = pathlib.Path(run('cli-bin-path', cli_command + ['--show-bin-path']).strip())
+                    shutil.copy2(cli_products / 'swift-json', dest / 'swift-json')
+                    metadata = run('cli-minimum', ['xcrun', 'vtool', '-show-build', str(dest / 'swift-json')])
+                    if not re.search(r'\bminos\s+14\.0\b', metadata):
+                        raise ValueError('Unexpected CLI deployment minimum')
                 for name in PROGRAMS:
                     shutil.copy2(products / name, dest / name)
                     metadata = run(sdk + '-' + name + '-minimum', ['xcrun', 'vtool', '-show-build', str(dest / name)])
@@ -173,7 +192,7 @@ def main():
             receipt['status'] = 'passed'
             (bundle / 'producer.json').write_text(json.dumps(receipt, indent=2) + '\n')
             (bundle / 'MANIFEST.json').write_text(json.dumps(payload_records(bundle), indent=2) + '\n')
-            print('APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9')
+            print('APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9 uri_cases=54 cli_cases=53')
         else:
             producer = verify_bundle(bundle, source)
             receipt['producer_git_head'] = producer['git_head']

@@ -20,4 +20,16 @@ private func referenceVerdict(_ schema: String,_ instance: String) throws -> JSO
     let opaquePlan = try JSONSchemaCompiler().compile(opaque)
     #expect(try JSONSchemaValidator().validate(42, against: opaquePlan).isValid)
     #expect(try !JSONSchemaValidator().validate(43, against: opaquePlan).isValid)
+    let measured = try JSONSchemaCompiler().compileWithReport(opaque)
+    var referenceLimits = JSONLimits.balanced
+    referenceLimits[.workUnits] = measured.statistics[.workUnits]
+    let inclusive = try JSONSchemaCompiler(options: .init(limits: referenceLimits)).compile(opaque)
+    #expect(try JSONSchemaValidator().validate(42, against: inclusive).isValid)
+    referenceLimits[.workUnits] -= 1
+    do {
+        _ = try JSONSchemaCompiler(options: .init(limits: referenceLimits)).compile(opaque)
+        Issue.record("URI/reference helper restarted compilation work")
+    } catch let failure as JSONFailure {
+        #expect(failure.category == .resource && failure.resource?.metric == .workUnits)
+    }
 }
