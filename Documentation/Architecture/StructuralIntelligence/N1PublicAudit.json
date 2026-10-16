@@ -1,0 +1,500 @@
+{
+  "parent": "4403b9ab3b0a1fadc57c12a283cfabb255f6237a",
+  "authored_declarations": 56,
+  "source_graph_audit": "fresh Swift6.4 baseline compilation; package/private symbols excluded",
+  "decisions": [
+    {
+      "path": [
+        "JSONScopeOverlapPolicy"
+      ],
+      "declaration": "enum JSONScopeOverlapPolicy",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONScopeOverlapPolicy",
+        "orderedOccurrences"
+      ],
+      "declaration": "case orderedOccurrences",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONScopeOverlapPolicy",
+        "rejectAmbiguous"
+      ],
+      "declaration": "case rejectAmbiguous",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONScopeOverlapPolicy",
+        "uniquePhysicalNodes"
+      ],
+      "declaration": "case uniquePhysicalNodes",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversal"
+      ],
+      "declaration": "struct JSONTraversal",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversal",
+        "collect(scope:options:maximumRecords:)"
+      ],
+      "declaration": "func collect(scope: JSONTraversalScope = .subtree(at: []), options: JSONTraversalOptions = .init(), maximumRecords: Int = 100_000) throws -> JSONOperationReport<JSONTraversalCollection>",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversal",
+        "document"
+      ],
+      "declaration": "let document: JSONDocument",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversal",
+        "init(document:limits:)"
+      ],
+      "declaration": "init(document: JSONDocument, limits: JSONLimits = .balanced)",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversal",
+        "limits"
+      ],
+      "declaration": "let limits: JSONLimits",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversal",
+        "visit(scope:options:_:)"
+      ],
+      "declaration": "func visit(scope: JSONTraversalScope = .subtree(at: []), options: JSONTraversalOptions = .init(), _ visitor: (JSONTraversalHit, JSON) throws -> JSONTraversalAction) throws -> JSONOperationReport<JSONTraversalSummary>",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalAction"
+      ],
+      "declaration": "enum JSONTraversalAction",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalAction",
+        "continue"
+      ],
+      "declaration": "case `continue`",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalAction",
+        "skipDescendants"
+      ],
+      "declaration": "case skipDescendants",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalAction",
+        "stop"
+      ],
+      "declaration": "case stop",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCollection"
+      ],
+      "declaration": "struct JSONTraversalCollection",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCollection",
+        "nodes"
+      ],
+      "declaration": "let nodes: [JSONTraversalHit]",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCollection",
+        "summary"
+      ],
+      "declaration": "let summary: JSONTraversalSummary",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCompletion"
+      ],
+      "declaration": "enum JSONTraversalCompletion",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCompletion",
+        "complete"
+      ],
+      "declaration": "case complete",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCompletion",
+        "restricted"
+      ],
+      "declaration": "case restricted",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalCompletion",
+        "visitorStopped"
+      ],
+      "declaration": "case visitorStopped",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalFailure"
+      ],
+      "declaration": "enum JSONTraversalFailure",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalFailure",
+        "ambiguousRoots(first:second:)"
+      ],
+      "declaration": "case ambiguousRoots(first: Int, second: Int)",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalFailure",
+        "collectionLimitExceeded(limit:)"
+      ],
+      "declaration": "case collectionLimitExceeded(limit: Int)",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit"
+      ],
+      "declaration": "struct JSONTraversalHit",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit",
+        "absoluteLocation"
+      ],
+      "declaration": "let absoluteLocation: [JSONLocationComponent]",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit",
+        "kind"
+      ],
+      "declaration": "let kind: JSONTraversalKind",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit",
+        "occurrenceIndex"
+      ],
+      "declaration": "let occurrenceIndex: UInt64",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit",
+        "relativeDepth"
+      ],
+      "declaration": "let relativeDepth: Int",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit",
+        "scopeRootIndex"
+      ],
+      "declaration": "let scopeRootIndex: Int",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalHit",
+        "sourceSpan"
+      ],
+      "declaration": "let sourceSpan: JSONSourceSpan?",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind"
+      ],
+      "declaration": "enum JSONTraversalKind",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind",
+        "array"
+      ],
+      "declaration": "case array",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind",
+        "boolean"
+      ],
+      "declaration": "case boolean",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind",
+        "null"
+      ],
+      "declaration": "case null",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind",
+        "number"
+      ],
+      "declaration": "case number",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind",
+        "object"
+      ],
+      "declaration": "case object",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalKind",
+        "string"
+      ],
+      "declaration": "case string",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalOptions"
+      ],
+      "declaration": "struct JSONTraversalOptions",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalOptions",
+        "depthLimit"
+      ],
+      "declaration": "var depthLimit: Int?",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalOptions",
+        "emitKinds"
+      ],
+      "declaration": "var emitKinds: Set<JSONTraversalKind>?",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalOptions",
+        "includeScopeRoot"
+      ],
+      "declaration": "var includeScopeRoot: Bool",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalOptions",
+        "includeSourceSpans"
+      ],
+      "declaration": "var includeSourceSpans: Bool",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalOptions",
+        "init(depthLimit:includeScopeRoot:emitKinds:includeSourceSpans:)"
+      ],
+      "declaration": "init(depthLimit: Int? = nil, includeScopeRoot: Bool = true, emitKinds: Set<JSONTraversalKind>? = nil, includeSourceSpans: Bool = false)",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalScope"
+      ],
+      "declaration": "enum JSONTraversalScope",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalScope",
+        "subtree(at:)"
+      ],
+      "declaration": "case subtree(at: [JSONLocationComponent])",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalScope",
+        "virtual(roots:overlap:)"
+      ],
+      "declaration": "case virtual(roots: [[JSONLocationComponent]], overlap: JSONScopeOverlapPolicy = .rejectAmbiguous)",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary"
+      ],
+      "declaration": "struct JSONTraversalSummary",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "completion"
+      ],
+      "declaration": "var completion: JSONTraversalCompletion { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "deduplicatedCount"
+      ],
+      "declaration": "var deduplicatedCount: UInt64 { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "depthLimitedSubtrees"
+      ],
+      "declaration": "var depthLimitedSubtrees: UInt64 { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "emittedCount"
+      ],
+      "declaration": "var emittedCount: UInt64 { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "maximumDepthVisited"
+      ],
+      "declaration": "var maximumDepthVisited: Int { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "prunedSubtrees"
+      ],
+      "declaration": "var prunedSubtrees: UInt64 { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "scopeRootCount"
+      ],
+      "declaration": "var scopeRootCount: Int { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    },
+    {
+      "path": [
+        "JSONTraversalSummary",
+        "visitedCount"
+      ],
+      "declaration": "var visitedCount: UInt64 { get }",
+      "decision": "keep",
+      "reason": "Exact source-bound metadata/coverage or existing single-ledger operation; no competing value/path/cursor authority"
+    }
+  ]
+}

@@ -29,7 +29,7 @@ the same native work still refuses the direct adapter after 98 references.
 The two supplementary native functions and 26 independent public functions from
 PR36 add cancellation boundaries, original-ledger identity, per-source capacity,
 exact values, event-ledger thresholds and deliberate omitted-charge mutants.
-There are 560 native / 544 Linux root functions and 325 parameter invocations.
+There are 599 native / 583 Linux root functions and 325 parameter invocations.
 The 126 restored identities and 49 exact public cap probes remain required.
 
 ## Reproducible checks
@@ -48,7 +48,7 @@ Crashes never count as normal diagnostic rejection. Exact discovery guards retai
 Compiler reductions and qualified explicit-borrow helper forms are preserved in
 `Tools/CompositionQualification/CompilerBugs`. Known Swift 6.4 inferred-capture and
 bound-method-value crashes remain usability limits. No unsafe annotation or
-experimental ownership flag is added. Public products remain seven and root
+experimental ownership flag is added. Current main’s eight public products are retained and root
 external dependencies remain empty. Physical devices are not requalified here;
 portable compilation/runtime evidence must identify its actual host and SDK.
 
@@ -69,3 +69,10 @@ Final commands, exits, source hashes, manifest-backed archives, materialized hos
 receipts, performance disposition and review findings belong in the maintainer's
 return evidence. Source documents here specify replay and acceptance, not a
 fabricated pass. Private evidence and build caches are excluded from source archives.
+
+## Current-main reconciliation
+
+Main `7d72c8825982550f0ee87218136fda12d8bae13b` independently added JSONNavigation.
+This branch retains that source, all 39 Navigation functions, the normal public
+consumer, exact product/dependency checks and seven DocC catalogues. Composition
+proofs remain additive; no Navigation or historical behavior is removed.

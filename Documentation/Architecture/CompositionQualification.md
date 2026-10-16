@@ -3,7 +3,8 @@
 The synchronous borrowed composition API is described in
 [Compose native operations](../../Sources/JSON/Documentation.docc/Composition.md).
 Its public surface and default profiles are unchanged by this qualification work.
-The root dependency graph remains empty and the package retains seven products.
+The root dependency graph remains empty and the package retains the existing products and adds opt-in JSONNavigation after its
+separate public-product gate.
 
 The separate [qualification package](../../Tools/CompositionQualification) exercises
 source-backed parsing, exact Pointer targets, URI identity and explicitly charged
@@ -62,7 +63,7 @@ Run python3 Scripts/ci.py --lane composition on the supported native or Linux
 runner. The lane requires 12 core functions in each build mode, separate public
 consumers, five external Swift Testing functions in Debug/Release/ASan, all eight
 scale cells and 11 compiler rejection cases. Exact module/cardinality checks
-reject missing tests and misclassified resource failures. The 560 native / 544
+reject missing tests and misclassified resource failures. The reconciled 599 native / 583
 Linux root functions, 325 parameter invocations, restored identities and 49 public
 metric probes retain their existing contracts.
 
