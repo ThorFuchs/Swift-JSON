@@ -264,6 +264,13 @@ private func snapshotFailure(_ body: () throws -> Void) -> JSONFailure? {
     #expect(try result.location(for: 3, limits: limits).result == [.key("a"),.index(0),.key("b")])
     limits[.workUnits] -= 1
     #expect(snapshotFailure { _ = try result.location(for: 3, limits: limits) }?.resource?.metric == .workUnits)
+    limits = .balanced; limits[.retainedBytes] = baseline.statistics.peakLogicalRetainedBytes
+    #expect(try result.location(for: 3, limits: limits).result.count == 3)
+    limits[.retainedBytes] -= 1
+    #expect(snapshotFailure { _ = try result.location(for: 3, limits: limits) }?.resource?.metric == .retainedBytes)
+    limits = .balanced; limits[.pointerTokens] = 2
+    let pathFailure = snapshotFailure { _ = try result.location(for: 3, limits: limits) }
+    #expect(pathFailure?.resource?.metric == .pointerTokens && pathFailure?.resource?.attemptedUsage == 3)
     limits = .balanced; limits[.nodes] = 0
     #expect(snapshotFailure { _ = try result.value(for: 3, limits: limits) }?.resource?.metric == .nodes)
     #expect(try result.value(for: 3).result == .null) // Existing explicit null; no absent/default API.
