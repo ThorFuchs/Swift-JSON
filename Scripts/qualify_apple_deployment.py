@@ -91,10 +91,12 @@ def main():
                             ('iphonesimulator', 'arm64-apple-ios17.0-simulator')]:
             path = run(sdk + '-path', ['xcrun', '--sdk', sdk, '--show-sdk-path']).strip()
             scratch = out / ('build-' + sdk)
-            run(sdk + '-build', ['swift', 'build', '--package-path', str(consumer),
+            build_command = ['swift', 'build', '--package-path', str(consumer),
                 '--scratch-path', str(scratch), '--jobs', '2', '--disable-index-store',
-                '-debug-info-format', 'none', '--triple', triple, '--sdk', path])
-            products = scratch / 'out/Products/Debug'
+                '-debug-info-format', 'none', '--triple', triple, '--sdk', path]
+            run(sdk + '-build', build_command)
+            products = pathlib.Path(run(sdk + '-bin-path', build_command + ['--show-bin-path']).strip()).resolve()
+            assert products.is_relative_to(scratch.resolve()), (sdk, products)
             assert all((products / name).is_file() for name in CONSUMERS), (sdk, 'missing consumer executable')
             assert all((products / (name + '.swiftmodule')).is_dir()
                        and (products / (name + '.o')).is_file() for name in LIBRARIES), (sdk, 'missing linked library module/object')
