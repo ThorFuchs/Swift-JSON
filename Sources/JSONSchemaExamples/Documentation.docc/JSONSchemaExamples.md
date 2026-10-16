@@ -2,7 +2,7 @@
 
 Deterministic exact JSON candidates certified by the existing offline schema validator.
 
-Use this optional 1.6 development library for schema-driven fixtures, examples and
+Use this optional library, introduced in 1.6.0, for schema-driven fixtures, examples and
 tooling where every returned value must satisfy the original compiled root. Prepare
 an admitted JSONSchemaDocument with explicit offline resources, then generate with
 finite policies and a reproducible seed. JSON and JSONSchema keep their existing
@@ -14,9 +14,9 @@ Every candidate requires completed native root validation. Unsupported or exhaus
 search is explicit; this is not a complete satisfiability solver. Formats, defaults,
 requiredness, dynamic scope and annotations retain the native dialect's meanings.
 
-All Swift guide blocks execute through a separate public consumer. Native G1-G6
-incremental evidence is separate from remaining G7/G8 release/platform qualification.
-The standalone source checkout is the API authority until this product is released.
+All Swift guide blocks execute through a separate public consumer. The release
+qualification retains exact source identities, platform scopes and explicit search
+limitations. Use the versioned source and matching compiled DocC release assets.
 
 ## Topics
 

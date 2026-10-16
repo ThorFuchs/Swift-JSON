@@ -1,15 +1,30 @@
 # Changelog
 
-## Unreleased — next feature train
+## 1.6.0 — 2026-10-16
+
+- Add opt-in JSONSchemaExamples: deterministic exact candidates, conservative typed
+  construction, offline immutable preparation, versioned provenance and completed
+  native root validation before returning a value. Unsupported/exhausted search
+  remains explicit and does not establish unsatisfiability.
+- Add opt-in JSONNavigation: exact many-node DFS, physical/virtual scopes, finite
+  metadata, overlap/stop/pruning policy and explicit completion coverage. Core
+  one-node reads remain unchanged; deeper N2 inspection stays deferred.
+- Include bounded native composition with shared cumulative work and terminal
+  failure accounting. Synthetic capacity qualification keeps five completed imports
+  separate from three operational refusals; arbitrary capacity is not promised.
 
 - Add structured JSONHTML layouts with finite string, color, declared raster, inline
   and atomic MathML previews; preserve exact source, complete export/print and shared
   CLI policy. Native, browser and WASI evidence is recorded with remaining assistive
   and host qualification boundaries.
-- Forward-port the following 1.5.1 maintenance repairs. Development CLI metadata
-  is `1.6.0-dev` with a deterministic source digest; this is not a released version.
+- Preserve the 1.5.1 maintenance repairs. CLI metadata reports `1.6.0` with a
+  deterministic source digest. Keep nine products, no root dependencies and all
+  49 baseline finite policies.
+- Restore native DocC guide navigators at existing URLs, with byte-identical
+  per-catalog indexes and twelve focused regression cases. Retain documented
+  cross-catalog routing and one observed lazy-chunk loading limitation.
 
-### 1.5.1 maintenance repairs
+## 1.5.1 — 2026-10-15
 
 - Restore best-effort schema diagnostic omission without latching terminal failure;
   strict diagnostic, work, retention, annotation and cancellation errors still throw.
@@ -170,12 +185,3 @@ remain unselected; projection and RFC 7464 framing remain deferred.
   timing sleeps; retain an invocation-local package-only checkpoint observer.
 - Qualify twenty frozen explicitly rooted downstream schema vectors and public
   cumulative budgets in a separate consumer; no protocol/runtime dependency added.
-
-## Unreleased Navigation candidate
-
-- Propose opt-in JSONNavigation as an eighth SwiftPM product, preserving its56
-  exact traversal declarations and cumulative resource semantics.
-- Qualify a real external Debug/Release SwiftPM consumer and preserve source-first
-  error precedence with two explicit regressions.
-- N2 inspection remains unimplemented: its separate borrowed-context compiler
-  proof is blocked. No version/tag/release or automatic merge is implied.

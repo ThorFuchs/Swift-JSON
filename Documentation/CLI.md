@@ -1,6 +1,6 @@
 # Command-line workflows
 
-The `swift-json` executable ships with the six libraries from 1.5.0. It uses the
+The `swift-json` executable, introduced in 1.5.0, accompanies eight libraries in 1.6.0. It uses the
 same exact decimal/scalar model, strict grammar, explicit offline schema resources
 and finite cumulative limits. It has no network provider, shell filter or universal
 jq compatibility claim.
@@ -47,16 +47,15 @@ source, compiler and architecture; library WASI results are a separate boundary.
 ## Version and source identity
 
 The frozen 1.5.0 executable reports `1.4.0-dev` and revision `unknown`; its release
-notes disclose that limitation. The separate 1.5.1 maintenance candidate corrects it. This main-based forward-port
-retains unreleased structured previews, so its explicit version is `1.6.0-dev`.
-Both candidates use the same source-identity interface:
+notes disclose that limitation. The 1.5.1 maintenance release corrects it, and
+1.6.0 reports `1.6.0`. Both use the same source-identity interface:
 
 ```sh
 swift run swift-json --version
 swift run swift-json --version --json
 ```
 
-Human output identifies the candidate version. JSON adds `revisionKind` with value
+Human output identifies the source version. JSON adds `revisionKind` with value
 `source-sha256`; `revision` is `sha256:` plus a lowercase 64-digit digest. This
 digest hashes the ordered content manifest for `Package.swift` and every file in
 `Sources`, excluding only generated `CLIBuildIdentity.swift`. The manifest uses
