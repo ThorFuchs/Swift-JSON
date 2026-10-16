@@ -38,7 +38,7 @@ public struct JSONCompositionScope: ~Copyable {
     }
 
     /// Executes a native helper on the sole ledger; all owned errors are terminal.
-    package func withMeter<T>(domain: JSONOperationDomain = .core,
+    package borrowing func withMeter<T>(domain: JSONOperationDomain = .core,
                                       _ body: (inout JSONWorkMeter) throws -> T) throws -> T {
         do {
             try state.context.meter.operationDomain(domain)
@@ -58,7 +58,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Parameter data: Caller-owned UTF-8 input, never fetched or repaired.
     /// - Returns: The exact source-backed document.
     /// - Throws: Original native failure or cancellation; caught failures stay terminal.
-    public func parseDocument(_ data: Data) throws -> JSONDocument {
+    public borrowing func parseDocument(_ data: Data) throws -> JSONDocument {
         try withMeter(domain: .parsing) { meter in
             try meter.require(.inputBytes, UInt64(data.count))
             try meter.retain(UInt64(data.count))
@@ -73,7 +73,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Parameter value: Trusted caller value; its prior construction is caller work.
     /// - Returns: The admitted value. Each call reserves a complete logical graph.
     /// - Throws: Native admission failure or cancellation.
-    public func admitTrusted(_ value: JSON) throws -> JSON {
+    public borrowing func admitTrusted(_ value: JSON) throws -> JSON {
         try withMeter { meter in
             try JSONAdmission.value(value, meter: &meter, owned: true)
             return value
@@ -91,7 +91,7 @@ public struct JSONCompositionScope: ~Copyable {
     ///   - body: Synchronous work borrowing the immutable admitted root.
     /// - Returns: The callback result; the handle cannot be returned.
     /// - Throws: Native terminal failure, cancellation or callback error.
-    public func withAdmittedRoot<Result>(_ value: JSON,
+    public borrowing func withAdmittedRoot<Result>(_ value: JSON,
         _ body: (borrowing JSONCompositionRoot) throws -> Result) throws -> Result {
         try withMeter { try JSONAdmission.value(value, meter: &$0, owned: true) }
         return try borrowingRoot(value, body)
@@ -108,13 +108,13 @@ public struct JSONCompositionScope: ~Copyable {
     ///   - body: Synchronous work receiving the document and borrowing its root handle.
     /// - Returns: The callback result, which may include the document or selected values.
     /// - Throws: Native terminal failure, cancellation or callback error.
-    public func withParsedDocument<Result>(_ data: Data,
+    public borrowing func withParsedDocument<Result>(_ data: Data,
         _ body: (JSONDocument, borrowing JSONCompositionRoot) throws -> Result) throws -> Result {
         let document = try parseDocument(data)
         return try borrowingRoot(document.root) { root in try body(document, root) }
     }
 
-    private func borrowingRoot<Result>(_ value: JSON,
+    private borrowing func borrowingRoot<Result>(_ value: JSON,
         _ body: (borrowing JSONCompositionRoot) throws -> Result) throws -> Result {
         try withMeter { meter in
             try meter.work()
@@ -138,7 +138,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Parameter tokens: Caller-owned decoded tokens.
     /// - Returns: The admitted Pointer.
     /// - Throws: Original native Pointer/admission failure or cancellation.
-    public func pointer(tokens: [String]) throws -> JSONPointer {
+    public borrowing func pointer(tokens: [String]) throws -> JSONPointer {
         try withMeter(domain: .pointer) { try JSONPointer.fromStrings(tokens, meter: &$0) }
     }
 
@@ -146,7 +146,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Parameter text: Encoded Pointer text; empty selects the root.
     /// - Returns: The admitted Pointer.
     /// - Throws: Original native Pointer/admission failure or cancellation.
-    public func pointer(parsing text: String) throws -> JSONPointer {
+    public borrowing func pointer(parsing text: String) throws -> JSONPointer {
         try withMeter(domain: .pointer) { try JSONPointer.parse(text, meter: &$0) }
     }
 
@@ -154,7 +154,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// - Parameter fragment: Encoded fragment including its leading #.
     /// - Returns: The admitted Pointer.
     /// - Throws: Original native Pointer/admission failure or cancellation.
-    public func pointer(uriFragment fragment: String) throws -> JSONPointer {
+    public borrowing func pointer(uriFragment fragment: String) throws -> JSONPointer {
         try withMeter(domain: .pointer) { try JSONPointer.uriFragment(fragment, meter: &$0) }
     }
 
@@ -164,7 +164,7 @@ public struct JSONCompositionScope: ~Copyable {
     ///   - key: The decoded token, also usable as a strict array index spelling.
     /// - Returns: The admitted appended Pointer.
     /// - Throws: Original native Pointer/admission failure or cancellation.
-    public func appending(_ pointer: JSONPointer, key: String) throws -> JSONPointer {
+    public borrowing func appending(_ pointer: JSONPointer, key: String) throws -> JSONPointer {
         try withMeter(domain: .pointer) { try pointer.appending(key: key, meter: &$0) }
     }
 
@@ -177,7 +177,7 @@ public struct JSONCompositionScope: ~Copyable {
     ///   - value: A caller or scope-created root.
     /// - Returns: The selected exact value.
     /// - Throws: Original native Pointer/admission failure or cancellation.
-    public func resolve(_ pointer: JSONPointer, in value: JSON) throws -> JSON {
+    public borrowing func resolve(_ pointer: JSONPointer, in value: JSON) throws -> JSON {
         try withMeter(domain: .pointer) { meter in
             try JSONAdmission.value(value, meter: &meter, owned: true)
             let admitted = try JSONPointer.decodedTokens(pointer.tokens, meter: &meter)
@@ -197,7 +197,7 @@ public struct JSONCompositionScope: ~Copyable {
     ///   - root: Borrowed handle produced by this scope's root callback.
     /// - Returns: The selected exact value with a conservative output reservation.
     /// - Throws: Wrong-owner configuration failure, native failure or cancellation.
-    public func resolve(_ pointer: JSONPointer, in root: borrowing JSONCompositionRoot) throws -> JSON {
+    public borrowing func resolve(_ pointer: JSONPointer, in root: borrowing JSONCompositionRoot) throws -> JSON {
         try withMeter(domain: .pointer) { meter in
             try meter.work()
             guard root.owner === state else { throw JSONFailure(.configuration, code: .invalidOperation) }
@@ -211,7 +211,7 @@ public struct JSONCompositionScope: ~Copyable {
     /// Charges instrumented adapter work once to aggregate core work.
     /// - Parameter units: Declared primitive work admitted before performing it.
     /// - Throws: Quota/overflow failure or cancellation, permanently terminal.
-    public func chargeExternalWork(_ units: UInt64) throws {
+    public borrowing func chargeExternalWork(_ units: UInt64) throws {
         try withMeter { try $0.work(units) }
     }
 
@@ -224,7 +224,7 @@ public struct JSONCompositionScope: ~Copyable {
     ///   - bytes: Logical weight per unit.
     ///   - count: Number of units, multiplied with checked UInt64 arithmetic.
     /// - Throws: Quota/overflow failure or cancellation, permanently terminal.
-    public func reserveExternalLogicalBytes(_ bytes: UInt64, count: UInt64 = 1) throws {
+    public borrowing func reserveExternalLogicalBytes(_ bytes: UInt64, count: UInt64 = 1) throws {
         try withMeter { meter in
             let (total, overflow) = bytes.multipliedReportingOverflow(by: count)
             guard !overflow else {
@@ -238,12 +238,12 @@ public struct JSONCompositionScope: ~Copyable {
 
     /// Checks cancellation and prior terminal failure before adapter work.
     /// - Throws: The original terminal failure or cancellation.
-    public func checkpoint() throws { try withMeter { try $0.checkpoint() } }
+    public borrowing func checkpoint() throws { try withMeter { try $0.checkpoint() } }
 
     /// Tightens finite limits without resetting work, live reservations or admissions.
     /// - Parameter limits: Requested ceilings, intersected with existing ceilings.
     /// - Throws: Invalid configuration, prior admission/work violation or cancellation.
-    public func restrict(to limits: JSONLimits) throws {
+    public borrowing func restrict(to limits: JSONLimits) throws {
         try withMeter { try $0.restrict(to: limits) }
     }
 

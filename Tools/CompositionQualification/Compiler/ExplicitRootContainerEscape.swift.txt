@@ -1,0 +1,10 @@
+import JSON
+struct Box { let action: () throws -> JSON }
+func escapedRoot() throws -> Box {
+    try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
+        let pointer = try scope.pointer(tokens: [])
+        return try scope.withAdmittedRoot(.null) { (root: borrowing JSONCompositionRoot) in
+            Box(action: { try scope.resolve(pointer, in: root) })
+        }
+    }.result
+}

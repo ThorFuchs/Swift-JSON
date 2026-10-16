@@ -1,0 +1,8 @@
+import JSON
+func inspect(_ root: borrowing JSONCompositionRoot) { }
+struct Box { let action: () -> Void }
+func escapedRoot() throws -> Box {
+    try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
+        try scope.withAdmittedRoot(.null) { (root: borrowing JSONCompositionRoot) in Box(action: { inspect(root) }) }
+    }.result
+}

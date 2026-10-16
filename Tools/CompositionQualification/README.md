@@ -27,14 +27,20 @@ The policy exposes no transferable owner token or refund. Borrowed root handles
 have no public constructor, value accessor or mutation; their private owner
 identity rejects use by another scope before navigation.
 
-Nine additional actual-callsite probes include three explicit-borrow positives and
-six forms exposing Swift 6.4 compiler aborts, including a root-only escaping capture.
-Their outcomes are separate from the 18 semantic rejections. Ten Python harness
-cases check the distinction and reject setup-log keyword false positives.
-The lane completes its checks, then exits 2 with overall `blocked` if known compiler
-aborts reproduce. Successful behavior and ownership results are recorded alongside
-the compiler robustness blocker. Use explicit nonescaping closures in supported
-code; do not turn a compiler crash into a rejection pass.
+Fourteen actual-callsite probes retain the original nine programs and add five
+explicit-ownership counterparts. Explicit borrowing instance methods prevent the
+two bound-method aborts: the escape is rejected, while the nonescaping bound-method
+positive remains blocked as unsupported. Four original inferred-capture forms still
+abort Swift 6.4. Explicit callback parameter spelling makes invalid captures receive
+ordinary diagnostics and makes local-function and closure-literal helper uses compile.
+See [the compiler diagnosis](../../Documentation/Architecture/CompositionCompiler.md).
+
+These outcomes remain separate from the 18 semantic rejections. Fourteen Python
+harness cases reject setup-log keyword false positives and require an exact
+borrowed-self error plus a source-local note for bound-method diagnostics.
+The lane completes its checks, then exits 2 with overall `blocked` if known aborts
+or unsupported positives remain. A workaround or an ordinary rejection does not
+satisfy the original positive requirement.
 
 ```sh
 swift run -c release --package-path Tools/CompositionQualification CompositionRegression

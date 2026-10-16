@@ -229,7 +229,7 @@ def check_result(command, code, log, events=None):
         cases = re.findall(r'^ADMITTED_ROOT_SCALE path=(trusted|parsed) items=50000 bytes=250001 refs=1000 nodes=51001 work=([1-9][0-9]*) retained=([1-9][0-9]*) peak=([1-9][0-9]*)$', log, re.MULTILINE)
         passed = passed and len(cases) == 2 and {c[0] for c in cases} == {'trusted', 'parsed'} and all(int(c[1]) < 1_000_000 and int(c[2]) < 6_000_000 for c in cases)
     if 'Scripts/test_composition_compiler_harness.py' in command:
-        passed = passed and 'COMPOSITION_COMPILER_HARNESS passed cases=10' in log.splitlines()
+        passed = passed and 'COMPOSITION_COMPILER_HARNESS passed cases=14' in log.splitlines()
     if command[:2] == ['swift', 'test'] and 'Tools/CompositionQualification' in command and events is not None:
         passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
     if command[:2] == ['swift', 'run'] and 'ProviderConsumer' in command:
@@ -322,12 +322,13 @@ def main():
         try:
             compiler_path = output / 'compiler-negative/receipt.json'
             compiler = json.loads(compiler_path.read_text())
-            if compiler['status'] != 'passed' or compiler['compiler_negative_cases'] != 18 or compiler['callsite_cases'] != 9:
+            if compiler['status'] != 'passed' or compiler['compiler_negative_cases'] != 18 or compiler['callsite_cases'] != 14:
                 raise ValueError('Missing composition compiler outcomes')
             receipt['compiler_qualification'] = {'path': 'compiler-negative/receipt.json',
                 'sha256': hashlib.sha256(compiler_path.read_bytes()).hexdigest(),
                 'ownership_status': compiler['status'], 'robustness_status': compiler['compiler_robustness_status'],
-                'compiler_abort_cases': compiler['compiler_abort_cases']}
+                'compiler_abort_cases': compiler['compiler_abort_cases'],
+                'unsupported_callsite_cases': compiler['unsupported_callsite_cases']}
             receipt['behavior_status'] = 'passed'
             if compiler['compiler_robustness_status'] == 'blocked': receipt['status'] = 'blocked'
         except (OSError, KeyError, ValueError, TypeError) as error:
@@ -380,6 +381,8 @@ def main():
         receipt['status'] = 'failed'
     receipt['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     save()
+    if args.lane == 'composition' and receipt['status'] == 'blocked':
+        return 2
     return 0 if receipt['status'] == 'passed' else 1
 
 if __name__ == '__main__':

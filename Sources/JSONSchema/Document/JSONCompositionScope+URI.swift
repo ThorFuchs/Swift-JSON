@@ -11,7 +11,7 @@ extension JSONCompositionScope {
     ///   - base: Explicit normalized base for a relative reference; never fetched.
     /// - Returns: Native normalized URI identity.
     /// - Throws: Native identifier/resource failure or cancellation, permanently terminal.
-    public func uri(_ text: String, relativeTo base: JSONSchemaURI? = nil) throws -> JSONSchemaURI {
+    public borrowing func uri(_ text: String, relativeTo base: JSONSchemaURI? = nil) throws -> JSONSchemaURI {
         try withMeter { meter in
             if let base { try JSONAdmission.text(base.string, meter: &meter, owned: true) }
             return try JSONSchemaURI.parse(text, relativeTo: base, meter: &meter)
@@ -22,7 +22,7 @@ extension JSONCompositionScope {
     /// - Parameter uri: Caller or scope-created identity, re-admitted before use.
     /// - Returns: Normalized URI without its fragment.
     /// - Throws: Native identifier/resource failure or cancellation, permanently terminal.
-    public func removingFragment(_ uri: JSONSchemaURI) throws -> JSONSchemaURI {
+    public borrowing func removingFragment(_ uri: JSONSchemaURI) throws -> JSONSchemaURI {
         try withMeter { meter in
             let admitted = try JSONSchemaURI.parse(uri.string, relativeTo: nil, meter: &meter)
             // Avoid the ordinary unmetered fragment convenience (including its

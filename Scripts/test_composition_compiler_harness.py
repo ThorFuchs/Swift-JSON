@@ -42,6 +42,28 @@ Swift.swiftinterface:3:1: note: BitwiseCopyable
         self.assertEqual(compiler_outcome(0, '', True), 'compiled')
         self.assertEqual(compiler_outcome(0, '', False), 'failed')
 
+    def test_unexpected_negative_compilation_remains_observable(self):
+        self.assertEqual(compiler_outcome(0, '', True, 'borrowed', 'Escape.swift'), 'compiled')
+
+    def test_bound_method_requires_exact_self_error_and_its_source_note(self):
+        log = """<unknown>:0: error: 'self' cannot be captured by an escaping closure since it is a borrowed parameter
+/tmp/MethodEscape.swift:3:47: note: closure capturing 'self' here
+"""
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'MethodEscape.swift', True), 'rejected')
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'MethodEscape.swift'), 'failed')
+
+    def test_bound_method_note_cannot_come_from_another_file(self):
+        log = """<unknown>:0: error: 'self' cannot be captured by an escaping closure since it is a borrowed parameter
+/tmp/Other.swift:3:47: note: closure capturing 'self' here
+"""
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'MethodEscape.swift', True), 'failed')
+
+    def test_bound_method_note_does_not_validate_an_unrelated_error(self):
+        log = """<unknown>:0: error: module setup failed; borrowed parameter
+/tmp/MethodEscape.swift:3:47: note: closure capturing 'self' here
+"""
+        self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'MethodEscape.swift', True), 'failed')
+
     def test_unrelated_error_is_not_rejection(self):
         log = "/tmp/Escape.swift:2:17: error: invalid syntax"
         self.assertEqual(compiler_outcome(1, log, False, 'borrowed', 'Escape.swift'), 'failed')
@@ -49,6 +71,6 @@ Swift.swiftinterface:3:1: note: BitwiseCopyable
 if __name__ == '__main__':
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(CompilerHarnessTests)
     result = unittest.TextTestRunner().run(suite)
-    passed = result.wasSuccessful() and result.testsRun == 10 and not result.skipped
-    if passed: print('COMPOSITION_COMPILER_HARNESS passed cases=10')
+    passed = result.wasSuccessful() and result.testsRun == 14 and not result.skipped
+    if passed: print('COMPOSITION_COMPILER_HARNESS passed cases=14')
     raise SystemExit(0 if passed else 1)

@@ -182,15 +182,19 @@ consumer performs 1,000 resolutions over 50,000-value trusted and parsed roots
 under balanced limits, checking the admitted-root path and per-selection accounting.
 
 Eighteen compiler ownership negatives require source-local diagnostics and no
-object emission. Nine actual call-site probes include three borrowing positives
-and six forms that expose current Swift 6.4 compiler aborts, including a root-only
-escaping capture. Ten Python cases verify that module-cache false positives,
-signals, fatal diagnostics and missing imports cannot pass as rejections. All
-commands, nonzero exits, source hashes and outcomes remain in receipts.
+object emission. Fourteen actual call-site probes retain the original nine and
+add five explicit-parameter counterparts. Four inferred captures still abort
+Swift 6.4. Explicit borrowing methods produce ordinary borrowed-self diagnostics
+for the two bound-method cases; the nonescaping bound-method positive remains
+unsupported rather than counted as a pass. Fourteen Python cases reject setup-log
+false positives and require an exact primary error/source-note pair for implicit
+self diagnostics. Commands, nonzero exits, source hashes and outcomes remain in
+receipts. See the [compiler diagnosis](../Architecture/CompositionCompiler.md).
 
-The lane runs every check before reporting compiler robustness. Reproduced known
-aborts set overall status `blocked` and exit 2 while `behavior_status` and the
-ownership rejection results remain explicit. A crash is never a semantic pass.
+The lane runs every check before reporting compiler robustness. Known aborts and
+unsupported positive call sites set overall status `blocked` and exit 2, while
+`behavior_status` and ownership rejection results remain explicit. A crash or
+rejected positive is never a semantic pass.
 This lane uses actual Linux preflight when invoked on Linux; no Linux success is
 inferred from macOS execution. It supplements full native, safety and docs lanes.
 The focused lane also runs in the native and both Linux architecture workflows.

@@ -17,11 +17,13 @@
 - Carry forward the 1.5.1 diagnostic, regression-suite, CLI-identity and Git-free
   archive repairs. The CLI reports `1.6.0` and a deterministic source digest.
 - Composition qualification covers 20 core functions in Debug/Release/ASan, two
-  concurrent-scope functions under TSan, 18 semantic ownership rejections, nine
+  concurrent-scope functions under TSan, 18 semantic ownership rejections, 14
   call-site probes and 1,000 selections from 50,000-value trusted and parsed roots.
-- **Known compiler limitation:** six of the nine call-site forms abort Swift 6.4
-  during compilation; the ownership harness records these as blocked, never as
-  successful rejections. The direct reference adapter still refuses the
+- **Known compiler limitation:** four inferred call-site forms still abort Swift
+  6.4. Explicit borrowing methods prevent two bound-method aborts, but the
+  nonescaping bound-method positive remains unsupported. Five new explicit
+  callback-parameter probes verify a source workaround. The original failures
+  remain blocked, never counted as successful rejections. The direct reference adapter still refuses the
   `balanced-128-128` capacity target. The large-root consumer is synthetic and does
   not qualify a complete Swift-OpenAPI importer, arbitrary callback instructions,
   process RSS or broad application capacity. See the [composition qualification

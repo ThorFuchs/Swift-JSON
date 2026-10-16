@@ -1,0 +1,7 @@
+import JSON
+func callNow(_ operation: () throws -> Void) throws { try operation() }
+func borrowedMethodClosure() throws {
+    _ = try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
+        try callNow { try scope.checkpoint() }
+    }
+}

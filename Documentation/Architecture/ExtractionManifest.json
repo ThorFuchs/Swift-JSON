@@ -278,7 +278,7 @@
     "license": "Apache-2.0",
     "adapted_third_party_code": false,
     "basis": "Independent ownership and repeated-admission review of 720da596; private review evidence excluded from source distribution.",
-    "scope": "Borrowed immutable admitted-root handles, private invocation identity, conservative selected-output reservations, boundary and scale consumers, compiler-callsite regressions and explicit compiler-abort classification. No root dependency or unsafe annotation added."
+    "scope": "Borrowed immutable admitted-root handles, private invocation identity, conservative selected-output reservations, boundary and scale consumers, compiler-callsite regressions, explicit borrowing method declarations, standalone compiler reductions and source-anchored compiler-abort/unsupported-callsite classification. No root dependency or unsafe annotation added."
   },
   "jsonhtml_export_original_contributions": {
     "license": "Apache-2.0",

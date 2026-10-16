@@ -81,12 +81,22 @@ large selected graphs still cost their full size. Calling `withAdmittedRoot` aga
 reserves another graph even for aliases. This API never caches arbitrary JSON
 identity or presumes a copy-on-write refund.
 
-The pinned Swift 6.4 compiler aborts for some implicit captures at actual callback
-call sites: returned bound methods, returned closure containers, a bound method
-passed to a nonescaping helper, local functions implicitly capturing a scope and
-an escaping closure that captures only the borrowed root handle.
-Use explicit borrowing parameters for named helpers and explicit nonescaping closures, for example
-`try perform { try scope.checkpoint() }`, instead of a bound method reference.
-Qualification records aborts separately from semantic ownership rejections; an
-abort emits no object and never counts as a successful rejection. Compiler
-robustness remains a reported blocker while those aborts reproduce.
+The pinned Swift 6.4 compiler can abort when implicitly named borrowed callback
+parameters are captured by local functions or escaping containers. Spell callback
+parameter ownership explicitly when factoring synchronous work into helpers:
+
+```swift
+try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
+    try scope.withAdmittedRoot(value) { (root: borrowing JSONCompositionRoot) in
+        let pointer = try scope.pointer(tokens: ["name"])
+        return try scope.resolve(pointer, in: root)
+    }
+}
+```
+
+Use a closure literal, for example `try perform { try scope.checkpoint() }`,
+instead of a bound method reference. Instance methods explicitly borrow `self`;
+Swift 6.4 diagnoses bound method capture, including a reference passed to a
+nonescaping helper. Qualification preserves the original inferred-capture crash
+cases and unsupported positive as blockers. Explicit spelling is a verified source
+workaround; it does not establish general compiler robustness.

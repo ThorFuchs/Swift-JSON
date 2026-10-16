@@ -16,13 +16,16 @@ conformance, arbitrary callback instruction limits, process RSS or broad applica
 capacity. The separate reference adapter still refuses its direct
 `balanced-128-128` capacity target.
 
-Compiler ownership qualification includes 18 semantic-negative cases and nine
-actual call-site forms. On Swift 6.4, six call-site probes currently abort the
-compiler, including the root-only escaping capture. The classifier preserves those
-as compiler-robustness blockers and does not count them as ownership rejections;
-three supported borrowing call sites compile. This release therefore does not claim
-that arbitrary closure/capture forms are compiler-robust. The package test and
-consumer lanes pass independently of that compiler-robustness blocker.
+Compiler ownership qualification includes 18 semantic-negative cases and 14
+actual call-site forms. Explicit borrowing method declarations prevent two
+Swift 6.4 aborts: the bound-method escape is correctly rejected, while the
+nonescaping bound-method positive remains unsupported. Four original inferred
+capture forms still abort, including the root-only escaping capture. Five added
+explicit-parameter counterparts verify ordinary invalid-capture diagnostics and
+supported local-function/closure-literal helpers. The original positive
+requirements and all inferred crash cases remain in the gate. Compiler robustness
+is still blocked; package tests and consumers pass independently. See the
+[compiler diagnosis](../../Architecture/CompositionCompiler.md).
 
 The Swift-OpenAPI package may pin this release and use the public composition API,
 but a complete importer remains a separate downstream qualification. Its source

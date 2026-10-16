@@ -1,0 +1,5 @@
+import JSON
+struct Box { let action: () throws -> Void }
+func escapedContainer() throws -> Box {
+    try JSON.withComposition { (scope: borrowing JSONCompositionScope) in Box(action: { try scope.checkpoint() }) }.result
+}

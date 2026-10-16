@@ -4,19 +4,31 @@
 import argparse, hashlib, json, pathlib, re, subprocess, tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
-def compiler_outcome(code, log, object_exists, diagnostic=None, source_name=None):
+def compiler_outcome(code, log, object_exists, diagnostic=None, source_name=None, borrowed_self_note=False):
     """An abort never establishes an expected ownership rejection."""
     if 'no such module' in log:
         return 'failed'
     if code < 0 or any(s in log for s in ('Stack dump:', 'fatal error encountered during compilation', 'Found ownership error?!')):
         return 'compiler_abort' if not object_exists else 'failed'
+    if code == 0 and object_exists:
+        return 'compiled'
     if diagnostic is None:
-        return 'compiled' if code == 0 and object_exists else 'failed'
+        return 'failed'
     if code <= 0 or object_exists or source_name is None:
         return 'failed'
     source_error = re.compile(
         r'^(?:.*[/\\])?' + re.escape(source_name) + r':\d+:\d+:\s+error:\s*(.*)$', re.MULTILINE)
-    return 'rejected' if any(diagnostic in message for message in source_error.findall(log)) else 'failed'
+    if any(diagnostic in message for message in source_error.findall(log)):
+        return 'rejected'
+    # Swift 6.4 locates a bound method's implicit self error at <unknown>, with
+    # its capture note at the actual source expression. Only these two probes
+    # opt into this exact primary-error/source-note pair.
+    source_note = re.compile(r'^(?:.*[/\\])?' + re.escape(source_name) +
+        r":\d+:\d+:\s+note:\s*closure capturing 'self' here\s*$", re.MULTILINE)
+    self_error = "<unknown>:0: error: 'self' cannot be captured by an escaping closure since it is a borrowed parameter"
+    if borrowed_self_note and diagnostic == 'borrowed' and self_error in log.splitlines() and source_note.search(log):
+        return 'rejected'
+    return 'failed'
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -39,7 +51,7 @@ def main():
     records = []
     callsites = []
     with tempfile.TemporaryDirectory(prefix='swift-json-composition-') as directory:
-        def compile_case(name, folder, diagnostic):
+        def compile_case(name, folder, diagnostic, borrowed_self_note=False):
             source = pathlib.Path(directory) / (name + '.swift')
             source.write_bytes((ROOT / 'Tools/CompositionQualification' / folder / (name + '.swift.txt')).read_bytes())
             command = ['swiftc', '-c', '-swift-version', '6', '-I', str(modules), str(source), '-o', str(source.with_suffix('.o'))]
@@ -50,28 +62,35 @@ def main():
                 source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
                 expected_diagnostic=diagnostic,
                 outcome=compiler_outcome(run.returncode, log, source.with_suffix('.o').exists(),
-                    diagnostic, source.name if diagnostic is not None else None))
+                    diagnostic, source.name if diagnostic is not None else None, borrowed_self_note))
         for name, diagnostic in expected.items():
             record = compile_case(name, 'Negative', diagnostic)
             record['status'] = 'passed' if record['outcome'] == 'rejected' else 'failed'
             records.append(record)
         for name, diagnostic in [('ClosureBorrow', None), ('RootClosureBorrow', None), ('ExplicitBorrowParameters', None),
             ('MethodEscape', 'borrowed'), ('ContainerEscape', 'borrowed'),
-            ('MethodBorrow', None), ('RootContainerEscape', 'borrowed'), ('LocalFunctionBorrow', None),
-            ('RootOnlyEscape', 'borrowed')]:
-            record = compile_case(name, 'Compiler', diagnostic)
+            ('MethodBorrow', 'borrowed'), ('RootContainerEscape', 'borrowed'), ('LocalFunctionBorrow', None),
+            ('RootOnlyEscape', 'borrowed'), ('ExplicitContainerEscape', 'borrowed'),
+            ('ExplicitRootContainerEscape', 'borrowed'), ('ExplicitRootOnlyEscape', 'borrowed'),
+            ('ExplicitLocalFunctionBorrow', None), ('ExplicitMethodClosureBorrow', None)]:
+            record = compile_case(name, 'Compiler', diagnostic, name in {'MethodBorrow', 'MethodEscape'})
             # Preserve these known call-site compiler bugs separately. A newer
             # compiler may diagnose the escapes or compile the nonescaping use.
             known_abort = name in {'MethodEscape', 'ContainerEscape', 'MethodBorrow', 'RootContainerEscape', 'LocalFunctionBorrow', 'RootOnlyEscape'}
-            record['status'] = ('blocked' if known_abort and record['outcome'] == 'compiler_abort' else
-                'passed' if record['outcome'] == ('compiled' if diagnostic is None else 'rejected') else 'failed')
+            # Preserve MethodBorrow's original positive requirement: a normal
+            # borrowed-self diagnostic is an unsupported call site, not a pass.
+            record['expected_outcome'] = 'compiled' if diagnostic is None or name == 'MethodBorrow' else 'rejected'
+            record['status'] = ('passed' if record['outcome'] == record['expected_outcome'] else
+                'blocked' if known_abort and (record['outcome'] == 'compiler_abort' or
+                    name == 'MethodBorrow' and record['outcome'] == 'rejected') else 'failed')
             callsites.append(record)
     receipt = dict(status='passed' if all(r['status']=='passed' for r in records) else 'failed',
                    compiler_negative_cases=len(records), records=records,
                    callsite_cases=len(callsites), callsites=callsites,
-                   compiler_abort_cases=sum(r['outcome']=='compiler_abort' for r in callsites))
+                   compiler_abort_cases=sum(r['outcome']=='compiler_abort' for r in callsites),
+                   unsupported_callsite_cases=sum(r['status']=='blocked' and r['outcome']!='compiler_abort' for r in callsites))
     if any(r['status']=='failed' for r in callsites): receipt['status'] = 'failed'
-    receipt['compiler_robustness_status'] = ('blocked' if receipt['compiler_abort_cases'] else
+    receipt['compiler_robustness_status'] = ('blocked' if any(r['status']=='blocked' for r in callsites) else
         'failed' if any(r['status']=='failed' for r in callsites) else 'passed')
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
     print(json.dumps(receipt, indent=2))

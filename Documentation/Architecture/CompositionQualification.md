@@ -71,7 +71,9 @@ work and retention receipts qualify that synthetic workload only.
 
 The public compiler probes also record supported explicit-borrow call sites and
 known Swift 6.4 compiler aborts. Those aborts remain compiler-robustness blockers;
-they are not counted as successful ownership rejections. The synthetic scale
+they are not counted as successful ownership rejections. Explicit borrowing
+methods and callback-parameter counterparts isolate the remaining capture-lowering
+defect; see the [compiler diagnosis](CompositionCompiler.md). The synthetic scale
 consumer does not qualify a full Swift-OpenAPI importer, broad application
 capacity, process RSS or callback instruction limits. The original direct
 adapter's 128/128 balanced quota refusal remains in the record.
@@ -89,7 +91,7 @@ Run `python3 Scripts/ci.py --lane composition` on the supported native or Linux
 runner. The lane requires 20 core functions in Debug/Release/ASan, two TSan
 concurrency functions, a strict-memory-safety build, distinct public consumers,
 both 50,000-value admitted-root scale cases, all eight reference-adapter scale
-cells, 18 semantic compiler rejections and nine actual call-site probes. Exact
+cells, 18 semantic compiler rejections and 14 actual call-site probes. Exact
 module/cardinality checks reject missing tests and misclassified resource
 failures. The current root function counts and 49 public metric probes are
 recorded by `Documentation/Qualification/TestDiscovery.json`.
