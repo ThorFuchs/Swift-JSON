@@ -32,6 +32,31 @@ class HarnessTests(unittest.TestCase):
                        dict(report, unmet_capacity_targets=[]), dict(report, adoption_status='all_imports_qualified')]:
             self.assertFalse(check_result(command, 0, json.dumps(broken))[0])
 
+        # Combined-source checks must retain both independently owned optional products.
+        for module, count, command in [
+            ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
+            ('JSONInspectionTests', 44, ['swift', 'test', '--filter', 'inspection']),
+            ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
+        ]:
+            events = dict(bundle_counts=[count], module_function_counts={module: count},
+                          parameter_case_invocations=0)
+            self.assertTrue(check_result(command, 0, '', events)[0])
+            for broken in [dict(events, bundle_counts=[count-1]),
+                           dict(events, module_function_counts={'WrongModule': count}),
+                           dict(events, parameter_case_invocations=1)]:
+                self.assertFalse(check_result(command, 0, '', broken)[0])
+        policy = DISCOVERY
+        for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
+            self.assertEqual(policy[key]['JSONNavigationTests'], 47)
+            self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 44)
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
+        for key in ('shared_state_functions', 'portable_shared_state_functions'):
+            self.assertEqual(policy[key]['JSONNavigationTests'], 1)
+            self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 3)
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
@@ -126,6 +151,12 @@ class HarnessTests(unittest.TestCase):
         self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
         for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
+        lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
+        marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'
+        self.assertTrue(check_result(lifetime, 0, marker)[0])
+        self.assertFalse(check_result(lifetime, 1, marker)[0])
+        for stale in ['', marker.replace('128', '1'), marker.replace('exact=1', 'exact=0')]:
+            self.assertFalse(check_result(lifetime, 0, stale)[0])
         # Scoped portability lanes retain exact discovery and safety rather
         # than describing an exit-zero subset as full qualification.
         output = pathlib.Path(__file__).resolve().parents[1] / 'Artifacts/HarnessProbe'

@@ -66,6 +66,12 @@ public struct JSONSchemaCompiler: Sendable {
         var state = JSONSchemaCompilation(options: options)
         return try state.compile(document, registry: registry, meter: &meter)
     }
+    /// Package composition preserves the admitted document and its source map.
+    package func compile(_ document: JSONSchemaDocument, registry: JSONSchemaRegistry,
+                         meter: inout JSONWorkMeter) throws -> CompiledJSONSchema {
+        var state = JSONSchemaCompilation(options: options)
+        return try state.compile(document, registry: registry, meter: &meter)
+    }
 }
 
 /// Invocation-owned mutable graph builder. Every lookup remains exact and charged.
