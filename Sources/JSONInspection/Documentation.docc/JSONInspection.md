@@ -24,3 +24,11 @@ or numeric matrix. Sampling does not exempt any source from admission.
 - ``JSONShapeKindCounts``
 - ``JSONColumnObservation``
 - ``JSONShapeInspectionFailure``
+
+### Capture complete source structure
+
+- <doc:StructuralSnapshots>
+- ``JSONStructuralSnapshotBuilder``
+- ``JSONStructuralSnapshot``
+- ``JSONStructuralRecord``
+- ``JSONStructuralSnapshotFailure``

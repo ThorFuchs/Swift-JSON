@@ -660,3 +660,12 @@ Full source admission still includes the unobserved suffix. Complete row evidenc
 can have restricted descendant traversal; structural rectangular width is not
 numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
 [public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).
+
+The isolated NAV6 candidate also proposes complete source-attached structural
+snapshots inside JSONInspection. Read-only parent/edge records preserve physical
+preorder and finalized subtree ranges; every value/path/span lookup uses the
+captured document and an explicitly separate finite source admission. It adds no
+snapshot product, persistent identity or table certification. See the
+[snapshot guide](Sources/JSONInspection/Documentation.docc/StructuralSnapshots.md)
+and [public consumer](Tools/SnapshotQualification). This API remains an unmerged,
+unreleased draft candidate; published products retain their tagged contracts.
