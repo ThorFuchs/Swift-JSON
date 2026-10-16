@@ -78,6 +78,22 @@ local HTML links and assets, rejects private-path/credential markers and symlink
 and records a file manifest. Only the generated site is packaged for Pages;
 source graphs, command logs and private maintainer records are not website content.
 
+Authored guide URLs retain `/documentation/documentation/<guide>/`. The native
+DocC client requests `index/documentation/index.json` on those pages, while its
+static export supplies `index/index.json`. The site builder copies each catalog's
+native index byte for byte to that additional path. It preserves existing guide,
+symbol and asset URLs and does not modify DocC's JavaScript. Qualification rejects
+missing, stale or foreign-catalog indexes, missing indexed routes and guides absent
+from the index. The Pages receipt records both index paths, their shared digest and
+the covered guides for each product. Focused regression fixtures run inside the
+native docs lane; run them separately with `python3 -B Scripts/test_documentation_site.py`.
+
+Browser acceptance must also open a guide directly, confirm the sidebar has links
+without a fetching error, follow a sidebar symbol link and return to a guide.
+Repeat direct guide navigation for all eight catalogs and the five schema-example
+guides. A successful article render or static HTML-link check alone does not prove
+that the client fetched its navigator index.
+
 The Native CI workflow uploads the exact static artifact. Its separate deployment
 job runs only on `main`, after all native, safety and docs matrix jobs succeed.
 Only that job receives `pages: write` and `id-token: write`. The `github-pages`

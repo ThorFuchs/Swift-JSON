@@ -149,6 +149,68 @@ def verify_site(site):
     return count
 
 
+def navigation_index(product_root, product):
+    """Require the native Swift index for this catalog, including its guide routes."""
+    path = product_root / 'index/index.json'
+    if path.is_symlink():
+        raise ValueError('Symlink navigation index: ' + product)
+    data = path.read_bytes()
+    index = json.loads(data)
+    if not isinstance(index, dict) or index.get('includedArchiveIdentifiers') != ['org.swift-json.' + product]:
+        raise ValueError('Navigation index catalog differs: ' + product)
+    languages = index.get('interfaceLanguages')
+    roots = languages.get('swift') if isinstance(languages, dict) else None
+    if (not isinstance(roots, list) or len(roots) != 1 or not isinstance(roots[0], dict)
+        or roots[0].get('path') != '/documentation/' + product.lower()
+        or roots[0].get('type') != 'module'):
+        raise ValueError('Missing native Swift navigation root: ' + product)
+    pending, routes = list(roots), set()
+    while pending:
+        node = pending.pop()
+        if not isinstance(node, dict) or not isinstance(node.get('children', []), list):
+            raise ValueError('Invalid native navigation node: ' + product)
+        pending.extend(node.get('children', []))
+        route = node.get('path')
+        if route is None:
+            continue
+        if not isinstance(route, str) or not route.startswith('/documentation/'):
+            raise ValueError('Invalid native navigation route: ' + product)
+        target = (product_root / route.lstrip('/') / 'index.html').resolve()
+        if product_root.resolve() not in target.parents or not target.is_file():
+            raise ValueError('Missing or escaping navigation route: ' + product + route)
+        routes.add(route)
+    guides = sorted('/' + p.parent.relative_to(product_root).as_posix()
+                    for p in (product_root / 'documentation/documentation').rglob('index.html'))
+    if not guides or any(route not in routes for route in guides):
+        raise ValueError('Missing authored guides in navigation index: ' + product)
+    return data, guides
+
+
+def install_guide_navigation_index(product_root, product):
+    # The native client treats the guide namespace "documentation" as a locale
+    # when resolving its index. Preserve every emitted route and the native JSON;
+    # supply the same bytes at the additional URL requested on guide pages.
+    data, _ = navigation_index(product_root, product)
+    destination = product_root / 'index/documentation/index.json'
+    if destination.parent.is_symlink() or destination.is_symlink():
+        raise ValueError('Symlink guide navigation index: ' + product)
+    destination.parent.mkdir(exist_ok=True)
+    destination.write_bytes(data)
+
+
+def verify_navigation_indexes(site):
+    records = []
+    for product in PRODUCTS:
+        data, guides = navigation_index(site / product, product)
+        alias = site / product / 'index/documentation/index.json'
+        if alias.is_symlink() or alias.read_bytes() != data:
+            raise ValueError('Guide navigation index differs from native bytes: ' + product)
+        records.append({'product': product, 'native_index': product + '/index/index.json',
+                        'guide_index': alias.relative_to(site).as_posix(),
+                        'sha256': hashlib.sha256(data).hexdigest(), 'guides': guides})
+    return records
+
+
 def main():
     output = ROOT / '.build/handoff/pages'
     output.mkdir(parents=True, exist_ok=True)
@@ -188,6 +250,7 @@ def main():
             receipt['transforms'].append(entry)
             if result.returncode:
                 raise ValueError('Native static-hosting transformation failed: ' + product)
+            install_guide_navigation_index(site / product, product)
             for route in [product.lower(), 'documentation/' + GUIDES[product][1]]:
                 if not (site / product / 'documentation' / route / 'index.html').is_file():
                     raise ValueError('Missing product root or guide: ' + route)
@@ -217,6 +280,7 @@ def main():
         urls = [SITE_URL if route == './' else SITE_URL + urllib.parse.quote(route, safe='/') for route in routes]
         (site / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>' + html.escape(url) + '</loc></url>\n' for url in urls) + '</urlset>\n')
         (site / 'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: ' + SITE_URL + 'sitemap.xml\n')
+        receipt['navigator_indexes'] = verify_navigation_indexes(site)
         receipt['local_links_verified'] = verify_site(site)
         receipt['static_routes'] = len(routes)
         paths = sorted(p for p in site.rglob('*') if p.is_file())
