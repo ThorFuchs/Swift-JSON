@@ -10,7 +10,8 @@
     "JSONHTMLTests": 97,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
-    "JSONNavigationTests": 39
+    "JSONNavigationTests": 39,
+    "JSONSchemaExamplesTests": 98
   },
   "parameterized_invocations": 325,
   "composition_external_functions": 5,
@@ -31,7 +32,8 @@
     "JSONHTMLTests": 5,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
-    "JSONNavigationTests": 1
+    "JSONNavigationTests": 1,
+    "JSONSchemaExamplesTests": 4
   },
   "coverage_unmapped": {
     "Sources/JSON/Pointer/JSONLocationComponent.swift": "declaration-only enum",
@@ -48,6 +50,7 @@
   "coverage_modules": [
     "JSON",
     "JSONSchema",
+    "JSONSchemaExamples",
     "JSONRegexRuntime",
     "JSONStreaming",
     "JSONPatch",
@@ -68,7 +71,8 @@
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
-    "JSONNavigationTests": 39
+    "JSONNavigationTests": 39,
+    "JSONSchemaExamplesTests": 98
   },
   "wasi_root_functions": {
     "JSONTests": 190,
@@ -79,7 +83,8 @@
     "JSONIntegrationTests": 34,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
-    "JSONNavigationTests": 39
+    "JSONNavigationTests": 39,
+    "JSONSchemaExamplesTests": 98
   },
   "wasi_parameterized_invocations": 288,
   "portable_shared_state_functions": {
@@ -91,7 +96,8 @@
     "JSONHTMLTests": 4,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
-    "JSONNavigationTests": 1
+    "JSONNavigationTests": 1,
+    "JSONSchemaExamplesTests": 4
   },
   "export_functions": {
     "JSONSchemaTests": 1,

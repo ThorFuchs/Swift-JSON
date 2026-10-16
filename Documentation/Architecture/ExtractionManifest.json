@@ -249,6 +249,28 @@
         "Scripts/qualify_schema_providers.py",
         "Tools/CLIQualification/Sources/ProviderConsumer"
       ]
+    },
+    {
+      "repository": "SwiftJSON-SchemaExamples-S3-Codex-Wave-v1.0 briefing packet",
+      "archive_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
+      "original_path": "Reference/SplitMix64.swift and Reference/SplitMix64Check.swift",
+      "destination": "Sources/JSONSchemaExamples/SchemaExampleDeterminism.swift",
+      "disposition": "SplitMix64 constants, wrapping steps and rejection threshold adapted into invocation-owned noncopyable state with cumulative native metering; standalone shims not used. Sixteen golden draws retained in real-engine tests.",
+      "attribution": "Apache-2.0 SPDX header retained; original Swift-JSON integration code Apache-2.0.",
+      "validation": "Tests/JSONSchemaExamplesTests/DeterminismTests.swift; independent stdlib transport oracle and public consumer",
+      "evidence": "Release1.6 G2 qualification; actual native/safety/docs receipts"
+    },
+    {
+      "repository": "SwiftJSON-SchemaExamples-S3-Codex-Wave-v1.0 briefing packet",
+      "archive_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
+      "original_path": "Fixtures/cases.json",
+      "original_sha256": "6f2bfd4fdb7c7e206b6570c2156ca8e248831840733b0258aa8cd5938b35649f",
+      "destination": "Tests/Fixtures/SchemaExamples",
+      "disposition": "Original 44-case input retained byte-for-byte alongside the independently reviewed G0 integral-number correction (155 witnesses). G3 selects exactly 24 must-generate IDs plus two sound proofs; 18 G4 cases remain separate. No fixture expected verdict was lowered for the generator.",
+      "amended_sha256": "5b3e6e40e83439a810d0eb7ac412ce158a4e582f36b9d36d6e313c159654ddd3",
+      "attribution": "User-authored packet fixture input; original integration/tests Apache-2.0. Packet source/provenance retained separately.",
+      "validation": "TypedConstructionTests.swift and public G3Acceptance consumer; strict native compiler/evaluator authority",
+      "evidence": "Release1.6/G3 qualification and materialized per-case receipts"
     }
   ],
   "original_implementation_notes": [
@@ -271,7 +293,10 @@
     "1.4 C4 immutable IR/function/pattern metadata, invocation closures/thunks, continuations, scalar string and format helpers, root-provenance paths and transactional mutation are original Apache-2.0 code. No eager upstream evaluator, Foundation regex or approximate arithmetic was copied.",
     "1.4 C5 stream/offline-schema adapters, checked sink handoff, command help and consumers are original Apache-2.0 code. Five NewInputs fixtures are copied byte-for-byte from the maintainer CLI briefing pack 43f8819c57e3d93bc6f7cf561d2d111442e089f2973cb7c62e16e3bd3fd73d0d; these authored data fixtures introduce no runtime dependency. Missing provider helper prerequisites remain blocked rather than adapted or silently rewritten.",
     "1.4 checked schema resource lookup and its missing/quota/cancellation/install regressions are original Apache-2.0 code. Supported app/framework/command layouts retain all nine official resource pins; no unbounded directory scan, fallback engine or external dependency is introduced.",
+    "1.6 S3 G4 contains-minimum proposals and the small anchored ASCII proposal scanner are original Apache-2.0 Swift code. Native compiler-qualified references and complete native regex/schema evaluation remain authoritative; no matcher, resolver, engine source or dependency is adapted. The original/amended S3 fixtures retain their pinned byte identities.",
     "1.5.1 restores 126 original Apache-2.0 test functions and qualification tools from Swift-JSON 1.2.1 (e8b687f822c577311156b13bf1d15c2d5620b84e), with file hashes and stable function identities in Qualification/Release1.5.1/Restoration.json. The diagnostic omission and Git-free provenance repairs are restored original code; current seven-product harness reconciliation and deterministic CLI identity are original contributions. No new upstream adaptation or dependency.",
+    "1.6 S3 G7 seeded grammar, scalar-key permutation tests, public replay consumer and strict cardinality/matrix harness are original Apache-2.0 contributions. The 64-schema authored fixture has SHA-256 cb55604183a6db7df5fa968db283e7abeae794277d2b0cef033b0bdb92e615cb. Independent python-jsonschema 4.26.0 is research qualification only, with exact numeric binding; no Python runtime dependency or copied validator/engine is distributed.",
+    "1.6 S3 G8 materializes the unchanged synthetic corpus per caller access, replacing process-lifetime stored JSON payloads exposed by Linux ASan/LSan. The public process-lifetime consumer and strengthened exact/value-copy test are original Apache-2.0 qualification code; no suppression, runtime fallback, new dependency or corpus/digest change is introduced.",
     "Composition reference-load fixtures, serial descriptor staging, public-only adapter, capacity/terminal tests and strict CI receipt checks are original Apache-2.0 code. Generated JSON graphs introduce no upstream protocol fixtures, engine or dependency. Core public APIs, finite profiles and accounting weights are unchanged.",
     "Composition reconciliation retains PR35 native routes/reference fixtures and adds PR36 original Apache-2.0 report-overlap, per-document capacity/history, independent owned-event/mutant and compiler proofs. No third-party source or root dependency is added."
   ],

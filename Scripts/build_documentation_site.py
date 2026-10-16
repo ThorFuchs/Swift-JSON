@@ -22,6 +22,7 @@ BASE_PATH = '/Swift-JSON'
 SITE_URL = 'https://thorfuchs.github.io' + BASE_PATH + '/'
 GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONSchema': ('Offline schema validation', 'offlinevalidation'),
+          'JSONSchemaExamples': ('Verified exact candidates', 'verifiedcandidates'),
           'JSONStreaming': ('Completion and backpressure', 'completionandbackpressure'),
           'JSONPatch': ('Choosing and applying patches', 'applyingpatches'),
           'JSONHTML': ('Exact interactive HTML', 'interactiverendering'),
@@ -30,6 +31,7 @@ GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
 DESCRIPTIONS = {
     'JSON': 'Exact values, strict UTF-8, native Codable, Pointer, presence and finite resource reports.',
     'JSONSchema': 'Draft 2020-12, explicit offline registries, immutable plans, annotations and bounded regex.',
+    'JSONSchemaExamples': 'Opt-in deterministic exact candidates and conservative typed proposals, with native offline certification and finite budgets.',
     'JSONStreaming': 'Pull events and values, strict NDJSON, root-array completion and awaited output chunks.',
     'JSONPatch': 'Transactional RFC 6902 JSON Patch and RFC 7396 Merge Patch with exact value semantics.',
     'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
@@ -101,7 +103,7 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <div class="nav-links"><a href="{REPOSITORY}#installation">Get started</a><a href="{REPOSITORY}">GitHub</a><a href="{REPOSITORY}/issues">Support</a></div></nav></header>
 <main id="content" class="container"><div class="eyebrow">Public Swift documentation</div>
 <h1>Exact JSON. Clear contracts.</h1>
-<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore seven Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
+<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore eight Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>
@@ -189,6 +191,13 @@ def main():
             for route in [product.lower(), 'documentation/' + GUIDES[product][1]]:
                 if not (site / product / 'documentation' / route / 'index.html').is_file():
                     raise ValueError('Missing product root or guide: ' + route)
+            if product == 'JSONSchemaExamples':
+                guides = ['verifiedcandidates', 'typedconstruction', 'advancedconstruction',
+                          'deterministicconstruction', 'policiesandlimits']
+                for guide in guides:
+                    if not (site / product / 'documentation/documentation' / guide / 'index.html').is_file():
+                        raise ValueError('Missing schema-examples guide: ' + guide)
+                receipt['schema_example_guides_verified'] = guides
             # DocC transforms its emitted routes but retains the original archive
             # root template. Make the product entry point an explicit static redirect.
             route = BASE_PATH + '/' + product + '/documentation/' + product.lower() + '/'

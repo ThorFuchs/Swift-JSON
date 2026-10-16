@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
+  "original_sha256": "6f2bfd4fdb7c7e206b6570c2156ca8e248831840733b0258aa8cd5938b35649f",
+  "amended_sha256": "5b3e6e40e83439a810d0eb7ac412ce158a4e582f36b9d36d6e313c159654ddd3",
+  "amendment": "G0: 9007199254740994.0 is mathematically integral and valid; add 9007199254740994.5 as negative. Original retained unchanged.",
+  "g3_must_generate_ids": [
+    "boolean-true",
+    "null-kind",
+    "string-length",
+    "exact-integer-beyond-2pow53",
+    "exact-decimal-multiple-of",
+    "numeric-exclusive-near-zero",
+    "object-required-and-null",
+    "unicode-exact-scalar-keys",
+    "undeclared-required-key",
+    "object-min-max-properties",
+    "array-prefix-items",
+    "array-unique",
+    "enum",
+    "const-exact-decimal",
+    "anyof",
+    "allof-object-composition",
+    "local-ref",
+    "format-annotation",
+    "format-assertion",
+    "invalid-default-annotation",
+    "invalid-examples-annotation",
+    "false-nested-schema",
+    "object-number-key-strings",
+    "required-with-additional-properties-false"
+  ],
+  "g3_sound_proof_ids": [
+    "boolean-false",
+    "not-true"
+  ],
+  "other_gate_cases": 18,
+  "case_count": 44,
+  "amended_witnesses": 155,
+  "g4_must_generate_ids": [
+    "array-contains",
+    "condition-then-else",
+    "dependent-required",
+    "dependent-schema",
+    "pattern-properties",
+    "property-names",
+    "unevaluated-properties-composition",
+    "simple-regex",
+    "mincontains-with-prefixitems",
+    "array-mixed-evaluation"
+  ],
+  "g4_may_fail_ids": [
+    "oneof-overlap",
+    "recursive-tree",
+    "dynamic-ref",
+    "conflicting-allof",
+    "unfulfillable-unique-enum",
+    "external-offline-ref",
+    "not-string",
+    "oneof-overlap-limited"
+  ]
+}

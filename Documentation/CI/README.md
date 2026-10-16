@@ -1,3 +1,32 @@
+# Composition proof reconciled with S3
+
+Reconciliation with main `c79d48c15f83ef88bed9459d9abcf05e54bd0bea` retains
+all schema-example, Navigation and composition behavior. Exact combined roots
+are 697 Mac / 681 Linux / 593 WASI functions, with 325 Mac/Linux and 288 WASI
+parameter invocations. Shared-state counts remain 47 Mac / 46 Linux. Nine products,
+eight library DocC catalogs, all 49 cap probes and all 126 restored identities
+remain mandatory. Both focused composition lanes and the complete S3 consumer,
+ownership, construction, matrix and corpus-lifetime checks are retained. The
+15-case Python harness rejects omitted dispatch and stale integration counts.
+Required check names and protections are unchanged. Quiet-host qualification
+remains pending separately; no timing comparison is scheduled by this integration.
+
+The following sections preserve their original source-specific counts.
+
+# Combined S3 / composition / Navigation qualification
+
+The current inventory requires 695 Mac / 679 Linux / 591 WASI functions,
+325 Mac/Linux and 288 WASI parameter invocations, 47 Mac / 46 Linux shared-state
+functions, eight library DocC catalogs, nine products and all 49 unchanged finite
+cap probes. Composition’s external five-function suite, eight classified capacity
+cells and 11 ownership rejections remain additive. Native / native also executes
+the focused composition lane; both Linux architecture jobs retain it.
+The S3 public/ownership/matrix/lifetime gates and Navigation external consumer are
+all retained. Counts specify requirements; source-bound receipts establish passes.
+See [G8 reconciliation](../Architecture/Release1.6/G8Integration.md).
+
+The following sections preserve their original increment histories.
+
 # Native CI
 
 ## Current composition proof
@@ -89,7 +118,7 @@ Pushes to main, pull requests and manual dispatch run four lanes:
   after execution. The extracted receipt must have null Git identity and the same
   complete source manifest.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
-  executed README examples, six native DocC catalogs with warnings as errors,
+  executed README examples, seven native DocC catalogs with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -185,6 +214,58 @@ regex 12, streaming 14, patch 11 and portable HTML 61. Its public consumer requi
 remain required. The first failed inherited expectations are retained; no blanket
 nonzero/exit-zero replacement is used. Real receiving-app and physical-device UI
 observations remain separate from automated SDK/API and portable execution.
+
+## S3 G1 focused native lane
+
+`python3 Scripts/ci.py --lane schema-examples` checks the exact eight-product
+manifest, empty dependencies, all 49 unchanged finite core policies, 21 functions
+in JSONSchemaExamplesTests, all 69 existing JSONSchemaTests functions with their
+12 exact parameter invocations, and the real standalone public consumer (12 cases and
+2 expected package-boundary compiler rejections). This focused lane supplements
+the unchanged required Native checks; it does not establish G7 platform release
+qualification. It records source hashes, toolchain, commands, exits and events.
+
+The full root lane now requires 440 functions on Mac (424 on Linux), with the
+same 325 parameter invocations. TSan adds one shared-generator function for a
+Mac total of 16. New tests are also included in the exact WASI bundle inventory;
+changing an expected inventory does not claim a WASI execution pass. All 49 core
+cap behavior probes, pinned independent-suite policies and existing discovery
+checks remain required in the full lanes.
+
+`--lane schema-examples-safety` supplements full safety with Release ASan (all
+21 G1 functions), TSan (the one shared-generator function) and strict memory-safety
+compilation of the new target and dependencies. Native Swift 6.4's observed
+`--test-product JSONSchemaExamplesTests` selects the generated test product; this
+does not add a public library product or change full-lane cardinalities. No
+filtered lane substitutes for the full release/conformance/platform gates.
+
+The schema-examples consumer qualifier preserves its 15 public cases/two compiler
+negatives and additionally requires ten synchronized DocC snippets in two processes.
+The docs lane checks those source bytes before compilation. Exact marker/cardinality
+checks reject missing documentation outcomes; all 49 baseline cap probes and the
+historical G6 requirements (96 generator/515 full-root/19 sharing functions).
+
+
+## S3 G7 integrated qualification
+
+The pre-composition S3 G7 exact discovery contract was 644 Mac / 628 Linux / 540 WASI functions,
+325 Mac/Linux and 288 WASI parameter invocations, 45 Mac / 44 Linux shared-state
+functions, and all 49 core cap probes. JSONSchemaExamples contributes 98 functions
+and four sharing functions. All 126 restored maintenance identities remain required.
+Earlier counts above describe their named historical increments.
+
+`--lane schema-examples-qualification` composes the advanced lane with the fixed
+64-schema public matrix: 512 seed/profile certifications and 64 known-invalid
+mutations, replayed in two processes. Full native also runs that matrix and uses
+one explicit root consumer scratch path for subsequent compiler/replay checks.
+A broad nonzero test count cannot satisfy any lane. Incomplete generation and
+independent-suite policy exclusions remain separate from evaluated successes.
+
+G7 passed full default native from a Git-free extraction, full native safety,
+WASI and the recorded Apple scopes. Linux preflight and Release build passed, but
+the guest was interrupted for disk pressure before full tests/safety. Those gates
+remain open; platform SDK compilation, simulator/device consumers and WASI do not
+substitute for Linux results. See the [G7 record](../Architecture/Release1.6/G7Qualification.md).
 
 ## Experimental composition lane
 

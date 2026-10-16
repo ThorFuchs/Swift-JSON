@@ -1,5 +1,32 @@
 # Composition reconciliation: PR35 and PR36
 
+## Reconciliation with schema examples
+
+The successor incorporates main
+`c79d48c15f83ef88bed9459d9abcf05e54bd0bea` (PR39) without changing its
+JSONSchemaExamples implementation, schema compiler support, consumers, fixtures
+or documentation. The existing composition runtime, proof package and performance
+harness remain byte-identical to `47ea4ef71dd7286ef0ec81342a8bb527438ce4b5`.
+Main's nine-product graph and empty root dependency graph are retained.
+
+The combined inventory requires 697 Mac / 681 Linux / 593 WASI root functions,
+325 Mac/Linux / 288 WASI parameter invocations and 47 Mac / 46 Linux shared-state
+functions. All 98 schema-example functions, 39 Navigation functions, 34 integration
+functions, 126 restored identities and 49 baseline cap probes remain required.
+The two composition lanes and every S3 consumer, ownership, construction, matrix
+and lifetime gate are retained. Eight public library DocC catalogs are required.
+The harness rejects omission of either proof dispatch or S3 qualification;
+cardinality checks still require the complete module and parameter inventories.
+
+The four conflicts are resolved by combining CI dispatch/cardinality guards,
+combining provenance notes and regenerating the CLI stamp from combined source.
+No implementation, quota, safety policy, baseline or review trigger is replaced.
+Actual source-bound receipts establish execution results, rather than these counts.
+Quiet-host performance remains pending by maintainer instruction. No timing retry,
+PR readiness change, merge into main, tag or publication is part of reconciliation.
+
+The following sections retain their original increment and source context.
+
 PR35 landed as main 30631e8fe60201518c00544c172340ec6576e0d5. This follow-up
 reconciles that implementation with proof head
 bab6316d31e9c1aca30ba3f9040b20edf1e6ae85 from PR36. The independent original

@@ -1,7 +1,7 @@
 # Public API contract
 
 This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the seven DocC catalogs. Examples
+graphs supply the complete declarations in the eight DocC catalogs. Examples
 in the [README](../../README.md) are compiled and executed by the public consumer.
 
 ## Products and ownership
@@ -18,7 +18,8 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
-JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are eight candidate public products: seven libraries and the swift-json executable,
+JSONRegexRuntime. Streaming, Patch, HTML, Bridges and Navigation depend on JSON.
+JSONSchemaExamples depends only on JSON and JSONSchema. There are nine public products: eight libraries and the swift-json executable,
 and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
 uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
 value, schema, Patch and streaming contracts do not acquire UI semantics.
@@ -233,13 +234,53 @@ is neither native validation of an instance nor a service-acceptance guarantee. 
 and all phase accounting are specified in [Providers](Release1.4/Providers.md) and the frozen
 [profile table](Release1.4/ProviderProfiles.json). No new product, SDK client or Apple type is added.
 
-## Best-effort diagnostics and versioned CLI identity
+## Schema examples (1.6 G4 development)
 
-With best-effort schema output, an optional diagnostic-byte refusal returns ordinary
-invalidity with `diagnosticsComplete == false`; it does not poison the active work
-ledger. Work, retention, annotation exhaustion and cancellation remain operational
-errors. Strict diagnostic output still throws on the same byte bound.
+The optional JSONSchemaExamples product prepares an immutable document/explicit
+registry/compiled-plan snapshot. `JSONSchemaExampleGenerator(document:registry:options:)`
+and `generate(seed:profile:)` offer exact declared candidates and compiler-qualified
+static reference targets. Every success contains the actual native valid verdict
+for the original root. Minimal scans stable exact declarations; demonstration
+uses metered SplitMix64 rejection sampling and circular scans. An immutable exact
+`JSONSchemaExampleCorpus` supplies candidates for true/empty schemas. Returned
+objects/numbers use scalar order and normalized exact spelling. Conservative
+typed construction covers the qualified foundational subset. G4 adds conservative
+contains minima and a small anchored ASCII pattern-proposal grammar. Native
+validation retains conditional, dependency, regex and evaluated-location semantics.
+General constraint
+solving, arbitrary regex inversion and dynamic construction remain incomplete.
 
+`JSONSchemaExampleFailure` distinguishes unsupported construction, searchExhausted,
+reviewed trivial provenUnsatisfiable and invalidConfiguration. Core operational
+failures and cancellation propagate without retries. Preparation accounting is
+separate from the shared per-generation ledger, which includes all completed
+invalid checks. Discarded validation ownership is released without refunding work. Logical
+retention is not process RSS.
+The result binds the versioned snapshot, ordered corpus, all generation/compiler/
+evaluator caps and flags, and complete abstract trace with SHA-256 digests. Trace
+bytes share diagnosticBytes with native diagnostics; exhaustion never truncates a
+success. See [the G3 constructive subset](Release1.6/G3Construction.md),
+[the G4 advanced boundary](Release1.6/G4Construction.md),
+[the capability ledger](Release1.6/Capabilities.json), [the G2 byte transports](Release1.6/G2Determinism.md), the historical
+[G1 API decision](Release1.6/G1API.md), and the
+[compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).
+
+## Optional verified schema examples (1.6 development)
+
+JSONSchemaExamples adds an immutable prepared generator over admitted documents and
+explicit offline registries. Every returned value has a completed native root verdict,
+with exact JSON semantics, cumulative generation statistics and versioned provenance.
+It does not alter JSON/JSONSchema APIs, policies, products or dependencies.
+
+See the [current public declarations and failures](Release1.6/API.md),
+[supported construction subset](../../Sources/JSONSchemaExamples/Documentation.docc/TypedConstruction.md),
+[resource scope](Release1.6/SchemaExamplesLimits.md) and
+[compiled public consumer](../../Examples/SchemaExamplesConsumer/README.md).
+Preparation and generation use separate finite ledgers. All attempts within a generation
+share one ledger; false verdicts consume work, operational errors/cancellation terminate
+without a candidate or successful report, and search exhaustion is not a proof.
+The [combined-source G8 record](Release1.6/G8Qualification.md) describes qualification,
+review and platform limits. Merge and release approval remain separate.
 The CLI's human version reports the candidate/release source version. JSON metadata
 includes `revisionKind: "source-sha256"` and `revision: "sha256:<hex>"`. This is the
 SHA-256 of the ordered Package.swift plus Sources content manifest, excluding only
