@@ -61,7 +61,7 @@ def package_catalogs(output):
             'bytes': archive.stat().st_size, 'verified_files': len(records),
             'manifest': str(manifest.relative_to(ROOT)),
             'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(),
-            'policy': 'Seven native DocC archives; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
+            'policy': 'Eight native DocC archives; exact internal filenames, sorted entries and normalized tar/gzip metadata.'}
 
 
 def main():
@@ -71,6 +71,10 @@ def main():
     try:
         if receipt['environment']['status'] != 'passed':
             raise ValueError('Supported native toolchain unavailable')
+        command = ['python3', '-B', 'Scripts/test_documentation_site.py']
+        receipt['site_regressions'] = run(command, output / 'site-regressions.log', 60)
+        if receipt['site_regressions']['exit_code']:
+            raise ValueError('Static documentation regression tests failed')
         command = ['swift', 'package', 'dump-symbol-graph', '--minimum-access-level', 'public']
         receipt['symbol_graph'] = run(command, output / 'symbol-graph.log', 900)
         if receipt['symbol_graph']['exit_code']:
