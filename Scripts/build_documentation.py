@@ -12,6 +12,7 @@ import sys
 import tarfile
 
 import documentation_catalog
+import schema_example_documentation
 from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -81,6 +82,7 @@ def main():
         receipt['coverage'] = coverage
         if coverage['errors']:
             raise ValueError('Incomplete authored public API documentation')
+        receipt['schema_examples_documentation'] = schema_example_documentation.check()
         example_source, example_count = documentation_catalog.readme_examples()
         example = ROOT / 'Examples/Consumer/Sources/Consumer/READMEExamples.swift'
         if example.read_text() != example_source:
@@ -89,6 +91,10 @@ def main():
         receipt['readme_examples'] = dict(run(command, output / 'readme-examples.log', 900), executable_fences=example_count)
         if receipt['readme_examples']['exit_code']:
             raise ValueError('Compiled README examples failed')
+        command = ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output.relative_to(ROOT) / 'schema-examples-consumer'), '--scratch-path', '.build']
+        receipt['schema_examples_consumer'] = run(command, output / 'schema-examples-consumer.log', 900)
+        if receipt['schema_examples_consumer']['exit_code']:
+            raise ValueError('Public schema-examples consumer or compiler boundaries failed')
         for product in documentation_catalog.PRODUCTS:
             graphs = output / 'symbols' / product
             if graphs.exists():

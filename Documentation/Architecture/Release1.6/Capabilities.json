@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "gate": "S3-G4",
+  "generator_algorithm": "s3-candidates-v4",
+  "trace_algorithm": "swift-json-example-trace-v2",
+  "semantic_authority": "Original compiled root plus completed JSONSchemaValidator result. Capability classifications describe proposal construction only.",
+  "groups": [
+    {
+      "id": "type",
+      "keywords": [
+        "type"
+      ],
+      "construction": "constructive",
+      "policy": "Fixed type preference, unions/intersections from active vocabularies; integer remains exact integral number.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "declared-candidates",
+      "keywords": [
+        "const",
+        "enum",
+        "default",
+        "examples"
+      ],
+      "construction": "conservative",
+      "policy": "Exact declared candidates; defaults/examples are hints, nested const/enum proposals still require complete root validation.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "numeric",
+      "keywords": [
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf"
+      ],
+      "construction": "conservative",
+      "policy": "Exact bounded decimal step/rounding; dense alignment can exhaust finite digit/work limits. Multiple conjunctive divisors are certified natively rather than solved generally.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "strings",
+      "keywords": [
+        "minLength",
+        "maxLength"
+      ],
+      "construction": "constructive",
+      "policy": "Unicode-scalar lengths; bounded admitted corpus/filler tokens.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "format",
+      "keywords": [
+        "format"
+      ],
+      "construction": "conservative",
+      "policy": "Fixed email token when native assertion applies; annotation does not assert or imply a type. Other formats are native certification only.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "objects",
+      "keywords": [
+        "properties",
+        "required",
+        "additionalProperties",
+        "minProperties",
+        "maxProperties"
+      ],
+      "construction": "conservative",
+      "policy": "Union of exact required keys, every conjunct scoped separately, optional omission and finite declared/synthetic fill names.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "arrays",
+      "keywords": [
+        "prefixItems",
+        "items",
+        "minItems",
+        "maxItems"
+      ],
+      "construction": "constructive",
+      "policy": "Explicit iterative frames, checked lengths and positional indices; nested arrays do not flatten.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "uniqueness",
+      "keywords": [
+        "uniqueItems"
+      ],
+      "construction": "conservative",
+      "policy": "Finite leaf variations; only native exact deep comparison certifies uniqueness. No complete cardinality solver.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "composition",
+      "keywords": [
+        "allOf",
+        "anyOf",
+        "oneOf"
+      ],
+      "construction": "conservative",
+      "policy": "Positive conjunction hints and finite alternative child proposals. No schema merge or branch-local success. Native exactly-one/conditional/annotation semantics remain authoritative.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "static-resources",
+      "keywords": [
+        "$ref",
+        "$id",
+        "$schema",
+        "$anchor",
+        "$defs",
+        "definitions",
+        "dependencies",
+        "$vocabulary",
+        "$comment"
+      ],
+      "construction": "compiler_authority",
+      "policy": "Compiler-qualified resource/node handles; no URI guessing or implicit definition rooting. Repeated static targets are DAG sharing; same-instance ancestor cycles are unsupported. Legacy definitions/dependencies remain non-applicative containers whose referenced children retain compiler locations.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "dynamic",
+      "keywords": [
+        "$dynamicRef",
+        "$dynamicAnchor"
+      ],
+      "construction": "unsupported_dynamic_construction",
+      "policy": "A reached scope-dependent reference fails explicitly. Omitting an optional dynamic child may produce a native-certified finite witness; that does not qualify constructive dynamic-scope navigation.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "native-only",
+      "keywords": [
+        "patternProperties",
+        "propertyNames",
+        "dependentRequired",
+        "dependentSchemas",
+        "unevaluatedProperties",
+        "unevaluatedItems",
+        "if",
+        "then",
+        "else"
+      ],
+      "construction": "native_certification_only",
+      "policy": "No constructive interpretation of these keywords. Optional omissions and finite whole-root proposals can satisfy the pinned fixtures; only complete native evaluation establishes conditionals, dependencies, key patterns/names and evaluated locations. No general triggered-constraint solver.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "not",
+      "keywords": [
+        "not"
+      ],
+      "construction": "native_certification_only",
+      "policy": "Only active root not-true/not-empty has a reviewed trivial unsatisfiability proof; other negations are native certification only.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "annotations",
+      "keywords": [
+        "title",
+        "description",
+        "deprecated",
+        "readOnly",
+        "writeOnly",
+        "contentEncoding",
+        "contentMediaType",
+        "contentSchema"
+      ],
+      "construction": "metadata_only",
+      "policy": "Never executed, inserted, repaired, resolved online or treated as validation authority.",
+      "evidence_tests": [
+        "g3All24RequiredFixturesAreNativeCertifiedForBothProfilesAndFourSeeds",
+        "g4AllTenRequiredAndEightIncompleteFixturesHaveHonestNativeOutcomes"
+      ]
+    },
+    {
+      "id": "pattern-proposals",
+      "keywords": [
+        "pattern"
+      ],
+      "construction": "conservative",
+      "policy": "Fully anchored printable ASCII literals, escaped regex punctuation, single ASCII-range classes and exact repetition only. Never a regex matcher; unsupported syntax may use finite corpus/filler proposals. Native regex compilation/matching and quotas remain authoritative.",
+      "evidence_tests": [
+        "g4AnchoredLiteralRangeAndExactRepeatProposalsAreNativeCertified",
+        "g4UnsupportedRegexSyntaxNeverPretendsToBeAnInverter",
+        "g4RegexOperationalFailureIsTerminalRatherThanAnInvalidCandidate",
+        "g4PatternScannerHasExactWorkAndPreallocationBoundaries",
+        "g4CancellationDuringPatternScanningLatchesTheInvocation"
+      ]
+    },
+    {
+      "id": "contains-proposals",
+      "keywords": [
+        "contains",
+        "minContains",
+        "maxContains"
+      ],
+      "construction": "conservative",
+      "policy": "Minimum positive-match proposals combined with prefix/items constraints per conjunct. Native validation counts all matches/maxima and annotations. Disjoint partitions and excluding surplus matches are not solved.",
+      "evidence_tests": [
+        "g4ContainsDefaultZeroAndInactiveSiblingLimitsRemainDistinct",
+        "g4ContainsPrefixAndUniqueConstraintsShareTheRootCertificate",
+        "g4ExtraContainsMatchesRemainHonestSearchExhaustion",
+        "g4ContainsCardinalityIsCheckedBeforeItemStaging"
+      ]
+    }
+  ],
+  "fixture_matrix": {
+    "source": "Tests/Fixtures/SchemaExamples/S3-integral-correction-v1.json",
+    "sha256": "5b3e6e40e83439a810d0eb7ac412ce158a4e582f36b9d36d6e313c159654ddd3",
+    "g3_must_generate_ids": [
+      "boolean-true",
+      "null-kind",
+      "string-length",
+      "exact-integer-beyond-2pow53",
+      "exact-decimal-multiple-of",
+      "numeric-exclusive-near-zero",
+      "object-required-and-null",
+      "unicode-exact-scalar-keys",
+      "undeclared-required-key",
+      "object-min-max-properties",
+      "array-prefix-items",
+      "array-unique",
+      "enum",
+      "const-exact-decimal",
+      "anyof",
+      "allof-object-composition",
+      "local-ref",
+      "format-annotation",
+      "format-assertion",
+      "invalid-default-annotation",
+      "invalid-examples-annotation",
+      "false-nested-schema",
+      "object-number-key-strings",
+      "required-with-additional-properties-false"
+    ],
+    "profiles": [
+      "minimal",
+      "demonstration"
+    ],
+    "seeds": [
+      "0",
+      "1",
+      "42",
+      "18446744073709551615"
+    ],
+    "expected_successful_invocations_per_process": 192,
+    "g3_proof_ids": [
+      "boolean-false",
+      "not-true"
+    ],
+    "g4_cases": 18,
+    "g4_status": "passed native increment; full release/platform gates remain open",
+    "g4_must_generate_ids": [
+      "array-contains",
+      "condition-then-else",
+      "dependent-required",
+      "dependent-schema",
+      "pattern-properties",
+      "property-names",
+      "unevaluated-properties-composition",
+      "simple-regex",
+      "mincontains-with-prefixitems",
+      "array-mixed-evaluation"
+    ],
+    "g4_may_fail_ids": [
+      "oneof-overlap",
+      "recursive-tree",
+      "dynamic-ref",
+      "conflicting-allof",
+      "unfulfillable-unique-enum",
+      "external-offline-ref",
+      "not-string",
+      "oneof-overlap-limited"
+    ],
+    "g4_expected_required_successes_per_process": 80,
+    "g4_total_invocations_per_process": 144,
+    "all_native_witness_expectations": 155,
+    "g4_observed_successes_per_process": 112,
+    "g4_observed_explicit_incomplete_per_process": 32,
+    "g4_public_processes": 2
+  },
+  "limitations": [
+    "No general satisfiability decision or universal must-generate promise outside the pinned subset",
+    "No unqualified cross-platform, RSS or controlled-throughput claim",
+    "Main 1.5.1 integration and G7/G8 remain separate gates"
+  ]
+}

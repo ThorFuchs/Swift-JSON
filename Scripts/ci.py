@@ -11,7 +11,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|sharedExportPreparationsHaveIndependentConcurrentState|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState'
 SHARED_TESTS += '|compositionIndependentScopesCanBeSharedAcrossTasks'
 SHARED_TESTS += '|qaStreaming|qaE2E(SharedPlan|RootImport|NDJSONImport|AwaitedSink|ExactWorkflow)'
-SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations|inspectionI17CoverageSpansReplacementAndSharedInvocations|snapshotS19NavigationParityAndIndependentInvocations'
+SHARED_TESTS += '|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations|g5SharedPreparationSeparatesConcurrentFailureAndSuccessHealth'
+SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations'
+SHARED_TESTS += '|inspectionI17CoverageSpansReplacementAndSharedInvocations'
+SHARED_TESTS += '|snapshotS19NavigationParityAndIndependentInvocations'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -29,6 +32,33 @@ def commands(lane, output):
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')]]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
+    if lane == 'schema-examples-qualification':
+        return commands('schema-examples-advanced', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'matrix')]]
+    if lane == 'schema-examples-advanced':
+        return commands('schema-examples-construction', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'advanced')]]
+    if lane in ('schema-examples-determinism', 'schema-examples-construction'):
+        # G2 changes only the opt-in generator. Reuse unchanged-core schema receipts;
+        # keep the broader schema-examples lane and every full release gate intact.
+        baseline = commands('schema-examples', ROOT / output)
+        return baseline[:4] + [
+            ['swift', 'test', '-c', 'release', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests'],
+            ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py', '--output', str(output / 'ownership')],
+        ] + baseline[5:] + ([['python3', '-B', 'Scripts/qualify_schema_example_generation.py', '--output', str(output / 'generation')]] if lane == 'schema-examples-construction' else [])
+    if lane == 'schema-examples-safety':
+        return [
+            ['swift', 'test', '-c', 'release', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests', '--sanitize', 'address', '--scratch-path', '.build/schema-examples-address'],
+            ['swift', 'test', '-c', 'release', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests', '--sanitize', 'thread', '--scratch-path', '.build/schema-examples-thread', '--filter', 'g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations|g5SharedPreparationSeparatesConcurrentFailureAndSuccessHealth'],
+            ['swift', 'build', '--target', 'JSONSchemaExamples', '--jobs', '2', '--scratch-path', '.build/schema-examples-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+        ]
+    if lane == 'schema-examples':
+        return [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['swift', 'package', 'dump-package'],
+            ['swift', 'package', 'show-dependencies', '--format', 'json'],
+            ['swift', 'test', '--jobs', '2', '--test-product', 'JSONSchemaExamplesTests', '--filter', 'JSONSchemaExamplesTests'],
+            ['swift', 'test', '--jobs', '2', '--test-product', 'JSONSchemaTests'],
+            ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output / 'consumer'), '--scratch-path', '.build'],
+        ]
     if lane == 'composition':
         result = [
             ['swift', 'test', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
@@ -127,6 +157,11 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
+            ['python3', '-B', 'Scripts/qualify_schema_examples.py', '--output', str(output / 'schema-examples'), '--scratch-path', '.build'],
+            ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py', '--output', str(output / 'schema-example-ownership')],
+            ['python3', '-B', 'Scripts/qualify_schema_example_generation.py', '--output', str(output / 'schema-example-generation')],
+            ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py', '--output', str(output / 'schema-example-advanced')],
+            ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'schema-example-matrix')],
             ['python3', '-B', 'Scripts/qualify_distribution.py', '--output', str(output / 'distribution')],
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
             ['python3', '-B', 'Scripts/qualify_navigation.py', '--output', str(output / 'navigation')],
@@ -144,6 +179,7 @@ def commands(lane, output):
             ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/ci-address'],
             ['swift', 'test', '-c', 'release', '--sanitize', 'thread', '--scratch-path', '.build/ci-thread', '--filter', SHARED_TESTS],
             ['swift', 'build', '--scratch-path', '.build/ci-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py', '--output', str(output / 'corpus-lifetime')],
         ]
     if lane == 'r0':
         return [
@@ -179,7 +215,12 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        if 'JSONSchemaExamplesTests' in command and events is not None:
+            passed = passed and events['module_function_counts'] == {'JSONSchemaExamplesTests': expected[0]} and events['parameter_case_invocations'] == 0
+        if 'JSONSchemaTests' in command and events is not None:
+            parameters = {name: ROOT_PARAMETER_CASES[name] for name in ['successfulAlternativesCannotSwallowRegexExhaustion(keyword:)', 'URIIdentityUsesSyntaxNormalizationWithoutUnicodeFolding(input:expected:)']}
+            passed = passed and events['module_function_counts'] == {'JSONSchemaTests': 79} and events['parameterized_functions'] == parameters and events['parameter_case_invocations'] == 12
         if 'navigation' in command:
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
@@ -193,9 +234,9 @@ def check_result(command, code, log, events=None):
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
-        if 'thread' in command and events is not None:
+        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and events is not None:
             passed = passed and events['module_function_counts'] == SHARED_COUNTS
-        if '--filter' not in command and not any(x.startswith('Tools/') for x in command):
+        if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
                 passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events)
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == PARAMETER_INVOCATIONS)
@@ -225,10 +266,25 @@ def check_result(command, code, log, events=None):
         passed = data['observed'] == data['passed'] == expected and data['failed'] == data['policy'] == data['blocked'] == 0
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
-        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONInspection', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
-        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection']}, **{'swift-json': ['JSONCLI']})
+        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONInspection', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
+        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection']}, **{'swift-json': ['JSONCLI']})
         targets = {t['name']: t for t in d['targets']}
-        passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigation']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigationTests']['dependencies'] == [{'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}] and targets['JSONInspection']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONNavigation', None]}] and targets['JSONInspectionTests']['dependencies'] == [{'byName': ['JSONInspection', None]}, {'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
+        passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
+        passed = passed and targets['JSONNavigation']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigationTests']['dependencies'] == [{'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
+        passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
+        passed = passed and targets['JSONInspection']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONNavigation', None]}] and targets['JSONInspectionTests']['dependencies'] == [{'byName': ['JSONInspection', None]}, {'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_MATRIX passed schemas=64 certified=512 invalid=64 processes=2' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_advanced.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_ADVANCED passed required=10 incomplete=8 profiles=2 seeds=4 per_process=144 processes=2 witnesses=155' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_generation.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_GENERATION passed cases=24 profiles=2 seeds=4 per_process=192 processes=2 proofs=2' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_ownership.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_OWNERSHIP passed positive=1 negatives=8' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_examples.py']:
+        passed = passed and 'SCHEMA_EXAMPLES_COMPILER passed public_cases=15 negatives=2' in log.splitlines() and 'SCHEMA_EXAMPLES_DOCUMENTATION_COMPILER passed snippets=10 processes=2' in log.splitlines()
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
         passed = json.loads(log)['dependencies'] == []
     if command[:2] == ['swift', 'run'] and 'CompositionConsumer' in command:
@@ -259,7 +315,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['composition', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive', 'navigation', 'inspection'], required=True)
+    parser.add_argument('--lane', choices=['composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)

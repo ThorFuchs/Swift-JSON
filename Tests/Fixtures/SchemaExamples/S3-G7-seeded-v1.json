@@ -1,0 +1,934 @@
+{
+  "version": 1,
+  "recipe": "eight bounded grammar families x eight exact variants; deterministic seed set 0,1,42,UInt64.max",
+  "cases": [
+    {
+      "id": "integer-0",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740993,
+        "maximum": 9007199254740996
+      },
+      "invalid": 9007199254740992
+    },
+    {
+      "id": "scalar-0",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 0
+          },
+          "é": {
+            "const": 9007199254740993
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 0
+      }
+    },
+    {
+      "id": "tuple-0",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 0
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        0
+      ]
+    },
+    {
+      "id": "conjunction-0",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 0
+          },
+          {
+            "maximum": 5
+          }
+        ]
+      },
+      "invalid": 6
+    },
+    {
+      "id": "choice-0",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 0
+          },
+          {
+            "const": "s0"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-0",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740993
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740992
+    },
+    {
+      "id": "string-0",
+      "schema": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 1
+      },
+      "invalid": "xx"
+    },
+    {
+      "id": "hints-0",
+      "schema": {
+        "type": "string",
+        "default": 0,
+        "examples": [
+          "v0"
+        ],
+        "enum": [
+          "v0",
+          "z0"
+        ]
+      },
+      "invalid": 0
+    },
+    {
+      "id": "integer-1",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740994,
+        "maximum": 9007199254740997
+      },
+      "invalid": 9007199254740993
+    },
+    {
+      "id": "scalar-1",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 1
+          },
+          "é": {
+            "const": 9007199254740994
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 1
+      }
+    },
+    {
+      "id": "tuple-1",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 1
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        1
+      ]
+    },
+    {
+      "id": "conjunction-1",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 1
+          },
+          {
+            "maximum": 6
+          }
+        ]
+      },
+      "invalid": 7
+    },
+    {
+      "id": "choice-1",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 1
+          },
+          {
+            "const": "s1"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-1",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740994
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740993
+    },
+    {
+      "id": "string-1",
+      "schema": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 2
+      },
+      "invalid": "xxx"
+    },
+    {
+      "id": "hints-1",
+      "schema": {
+        "type": "string",
+        "default": 1,
+        "examples": [
+          "v1"
+        ],
+        "enum": [
+          "v1",
+          "z1"
+        ]
+      },
+      "invalid": 1
+    },
+    {
+      "id": "integer-2",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740995,
+        "maximum": 9007199254740998
+      },
+      "invalid": 9007199254740994
+    },
+    {
+      "id": "scalar-2",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 2
+          },
+          "é": {
+            "const": 9007199254740995
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 2
+      }
+    },
+    {
+      "id": "tuple-2",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 2
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        2
+      ]
+    },
+    {
+      "id": "conjunction-2",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 2
+          },
+          {
+            "maximum": 7
+          }
+        ]
+      },
+      "invalid": 8
+    },
+    {
+      "id": "choice-2",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 2
+          },
+          {
+            "const": "s2"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-2",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740995
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740994
+    },
+    {
+      "id": "string-2",
+      "schema": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 3
+      },
+      "invalid": "xxxx"
+    },
+    {
+      "id": "hints-2",
+      "schema": {
+        "type": "string",
+        "default": 2,
+        "examples": [
+          "v2"
+        ],
+        "enum": [
+          "v2",
+          "z2"
+        ]
+      },
+      "invalid": 2
+    },
+    {
+      "id": "integer-3",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740996,
+        "maximum": 9007199254740999
+      },
+      "invalid": 9007199254740995
+    },
+    {
+      "id": "scalar-3",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 3
+          },
+          "é": {
+            "const": 9007199254740996
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 3
+      }
+    },
+    {
+      "id": "tuple-3",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 3
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        3
+      ]
+    },
+    {
+      "id": "conjunction-3",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 3
+          },
+          {
+            "maximum": 8
+          }
+        ]
+      },
+      "invalid": 9
+    },
+    {
+      "id": "choice-3",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 3
+          },
+          {
+            "const": "s3"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-3",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740996
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740995
+    },
+    {
+      "id": "string-3",
+      "schema": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 4
+      },
+      "invalid": "xxxxx"
+    },
+    {
+      "id": "hints-3",
+      "schema": {
+        "type": "string",
+        "default": 3,
+        "examples": [
+          "v3"
+        ],
+        "enum": [
+          "v3",
+          "z3"
+        ]
+      },
+      "invalid": 3
+    },
+    {
+      "id": "integer-4",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740997,
+        "maximum": 9007199254741000
+      },
+      "invalid": 9007199254740996
+    },
+    {
+      "id": "scalar-4",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 4
+          },
+          "é": {
+            "const": 9007199254740997
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 4
+      }
+    },
+    {
+      "id": "tuple-4",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 4
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        4
+      ]
+    },
+    {
+      "id": "conjunction-4",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 4
+          },
+          {
+            "maximum": 9
+          }
+        ]
+      },
+      "invalid": 10
+    },
+    {
+      "id": "choice-4",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 4
+          },
+          {
+            "const": "s4"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-4",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740997
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740996
+    },
+    {
+      "id": "string-4",
+      "schema": {
+        "type": "string",
+        "minLength": 4,
+        "maxLength": 5
+      },
+      "invalid": "xxxxxx"
+    },
+    {
+      "id": "hints-4",
+      "schema": {
+        "type": "string",
+        "default": 4,
+        "examples": [
+          "v4"
+        ],
+        "enum": [
+          "v4",
+          "z4"
+        ]
+      },
+      "invalid": 4
+    },
+    {
+      "id": "integer-5",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740998,
+        "maximum": 9007199254741001
+      },
+      "invalid": 9007199254740997
+    },
+    {
+      "id": "scalar-5",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 5
+          },
+          "é": {
+            "const": 9007199254740998
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 5
+      }
+    },
+    {
+      "id": "tuple-5",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 5
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        5
+      ]
+    },
+    {
+      "id": "conjunction-5",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 5
+          },
+          {
+            "maximum": 10
+          }
+        ]
+      },
+      "invalid": 11
+    },
+    {
+      "id": "choice-5",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 5
+          },
+          {
+            "const": "s5"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-5",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740998
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740997
+    },
+    {
+      "id": "string-5",
+      "schema": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 6
+      },
+      "invalid": "xxxxxxx"
+    },
+    {
+      "id": "hints-5",
+      "schema": {
+        "type": "string",
+        "default": 5,
+        "examples": [
+          "v5"
+        ],
+        "enum": [
+          "v5",
+          "z5"
+        ]
+      },
+      "invalid": 5
+    },
+    {
+      "id": "integer-6",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254740999,
+        "maximum": 9007199254741002
+      },
+      "invalid": 9007199254740998
+    },
+    {
+      "id": "scalar-6",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 6
+          },
+          "é": {
+            "const": 9007199254740999
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 6
+      }
+    },
+    {
+      "id": "tuple-6",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 6
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        6
+      ]
+    },
+    {
+      "id": "conjunction-6",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 6
+          },
+          {
+            "maximum": 11
+          }
+        ]
+      },
+      "invalid": 12
+    },
+    {
+      "id": "choice-6",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 6
+          },
+          {
+            "const": "s6"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-6",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254740999
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740998
+    },
+    {
+      "id": "string-6",
+      "schema": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 7
+      },
+      "invalid": "xxxxxxxx"
+    },
+    {
+      "id": "hints-6",
+      "schema": {
+        "type": "string",
+        "default": 6,
+        "examples": [
+          "v6"
+        ],
+        "enum": [
+          "v6",
+          "z6"
+        ]
+      },
+      "invalid": 6
+    },
+    {
+      "id": "integer-7",
+      "schema": {
+        "type": "integer",
+        "minimum": 9007199254741000,
+        "maximum": 9007199254741003
+      },
+      "invalid": 9007199254740999
+    },
+    {
+      "id": "scalar-7",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "é": {
+            "const": 7
+          },
+          "é": {
+            "const": 9007199254741000
+          }
+        },
+        "required": [
+          "é",
+          "é"
+        ],
+        "additionalProperties": false
+      },
+      "invalid": {
+        "é": 7
+      }
+    },
+    {
+      "id": "tuple-7",
+      "schema": {
+        "type": "array",
+        "prefixItems": [
+          {
+            "const": 7
+          },
+          {
+            "type": "boolean"
+          }
+        ],
+        "minItems": 2,
+        "maxItems": 2,
+        "items": false
+      },
+      "invalid": [
+        7
+      ]
+    },
+    {
+      "id": "conjunction-7",
+      "schema": {
+        "type": "integer",
+        "allOf": [
+          {
+            "minimum": 7
+          },
+          {
+            "maximum": 12
+          }
+        ]
+      },
+      "invalid": 13
+    },
+    {
+      "id": "choice-7",
+      "schema": {
+        "oneOf": [
+          {
+            "const": 7
+          },
+          {
+            "const": "s7"
+          }
+        ]
+      },
+      "invalid": null
+    },
+    {
+      "id": "reference-7",
+      "schema": {
+        "$defs": {
+          "v": {
+            "const": 9007199254741000
+          }
+        },
+        "$ref": "#/$defs/v"
+      },
+      "invalid": 9007199254740999
+    },
+    {
+      "id": "string-7",
+      "schema": {
+        "type": "string",
+        "minLength": 7,
+        "maxLength": 8
+      },
+      "invalid": "xxxxxxxxx"
+    },
+    {
+      "id": "hints-7",
+      "schema": {
+        "type": "string",
+        "default": 7,
+        "examples": [
+          "v7"
+        ],
+        "enum": [
+          "v7",
+          "z7"
+        ]
+      },
+      "invalid": 7
+    }
+  ]
+}
