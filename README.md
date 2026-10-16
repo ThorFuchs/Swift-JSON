@@ -129,7 +129,7 @@ Then add products to your target dependencies:
 Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`
 or `JSONSchemaExamples` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [seven-library consumer](Examples/Consumer) for a complete buildable
+releases. See the [eight-library consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 

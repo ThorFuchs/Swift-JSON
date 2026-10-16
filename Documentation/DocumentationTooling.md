@@ -162,6 +162,6 @@ swift run --package-path Examples/SchemaExamplesConsumer SchemaExamplesConsumer 
 Review the generated DocumentationExamples.swift diff after editing a guide. Missing,
 extra, empty or foreign-import snippets and source drift fail qualification. The
 `#sourceLocation` directives map compiler errors to the authored guide. The root
-README has fourteen executable Swift fences in its separate seven-library consumer;
+README has fifteen executable Swift fences in its separate eight-library consumer;
 installation fragments remain manifest examples, checked by real package manifests.
 Native DocC checks symbol links and the site verifies the new limits-guide route.
