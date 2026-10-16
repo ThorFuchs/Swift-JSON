@@ -6,7 +6,7 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G8 combined-source reconciliation with main; fresh qualification in progress",
+  "status": "G8 agent source/API/evidence review complete; combined-source available-platform qualification passed; owner merge/release decisions remain separate",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
@@ -16,8 +16,8 @@
     "S3-G4": "passed_native_increment",
     "S3-G5": "passed_native_increment",
     "S3-G6": "passed_native_increment",
-    "S3-G7": "reopened_for_combined_source_qualification",
-    "S3-G8": "review_preparation_in_progress"
+    "S3-G7": "passed_combined_native_linux_wasi_and_recorded_apple_scopes",
+    "S3-G8": "review_complete_with_explicit_platform_and_claim_limits"
   },
   "observed": {
     "packet_manifest_files": 26,
@@ -46,14 +46,14 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "Combined-source native, safety, docs, archive, Linux, WASI and G8 review",
+  "next_gate": "Owner review/merge decision; post-merge qualification and release/tag/publication are separate",
   "limitations": [
-    "Combined composition/Navigation/S3 source requires refreshed qualification; standalone passes are preserved separately",
-    "G8 remains open; no release-ready or merge-ready claim",
-    "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
-    "Logical retention is not RSS; no controlled performance or caller instruction guarantee"
+    "Physical iPhone is currently disconnected: no new physical-device pass is claimed; the historical G7 receipt remains source-bound. Fresh SDK and iPhone/iPad simulator checks passed.",
+    "Physical iPad retains the existing accepted simulator-only policy.",
+    "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete.",
+    "Logical retention is not process RSS; no controlled throughput or caller instruction guarantee.",
+    "This is agent review and a draft PR; no independent human approval, PR merge, tag, release or deployment is claimed."
   ],
-  "push_merge_tag_or_publication_performed": false,
   "g1_observed": {
     "new_swift_testing_functions": 21,
     "existing_schema_functions": 69,
@@ -365,7 +365,73 @@
       "limitations": [
         "These runs do not qualify the later composition/Navigation combination; preserved materialized G8 preparation report provides raw receipts."
       ]
+    },
+    {
+      "gate": "S3-G8-integration-preparation",
+      "status": "G8 combined-source reconciliation with main; fresh qualification in progress",
+      "gates": {
+        "S3-G0": "passed_with_documented_fixture_amendment",
+        "S3-G1": "passed_native_increment",
+        "S3-G2": "passed_native_increment",
+        "S3-G3": "passed_native_increment",
+        "S3-G4": "passed_native_increment",
+        "S3-G5": "passed_native_increment",
+        "S3-G6": "passed_native_increment",
+        "S3-G7": "reopened_for_combined_source_qualification",
+        "S3-G8": "review_preparation_in_progress"
+      },
+      "source": "130823a5c8af47e21251f271df50a948c73cb9a1"
     }
   ],
-  "g8_integrated_main": "7d72c8825982550f0ee87218136fda12d8bae13b"
+  "g8_integrated_main": "7d72c8825982550f0ee87218136fda12d8bae13b",
+  "review_ready": true,
+  "actions": {
+    "feature_branch_pushed": true,
+    "draft_pr": 39,
+    "pr_merged": false,
+    "tag_created": false,
+    "release_published": false,
+    "pages_deployed": false,
+    "sibling_edits": false
+  },
+  "g8_qualified_source_commit": "130823a5c8af47e21251f271df50a948c73cb9a1",
+  "g8_qualified_pr_merge_commit": "34efc30e56da30a1e907a8f7d8b6614fd97b2951",
+  "g8_qualification_record": "Documentation/Architecture/Release1.6/G8Qualification.md",
+  "g8_source_archive_sha256": "ab4cc31d95d3409d7947aafa057954089961fd6ff65e573e43ce92dd03f2a29c",
+  "g8_observed": {
+    "native_commands": 38,
+    "linux_commands_per_architecture": 34,
+    "composition_commands_per_full_job": 9,
+    "native_debug_release_asan_functions": 695,
+    "linux_debug_release_asan_functions": 679,
+    "parameter_invocations_each": 325,
+    "native_tsan_functions": 47,
+    "linux_tsan_functions": 46,
+    "restored_maintenance_identities": 126,
+    "finite_core_cap_probes": 49,
+    "docc_catalogs": 8,
+    "authored_documented_symbols": 1077,
+    "s3_authored_declarations": 60,
+    "navigation_authored_declarations": 56,
+    "wasi_commands": 79,
+    "wasi_debug_release_functions": 591,
+    "wasi_parameter_invocations_each": 288,
+    "sdk_builds_s3": 2,
+    "sdk_builds_navigation": 2,
+    "simulators": 2,
+    "fresh_physical_device_runs": 0,
+    "fixed_native_records": 848,
+    "fixed_certified": 816,
+    "fixed_explicit_incomplete": 32,
+    "separate_trivial_proofs": 2,
+    "additional_research_certified": 512,
+    "additional_research_invalid": 64,
+    "external_oracle_disagreements": 0,
+    "byte_equal_current_matrix_platforms": 5,
+    "expected_ownership_rejections": 8,
+    "public_consumer_cases": 15,
+    "public_access_rejections": 2,
+    "compiled_guide_snippets": 10,
+    "source_review_new_runtime_findings": 0
+  }
 }

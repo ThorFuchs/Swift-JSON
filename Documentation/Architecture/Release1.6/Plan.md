@@ -81,3 +81,8 @@ and guides describe the implemented subset and lifecycle. See [G6 qualification]
 and [documentation contract](G6Documentation.md). Runtime/defaults remain unchanged;
 G7/G8 and main repair integration remain open. The conditional DSL example waits
 for an available integrated product without touching its independent train.
+
+G8 reconciles composition and Navigation on main7d72c88 while preserving S3 and
+all prior increments. The [combined-source qualification](G8Qualification.md) records
+actual execution and the source/API/evidence review. It adds no release, merge,
+physical-device or controlled-performance claim beyond its stated scopes.

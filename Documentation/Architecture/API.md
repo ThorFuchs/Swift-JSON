@@ -279,7 +279,8 @@ See the [current public declarations and failures](Release1.6/API.md),
 Preparation and generation use separate finite ledgers. All attempts within a generation
 share one ledger; false verdicts consume work, operational errors/cancellation terminate
 without a candidate or successful report, and search exhaustion is not a proof.
-G7/G8 final release/platform qualification remains open.
+The [combined-source G8 record](Release1.6/G8Qualification.md) describes qualification,
+review and platform limits. Merge and release approval remain separate.
 The CLI's human version reports the candidate/release source version. JSON metadata
 includes `revisionKind: "source-sha256"` and `revision: "sha256:<hex>"`. This is the
 SHA-256 of the ordered Package.swift plus Sources content manifest, excluding only
