@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Matched native Release ABBA comparison with mandatory quiet-host admission."""
-import argparse, datetime, hashlib, json, os, pathlib, re, shutil, statistics, subprocess, tarfile, time
+import argparse, datetime, hashlib, json, math, os, pathlib, re, resource, shutil, statistics, subprocess, tarfile, time
 from preflight import collect
 from archive_candidate import files
+from composition_host import DarwinCPU, admitted
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = '30631e8fe60201518c00544c172340ec6576e0d5'
@@ -17,6 +18,16 @@ def inventory(directory):
 def source_identity():
     return [{'path':p.relative_to(ROOT).as_posix(), 'sha256':digest(p)} for p in files()]
 
+def check_samples(rows):
+    if len(rows)!=5 or {row['name']:row['iterations'] for row in rows} != NAMES:
+        raise ValueError('Changed benchmark discovery/iterations')
+    if any(len(row['seconds'])!=9 or any(not math.isfinite(v) or v<=0 for v in row['seconds']) for row in rows):
+        raise ValueError('Missing/nonpositive/nonfinite timing samples')
+
+def completion_counters(baseline):
+    work, peak, retained, size = baseline
+    return (work+50, max(peak, retained+424), retained+424, size)
+
 class Blocked(Exception): pass
 
 def main():
@@ -27,7 +38,8 @@ def main():
     receipt = {'status':'running', 'baseline':BASE, 'candidate':None, 'environment':collect(),
         'source_inputs':inputs, 'source_manifest_sha256':hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(),
         'configuration':'release', 'build_system':'native', 'review_trigger_percent':10,
-        'minimum_pre_and_post_idle_percent':90, 'commands':[], 'host_checks':[], 'runs':[],
+        'minimum_pre_and_post_idle_percent':90, 'host_sampler':'Darwin HOST_CPU_LOAD_INFO; three one-second intervals; no process enumeration',
+        'commands':[], 'host_checks':[], 'observer_experiment':[], 'runs':[],
         'started_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
     def save(): (output/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
     def run(name, command, env=None):
@@ -39,19 +51,29 @@ def main():
         save()
         if result.returncode: raise ValueError('Command failed: '+name)
         return log.read_text()
+    cpu = None
     def host(name):
-        result = subprocess.run(['top','-l','4','-n','0','-s','1'], capture_output=True, text=True, timeout=15)
-        log = output/(name+'.log'); log.write_text(result.stdout+result.stderr)
-        matches = re.findall(r'([0-9.]+)% idle', result.stdout)
-        intervals = [float(v) for v in matches[-3:]] if result.returncode == 0 and len(matches) == 4 else []
-        idle = min(intervals) if intervals else None
-        receipt['host_checks'].append({'name':name, 'command':['top','-l','4','-n','0','-s','1'], 'interval_idle_percent':intervals,
-            'exit_code':result.returncode, 'idle_percent':idle, 'log':log.name, 'log_sha256':digest(log)})
+        window = cpu.window()
+        log = output/(name+'.log'); log.write_text(json.dumps(window, indent=2)+'\n')
+        idle = min(window['interval_idle_percent'])
+        receipt['host_checks'].append(dict(window, name=name, idle_percent=idle,
+            admitted=admitted(window), log=log.name, log_sha256=digest(log)))
         save(); print(name, 'idle='+str(idle), flush=True)
-        return idle is not None and idle >= 90
+        return admitted(window)
+    def diagnostics(name):
+        # Outside measurement/admission; never masks an immediate failed post window.
+        run(name+'-processes', ['ps','-Ao','pid,pcpu,state,comm','-r'])
+        run(name+'-thermal', ['pmset','-g','therm'])
+    def swap(name):
+        text = run(name+'-vm', ['vm_stat'])
+        values = [re.search(r'^'+key+r':\s*(\d+)\.', text, re.M) for key in ['Swapins','Swapouts']]
+        if not all(values): raise ValueError('Missing native swap counters')
+        return [int(v[1]) for v in values]
     try:
         save()
         if receipt['environment']['status'] != 'passed': raise Blocked('Supported native Mac/toolchain/SDK required')
+        run('harness-tests', ['python3','-B','Scripts/test_composition_performance.py'])
+        cpu = DarwinCPU()
         run('cpu', ['sysctl','-n','machdep.cpu.brand_string'])
         run('memory', ['sysctl','-n','hw.memsize'])
         run('os-build', ['sw_vers','-buildVersion'])
@@ -91,28 +113,70 @@ def main():
         shutil.copytree(binaries['baseline'].parent/bundle, runtime/bundle)
         receipt['resource_files'] = resources
         receipt['binaries'] = {name:{'sha256':digest(path), 'bytes':path.stat().st_size} for name,path in binaries.items()}
+        # ABBA observer experiment, before qualification. The legacy top monitor
+        # performs system-wide per-process inspection even with -n 0. Record its
+        # own CPU and independent global ticks, alongside sampler-only windows.
+        for index, mode in enumerate(['legacy-top','native-only','native-only','legacy-top']):
+            label = 'observer-'+str(index)+'-'+mode
+            before = resource.getrusage(resource.RUSAGE_CHILDREN); start = time.monotonic()
+            if mode == 'legacy-top':
+                command = ['top','-l','4','-n','0','-s','1']
+                with (output/(label+'.log')).open('w') as stream:
+                    monitor = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT)
+                    try:
+                        window = cpu.window()
+                        code = monitor.wait(timeout=20)
+                    finally:
+                        if monitor.poll() is None:
+                            monitor.terminate()
+                            monitor.wait(timeout=5)
+                if code: raise ValueError('Observer diagnostic command failed')
+            else:
+                window = cpu.window(); command = None
+                (output/(label+'.log')).write_text(json.dumps(window, indent=2)+'\n')
+            after = resource.getrusage(resource.RUSAGE_CHILDREN)
+            receipt['observer_experiment'].append(dict(name=label, command=command,
+                window=window, elapsed_seconds=time.monotonic()-start,
+                child_cpu_seconds=after.ru_utime+after.ru_stime-before.ru_utime-before.ru_stime,
+                log=label+'.log', log_sha256=digest(output/(label+'.log'))))
+        diagnostics('measurement-start')
         save()
         for workload in ['wide512','frozen-schema']:
             env = os.environ.copy(); env.pop('JCOMP_BENCHMARK_INPUT',None)
             if workload == 'frozen-schema': env['JCOMP_BENCHMARK_INPUT'] = str(fixture)
             for index, name in enumerate(['baseline','candidate','candidate','baseline']):
                 label = workload+'-'+str(index)+'-'+name
+                # Finish executable replacement and receipt I/O before pre-admission.
+                shutil.copy2(binaries[name],runtime/'CompositionBenchmark')
+                if digest(runtime/'CompositionBenchmark') != receipt['binaries'][name]['sha256']:
+                    raise ValueError('Changed runtime binary')
+                before_swap = swap(label+'-before')
                 # A bounded settling period is allowed before a measurement.
                 # Post-run eligibility is checked immediately, with no waiting to hide noise.
                 for attempt in range(12):
                     if host(label+'-before-'+str(attempt)): break
                     time.sleep(3)
                 else: raise Blocked('No 90% pre-run idle window: '+label)
-                shutil.copy2(binaries[name],runtime/'CompositionBenchmark')
-                text = run(label,[str(runtime/'CompositionBenchmark')],env)
-                rows = json.loads(text)
-                if len(rows)!=5 or {row['name']:row['iterations'] for row in rows} != NAMES:
-                    raise ValueError('Changed benchmark discovery/iterations')
-                if any(len(row['seconds'])!=9 or any(v<=0 for v in row['seconds']) for row in rows):
-                    raise ValueError('Missing/nonpositive timing samples')
-                receipt['runs'].append({'workload':workload, 'name':name, 'log':label+'.log', 'samples':rows})
+                log = output/(label+'.log'); start = time.monotonic()
+                with log.open('w') as stream:
+                    result = subprocess.run([str(runtime/'CompositionBenchmark')], cwd=ROOT, env=env,
+                        stdout=stream, stderr=subprocess.STDOUT, timeout=1200)
+                elapsed = time.monotonic()-start
+                # No hashing, JSON decoding, receipt serialization or settling delay
+                # between process exit and the first post-run counter snapshot.
+                post_ok = host(label+'-after')
+                receipt['commands'].append(dict(name=label, command=[str(runtime/'CompositionBenchmark')],
+                    exit_code=result.returncode, seconds=elapsed, log=log.name, log_sha256=digest(log)))
+                after_swap = swap(label+'-after')
+                if result.returncode: raise ValueError('Command failed: '+label)
+                rows = json.loads(log.read_text()); check_samples(rows)
+                receipt['runs'].append({'workload':workload, 'name':name, 'log':log.name, 'samples':rows,
+                    'swap_before':before_swap, 'swap_after':after_swap, 'post_admitted':post_ok})
                 save()
-                if not host(label+'-after'): raise Blocked('Post-run idle below 90%: '+label)
+                if not post_ok:
+                    diagnostics(label+'-failed-post')
+                    raise Blocked('Post-run idle below 90%: '+label)
+                if before_swap != after_swap: raise Blocked('Paging during measurement: '+label)
         comparison = []
         for workload in ['wide512','frozen-schema']:
             for operation in NAMES:
@@ -126,7 +190,7 @@ def main():
                     raise ValueError('Nondeterministic accounting: '+operation)
                 base_count = next(iter(counters['baseline'])); candidate_count = next(iter(counters['candidate']))
                 if operation == 'composition-document':
-                    if candidate_count != (base_count[0]+50, max(base_count[1], base_count[2]+424), base_count[2]+424, base_count[3]):
+                    if candidate_count != completion_counters(base_count):
                         raise ValueError('Unexpected composition receipt delta')
                 elif counters['baseline'] != counters['candidate']:
                     raise ValueError('Changed old-API work/retention/input identity: '+operation)
@@ -143,6 +207,10 @@ def main():
         receipt.update(status='blocked', error=str(error))
     except (OSError,ValueError,subprocess.SubprocessError) as error:
         receipt.update(status='failed', error=str(error))
+    finally:
+        if cpu is not None:
+            try: cpu.close()
+            except OSError as error: receipt.update(status='failed', error=str(error))
     receipt['source_inputs_unchanged'] = source_identity() == inputs
     if not receipt['source_inputs_unchanged']: receipt.update(status='failed',error='Source changed during measurement')
     receipt['finished_utc'] = datetime.datetime.now(datetime.timezone.utc).isoformat(); save()

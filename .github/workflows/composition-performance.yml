@@ -4,6 +4,8 @@ on:
     paths:
       - '.github/workflows/composition-performance.yml'
       - 'Scripts/qualify_composition_performance.py'
+      - 'Scripts/composition_host.py'
+      - 'Scripts/test_composition_performance.py'
       - 'Sources/JSON/Limits/JSONCompositionScope.swift'
       - 'Sources/JSON/Limits/JSONWorkMeter.swift'
       - 'Tools/CompositionQualification/Sources/CompositionBenchmark/**'

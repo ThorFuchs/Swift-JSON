@@ -90,6 +90,8 @@ Every process requires at least 90% idle before and immediately after timing.
 A bounded settling period precedes runs; a failed post-run probe invalidates the
 controlled result. The 10% review trigger is unchanged. Exit 2 means blocked and
 exit 3 requires review; neither is a performance pass or automatic exception.
+The [observer investigation and replay contract](Performance.md) specifies the
+lightweight native CPU sampler, raw-counter evidence and paging checks.
 Logical retention and owned work remain distinct from RSS and caller instructions.
 The Composition performance workflow executes this exact harness when its benchmark
 files change in a PR, or through optional manual dispatch after default-branch
