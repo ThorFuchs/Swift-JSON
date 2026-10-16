@@ -1,3 +1,12 @@
+# N1 candidate WASI scope
+
+The opt-in JSONNavigation product candidate keeps the same full-language Swift6.4
+wasm32-unknown-wasip1 scope and empty dependency graph. Exact discovery is481
+functions/288 parameters, including39 Navigation functions, with all49 core cap
+outcomes and existing independent policies. CLI runtime remains a separate scope.
+Actual source-bound execution receipts are required; the historical stage counts
+below are preserved, not attributed to this candidate.
+
 # WASI command support
 
 This additive local branch supports the full-language Swift 6.4 SDK target

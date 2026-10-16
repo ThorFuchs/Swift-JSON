@@ -1,0 +1,15 @@
+import JSON
+
+var limits = JSONLimits.balanced
+limits[.workUnits] = 1
+let report = try JSON.withComposition(limits: limits) { outer in
+    let nested = try JSON.withComposition { inner in
+        swap(&outer, &inner)
+        try outer.chargeExternalWork(100)
+        swap(&outer, &inner)
+        return 42
+    }
+    print("innerWork=\(nested.statistics[.workUnits])")
+    return nested.result
+}
+print("result=\(report.result) outerWork=\(report.statistics[.workUnits]) outerLimit=1")

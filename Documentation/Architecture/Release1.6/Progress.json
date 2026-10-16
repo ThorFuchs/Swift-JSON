@@ -6,7 +6,7 @@
   "initial_release_base": "8a5cf73dfe9b674f7c635f5f6d21a7051d66bb51",
   "implementation_base": "507dbf9ad4b545a5d60d7d6acf6b814795ec3099",
   "packet_sha256": "f67ec2f5d0bfd223f54a3577f93c03951a7992ecab524910ba44f6bc8621c4a1",
-  "status": "G8 preparation: hosted Linux ASan identified process-lifetime synthetic corpus allocations; caller-lifetime repair awaits exact-head hosted qualification",
+  "status": "G8 combined-source reconciliation with main; fresh qualification in progress",
   "release_ready": false,
   "gates": {
     "S3-G0": "passed_with_documented_fixture_amendment",
@@ -16,7 +16,7 @@
     "S3-G4": "passed_native_increment",
     "S3-G5": "passed_native_increment",
     "S3-G6": "passed_native_increment",
-    "S3-G7": "reopened_for_corpus_lifetime_qualification",
+    "S3-G7": "reopened_for_combined_source_qualification",
     "S3-G8": "review_preparation_in_progress"
   },
   "observed": {
@@ -46,10 +46,9 @@
     "core_metrics": 49,
     "scope": "Required counts on current main, not a fresh S3 qualification claim"
   },
-  "next_gate": "Finish exact-head Linux/native safety after corpus lifetime repair, then integrate current-main composition/navigation and qualify combined-source G8 review",
+  "next_gate": "Combined-source native, safety, docs, archive, Linux, WASI and G8 review",
   "limitations": [
-    "Initial hosted Linux safety failed with 129 bytes in four stored synthetic-corpus allocations; replacement caller-lifetime getter requires refreshed qualification",
-    "Main has advanced through composition #35 and navigation #38; twelve metadata/harness/derived-identity conflicts remain to integrate before combined-source review",
+    "Combined composition/Navigation/S3 source requires refreshed qualification; standalone passes are preserved separately",
     "G8 remains open; no release-ready or merge-ready claim",
     "General constraint solving, boundary profile and advanced/dynamic construction remain explicitly incomplete",
     "Logical retention is not RSS; no controlled performance or caller instruction guarantee"
@@ -73,15 +72,15 @@
     "focused_safety_lane_commands": 3
   },
   "current_harness_requirements": {
-    "native_root_functions": 644,
-    "linux_root_functions": 628,
-    "wasi_root_functions": 540,
+    "native_root_functions": 695,
+    "linux_root_functions": 679,
+    "wasi_root_functions": 591,
     "parameter_invocations": 325,
     "wasi_parameter_invocations": 288,
-    "native_shared_state_functions": 45,
-    "linux_shared_state_functions": 44,
+    "native_shared_state_functions": 47,
+    "linux_shared_state_functions": 46,
     "core_metrics": 49,
-    "scope": "Exact integrated G7 inventories; Linux requirements do not imply completed Linux qualification"
+    "scope": "Combined-source exact requirements; execution results remain source-bound"
   },
   "g1_implementation_commit": "6c19580dec99c9363bb4b4d1611af8b8a2bab266",
   "g1_qualification_record": "Documentation/Architecture/Release1.6/G1Qualification.md",
@@ -355,5 +354,18 @@
   },
   "g8_initial_head": "c6291148f9ba31b48b9a879b0eb004087f567c96",
   "g8_lifetime_record": "Documentation/Architecture/Release1.6/G8CorpusLifetime.md",
-  "g8_initial_linux_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38822602731"
+  "g8_initial_linux_run": "https://github.com/ThorFuchs/Swift-JSON/actions/runs/38822602731",
+  "history": [
+    {
+      "gate": "S3-G8-corpus-lifetime",
+      "source": "8d0e83037cb1e82b33e1dec862123c890b9b9bc7",
+      "status": "passed_standalone_native_linux_safety_docs_archive",
+      "native_run": 38824896580,
+      "linux_run": 38824893590,
+      "limitations": [
+        "These runs do not qualify the later composition/Navigation combination; preserved materialized G8 preparation report provides raw receipts."
+      ]
+    }
+  ],
+  "g8_integrated_main": "7d72c8825982550f0ee87218136fda12d8bae13b"
 }

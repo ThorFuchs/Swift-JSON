@@ -1,0 +1,19 @@
+{
+  "origin": "Maintainer-provided Structural Intelligence S1 synthetic fixtures",
+  "packet_sha256": "d758f75d84271a97da515bf7b7ef70de7a61e91fdf949a511fe0fca2708156f8",
+  "adapted_algorithm": false,
+  "fixtures": [
+    {
+      "path": "paths.json",
+      "sha256": "57ad0216911c5c581c6370500ea9564c6b0f906f4fb01c3e60d8789c4bf0ce26"
+    },
+    {
+      "path": "structures.json",
+      "sha256": "756312755ad347361be8d7330e213c71c9c0e3faf4b4b1d9cdfa523cb0681945"
+    },
+    {
+      "path": "source-revisions.json",
+      "sha256": "a28438f83a85c40ddcc69b174f517403ba6eb8dc94f3adf2bfadcd418878fe81"
+    }
+  ]
+}

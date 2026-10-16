@@ -6,7 +6,7 @@ behavioral contracts and native qualification procedure.
 
 ## API references and guided reading
 
-The seven native DocC catalogs combine inline API documentation with focused guides:
+The eight native DocC catalogs combine inline API documentation with focused guides:
 
 | Product | Catalog source | Guide |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ The seven native DocC catalogs combine inline API documentation with focused gui
 | JSONBridges | [JSONBridges](../Sources/JSONBridges/Documentation.docc/JSONBridges.md) | [Opt-in native conversions](../Sources/JSONBridges/Documentation.docc/NumericFidelity.md) |
 | JSONStreaming | [JSONStreaming](../Sources/JSONStreaming/Documentation.docc/JSONStreaming.md) | [Completion and backpressure](../Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md) |
 | JSONHTML | [JSONHTML](../Sources/JSONHTML/Documentation.docc/JSONHTML.md) | [Formatted rendering](../Sources/JSONHTML/Documentation.docc/FormattedRendering.md) |
-| JSONBridges | [JSONBridges](../Sources/JSONBridges/Documentation.docc/JSONBridges.md) | [Numeric fidelity](../Sources/JSONBridges/Documentation.docc/NumericFidelity.md) |
+| JSONNavigation | [JSONNavigation](../Sources/JSONNavigation/Documentation.docc/JSONNavigation.md) | [Exact traversal](../Sources/JSONNavigation/Documentation.docc/Traversal.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
 
 [Browse the public documentation](https://thorfuchs.github.io/Swift-JSON/) or
@@ -45,6 +45,8 @@ Online references track main; tagged releases include matching compiled catalogu
 
 - [Seven-library compiled example](../Examples/Consumer/README.md)
 - [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
+- [Experimental N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md) and [gated traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md); JSONNavigation is not a released product.
+
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)
 - [Native CI lanes and receipts](CI/README.md)

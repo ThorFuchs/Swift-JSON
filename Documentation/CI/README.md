@@ -1,9 +1,61 @@
+# Combined S3 / composition / Navigation qualification
+
+The current inventory requires 695 Mac / 679 Linux / 591 WASI functions,
+325 Mac/Linux and 288 WASI parameter invocations, 47 Mac / 46 Linux shared-state
+functions, eight library DocC catalogs, nine products and all 49 unchanged finite
+cap probes. Composition’s external five-function suite, eight classified capacity
+cells and 11 ownership rejections remain additive. Native / native also executes
+the focused composition lane; both Linux architecture jobs retain it.
+The S3 public/ownership/matrix/lifetime gates and Navigation external consumer are
+all retained. Counts specify requirements; source-bound receipts establish passes.
+See [G8 reconciliation](../Architecture/Release1.6/G8Integration.md).
+
+The following sections preserve their original increment histories.
+
 # Native CI
 
+## Reconciled Navigation and composition increment
+
+Current source retains composition from main and adds the opt-in Navigation
+product. The discovery contract requires 597 native functions, 581 Linux functions
+and 493 WASI functions, including all 39 Navigation and 12 composition functions.
+Parameterized inventories remain 325 native/Linux and 288 WASI. Shared-state
+sanitizer expectations are 43 native and 42 Linux. All 126 restored maintenance
+identities and all 49 public capacity probes remain mandatory. Full ASan uses the
+current root inventory. Native has 33 commands, Linux 29; the separate composition
+lane retains its nine commands, five external functions, eight capacity cells and
+11 negative compiler cases. Navigation's focused lane retains five commands.
+Seven public library DocC catalogues include Navigation. These are acceptance
+expectations; source-bound receipts establish actual execution outcomes.
+
+The following dated sections retain their original source context.
+
+## N1 product-candidate increment
+
+Promotion adds the JSONNavigation library product after a 56-declaration audit,
+with a real external SwiftPM consumer in Debug/Release. Two new P07 tests preserve
+source-admission-first precedence. Focused discovery is now 39 functions; all37
+N1 identities remain. Exact roots are 585 native/569 Linux and 481 WASI, with the
+same325/288 parameter inventories and42/41 shared functions. Seven public DocC
+catalogues include Navigation; private borrowed interfaces are never public API.
+Actual receipts establish passes. Earlier stage counts below retain their source.
+
+## Experimental N1 branch
+
+The Structural Intelligence branch adds exactly 37 Navigation functions and one
+shared-root safety function, keeping every existing identity/case. Root expectations
+are 583 native/567 Linux with 325 parameter invocations; TSan is 42/41. WASI's
+separate core scope is 479 functions/288 parameters. No new public product is exposed.
+`--lane navigation` checks focused discovery, Debug/Release, explicit strict-memory
+compilation and the external compiler/consumer/experimental DocC audit. Native/Linux
+include that consumer alongside their existing gates; all 49 core cap outcomes and
+126 restored maintenance identities remain required. The following earlier counts
+retain their original source context; actual source-bound receipts establish passes.
+
 This main-based forward-port retains seven products and restores the entire
-1.2.1 regression inventory. Current native root discovery is 546 functions and
-325 parameter invocations; Linux is 530/325. Full ASan uses the same roots;
-TSan checks 41 native or 40 Linux functions. QA requires the original 145-function
+1.2.1 regression inventory. The experimental composition increment adds 12 functions; current native root discovery is 558 functions and
+325 parameter invocations; Linux is 542/325. Full ASan uses the same roots;
+TSan checks 42 native or 41 Linux functions. QA requires the original 145-function
 maintenance subset. Exact per-module counts are in
 [the discovery contract](../Qualification/TestDiscovery.json); parameter-function
 identities remain independently checked from Swift Testing events. All 49 public
@@ -166,7 +218,7 @@ historical G6 requirements (96 generator/515 full-root/19 sharing functions).
 
 ## S3 G7 integrated qualification
 
-The current exact discovery contract is 644 Mac / 628 Linux / 540 WASI functions,
+The pre-composition S3 G7 exact discovery contract was 644 Mac / 628 Linux / 540 WASI functions,
 325 Mac/Linux and 288 WASI parameter invocations, 45 Mac / 44 Linux shared-state
 functions, and all 49 core cap probes. JSONSchemaExamples contributes 98 functions
 and four sharing functions. All 126 restored maintenance identities remain required.
@@ -184,3 +236,19 @@ WASI and the recorded Apple scopes. Linux preflight and Release build passed, bu
 the guest was interrupted for disk pressure before full tests/safety. Those gates
 remain open; platform SDK compilation, simulator/device consumers and WASI do not
 substitute for Linux results. See the [G7 record](../Architecture/Release1.6/G7Qualification.md).
+
+## Experimental composition lane
+
+`python3 Scripts/ci.py --lane composition` executes 12 composition functions in
+Debug and Release, a distinct-package JSON/JSONSchema consumer in both modes,
+five external reference-load functions in Debug/Release/ASan, eight separately classified scale cells,
+and 11 compiler-negative ownership fixtures. It supplements the full native,
+safety and docs lanes. On a CLT installation that does not discover TestingMacros,
+set `SWIFT_JSON_TESTING_PLUGIN_PATH` to the installed testing plugin directory;
+CI records the explicit `-plugin-path` arguments and preserves the original failure.
+No language, SDK, platform, discovery or sanitizer baseline changes.
+
+The focused composition lane also runs on the Linux architecture jobs and Native / native.
+Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
+The qualification harness now has 15 regression functions, retaining its original 14.
+See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.

@@ -17,6 +17,11 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
+This branch combines main’s bounded composition and opt-in structural traversal with
+the proposed JSONSchemaExamples product: eight libraries and the CLI.
+Release remains human-gated; the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
+describes its many-node scope, exact locations, finite accounting and coverage.
+
 Published **1.5.0** provides six libraries and the CLI. This development branch
 retains main’s unreleased structured HTML previews and forward-ports the 1.5.1
 maintenance repairs: best-effort schema diagnostics, the complete 1.2.1 regression
@@ -73,6 +78,7 @@ Choose the products your application needs:
 | **JSONHTML** | Exact HTML and immutable exports since 1.3.0; structured forms/cards and bounded previews on unreleased main |
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
+| **JSONNavigation** | Unreleased candidate: exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -99,7 +105,8 @@ The separately qualified WASI core scope targets full-language Swift 6.4
 [platform contract](Documentation/Architecture/WebAssembly.md) documents resource
 packaging, execution hosts, qualification scope and safety limitations. Browser
 and Embedded Swift hosting require separate qualification. JSONSchemaExamples has native
-G1–G6 evidence on this branch; its Linux/WASI/mobile release gates remain open.
+source-bound G1–G7 and caller-lifetime repair evidence. Fresh combined-source
+qualification is tracked in [G8 integration](Documentation/Architecture/Release1.6/G8Integration.md).
 
 ## Installation
 
@@ -497,11 +504,11 @@ It includes unreleased APIs. For the exact released 1.5.0 interface, use its
 [tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.5.0/Sources)
 or its [compiled DocC asset](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.5.0).
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The seven DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The eight DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all six catalogs on a supported native host:
+Build all eight candidate catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -574,7 +581,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-The package has six libraries plus the executable, with no external root
+The development package has eight libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
@@ -609,3 +616,15 @@ cumulative reports. It makes no requests and never rewrites optional properties,
 Incompatibility exits1; operational errors remain errors. Apple schema/model bridges are separate.
 See the [provider contract](Documentation/Architecture/Release1.4/Providers.md) and
 [compiled public consumer](Tools/CLIQualification/Sources/ProviderConsumer/Main.swift).
+
+## Exact structural navigation (unreleased candidate)
+
+`JSONNavigation` adds many-node DFS preorder over a captured canonical document,
+with insertion-order object members, increasing array indices and exact typed
+locations. Physical and virtual scopes, explicit overlap/stop/pruning policies,
+bounded metadata collection and coverage share one finite cumulative core budget.
+Add the JSONNavigation product and import it explicitly. Existing one-node reads
+remain in JSON. Full source admission precedes traversal option validation.
+See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
+and [real external SwiftPM consumer](Tools/NavigationQualification). This branch
+prepares nine products; published 1.5.0 and its seven-product contract are unchanged.

@@ -9,11 +9,12 @@ separate from the dependency-free library. Native lanes fail on unsupported host
 | `python3 Scripts/preflight.py` | Actual native OS/compiler/SDK receipt |
 | `python3 Scripts/ci.py --lane native` | Manifests, builds, Swift Testing, consumers and suites |
 | `python3 Scripts/ci.py --lane safety` | Address/Thread Sanitizer and strict memory safety |
-| `python3 Scripts/ci.py --lane linux` | Actual Linux preflight, all eight products, exact root/cap/corpus/consumer counts |
+| `python3 Scripts/ci.py --lane navigation` | N1 product exact discovery, Debug/Release, strict-memory and real external SwiftPM consumer/compiler/DocC proof; no release action |
+| `python3 Scripts/ci.py --lane linux` | Actual Linux preflight, all nine products, exact root/cap/corpus/consumer counts |
 | `python3 Scripts/ci.py --lane linux-safety` | Linux Address/Thread Sanitizer and strict memory safety |
 | `python3 Scripts/ci.py --lane wasm` | Matched Swift 6.4 WASI debug/release, exact root/corpus/cap/consumer counts, two-host public parity and structured resource failures |
 | `python3 Scripts/qualify_linux_reproduction.py --output PATH` | Actual source archive, byte-equal rebuild, clean extraction, build/tests and public consumer |
-| `python3 Scripts/ci.py --lane docs` | Seven DocC catalogs, authored API/parameter coverage, executed README examples and verified static Pages site |
+| `python3 Scripts/ci.py --lane docs` | Eight DocC catalogs, authored API/parameter coverage, executed README examples and verified static Pages site |
 | `python3 Scripts/ci.py --lane schema-examples` | G1 focused native tests, exact optional-product graph and actual public consumer/access-control probes |
 | `python3 Scripts/ci.py --lane schema-examples-safety` | G1 Release ASan, shared-generator TSan and strict memory-safety compilation; supplements full safety |
 | `python3 Scripts/build_documentation_site.py` | Transform already-qualified DocC archives and verify static routes/assets |

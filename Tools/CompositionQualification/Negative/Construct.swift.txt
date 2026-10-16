@@ -1,0 +1,2 @@
+import JSON
+func rejected() throws { _ = try JSONCompositionScope(limits: .balanced) }

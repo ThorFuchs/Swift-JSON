@@ -1,0 +1,3 @@
+import JSON
+func copy<T>(_ value: T) {}
+func rejected(_ scope: inout JSONCompositionScope) { copy(scope) }
