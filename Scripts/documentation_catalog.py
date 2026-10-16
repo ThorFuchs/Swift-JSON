@@ -7,7 +7,7 @@ import re
 import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PRODUCTS = ('JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation')
+PRODUCTS = ('JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection')
 
 
 def public_symbols(graph_dir):

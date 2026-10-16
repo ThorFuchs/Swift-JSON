@@ -130,6 +130,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_distribution.py', '--output', str(output / 'distribution')],
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
             ['python3', '-B', 'Scripts/qualify_navigation.py', '--output', str(output / 'navigation')],
+            ['python3', '-B', 'Scripts/qualify_inspection.py', '--output', str(output / 'inspection-consumer')],
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
@@ -224,8 +225,8 @@ def check_result(command, code, log, events=None):
         passed = data['observed'] == data['passed'] == expected and data['failed'] == data['policy'] == data['blocked'] == 0
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
-        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
-        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation']}, **{'swift-json': ['JSONCLI']})
+        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONInspection', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
+        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection']}, **{'swift-json': ['JSONCLI']})
         targets = {t['name']: t for t in d['targets']}
         passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigation']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigationTests']['dependencies'] == [{'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}] and targets['JSONInspection']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONNavigation', None]}] and targets['JSONInspectionTests']['dependencies'] == [{'byName': ['JSONInspection', None]}, {'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
     if command == ['swift', 'package', 'show-dependencies', '--format', 'json'] and passed:
@@ -242,6 +243,8 @@ def check_result(command, code, log, events=None):
         passed = passed and 'ERGONOMICS_COMPILER passed commands=8 guide_fences=3' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation_reducer.py']:
         passed = passed and 'REDUCER_CODEGEN passed positive=2 negative=20' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_inspection.py']:
+        passed = passed and 'INSPECTION_COMPILER passed configurations=2 consumer_cases=12 address_cases=12 guide_fences=3 negative_probes=8' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation.py']:
         passed = passed and 'NAVIGATION_COMPILER passed configurations=2 consumer_cases=18 negative_probes=8' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/verify_html_assets.py']:

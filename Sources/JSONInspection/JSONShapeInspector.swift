@@ -2,8 +2,8 @@
 import JSON
 import JSONNavigation
 
-/// Experimental read-only evidence inspection over the canonical traversal ledger.
-/// This target has no public SwiftPM product. Each invocation admits the entire
+/// Read-only array evidence over the canonical traversal ledger.
+/// Import the opt-in JSONInspection product. Each invocation admits the entire
 /// captured source once and charges selection, classification and returned storage
 /// cumulatively. Logical retained bytes describe package policy, not process RSS.
 public struct JSONShapeInspector: Sendable {

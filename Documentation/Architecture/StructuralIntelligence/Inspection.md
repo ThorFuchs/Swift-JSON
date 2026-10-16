@@ -1,9 +1,10 @@
-# Experimental array evidence
+# Array evidence public-product candidate
 
-JSONInspection is a read-only target with **no SwiftPM product**. It depends on
-JSON and JSONNavigation. Its declarations are API candidates, not a stable
-release or a table/schema admission interface. Public Navigation remains opt-in
-and unchanged; inspection is isolated from its promotion branch.
+JSONInspection is an opt-in library depending on JSON and JSONNavigation. Core
+never re-exports it. This isolated promotion candidate is unmerged and unreleased.
+It reports observations rather than table/schema admission. Navigation public
+declarations and semantics are unchanged. See [public surface review](N2Promotion.md)
+and the [DocC guide](../../../Sources/JSONInspection/Documentation.docc/ArrayEvidence.md).
 
 `JSONShapeInspector(document:limits:)` captures one canonical source.
 `inspectArray(at:sampling:maximumColumns:includeSourceSpan:)` selects an existing

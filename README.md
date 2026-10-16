@@ -18,7 +18,9 @@ semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
 This feature branch also contains an [opt-in structural traversal product candidate](Documentation/Architecture/StructuralIntelligence/N1Promotion.md).
-It preserves the seven released products and proposes JSONNavigation as the eighth.
+It retains Navigation from protected main and proposes JSONInspection as the ninth
+product (eight libraries and the CLI). Inspection reports observed array evidence;
+its public-product candidate remains unmerged and unreleased.
 Merge and release remain human-gated; the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 describes its many-node scope, exact locations, finite accounting and coverage.
 
@@ -77,7 +79,8 @@ Choose the products your application needs:
 | **JSONHTML** | Exact HTML and immutable exports since 1.3.0; structured forms/cards and bounded previews on unreleased main |
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
-| **JSONNavigation** | Unreleased candidate: exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage |
+| **JSONNavigation** | Exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage |
+| **JSONInspection** | Unreleased candidate: observed array kinds, exact first-seen columns and explicit complete/prefix row coverage |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -457,7 +460,7 @@ The [documentation index](Documentation/README.md) links the behavior contracts.
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all seven candidate catalogs on a supported native host:
+Build all eight candidate catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -576,4 +579,29 @@ Add the JSONNavigation product and import it explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 and [real external SwiftPM consumer](Tools/NavigationQualification). This branch
-prepares eight products; published 1.5.0 and its seven-product contract are unchanged.
+prepares nine products; published 1.5.0 and its seven-product contract are unchanged.
+
+
+## Inspect array evidence
+
+Add the opt-in JSONInspection product and import it explicitly. Inspect a complete
+array or a deterministic prefix without changing its exact values. Column counts
+use observed object rows: present includes null, while missing excludes nonobject
+rows. Prefix observations make no statement about an unseen suffix.
+
+```swift
+import JSONInspection
+
+let shapeSource = try JSON.parse(#"[{"name":"Ada","note":null},{"name":"Grace"},false]"#)
+let shapeReport = try JSONShapeInspector(document: JSONDocument(root: shapeSource))
+    .inspectArray(sampling: .prefix(maximumRows: 2))
+precondition(shapeReport.result.rowCoverage == .prefix(examined: 2, total: 3))
+precondition(shapeReport.result.firstSeenColumns[1].explicitNull == 1)
+precondition(shapeReport.result.firstSeenColumns[1].missing == 1)
+precondition(shapeReport.statistics[.workUnits] > 0)
+```
+
+Full source admission still includes the unobserved suffix. Complete row evidence
+can have restricted descendant traversal; structural rectangular width is not
+numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
+[public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).

@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "JSONHTML", targets: ["JSONHTML"]),
         .library(name: "JSONBridges", targets: ["JSONBridges"]),
         .library(name: "JSONNavigation", targets: ["JSONNavigation"]),
+        .library(name: "JSONInspection", targets: ["JSONInspection"]),
         .executable(name: "swift-json", targets: ["JSONCLI"])
     ],
     targets: [

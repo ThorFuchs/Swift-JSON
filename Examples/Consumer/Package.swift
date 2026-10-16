@@ -13,7 +13,8 @@ let package = Package(
         .product(name: "JSONStreaming", package: "Swift-JSON"),
         .product(name: "JSONPatch", package: "Swift-JSON"),
         .product(name: "JSONHTML", package: "Swift-JSON"),
-        .product(name: "JSONBridges", package: "Swift-JSON")
+        .product(name: "JSONBridges", package: "Swift-JSON"),
+        .product(name: "JSONInspection", package: "Swift-JSON")
     ])],
     swiftLanguageModes: [.v6]
 )
