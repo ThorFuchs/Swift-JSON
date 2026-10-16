@@ -36,6 +36,13 @@ mutate a shared cache. Generic text subtype negotiation belongs to the system;
 select a format explicitly when recipient choice matters. CoreTransferable wraps
 some native parser errors; use JSONParser for structured diagnostics.
 
+On the unreleased lower-deployment branch, the conformance is available at the
+package's macOS 14/iOS 17 deployment targets. Apple's separate programmatic
+`importing`, `exported(as:)` and content-type discovery conveniences require
+macOS 15.2/iOS 18.2; guard calls to those SDK helpers on earlier systems. These
+helper requirements do not raise the minimum for pure prepared bytes or the
+transfer conformance itself.
+
 RTF uses the same strict syntax tokens and cumulative meter as other formats.
 Its independently decoded body equals pretty JSON, including quoted string roots,
 LF, literal indentation tabs, insertion order, exact number lexemes and decoded

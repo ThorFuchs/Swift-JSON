@@ -7,6 +7,7 @@ tag retains macOS/iOS/iPadOS 27 minimums. No released tag or source asset is cha
 | --- | --- |
 | Eight public libraries, including pure HTML/RTF and exact persistence | macOS 14 / iOS 17 / iPadOS 17 |
 | swift-json executable | macOS 14; mobile CLI hosting is not qualified |
+| SDK programmatic Transferable import/export convenience methods | macOS 15.2 / iOS 18.2 / iPadOS 18.2 |
 | Explicit native PDF preparation | macOS 26 / iOS 26 / iPadOS 26 |
 | SwiftData `@Attribute(.codable)` example | macOS 27 / iOS 27 / iPadOS 27 |
 | Native qualification tools/host | Swift tools/compiler 6.4+, language 6, macOS/SDK 27+ |
@@ -16,7 +17,7 @@ minimums, not a claim that no older OS could compile any subset. Build-tool host
 SDK version and deployment version are separate: a current SDK can produce a
 binary for an older deployment target. Compilation on a new OS does not establish
 behavior on the older OS. Swift's [platform support](https://www.swift.org/platform-support/)
-describes that distinction. The inspected [Vapor 5 beta.2 manifest](https://github.com/vapor/vapor/blob/5.0.0-beta.2/Package.swift)
+describes that distinction. The inspected [Vapor 5 beta.4 manifest](https://github.com/vapor/vapor/blob/5.0.0-beta.4/Package.swift)
 declares Swift 6.4 and macOS/iOS 26.2; no Vapor dependency is introduced here.
 
 ## Actual availability constraints
@@ -38,6 +39,13 @@ The `.codable` SwiftData attribute really requires OS 27 in the inspected SDK.
 The core `JSONCodablePayload` has no SwiftData import or OS 27 dependency. Int128
 behavior tests retain their actual macOS 15/iOS 18 type availability; all their
 assertions still run on the native qualification host.
+
+Apple's programmatic `Transferable` import/export discovery and byte helpers
+require macOS 15.2/iOS 18.2. Their two behavior tests carry that SDK availability;
+the conformance and NSItemProvider tests are not raised to that floor. Test-only
+cancellation/progress locks use OSAllocatedUnfairLock on Apple so the three owned
+work/regex assertions remain runnable at the declared candidate minimum; Linux
+retains its existing synchronization implementation.
 
 ## Qualification and release gate
 

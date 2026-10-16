@@ -182,6 +182,7 @@ private var markdownTransferType: UTType {
     if #available(macOS 27.0, iOS 27.0, *) { return .markdown }
     return UTType(importedAs: "net.daringfireball.markdown", conformingTo: .utf8PlainText)
 }
+@available(macOS 15.2, iOS 18.2, *)
 @Test func appleTransferTypesAndSelectedBytesMatchAvailableArtifacts() async throws {
     #expect(markdownTransferType.identifier == "net.daringfireball.markdown")
     #expect(markdownTransferType.conforms(to: .utf8PlainText))
@@ -228,6 +229,7 @@ private var markdownTransferType: UTType {
     #expect(provider.suggestedName == "Selected.html")
 }
 
+@available(macOS 15.2, iOS 18.2, *)
 @Test func appleNativeJSONImportIsStrictAndPreservesExactBytes() async throws {
     let input = Data(#"{"é":9007199254740993,"é":-0.00e+2}"#.utf8)
     let value = try await JSON(importing: input, contentType: .json)
