@@ -51,6 +51,12 @@ class HarnessTests(unittest.TestCase):
             self.assertFalse(check_result(command, 0, partial)[0])
         native = commands('native', pathlib.Path(__file__).resolve().parents[1] / '.build/ci/native')
         self.assertEqual(sum(c[:3] == command for c in native), 1)
+        linux = commands('linux', pathlib.Path(__file__).resolve().parents[1] / '.build/ci/linux')
+        self.assertEqual(len(native), 39)
+        self.assertEqual(len(linux), 34)
+        self.assertFalse(any(c[:3] == command for c in linux))
+        self.assertEqual(sum('Scripts/qualification_watchdog.py' in c and 'Tools/Qualification' in c for c in linux), 1)
+        self.assertEqual(linux[-1][:3], ['python3', '-B', 'Scripts/qualify_linux_reproduction.py'])
 
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
         command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']

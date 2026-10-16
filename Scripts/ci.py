@@ -96,7 +96,8 @@ def commands(lane, output):
         # Root behavior/corpora remain required. SwiftData and Apple SDK/lifetime
         # probes are separate Apple acceptance; they never become Linux passes.
         return [c for c in commands('native', ROOT / output)
-                if not any(x in c for x in ['Tools/MobileQualification', '--mode', 'Scripts/qualify_cli_ownership.py'])] + [
+                if not any(x in c for x in ['Tools/MobileQualification', '--mode', 'Scripts/qualify_cli_ownership.py',
+                                           'Scripts/qualify_apple_deployment.py'])] + [
             ['python3', '-B', 'Scripts/qualify_linux_reproduction.py', '--output', str(output / 'reproduction')]]
     if lane == 'linux-safety':
         # Every behavior case uses Swift Testing. Do not start the generated
