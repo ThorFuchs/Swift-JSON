@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 import Testing
+#if canImport(os)
+import os
+#else
 import Synchronization
+#endif
 #if canImport(Dispatch)
 import Dispatch
 #endif
@@ -86,7 +90,11 @@ func invalidCancellationConfiguration(quantum: UInt64) {
 
 #if canImport(Dispatch)
 private final class OwnedCancellationProgress: Sendable {
+    #if canImport(os)
+    let ready = OSAllocatedUnfairLock(initialState: false)
+    #else
     let ready = Mutex(false)
+    #endif
     let resume = DispatchSemaphore(value: 0)
     func checkpoint(_ work: UInt64) {
         guard work >= 4096 else { return }

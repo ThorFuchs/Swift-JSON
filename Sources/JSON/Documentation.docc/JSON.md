@@ -1,6 +1,6 @@
 # ``JSON``
 
-Exact values and strict, bounded UTF-8 coding on macOS 27 with Swift 6.4.
+Exact values and strict, bounded UTF-8 coding with Swift 6.4.
 
 ``JSONNumber`` stores a sign, decimal digits and a bounded decimal exponent.
 Equivalent decimal spellings compare mathematically; integers beyond binary64

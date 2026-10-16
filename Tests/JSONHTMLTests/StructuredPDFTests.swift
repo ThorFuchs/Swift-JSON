@@ -11,6 +11,7 @@ import Testing
         import AppKit
     #endif
     @Suite(.serialized) struct StructuredApplePDFTests {
+        @available(macOS 26.0, iOS 26.0, *)
         @Test @MainActor func structuredPDFPrintCaptureKeepsMediaMathFullStringsAndTail()
             async throws
         {
@@ -58,6 +59,7 @@ import Testing
                 #expect(report.operation[.nodes] == 0)
             }
         }
+        @available(macOS 26.0, iOS 26.0, *)
         @Test @MainActor func structuredPDFCapsAndFailedRasterDecodeInstallNothing() async throws {
             #if canImport(AppKit)
                 _ = NSApplication.shared

@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Swift-JSON",
-    platforms: [.macOS("27.0"), .iOS("27.0")],
+    platforms: [.macOS("14.0"), .iOS("17.0")],
     products: [
         .library(name: "JSON", targets: ["JSON"]),
         .library(name: "JSONSchema", targets: ["JSONSchema"]),

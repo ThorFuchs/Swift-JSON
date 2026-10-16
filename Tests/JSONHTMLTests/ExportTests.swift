@@ -176,13 +176,22 @@ import UniformTypeIdentifiers
 }
 
 #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
+// The SDK constant remains the independent oracle on OS 27. Earlier systems
+// use its documented exact identifier and UTF-8 plain-text conformance.
+private var markdownTransferType: UTType {
+    if #available(macOS 27.0, iOS 27.0, *) { return .markdown }
+    return UTType(importedAs: "net.daringfireball.markdown", conformingTo: .utf8PlainText)
+}
+@available(macOS 15.2, iOS 18.2, *)
 @Test func appleTransferTypesAndSelectedBytesMatchAvailableArtifacts() async throws {
-    #expect(JSON.exportedContentTypes() == [.json, .html, .utf8PlainText, .markdown])
+    #expect(markdownTransferType.identifier == "net.daringfireball.markdown")
+    #expect(markdownTransferType.conforms(to: .utf8PlainText))
+    #expect(JSON.exportedContentTypes() == [.json, .html, .utf8PlainText, markdownTransferType])
     #expect(JSON.importedContentTypes() == [.json])
     #expect(JSONExportDocument.importedContentTypes().isEmpty)
     let root: JSON = .array([.null])
     let item = try JSONExportDocument.prepare(root, options: .init(formats: [.json, .html, .plainText, .markdown, .rtf]))
-    for (format, type) in [(JSONExportFormat.json, UTType.json), (.plainText, .utf8PlainText), (.markdown, .markdown), (.html, .html)] {
+    for (format, type) in [(JSONExportFormat.json, UTType.json), (.plainText, .utf8PlainText), (.markdown, markdownTransferType), (.html, .html)] {
         let selected = try item.selecting([format])
         #expect(selected.exportedContentTypes() == [type])
         #expect(try await selected.exported(as: type) == item.data(for: format))
@@ -197,7 +206,7 @@ import UniformTypeIdentifiers
     catch { #expect(!String(describing: error).isEmpty) }
     // The guard rejects hidden candidates; generic text matching then reaches Markdown.
     #expect(try await markdown.exported(as: .text) == item.data(for: .markdown))
-    #expect(try await markdown.exported(as: .markdown) == item.data(for: .markdown))
+    #expect(try await markdown.exported(as: markdownTransferType) == item.data(for: .markdown))
     do { _ = try await markdown.exported(as: .json); Issue.record("Hidden JSON bytes escaped selected-format transfer") }
     catch { #expect(!String(describing: error).isEmpty) }
 }
@@ -206,7 +215,7 @@ import UniformTypeIdentifiers
     let item = try JSONExportDocument.prepare(.null, options: .init(
         formats: [.json, .html, .rtf, .plainText, .markdown], filenameStem: "Selected"))
     for (format, type) in [(JSONExportFormat.json, UTType.json), (.html, .html),
-                          (.rtf, .rtf), (.plainText, .utf8PlainText), (.markdown, .markdown)] {
+                          (.rtf, .rtf), (.plainText, .utf8PlainText), (.markdown, markdownTransferType)] {
         let selected = try item.selecting([format])
         let provider = NSItemProvider()
         provider.register(selected)
@@ -216,10 +225,11 @@ import UniformTypeIdentifiers
     let mixed = try item.selecting([.html, .markdown])
     let provider = NSItemProvider()
     provider.register(mixed)
-    #expect(provider.registeredTypeIdentifiers == [UTType.html.identifier, UTType.markdown.identifier])
+    #expect(provider.registeredTypeIdentifiers == [UTType.html.identifier, markdownTransferType.identifier])
     #expect(provider.suggestedName == "Selected.html")
 }
 
+@available(macOS 15.2, iOS 18.2, *)
 @Test func appleNativeJSONImportIsStrictAndPreservesExactBytes() async throws {
     let input = Data(#"{"é":9007199254740993,"é":-0.00e+2}"#.utf8)
     let value = try await JSON(importing: input, contentType: .json)

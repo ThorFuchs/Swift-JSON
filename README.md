@@ -62,9 +62,18 @@ familiar route from Swift models to the exact value model.
 | --- | --- |
 | Swift tools and compiler | 6.4 or later |
 | Swift language mode | 6 |
-| Platform and SDK | macOS 27, iOS 27 or iPadOS 27 and later |
+| Deployment candidate on this branch | macOS 14, iOS 17 or iPadOS 17 and later |
+| Native qualification host and SDK | macOS/SDK 27 or later |
 | Runtime dependencies | None outside the package and platform SDK |
 | License | Apache-2.0 original code, with retained upstream notices |
+
+The lower Apple deployment targets are **unreleased**. Published 1.6.0 retains
+macOS/iOS/iPadOS 27 minima. The candidate builds with Swift 6.4; older-OS runtime
+qualification is tracked separately. Native PDF preparation retains explicit
+macOS/iOS/iPadOS 26 availability, and the SwiftData `@Attribute(.codable)` example
+still requires OS 27. Pure JSON, schema, streams, Patch, HTML/RTF and exact
+persistence do not acquire those optional framework requirements. See the
+[Apple deployment audit](Documentation/Architecture/AppleDeployment.md).
 
 Choose the products your application needs:
 
@@ -97,7 +106,8 @@ and the [compiled public guide consumer](Examples/SchemaExamplesConsumer/README.
 The inherited Linux increment adds portable schema integrity for its qualified products
 without runtime dependencies. Its initial qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
-for execution gates and limits. Apple platform requirements remain unchanged.
+for execution gates and limits. Apple deployment scope is recorded separately in
+the [Apple deployment contract](Documentation/Architecture/AppleDeployment.md).
 
 The separately qualified WASI core scope targets full-language Swift 6.4
 `wasm32-unknown-wasip1`, with finite defaults and exact persistence. Its

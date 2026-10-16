@@ -2,6 +2,11 @@
 
 Prepare complete PDF bytes before offering them to the transfer system.
 
+On the unreleased lower-deployment branch these explicit methods require macOS 26
+or iOS/iPadOS 26 because the native backend uses WebKit's WebPage API. A program
+targeting an earlier OS must check availability before calling them. Pure HTML,
+JSON, text, Markdown and RTF preparation remain independent of this PDF boundary.
+
 ```swift
 import JSON
 import JSONHTML

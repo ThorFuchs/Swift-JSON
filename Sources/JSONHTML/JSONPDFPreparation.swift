@@ -16,6 +16,7 @@ extension JSONExportDocument {
     ///   - options: Qualified geometry, finite capacities and responsiveness policy.
     /// - Returns: A new immutable document with PDF available and advertised.
     /// - Throws: Missing HTML, configuration, capacity, backend or cancellation failure.
+    @available(macOS 26.0, iOS 26.0, *)
     @MainActor public func preparingPDF(options: JSONPDFOptions = .init()) async throws -> Self {
         try await preparingPDFWithReport(options: options).result
     }
@@ -25,6 +26,7 @@ extension JSONExportDocument {
     ///   - options: Qualified geometry, finite capacities and responsiveness policy.
     /// - Returns: Complete immutable artifacts and a distinct PDF operation report.
     /// - Throws: Missing HTML, configuration, capacity, backend or cancellation failure.
+    @available(macOS 26.0, iOS 26.0, *)
     @MainActor public func preparingPDFWithReport(options: JSONPDFOptions = .init()) async throws
         -> JSONPDFPreparationReport
     {
@@ -40,6 +42,7 @@ extension JSONExportDocument {
     }
 
     #if canImport(WebKit) && canImport(CoreGraphics)
+        @available(macOS 26.0, iOS 26.0, *)
         @MainActor package func preparingPDFWithReport(
             options: JSONPDFOptions,
             factory: @escaping @MainActor () -> any JSONPDFPageBackend,
@@ -55,11 +58,13 @@ extension JSONExportDocument {
 }
 
 #if canImport(WebKit) && canImport(CoreGraphics)
+    @available(macOS 26.0, iOS 26.0, *)
     private final class JSONPDFCancellationState: Sendable {
         private let state = Mutex(false)
         func cancel() { state.withLock { $0 = true } }
         var isCancelled: Bool { state.withLock { $0 } }
     }
+    @available(macOS 26.0, iOS 26.0, *)
     @MainActor private final class JSONPDFJob {
         private var document: JSONExportDocument?
         private let options: JSONPDFOptions

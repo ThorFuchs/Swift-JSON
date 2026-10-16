@@ -1,7 +1,9 @@
 # Contributor instructions
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
-macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
+macOS/SDK 27+ for native qualification. This branch's unreleased deployment
+candidate is macOS 14+ and iOS/iPadOS 17+; explicit PDF APIs require OS 26+ and
+the SwiftData `.codable` example requires OS 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
 - Keep nine public products: JSON, JSONSchema, JSONSchemaExamples, JSONStreaming,

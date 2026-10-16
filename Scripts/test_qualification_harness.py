@@ -12,8 +12,52 @@ import unittest
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
 from ci import check_result, commands
+from apple_runtime import runtime_matches, payload_records, verify_bundle
 
 class HarnessTests(unittest.TestCase):
+    def test_runtime_requires_exact_family_source_and_complete_bundle(self):
+        self.assertTrue(runtime_matches('14.8.9', '14'))
+        self.assertTrue(runtime_matches('26.2.1', '26.2'))
+        for actual in ['26.6.2', '27.0', '26.20']:
+            self.assertFalse(runtime_matches(actual, '26.2'))
+        bundle = self.root / 'bundle'; bundle.mkdir()
+        payload = bundle / 'program'; payload.write_text('runtime fixture')
+        producer = bundle / 'producer.json'
+        producer.write_text(json.dumps(dict(status='passed', source_inputs=[dict(path='fixture', sha256='abc')])))
+        manifest = bundle / 'MANIFEST.json'
+        manifest.write_text(json.dumps(payload_records(bundle)))
+        verify_bundle(bundle, [dict(path='fixture', sha256='abc')])
+        with self.assertRaises(ValueError): verify_bundle(bundle, [])
+        payload.write_text('corrupted')
+        with self.assertRaises(ValueError): verify_bundle(bundle, [dict(path='fixture', sha256='abc')])
+        command = ['python3', '-B', 'Scripts/apple_runtime.py', 'build']
+        marker = 'APPLE_RUNTIME_BUILD passed libraries=8 consumers=3 disk_fixtures=8 builds=2 resources=9 uri_cases=54 cli_cases=53'
+        self.assertTrue(check_result(command, 0, marker)[0])
+        for partial in ['', marker.replace('consumers=3', 'consumers=2'), marker.replace('disk_fixtures=8', 'disk_fixtures=0'),
+                        marker.replace('uri_cases=54', 'uri_cases=6'), marker.replace('cli_cases=53', 'cli_cases=0')]:
+            self.assertFalse(check_result(command, 0, partial)[0])
+        self.assertFalse(check_result(command, 1, marker)[0])
+
+    def test_apple_deployment_requires_complete_fixed_matrix(self):
+        command = ['python3', '-B', 'Scripts/qualify_apple_deployment.py']
+        marker = 'APPLE_DEPLOYMENT passed libraries=8 consumers=3 mobile_builds=2 pdf_availability=6 swiftdata_availability=2 resources=9'
+        self.assertTrue(check_result(command, 0, marker)[0])
+        self.assertFalse(check_result(command, 1, marker)[0])
+        for partial in ['', 'APPLE_DEPLOYMENT passed',
+                        marker.replace('mobile_builds=2', 'mobile_builds=0'),
+                        marker.replace('pdf_availability=6', 'pdf_availability=5'),
+                        marker.replace('swiftdata_availability=2', 'swiftdata_availability=1'),
+                        marker.replace('resources=9', 'resources=8')]:
+            self.assertFalse(check_result(command, 0, partial)[0])
+        native = commands('native', pathlib.Path(__file__).resolve().parents[1] / '.build/ci/native')
+        self.assertEqual(sum(c[:3] == command for c in native), 1)
+        linux = commands('linux', pathlib.Path(__file__).resolve().parents[1] / '.build/ci/linux')
+        self.assertEqual(len(native), 39)
+        self.assertEqual(len(linux), 34)
+        self.assertFalse(any(c[:3] == command for c in linux))
+        self.assertEqual(sum('Scripts/qualification_watchdog.py' in c and 'Tools/Qualification' in c for c in linux), 1)
+        self.assertEqual(linux[-1][:3], ['python3', '-B', 'Scripts/qualify_linux_reproduction.py'])
+
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
         command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']
         events = dict(bundle_counts=[5], module_function_counts={'CompositionScaleTests': 5},
@@ -145,8 +189,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=17')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=16', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

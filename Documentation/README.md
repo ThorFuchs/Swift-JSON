@@ -36,6 +36,7 @@ Online references track main; tagged releases include matching compiled catalogu
 - [Strict streaming and certified completion](Architecture/Streaming.md)
 - [Pointer, JSON Patch and Merge Patch](Architecture/Patch.md)
 - [Concurrency, cancellation and caller-work boundaries](Architecture/Concurrency.md)
+- [Apple deployment targets, optional APIs and qualification](Architecture/AppleDeployment.md)
 - [Linux platform and portable schema integrity](Architecture/Linux.md)
 - [WebAssembly audit and unresolved qualification boundary](Architecture/WebAssemblyAudit.md)
 

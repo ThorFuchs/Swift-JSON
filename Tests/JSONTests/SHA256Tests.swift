@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 import Testing
+#if canImport(os)
+import os
+#else
 import Synchronization
+#endif
 @testable import JSON
 
 private struct DigestVectors: Decodable {
@@ -56,7 +60,11 @@ private struct DigestVectors: Decodable {
     #expect(throws: JSONFailure.self) { try JSONSHA256Core.hexadecimal(bytes, accounting: &scratch) }
     #expect(scratch.used(.retainedBytes) == 0 && scratch.used(.workUnits) == 0)
     for quantum: UInt64 in [1, 16, 1024] {
+        #if canImport(os)
+        let progress = OSAllocatedUnfairLock(initialState: [UInt64]())
+        #else
         let progress = Mutex([UInt64]())
+        #endif
         var configured = JSONLimits.balanced; configured[.cancellationQuantum] = quantum
         var granular = try JSONWorkMeter(limits: configured, domain: .core)
         granular.checkpointObserver = { work in progress.withLock { $0.append(work) } }
