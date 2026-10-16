@@ -7,6 +7,7 @@ import JSONSchema
 import JSONPatch
 import JSONStreaming
 import JSONHTML
+import JSONInspection
 
 func inspectArray<Source: AsyncSequence>(_ source: Source) async throws -> UInt64
 where Source.Element == JSONByteChunk {
@@ -124,4 +125,12 @@ func runREADMEExamples() throws {
     let syntaxHTML = try JSONHTMLRenderer(options: .init(
         layout: .syntax, presentation: .formatted)
     ).render(valueForHTML)
+
+    let shapeSource = try JSON.parse(#"[{"name":"Ada","note":null},{"name":"Grace"},false]"#)
+    let shapeReport = try JSONShapeInspector(document: JSONDocument(root: shapeSource))
+        .inspectArray(sampling: .prefix(maximumRows: 2))
+    precondition(shapeReport.result.rowCoverage == .prefix(examined: 2, total: 3))
+    precondition(shapeReport.result.firstSeenColumns[1].explicitNull == 1)
+    precondition(shapeReport.result.firstSeenColumns[1].missing == 1)
+    precondition(shapeReport.statistics[.workUnits] > 0)
 }

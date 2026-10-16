@@ -68,7 +68,7 @@ def main():
         if preamble and not re.fullmatch(r"Another instance of SwiftPM .*waiting until that process has finished execution\.\.\.", preamble):
             raise ValueError('Unexpected manifest preamble: ' + preamble)
         manifest = json.loads(manifest_text[start:])
-        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONBridges', 'JSONHTML', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
+        if manifest['dependencies'] or sorted(p['name'] for p in manifest['products']) != ['JSON', 'JSONBridges', 'JSONHTML', 'JSONInspection', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONStreaming', 'swift-json']:
             raise ValueError('Changed public products/dependencies')
         def invoke(engine, path, mode='command', arguments=(), repo=True, resources=True):
             if engine == 'node':
