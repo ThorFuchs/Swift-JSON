@@ -1,0 +1,103 @@
+name: Apple Runtime Compatibility
+on:
+  pull_request:
+    paths:
+      - 'Package.swift'
+      - 'Sources/**'
+      - 'Tests/**'
+      - 'Examples/**'
+      - 'Tools/AppleDeploymentQualification/**'
+      - 'Tools/MobileQualification/**'
+      - 'Scripts/**'
+      - '.github/workflows/apple-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: apple-runtime-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  producer:
+    name: Apple runtime / Swift 6.4 producer
+    runs-on: xcode-27
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - run: python3 -B Scripts/ci.py --lane apple-runtime-build
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: apple-runtime-binaries
+          path: .build/ci/apple-runtime-build/producer/bundle/
+          if-no-files-found: error
+          retention-days: 30
+      - if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: apple-runtime-producer-receipts
+          path: |
+            .build/ci/apple-runtime-build/*.json
+            .build/ci/apple-runtime-build/*.log
+            .build/ci/apple-runtime-build/producer/*.json
+            .build/ci/apple-runtime-build/producer/*.log
+          if-no-files-found: error
+          retention-days: 30
+  macos:
+    name: Apple runtime / macOS ${{ matrix.os }}
+    needs: producer
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14
+            os: '14'
+          - runner: macos-15
+            os: '15'
+          # This is supplementary rolling-26 coverage. It cannot close 26.2.
+          - runner: macos-26
+            os: '26'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: apple-runtime-binaries
+          path: .runtime-bundle
+      # Artifact transport does not preserve executable modes; it preserves bytes.
+      - run: chmod +x .runtime-bundle/macosx/{Consumer,SchemaExamplesConsumer,NavigationConsumer,DiskPayload}
+      - run: python3 -B Scripts/apple_runtime.py macos --bundle .runtime-bundle --output .build/ci/apple-runtime --expected-os '${{ matrix.os }}'
+      - if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: apple-runtime-macos-${{ matrix.os }}
+          path: .build/ci/apple-runtime/
+          if-no-files-found: error
+          retention-days: 30
+  simulator:
+    name: Apple runtime / iOS and iPadOS 17
+    needs: producer
+    runs-on: macos-14
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: apple-runtime-binaries
+          path: .runtime-bundle
+      - run: chmod +x .runtime-bundle/iphonesimulator/{Consumer,SchemaExamplesConsumer,NavigationConsumer,DiskPayload}
+      - run: python3 -B Scripts/apple_runtime.py simulator --bundle .runtime-bundle --output .build/ci/apple-runtime --expected-os '17'
+      - if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: apple-runtime-ios-ipados-17
+          path: .build/ci/apple-runtime/
+          if-no-files-found: error
+          retention-days: 30

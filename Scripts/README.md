@@ -27,6 +27,13 @@ licenses. They neither publish nor introduce runtime network resolution.
 Receipts go to `.build/ci/` and GitHub Actions artifacts. Private local records
 and original frozen archives stay in ignored `Artifacts/`.
 
+`python3 Scripts/ci.py --lane apple-runtime-build` builds relocatable public
+consumer binaries on the native Swift 6.4 / OS 27 baseline. The separate
+`Scripts/apple_runtime.py macos|simulator` modes verify those exact bytes before
+executing on the requested runtime. Their observed OS identities and acceptance
+counts supplement, rather than replace, the native lanes. See the
+[Apple deployment contract](../Documentation/Architecture/AppleDeployment.md).
+
 `Scripts/qualify_ergonomics.py` is part of native/Linux CI: eight real-module
 compiler probes and three synchronized, executed public guide fences.
 

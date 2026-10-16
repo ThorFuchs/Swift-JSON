@@ -81,3 +81,38 @@ Native/safety/docs receipts and any unchanged-source Linux/WASI evidence must re
 their actual source identity. Published 1.6.0 evidence remains historical; it cannot
 be relabelled as a new run against this candidate. No platform release, tag or
 publication is performed by this qualification tool.
+
+## Separate runtime execution
+
+`python3 Scripts/ci.py --lane apple-runtime-build` prepares a manifest-backed
+ARM64 consumer bundle on the unchanged native qualification baseline. Three
+existing public consumers exercise all eight libraries, including 15 schema
+example and 18 navigation cases. A fourth program executes eight pinned exact
+payload fixtures in three separate processes: save, reopen/update, verify update.
+The on-disk binary property-list envelope uses the public JSONCodablePayload;
+it does not claim SwiftData `.codable` support on older systems. The OS 27
+SwiftData tests remain independently required.
+
+The producer records the source manifest, toolchain, command exits, binary and
+resource hashes, minimum load commands and copied Swift support libraries. A
+relocated macOS run checks the exported bytes. Runtime jobs verify the complete
+bundle and its source manifest before execution; artifact transport restores
+executable permissions without modifying bytes. Neither an SDK cross-build nor
+an omitted consumer can become a runtime pass.
+
+The separate `Apple Runtime Compatibility` workflow runs these exact binaries on
+the observed macOS 14 and 15 hosted images, a supplementary rolling macOS 26
+image, and both an iPhone and an iPad on an available iOS 17 simulator. Receipts
+retain actual OS/build and simulator identities. A rolling macOS 26 result does
+**not** close the exact macOS 26.2 gate. An available 26.2 host can run:
+
+```sh
+python3 Scripts/apple_runtime.py macos --bundle PATH_TO_VERIFIED_BUNDLE \
+  --output Artifacts/macOS26.2-runtime --expected-os 26.2
+```
+
+This runtime-only execution needs no Swift compiler on the destination. It
+supplements the native Swift Testing, safety, conformance, documentation and
+archive lanes; it does not reclassify those compiler/SDK requirements. The
+runtime scope is a public-consumer and disk-envelope acceptance matrix, not a
+claim that the entire native Swift Testing suite ran on every older OS.
