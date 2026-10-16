@@ -12,6 +12,7 @@ import unittest
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
 from ci import check_result, commands
+from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, check_projection_cases
 
 class HarnessTests(unittest.TestCase):
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
@@ -35,11 +36,11 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 44, ['swift', 'test', '--filter', 'inspection']),
+            ('JSONInspectionTests', 76, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
-                          parameter_case_invocations=0)
+                          parameter_case_invocations=0, function_names=sorted(PROJECTION_FUNCTIONS) if module == 'JSONInspectionTests' else [])
             self.assertTrue(check_result(command, 0, '', events)[0])
             for broken in [dict(events, bundle_counts=[count-1]),
                            dict(events, module_function_counts={'WrongModule': count}),
@@ -49,13 +50,25 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 47)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 44)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 76)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 1)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 3)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 4)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
+
+    def test_private_projection_identities_cannot_be_missing_renamed_or_duplicated(self):
+        names = sorted(PROJECTION_FUNCTIONS)
+        self.assertEqual(len(names), 32)
+        self.assertTrue(check_projection_cases({'function_names': names}))
+        for broken in [names[:-1], names + names[:1],
+                       ['WrongModule.' + names[0].split('.', 1)[1]] + names[1:],
+                       [names[0].replace('projectionP01', 'projectionP99')] + names[1:]]:
+            self.assertFalse(check_projection_cases({'function_names': broken}))
+        shared = ['JSONInspectionTests.projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics()']
+        self.assertTrue(check_projection_cases({'function_names': shared}, shared=True))
+        self.assertFalse(check_projection_cases({'function_names': []}, shared=True))
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -148,8 +161,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=16')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

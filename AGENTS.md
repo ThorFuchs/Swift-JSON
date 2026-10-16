@@ -35,4 +35,6 @@ Documentation/Architecture before changing behavior.
   user instruction. Preserve unrelated changes.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
-optimizations. Projection and JSON text-sequence framing remain deferred.
+optimizations. Public projection APIs and JSON text-sequence framing remain deferred. Package-only
+NAV7 tree/sparse-table proofs stay experimental inside JSONInspection, with no
+additional product/target and no merge or performance qualification implied.

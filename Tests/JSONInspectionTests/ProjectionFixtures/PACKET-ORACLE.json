@@ -1,0 +1,1093 @@
+{
+  "provenance": "Original independent packet oracle; not derived from Swift implementation. Source fixtures copied byte-identically.",
+  "cases": [
+    {
+      "file": "root-keys.json",
+      "sha256": "7de2c8cbd8634b94974502bcb029673016a1afac458724ba478b1263205cdf5d",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "object",
+          "end": 10
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "key",
+            ""
+          ],
+          "depth": 1,
+          "kind": "string",
+          "end": 2
+        },
+        {
+          "ordinal": 2,
+          "parent": 0,
+          "component": [
+            "key",
+            "0"
+          ],
+          "depth": 1,
+          "kind": "array",
+          "end": 6
+        },
+        {
+          "ordinal": 3,
+          "parent": 2,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 4
+        },
+        {
+          "ordinal": 4,
+          "parent": 2,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 2,
+          "kind": "object",
+          "end": 6
+        },
+        {
+          "ordinal": 5,
+          "parent": 4,
+          "component": [
+            "key",
+            "0"
+          ],
+          "depth": 3,
+          "kind": "boolean",
+          "end": 6
+        },
+        {
+          "ordinal": 6,
+          "parent": 0,
+          "component": [
+            "key",
+            "a/b"
+          ],
+          "depth": 1,
+          "kind": "string",
+          "end": 7
+        },
+        {
+          "ordinal": 7,
+          "parent": 0,
+          "component": [
+            "key",
+            "~"
+          ],
+          "depth": 1,
+          "kind": "string",
+          "end": 8
+        },
+        {
+          "ordinal": 8,
+          "parent": 0,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 1,
+          "kind": "string",
+          "end": 9
+        },
+        {
+          "ordinal": 9,
+          "parent": 0,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 1,
+          "kind": "string",
+          "end": 10
+        }
+      ],
+      "table": {
+        "status": "rejected",
+        "reason": "root wrong kind"
+      }
+    },
+    {
+      "file": "table-complete.json",
+      "sha256": "c83c3bab11555ceab3ed4e8d5e1738331330c533d6737f8e86acb65ef61dee59",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 14
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 5
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "n"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 3
+        },
+        {
+          "ordinal": 3,
+          "parent": 1,
+          "component": [
+            "key",
+            "price"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 4
+        },
+        {
+          "ordinal": 4,
+          "parent": 1,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 2,
+          "kind": "null",
+          "end": 5
+        },
+        {
+          "ordinal": 5,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 8
+        },
+        {
+          "ordinal": 6,
+          "parent": 5,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 2,
+          "kind": "string",
+          "end": 7
+        },
+        {
+          "ordinal": 7,
+          "parent": 5,
+          "component": [
+            "key",
+            "n"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 8
+        },
+        {
+          "ordinal": 8,
+          "parent": 0,
+          "component": [
+            "index",
+            2
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 14
+        },
+        {
+          "ordinal": 9,
+          "parent": 8,
+          "component": [
+            "key",
+            "n"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 10
+        },
+        {
+          "ordinal": 10,
+          "parent": 8,
+          "component": [
+            "key",
+            "nest"
+          ],
+          "depth": 2,
+          "kind": "array",
+          "end": 14
+        },
+        {
+          "ordinal": 11,
+          "parent": 10,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 3,
+          "kind": "null",
+          "end": 12
+        },
+        {
+          "ordinal": 12,
+          "parent": 10,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 3,
+          "kind": "object",
+          "end": 14
+        },
+        {
+          "ordinal": 13,
+          "parent": 12,
+          "component": [
+            "key",
+            "0"
+          ],
+          "depth": 4,
+          "kind": "number",
+          "end": 14
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 3,
+        "columns": [
+          "n",
+          "price",
+          "é",
+          "é",
+          "nest"
+        ],
+        "column_scalars": [
+          [
+            110
+          ],
+          [
+            112,
+            114,
+            105,
+            99,
+            101
+          ],
+          [
+            233
+          ],
+          [
+            101,
+            769
+          ],
+          [
+            110,
+            101,
+            115,
+            116
+          ]
+        ],
+        "sparse_offsets": [
+          0,
+          3,
+          5,
+          7
+        ],
+        "members": [
+          {
+            "row": 0,
+            "member": 0,
+            "column": 0,
+            "kind": "number"
+          },
+          {
+            "row": 0,
+            "member": 1,
+            "column": 1,
+            "kind": "number"
+          },
+          {
+            "row": 0,
+            "member": 2,
+            "column": 2,
+            "kind": "null"
+          },
+          {
+            "row": 1,
+            "member": 0,
+            "column": 3,
+            "kind": "string"
+          },
+          {
+            "row": 1,
+            "member": 1,
+            "column": 0,
+            "kind": "number"
+          },
+          {
+            "row": 2,
+            "member": 0,
+            "column": 0,
+            "kind": "number"
+          },
+          {
+            "row": 2,
+            "member": 1,
+            "column": 4,
+            "kind": "array"
+          }
+        ]
+      }
+    },
+    {
+      "file": "table-duplicate-keys.json",
+      "sha256": "aa886214aeb2a7d7071ae91582079452493e63d4716b0d087c339da9108e5fa1",
+      "parse": "duplicate decoded key refusal"
+    },
+    {
+      "file": "table-empty-objects.json",
+      "sha256": "8e4d987d18556962d07f4b85a54fb3926f2068657fdb558a5ddfcea702f0f45c",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 3
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 2
+        },
+        {
+          "ordinal": 2,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 3
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 2,
+        "columns": [],
+        "column_scalars": [],
+        "sparse_offsets": [
+          0,
+          0,
+          0
+        ],
+        "members": []
+      }
+    },
+    {
+      "file": "table-empty.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 1
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 0,
+        "columns": [],
+        "column_scalars": [],
+        "sparse_offsets": [
+          0
+        ],
+        "members": []
+      }
+    },
+    {
+      "file": "table-equal-rows.json",
+      "sha256": "bcdc21b212dbb7f53cfaa5c77380cf3a15096ff6147f7049b9f90bce436bd814",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 5
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 3
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "a"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 3
+        },
+        {
+          "ordinal": 3,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 5
+        },
+        {
+          "ordinal": 4,
+          "parent": 3,
+          "component": [
+            "key",
+            "a"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 5
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 2,
+        "columns": [
+          "a"
+        ],
+        "column_scalars": [
+          [
+            97
+          ]
+        ],
+        "sparse_offsets": [
+          0,
+          1,
+          2
+        ],
+        "members": [
+          {
+            "row": 0,
+            "member": 0,
+            "column": 0,
+            "kind": "number"
+          },
+          {
+            "row": 1,
+            "member": 0,
+            "column": 0,
+            "kind": "number"
+          }
+        ]
+      }
+    },
+    {
+      "file": "table-late-invalid.json",
+      "sha256": "d65cd94eacea0a0e01d582cd959b52a44e45cdacecfbbc9e7b761ac4fb9da097",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 6
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 3
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "a"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 3
+        },
+        {
+          "ordinal": 3,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 5
+        },
+        {
+          "ordinal": 4,
+          "parent": 3,
+          "component": [
+            "key",
+            "a"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 5
+        },
+        {
+          "ordinal": 5,
+          "parent": 0,
+          "component": [
+            "index",
+            2
+          ],
+          "depth": 1,
+          "kind": "boolean",
+          "end": 6
+        }
+      ],
+      "table": {
+        "status": "rejected",
+        "reason": "wrongKind at [2]"
+      }
+    },
+    {
+      "file": "table-nested.json",
+      "sha256": "d3a076388c727a90a9f77917fab580dad311024b3a93b98d71b8fb2a33ae13ce",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 9
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 7
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "x"
+          ],
+          "depth": 2,
+          "kind": "array",
+          "end": 5
+        },
+        {
+          "ordinal": 3,
+          "parent": 2,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 3,
+          "kind": "number",
+          "end": 4
+        },
+        {
+          "ordinal": 4,
+          "parent": 2,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 3,
+          "kind": "number",
+          "end": 5
+        },
+        {
+          "ordinal": 5,
+          "parent": 1,
+          "component": [
+            "key",
+            "y"
+          ],
+          "depth": 2,
+          "kind": "object",
+          "end": 7
+        },
+        {
+          "ordinal": 6,
+          "parent": 5,
+          "component": [
+            "key",
+            "0"
+          ],
+          "depth": 3,
+          "kind": "string",
+          "end": 7
+        },
+        {
+          "ordinal": 7,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 9
+        },
+        {
+          "ordinal": 8,
+          "parent": 7,
+          "component": [
+            "key",
+            "x"
+          ],
+          "depth": 2,
+          "kind": "null",
+          "end": 9
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 2,
+        "columns": [
+          "x",
+          "y"
+        ],
+        "column_scalars": [
+          [
+            120
+          ],
+          [
+            121
+          ]
+        ],
+        "sparse_offsets": [
+          0,
+          2,
+          3
+        ],
+        "members": [
+          {
+            "row": 0,
+            "member": 0,
+            "column": 0,
+            "kind": "array"
+          },
+          {
+            "row": 0,
+            "member": 1,
+            "column": 1,
+            "kind": "object"
+          },
+          {
+            "row": 1,
+            "member": 0,
+            "column": 0,
+            "kind": "null"
+          }
+        ]
+      }
+    },
+    {
+      "file": "table-nonobject.json",
+      "sha256": "161a1bfffa621be8ff92c3a770b613a877f77c8a2d865342c10988ae7f72aa6b",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 2
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "null",
+          "end": 2
+        }
+      ],
+      "table": {
+        "status": "rejected",
+        "reason": "wrongKind at [0]"
+      }
+    },
+    {
+      "file": "table-numeric-keys.json",
+      "sha256": "5c3e20f876844f0f703b8f92c5dedbbf7fd67f2fb61e6a8ca0af0475c1b5a110",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 5
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 3
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "0"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 3
+        },
+        {
+          "ordinal": 3,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 5
+        },
+        {
+          "ordinal": 4,
+          "parent": 3,
+          "component": [
+            "key",
+            "0"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 5
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 2,
+        "columns": [
+          "0"
+        ],
+        "column_scalars": [
+          [
+            48
+          ]
+        ],
+        "sparse_offsets": [
+          0,
+          1,
+          2
+        ],
+        "members": [
+          {
+            "row": 0,
+            "member": 0,
+            "column": 0,
+            "kind": "number"
+          },
+          {
+            "row": 1,
+            "member": 0,
+            "column": 0,
+            "kind": "number"
+          }
+        ]
+      }
+    },
+    {
+      "file": "table-unicode.json",
+      "sha256": "4d8592625fa883598299a020db0455e9698417ffb893d669bbf2ac76b9461780",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "array",
+          "end": 6
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 4
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 2,
+          "kind": "null",
+          "end": 3
+        },
+        {
+          "ordinal": 3,
+          "parent": 1,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 4
+        },
+        {
+          "ordinal": 4,
+          "parent": 0,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 6
+        },
+        {
+          "ordinal": 5,
+          "parent": 4,
+          "component": [
+            "key",
+            "é"
+          ],
+          "depth": 2,
+          "kind": "number",
+          "end": 6
+        }
+      ],
+      "table": {
+        "status": "valid",
+        "rows": 2,
+        "columns": [
+          "é",
+          "é"
+        ],
+        "column_scalars": [
+          [
+            233
+          ],
+          [
+            101,
+            769
+          ]
+        ],
+        "sparse_offsets": [
+          0,
+          2,
+          3
+        ],
+        "members": [
+          {
+            "row": 0,
+            "member": 0,
+            "column": 0,
+            "kind": "null"
+          },
+          {
+            "row": 0,
+            "member": 1,
+            "column": 1,
+            "kind": "number"
+          },
+          {
+            "row": 1,
+            "member": 0,
+            "column": 1,
+            "kind": "number"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tree-nested.json",
+      "sha256": "2ef21ab9362c0d13ddbf54e19f9389d23669cf8ea5eb29eec9388b150350bb5e",
+      "parse": "valid",
+      "records": [
+        {
+          "ordinal": 0,
+          "parent": null,
+          "component": null,
+          "depth": 0,
+          "kind": "object",
+          "end": 9
+        },
+        {
+          "ordinal": 1,
+          "parent": 0,
+          "component": [
+            "key",
+            "tree"
+          ],
+          "depth": 1,
+          "kind": "object",
+          "end": 8
+        },
+        {
+          "ordinal": 2,
+          "parent": 1,
+          "component": [
+            "key",
+            "left"
+          ],
+          "depth": 2,
+          "kind": "object",
+          "end": 4
+        },
+        {
+          "ordinal": 3,
+          "parent": 2,
+          "component": [
+            "key",
+            "leaf"
+          ],
+          "depth": 3,
+          "kind": "number",
+          "end": 4
+        },
+        {
+          "ordinal": 4,
+          "parent": 1,
+          "component": [
+            "key",
+            "right"
+          ],
+          "depth": 2,
+          "kind": "array",
+          "end": 8
+        },
+        {
+          "ordinal": 5,
+          "parent": 4,
+          "component": [
+            "index",
+            0
+          ],
+          "depth": 3,
+          "kind": "number",
+          "end": 6
+        },
+        {
+          "ordinal": 6,
+          "parent": 4,
+          "component": [
+            "index",
+            1
+          ],
+          "depth": 3,
+          "kind": "object",
+          "end": 8
+        },
+        {
+          "ordinal": 7,
+          "parent": 6,
+          "component": [
+            "key",
+            "leaf"
+          ],
+          "depth": 4,
+          "kind": "number",
+          "end": 8
+        },
+        {
+          "ordinal": 8,
+          "parent": 0,
+          "component": [
+            "key",
+            "empty"
+          ],
+          "depth": 1,
+          "kind": "array",
+          "end": 9
+        }
+      ],
+      "table": {
+        "status": "rejected",
+        "reason": "root wrong kind"
+      }
+    }
+  ]
+}
