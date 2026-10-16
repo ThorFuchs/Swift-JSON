@@ -1,3 +1,29 @@
+# NAV7 package-only projection proof lane
+
+The experimental P1 branch retains all existing products and public declarations.
+It adds exactly32 P01–P32 functions to JSONInspectionTests:76 total in that module,
+779 native/763 Linux/675 WASI root functions. Parameter counts325/288, all49 caps
+and126 maintenance identities remain unchanged. Shared-state counts are51 native
+and50 Linux, including the new combined tree/table16-task proof. The discovery
+contract pins every P function identity, rejecting missing/renamed/duplicate cases.
+
+`--lane inspection` now has seven commands: all76 I/S/V/P functions Debug/Release/
+ASan, strict compilation, original2-positive/20-negative full-codegen matrix and
+the new private compiler qualifier. That qualifier has24 commands,2 legal and14
+ordinary negative codegen cases, plus a five-case same-package consumer/config.
+The package-only probe is not a public product or external public consumer; the
+existing independent12-case Inspection and14-case Snapshot consumers remain.
+Full native/Linux runtime lanes include the new qualifier. The Python harness has
+16 meaningful regression tests and retains every original failure counterexample.
+
+No new target/product, private-engine dependency, portability lane or baseline
+exception is introduced. Nine public candidate library catalogues still document
+1144 authored declarations; the projection proof is absent from public symbols.
+Actual receipts establish outcomes, not these expectations. Native performance
+G4 remains HOLD, with no new benchmark or timing/RSS/scalability claim.
+
+The following source-stage sections are historical and retain their own counts.
+
 # NAV6 snapshot integration
 
 Retains current main and all N2/N3 cases. Counts below are historical; the
