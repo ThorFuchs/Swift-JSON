@@ -22,6 +22,9 @@ examples and structural traversal, structured HTML previews and bounded native
 composition. Exact JSON and offline schema validation remain the semantic authorities.
 The CLI reports `1.6.0` and a deterministic source-content digest.
 
+This isolated candidate adds unreleased opt-in JSONInspection: nine libraries plus
+the CLI. Inspection remains a draft proposal and is not part of version 1.6.0.
+
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the
 [1.6 qualification and compatibility notes](Documentation/Qualification/Release1.6.0.md)
@@ -78,6 +81,7 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
+| **JSONInspection** | Unreleased candidate: observed array kinds, exact first-seen columns and explicit complete/prefix row coverage |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -125,7 +129,7 @@ Then add products to your target dependencies:
 Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`
 or `JSONSchemaExamples` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [seven-library consumer](Examples/Consumer) for a complete buildable
+releases. See the [eight-library consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
 for the exact released source.
 
@@ -508,11 +512,11 @@ Matching compiled catalogs accompany the GitHub release when published. Known
 web-client limitations and direct-link/reload guidance are recorded in the
 [qualification notes](Documentation/Qualification/Release1.6.0.md#documentation).
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The eight DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The nine candidate DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all eight catalogs on a supported native host:
+Build all nine candidate catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -631,4 +635,28 @@ Add the JSONNavigation product and import it explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
-opt-in in 1.6.0; one-node lookup remains in JSON. Deeper N2 inspection is deferred.
+opt-in in 1.6.0; one-node lookup remains in JSON. N2 inspection is proposed separately below.
+
+## Inspect array evidence
+
+Add the opt-in JSONInspection product and import it explicitly. Inspect a complete
+array or a deterministic prefix without changing its exact values. Column counts
+use observed object rows: present includes null, while missing excludes nonobject
+rows. Prefix observations make no statement about an unseen suffix.
+
+```swift
+import JSONInspection
+
+let shapeSource = try JSON.parse(#"[{"name":"Ada","note":null},{"name":"Grace"},false]"#)
+let shapeReport = try JSONShapeInspector(document: JSONDocument(root: shapeSource))
+    .inspectArray(sampling: .prefix(maximumRows: 2))
+precondition(shapeReport.result.rowCoverage == .prefix(examined: 2, total: 3))
+precondition(shapeReport.result.firstSeenColumns[1].explicitNull == 1)
+precondition(shapeReport.result.firstSeenColumns[1].missing == 1)
+precondition(shapeReport.statistics[.workUnits] > 0)
+```
+
+Full source admission still includes the unobserved suffix. Complete row evidence
+can have restricted descendant traversal; structural rectangular width is not
+numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
+[public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).

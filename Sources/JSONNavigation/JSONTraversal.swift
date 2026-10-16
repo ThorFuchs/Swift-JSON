@@ -14,6 +14,8 @@ public struct JSONTraversal: Sendable {
     public let limits: JSONLimits
     /// Invocation-local rendezvous for qualification, absent from public consumers.
     package var checkpointObserver: (@Sendable (UInt64) -> Void)?
+    /// Qualification-only post-invalidation facts; never exposes scope or state.
+    package var lifetimeObserver: (@Sendable (Bool, Bool) -> Void)?
 
     /// Captures a document without admission or scanning; each operation admits it.
     /// - Parameters:
@@ -34,7 +36,8 @@ public struct JSONTraversal: Sendable {
                       options: JSONTraversalOptions = .init(),
                       _ visitor: (JSONTraversalHit, JSON) throws -> JSONTraversalAction)
         throws -> JSONOperationReport<JSONTraversalSummary> {
-        let report = try execute(scope: scope, options: options, collectionLimit: nil, visitor)
+        let report = try execute(scope: scope, options: options, collectionLimit: nil,
+            { hit, value, _ in try visitor(hit, value) }, finish: { collection, _ in collection })
         return .init(result: report.result.summary, statistics: report.statistics)
     }
 
@@ -48,7 +51,22 @@ public struct JSONTraversal: Sendable {
     public func collect(scope: JSONTraversalScope = .subtree(at: []),
                         options: JSONTraversalOptions = .init(), maximumRecords: Int = 100_000)
         throws -> JSONOperationReport<JSONTraversalCollection> {
-        try execute(scope: scope, options: options, collectionLimit: maximumRecords) { _, _ in .continue }
+        try execute(scope: scope, options: options, collectionLimit: maximumRecords,
+            { _, _, _ in .continue }, finish: { collection, _ in collection })
+    }
+
+    /// A synchronous reducer cannot store or return the invocation capability.
+    package func inspectOwned<Reducer: JSONTraversalOwnedReducer>(
+        scope: JSONTraversalScope = .subtree(at: []),
+        options: JSONTraversalOptions = .init(), reducer: inout Reducer)
+        throws -> JSONOperationReport<Reducer.Result> {
+        try execute(scope: scope, options: options, collectionLimit: nil, { hit, value, context in
+            do { return try reducer.observe(hit, value: value, context: &context) }
+            catch { try context.recordFailure(error); throw error }
+        }, finish: { collection, context in
+            do { return try reducer.finish(collection.summary, context: &context) }
+            catch { try context.recordFailure(error); throw error }
+        })
     }
 
     private struct Frame {
@@ -63,13 +81,18 @@ public struct JSONTraversal: Sendable {
         let path: JSONReadPath
     }
 
-    private func execute(scope selection: JSONTraversalScope, options: JSONTraversalOptions,
+    private func execute<Result>(scope selection: JSONTraversalScope, options: JSONTraversalOptions,
                          collectionLimit: Int?,
-                         _ visitor: (JSONTraversalHit, JSON) throws -> JSONTraversalAction)
-        throws -> JSONOperationReport<JSONTraversalCollection> {
+                         _ visitor: (JSONTraversalHit, JSON, inout JSONTraversalContext) throws -> JSONTraversalAction,
+                         finish: (JSONTraversalCollection, inout JSONTraversalContext) throws -> Result)
+        throws -> JSONOperationReport<Result> {
         let scope = try JSONReadScope(document, limits: limits)
-        defer { scope.invalidate() }
+        defer {
+            scope.invalidate()
+            lifetimeObserver?(scope.document == nil, scope.state == nil)
+        }
         let state = try scope.check()
+        var context = JSONTraversalContext(scope: scope)
         state.meter.checkpointObserver = checkpointObserver
         guard options.depthLimit.map({ $0 >= 0 }) ?? true,
               collectionLimit.map({ $0 >= 0 }) ?? true else {
@@ -157,7 +180,7 @@ public struct JSONTraversal: Sendable {
                             try Self.retainRecord(hit, state: state)
                             records.append(hit)
                         }
-                        action = try visitor(hit, value)
+                        action = try visitor(hit, value, &context)
                         _ = try scope.check() // cancellation/terminal health, including after .stop
                         try state.meter.release(64)
                         summary.emittedCount += 1
@@ -192,7 +215,8 @@ public struct JSONTraversal: Sendable {
         while !seen.isEmpty { seen.removeLast(); try state.meter.release(16); try state.meter.work() }
         while !roots.isEmpty { roots.removeLast(); try state.meter.release(64); try state.meter.work() }
         try state.meter.release(144)
-        return try scope.complete(JSONTraversalCollection(nodes: records, summary: summary))
+        let result = try finish(JSONTraversalCollection(nodes: records, summary: summary), &context)
+        return try scope.complete(result)
     }
 
     /// Exact metered prefix comparison; no String Set, value equality or unmetered hashing.
