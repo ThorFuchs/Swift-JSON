@@ -1,3 +1,8 @@
+# NAV6 snapshot integration
+
+Retains current main and all N2/N3 cases. Counts below are historical; the
+source-bound discovery manifest and receipts determine this candidate’s inventory.
+
 # NAV6 integrated inspection candidate
 
 Adds Inspection to schema-example-enabled main: ten products, nine libraries,
@@ -20,6 +25,19 @@ See [G8 reconciliation](../Architecture/Release1.6/G8Integration.md).
 The following sections preserve their original increment histories.
 
 # NAV5 public inspection candidate
+
+# NAV5 package-only snapshot experiment
+
+This stacked candidate retains the N2 public surface and adds 24 snapshot cases.
+Root function inventories are 646 native, 630 Linux and 542 WASI; parameter case
+inventories remain 325 native/Linux and 288 WASI. Inspection has 41 functions;
+the focused inspection lane selects inspection|snapshot with exact discovery.
+Shared-state inventories add snapshotS19 (45 native, 44 Linux). No cap probe,
+restored maintenance identity, product or public declaration is added by N3.
+The new package-only source-ownership transfer preserves default input refunds;
+full compiler/safety and source-bound receipts remain required.
+
+## NAV5 public inspection candidate
 
 The candidate adds JSONInspection as the ninth product (eight libraries plus CLI).
 Its existing I01-I17 identities, root discovery, 49 cap probes and 126 restored
