@@ -52,6 +52,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     #expect(throws: JSONPDFFailure.counterOverflow(.preparedBytes)) { try pdfAdd(.preparedBytes, .max, 1, .max) }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func exportPDFMissingHTMLNeverRerendersOrAltersSelection() async throws {
     let original = try syntaxPDFInput(.null, options: .init(formats: [.json]))
     #expect(throws: JSONPDFFailure.missingHTML) { try original.pdfInput() }
@@ -71,6 +72,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     return try syntaxPDFInput(.array(values + [.string("LAST-CONTENT-SENTINEL")]))
 }
 @Suite(.serialized) struct ApplePDFTests {
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFPaginatedA4AndLetterHaveCompleteSelectableRegions() async throws {
     pdfBootstrap()
     let original = try pdfFixture()
@@ -95,6 +97,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFContinuousIsExplicitAndAllSixRootsRemainVisible() async throws {
     pdfBootstrap()
     let long = try pdfFixture()
@@ -111,6 +114,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFWrapsWideContentAndHonorsZeroAndWideMargins() async throws {
     pdfBootstrap()
     let root: JSON = .string("FIRST-SENTINEL " + String(repeating: "https://example.test/long-key-😀-e\u{301}/", count: 300) + " LAST-CONTENT-SENTINEL")
@@ -124,6 +128,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFNativeCapsRejectPartialArtifactsAndPreserveOriginal() async throws {
     pdfBootstrap()
     let item = try pdfFixture()
@@ -146,6 +151,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFCancellationAtEveryStageDoesNotInstallOutput() async throws {
     pdfBootstrap()
     let item = try pdfFixture(80)
@@ -165,6 +171,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFOwnedBudgetsAreCumulativeAndInclusive() async throws {
     pdfBootstrap()
     let item = try syntaxPDFInput(.string("é e\u{301} 😀 exact 9007199254740993"))
@@ -184,6 +191,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFHiddenHTMLAndReplacementPreserveImmutablePolicy() async throws {
     pdfBootstrap()
     let original = try syntaxPDFInput(.null).selecting([.json])
@@ -199,6 +207,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     #expect(!tight.availableFormats.contains(.pdf))
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFFailureAndImmediateDeadlineNeverAdvertiseAnArtifact() async throws {
     pdfBootstrap()
     let item = try syntaxPDFInput(.null)
@@ -217,6 +226,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     #expect(!item.availableFormats.contains(.pdf))
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFTransferOffersOnlyPreparedSelectedBytes() async throws {
     pdfBootstrap()
     let item = try syntaxPDFInput(.null)
@@ -258,6 +268,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
     func stop() { stopped = true }
 }
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFTimeoutReturnsWithoutWaitingForUncooperativeCapture() async throws {
     pdfBootstrap()
     let item = try syntaxPDFInput(.null)
@@ -277,6 +288,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func applePDFSimultaneousJobsHaveIndependentStateAndCancellation() async throws {
     pdfBootstrap()
     let item = try pdfFixture(80)
@@ -295,6 +307,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
 }
 }
 #else
+@available(macOS 26.0, iOS 26.0, *)
 @Test @MainActor func exportPDFUnavailableBackendRemainsUnadvertised() async throws {
     let item = try syntaxPDFInput(.null)
     do { _ = try await item.preparingPDF(); Issue.record("Unsupported platform advertised PDF") }

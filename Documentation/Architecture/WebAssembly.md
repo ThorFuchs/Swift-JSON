@@ -13,7 +13,8 @@ This additive local branch supports the full-language Swift 6.4 SDK target
 `wasm32-unknown-wasip1`. All four products and the package-private regex runtime
 use the same model, codec and offline schema engine as Apple and Linux. The root
 manifest retains four products, no dependencies and Swift language mode 6.
-Apple deployment minimums remain macOS/iOS 27. WASI has no SwiftPM platform entry.
+Apple deployment and qualification minima are tracked separately in
+[Apple deployment](AppleDeployment.md). WASI has no SwiftPM platform entry.
 
 The initial pinned execution hosts are WasmKit 0.3.1 and Node 26.5.0/V8 on an
 ARM64 Mac. Match the Swift.org compiler and SDK exactly. The SDK pin is

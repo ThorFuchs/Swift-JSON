@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — Apple deployment candidate
+
+- Propose macOS 14 and iOS/iPadOS 17 deployment targets while retaining Swift
+  tools/compiler 6.4 and language mode 6. Native qualification still uses OS/SDK 27+;
+  older-OS runtime acceptance remains pending.
+- Preserve the exact Markdown transfer identifier without requiring Apple's OS 27
+  convenience constant. Scope the existing WebPage PDF APIs to OS 26+; retain the
+  SwiftData `.codable` example at OS 27. No alternate backend or dependency is added.
+- Add explicit public-consumer, Mach-O deployment, resource-bundle and positive/
+  negative availability checks without reducing test discovery or the 49 cap probes.
+
 ## 1.6.0 — 2026-10-16
 
 - Add opt-in JSONSchemaExamples: deterministic exact candidates, conservative typed

@@ -28,6 +28,11 @@ Immutable facades store value configuration. Every operation owns its mutable
 context; every stream iterator requires exclusive access. Sendable follows the
 actual stored state and result types. See [concurrency](Concurrency.md).
 
+The unreleased [Apple deployment candidate](AppleDeployment.md) declares macOS 14
+and iOS/iPadOS 17 without changing Swift 6.4/language 6. Explicit PDF methods carry
+macOS/iOS 26 availability; the separate SwiftData `.codable` example retains OS 27.
+These feature boundaries do not apply to the portable codec/schema/value APIs.
+
 ## Exact values and construction
 
 The ergonomic surface released through the 1.4.0 tag and 1.5.0 release is documented in the

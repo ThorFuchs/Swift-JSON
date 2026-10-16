@@ -13,7 +13,9 @@ Linux with Swift tools/compiler 6.4+ and Swift language mode 6. Initial executio
 qualification targets Ubuntu 24.04 with glibc on ARM64 and x86_64. A platform
 preflight identifies the actual runtime; cross-compilation alone cannot qualify
 behavior or safety. Architecture-specific receipts must pass before claiming
-that architecture qualified. Apple minimums remain macOS/SDK 27 and iOS/SDK 27.
+that architecture qualified. Current Apple deployment and qualification minima are
+tracked separately in [Apple deployment](AppleDeployment.md); the initial Linux
+qualification used Apple OS/SDK 27.
 
 The root manifest keeps an empty dependency graph and seven products.
 Apple PDF and native transfer APIs retain their platform availability; portable

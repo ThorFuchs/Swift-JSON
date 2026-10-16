@@ -14,6 +14,20 @@ from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_
 from ci import check_result, commands
 
 class HarnessTests(unittest.TestCase):
+    def test_apple_deployment_requires_complete_fixed_matrix(self):
+        command = ['python3', '-B', 'Scripts/qualify_apple_deployment.py']
+        marker = 'APPLE_DEPLOYMENT passed libraries=8 consumers=3 mobile_builds=2 pdf_availability=6 swiftdata_availability=2 resources=9'
+        self.assertTrue(check_result(command, 0, marker)[0])
+        self.assertFalse(check_result(command, 1, marker)[0])
+        for partial in ['', 'APPLE_DEPLOYMENT passed',
+                        marker.replace('mobile_builds=2', 'mobile_builds=0'),
+                        marker.replace('pdf_availability=6', 'pdf_availability=5'),
+                        marker.replace('swiftdata_availability=2', 'swiftdata_availability=1'),
+                        marker.replace('resources=9', 'resources=8')]:
+            self.assertFalse(check_result(command, 0, partial)[0])
+        native = commands('native', pathlib.Path(__file__).resolve().parents[1] / '.build/ci/native')
+        self.assertEqual(sum(c[:3] == command for c in native), 1)
+
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
         command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']
         events = dict(bundle_counts=[5], module_function_counts={'CompositionScaleTests': 5},
@@ -145,8 +159,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=15')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=16')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

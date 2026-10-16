@@ -1,0 +1,75 @@
+# Apple deployment candidate
+
+This is an **unreleased** deployment change based on 1.6.0. The published 1.6.0
+tag retains macOS/iOS/iPadOS 27 minimums. No released tag or source asset is changed.
+
+| Capability | Candidate deployment boundary |
+| --- | --- |
+| Eight public libraries, including pure HTML/RTF and exact persistence | macOS 14 / iOS 17 / iPadOS 17 |
+| swift-json executable | macOS 14; mobile CLI hosting is not qualified |
+| Explicit native PDF preparation | macOS 26 / iOS 26 / iPadOS 26 |
+| SwiftData `@Attribute(.codable)` example | macOS 27 / iOS 27 / iPadOS 27 |
+| Native qualification tools/host | Swift tools/compiler 6.4+, language 6, macOS/SDK 27+ |
+
+iPadOS shares the SwiftPM `.iOS("17.0")` declaration. These are selected candidate
+minimums, not a claim that no older OS could compile any subset. Build-tool host,
+SDK version and deployment version are separate: a current SDK can produce a
+binary for an older deployment target. Compilation on a new OS does not establish
+behavior on the older OS. Swift's [platform support](https://www.swift.org/platform-support/)
+describes that distinction. The inspected [Vapor 5 beta.2 manifest](https://github.com/vapor/vapor/blob/5.0.0-beta.2/Package.swift)
+declares Swift 6.4 and macOS/iOS 26.2; no Vapor dependency is introduced here.
+
+## Actual availability constraints
+
+The unchanged 1.6.0 source fails a macOS 26.2 compile because `UTType.markdown` is
+available only on OS 27. Its documented identifier is `net.daringfireball.markdown`,
+conforming to UTF-8 plain text. The candidate declares that exact imported type;
+Apple's convenience constant remains the independent OS 27 test oracle. Export
+bytes, type identity, selection and filename tests retain their existing assertions.
+
+WebKit's `WebPage` requires OS 26. Its existing backend, private job state and
+public PDF methods receive precise availability annotations. The cancellation
+mutex stays inside that boundary; no older lock implementation, unchecked Sendable
+annotation, alternate renderer or unbounded fallback is added. Earlier applications
+can use the pure exports and guard native PDF calls with `if #available`.
+
+The `.codable` SwiftData attribute really requires OS 27 in the inspected SDK.
+`Tools/MobileQualification` and its disk-backed example keep their existing minimums.
+The core `JSONCodablePayload` has no SwiftData import or OS 27 dependency. Int128
+behavior tests retain their actual macOS 15/iOS 18 type availability; all their
+assertions still run on the native qualification host.
+
+## Qualification and release gate
+
+Run `python3 Scripts/ci.py --lane apple-deployment`. The same check is appended to
+the full native lane. It writes actual command exits, compiler diagnostics, source
+and public-consumer hashes, Mach-O load commands and logs. The finite matrix is:
+
+- Three real public consumers of all eight libraries, built for macOS 14, iPhoneOS
+  17 and iPhoneSimulator 17. Their source is copied from the existing compiled
+  examples, not replaced by semantic shims.
+- Three consumer executables per build, each with the expected minimum deployment
+  load command, all eight library modules/objects and nine packaged meta-schemas.
+- Execute all three consumers on the actual Mac host. SchemaExamples retains its
+  15 cases, Navigation its 18 and the general consumer its established assertions.
+- Six PDF compiler cases: unguarded macOS 14/15 and iOS 17 calls must fail for the
+  method's OS 26 availability; guarded earlier-OS and direct macOS 26.2 calls pass.
+- Two real public-payload SwiftData cases: OS 27 succeeds; macOS 26.2 rejects the
+  attribute for its actual OS 27 availability.
+
+Existing Native, safety, docs, exact discovery/cardinality checks and all 49 finite
+metric probes remain required. The empty dependency graph, nine public products,
+strict semantics and Linux/WASI scope remain unchanged. Native preflight is not
+lowered to turn a missing qualification host into a pass.
+
+Older macOS 14/15/26.2 and iOS/iPadOS 17 runtimes must receive explicit execution
+acceptance before the corresponding minimum is advertised as release-qualified.
+The available host and simulator can exercise newer-OS behavior only. ABI/load
+command checks and successful SDK builds are evidence of compilation and linking,
+not substitute device/runtime results. Until those gates close, this branch is a
+reviewable compatibility candidate and the released minimum remains OS 27.
+
+Native/safety/docs receipts and any unchanged-source Linux/WASI evidence must retain
+their actual source identity. Published 1.6.0 evidence remains historical; it cannot
+be relabelled as a new run against this candidate. No platform release, tag or
+publication is performed by this qualification tool.

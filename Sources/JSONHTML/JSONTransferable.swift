@@ -5,6 +5,11 @@ import Foundation
 import JSON
 import UniformTypeIdentifiers
 
+// Apple's convenience constant requires OS 27; the declared Markdown identity
+// and UTF-8 text conformance are also usable on earlier deployment targets.
+private let jsonMarkdownContentType = UTType(
+    importedAs: "net.daringfireball.markdown", conformingTo: .utf8PlainText)
+
 extension JSON: Transferable {
     /// Fixed finite JSON, static HTML, UTF-8 text and Markdown representations.
     ///
@@ -23,7 +28,7 @@ extension JSON: Transferable {
         DataRepresentation(exportedContentType: .utf8PlainText) { value in
             try JSONExportDocument.prepare(value, options: .init(formats: [.plainText])).data(for: .plainText)
         }.suggestedFileName("JSON.txt")
-        DataRepresentation(exportedContentType: .markdown) { value in
+        DataRepresentation(exportedContentType: jsonMarkdownContentType) { value in
             try JSONExportDocument.prepare(value, options: .init(formats: [.markdown])).data(for: .markdown)
         }.suggestedFileName("JSON.md")
     }
@@ -49,7 +54,7 @@ extension JSONExportDocument: Transferable {
         DataRepresentation(exportedContentType: .utf8PlainText) { try $0.transferData(for: .plainText) }
             .exportingCondition { $0.advertisedFormats.contains(.plainText) }
             .suggestedFileName { $0.transferFilename(for: .plainText) }
-        DataRepresentation(exportedContentType: .markdown) { try $0.transferData(for: .markdown) }
+        DataRepresentation(exportedContentType: jsonMarkdownContentType) { try $0.transferData(for: .markdown) }
             .exportingCondition { $0.advertisedFormats.contains(.markdown) }
             .suggestedFileName { $0.transferFilename(for: .markdown) }
         DataRepresentation(exportedContentType: .pdf) { try $0.transferData(for: .pdf) }
