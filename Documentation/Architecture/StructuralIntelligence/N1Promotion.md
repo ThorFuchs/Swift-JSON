@@ -1,5 +1,20 @@
 # Reconciled public-product gate
 
+## Published-status annotation — 16 October 2026
+
+JSONNavigation N1 is included in the published [1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0)
+at `f975ac1c5a18af9b422db0994cbc551fd37eee2f`. Its 56 authored public declarations
+belong to the opt-in JSON-only library. The package has eight libraries plus the
+CLI and eight DocC catalogs; see the [source authority map](SOURCE-AUTHORITY.md)
+and [release qualification](../../Qualification/Release1.6.0.md).
+
+The reconciliation and candidate decision below are preserved historical editions.
+Their no-transition, qualification and separate-publication clauses describe those
+sources and authorization boundaries, not the current availability of N1.
+Later N2/N3/private P1 candidates have not been admitted by this annotation.
+The A0 compiler failure below remains adverse evidence; publication of traversal
+does not qualify a borrowed-context escape or repair a compiler failure.
+
 The historical candidate decision below belongs to 5cf7897. Its no-transition
 statement records that earlier authorization boundary. The owner subsequently
 authorized one fresh-main Navigation integration and guarded merge after full

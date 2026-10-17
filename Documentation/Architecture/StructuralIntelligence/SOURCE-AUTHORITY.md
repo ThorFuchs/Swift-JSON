@@ -1,5 +1,49 @@
 # N0 source authority
 
+## Published authority — 16 October 2026
+
+The published [1.6.0 source](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0)
+is `f975ac1c5a18af9b422db0994cbc551fd37eee2f`, tree
+`31de4dcd167c03af721c1b18594490e051a8a695`. It contains released N1
+JSONNavigation: eight libraries plus `swift-json`, eight DocC catalogs, no external
+root dependencies, Swift tools/compiler 6.4+, language mode 6 and Apple OS/SDK 27+.
+[Release qualification](../../Qualification/Release1.6.0.md) distinguishes published
+availability from the preserved prepublication receipts.
+
+The N0 research/reconnaissance record and semantic delegates below remain unchanged
+historical source editions. In particular, their experimental/no-public-product
+and latest-release statements apply to their recorded stage, not to 1.6.0.
+The [N1 promotion record](N1Promotion.md) likewise preserves its original decisions.
+
+### Unmerged candidates observed on 16 October 2026
+
+These are source-bound draft proposals, not accepted, merged or released additions.
+A technical pass on a candidate does not approve its API or close another gate.
+
+| Candidate | Captured head | Boundary |
+| --- | --- | --- |
+| [N2 inspection #46](https://github.com/ThorFuchs/Swift-JSON/pull/46) | `258a23eb01cd0cbcc702c0a2550d35ff05f4881d` | Separate Inspection owner/API decision; independent of composition timing |
+| [N3 snapshots #47](https://github.com/ThorFuchs/Swift-JSON/pull/47) | `db991c51dc15e8e47a0356a66ae7e03f4ed51b98` | Depends on #46; public promotion separate; G4 has zero timed workloads and remains held |
+| [Private P1 #48](https://github.com/ThorFuchs/Swift-JSON/pull/48) | `bda8aef4c8347ac4f6f2d7264c4be244367e4869` | Depends on #47; package-only proof, no public product or E11 promotion |
+| [Composition accounting #36](https://github.com/ThorFuchs/Swift-JSON/pull/36) | `3571cb0d8aea5cf2c4ba454c5eab02ea2ce23f11` | Per-document admission/cumulative totals and 50-work/424-logical-byte final report costs are not released behavior; controlled comparison pending |
+| [Root reuse #40](https://github.com/ThorFuchs/Swift-JSON/pull/40) | `95267eea3d4ab3c3c1553d4afcf89806fde8788e` | Distinct admission proposal; does not contain #36 accounting |
+| [Value/schema DSL #31](https://github.com/ThorFuchs/Swift-JSON/pull/31) | `64264218dc0073a5738ab557bfa25b3bb9f6fa7a` | Older-base proposal; trusted authoring staging is distinct from checked finalization |
+| [Deployment #49](https://github.com/ThorFuchs/Swift-JSON/pull/49) | `5617483ae222c6823d0231ac0f984b0a863e789b` | Lower floors are not released; exact macOS 26.2 evidence blocked and changed-schema controlled measurement pending |
+
+The original [#41](https://github.com/ThorFuchs/Swift-JSON/pull/41),
+[#42](https://github.com/ThorFuchs/Swift-JSON/pull/42) and
+[#43](https://github.com/ThorFuchs/Swift-JSON/pull/43) stack remains historical;
+its receipts are not silently rebound to #46–#48. The separate runtime-handle
+alternative retains 13 full-Debug streaming deadline issues and withheld full lanes;
+narrow probes do not replace those failures or authorize a static-to-runtime API change.
+
+The [composition guide](../../../Sources/JSON/Documentation.docc/Composition.md)
+records the source-bound Swift 6.4 borrowing/compiler limitation. A compiler crash
+is not expected rejection or a universal non-escape proof. Logical accounting is
+not RSS, ordinary schema invalidity is not an operational error, and corpus policy
+exclusions are not evaluated successes. No approval or held-gate promotion follows
+from this documentary map. E11 public projection and E12 framing remain deferred.
+
 The research baseline is `507dbf9ad4b545a5d60d7d6acf6b814795ec3099`.
 The reconciled implementation base is main
 `037e735dc6224789e4d04d2c18d15b8d27440198`, tree

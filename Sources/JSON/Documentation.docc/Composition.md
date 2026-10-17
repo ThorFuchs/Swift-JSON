@@ -56,3 +56,24 @@ unforgeable receipt, and it cannot establish that an arbitrary callback charged
 all its work. An adopting adapter must own its final accounting boundary and audit
 all external work and reservations. Independent reports cannot retroactively
 certify one enforced invocation.
+
+## Borrowing and compiler qualification
+
+The supported helper shape passes the active scope explicitly as a
+`borrowing JSONCompositionScope` parameter to a normal synchronous function.
+Selection and native helpers continue through that same scope and ledger; this
+usage pattern does not grant an escaping continuation or a second budget.
+
+A Swift 6.4 investigation against `c79d48c15f83ef88bed9459d9abcf05e54bd0bea`
+recorded 49 follow-up compiler invocations: 22 valid compilations, 24 compiler
+crashes and three intended rejections. Explicit borrowed-parameter helpers had
+limited positive object-generation and public-consumer evidence. Bound-method
+escape and nested functions capturing the borrowed scope could pass type checking
+and then abort during IR/object emission. Xcode and Command Line Tools in that
+matrix shared an Apple compiler revision; they were not independent revisions.
+
+These observations qualify those source/toolchain shapes only. A compiler crash
+is not a normal rejection, a supported escape or a universal compiler-enforced
+non-escape proof. Do not infer safety from typecheck success alone. The existing
+scope, terminal-failure and accounting contracts remain unchanged; runtime
+invalidation alternatives and later accounting/root proposals need separate review.
