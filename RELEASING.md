@@ -1,5 +1,17 @@
 # Release process
 
+Keep the [stable/development matrix](Documentation/Qualification/ReleaseLines.md)
+source-bound. Prepare 1.6 maintenance releases from the pre-N2 line, not current
+main. Preserve published tags/assets and map applicable maintenance changes to
+1.7.0-dev explicitly. Squash/rebase settings do not preserve maintenance-tip
+ancestry; no merge-setting change is required. A clean path/revision consumer
+is preparation evidence only: independently resolve the actual version tag after
+publication. Metadata-only maintenance reuses unchanged-workload performance
+dispositions; this does not close any held controlled-performance gate.
+
+See the [maintenance CI procedure](Documentation/Qualification/MaintenanceCI.md)
+for branch coverage, source-bound checks and build-incident handling.
+
 Maintainer: @ThorFuchs. Version tags use semantic versions such as `1.0.0`.
 Publication requires an explicit maintainer instruction; CI never creates tags
 or releases. Published version tags are protected against updates and deletion.
@@ -7,10 +19,13 @@ or releases. Published version tags are protected against updates and deletion.
 1. Require passed native, safety, documentation and Git-free archive lanes for
    the exact candidate commit on macOS/SDK 27+ and Swift 6.4+ with language mode 6.
    Retain both ARM64 and x86_64 Linux behavior/safety receipts for portable changes.
-2. Review nine public products (eight libraries, including opt-in JSONBridges,
-   JSONNavigation and JSONSchemaExamples, plus swift-json), the empty root dependency graph, compiled external
-   consumers, populated pinned suites, policy exclusions, all 49 finite caps,
-   schema/regex behavior and cancellation boundaries.
+2. Derive the exact branch-specific product, catalog and API inventory from the
+   candidate manifest and compiler graphs. The 1.6 maintenance line has eight
+   libraries plus CLI, eight catalogs and 1,077 authored declarations; 1.7-dev
+   has nine libraries plus CLI, nine catalogs and 1,121 declarations. Inspection
+   is not a 1.6 patch feature. Review the empty root dependency graph, compiled
+   external consumers, populated pinned suites, policy exclusions, all 49 finite
+   caps, schema/regex behavior and cancellation boundaries.
 3. Review licenses, provenance, public file inventory and documentation links.
    Keep private records, credentials, input clones and build outputs out of source
    archives and Git history.

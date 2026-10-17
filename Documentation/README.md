@@ -1,5 +1,9 @@
 # Swift-JSON documentation
 
+The [release-line matrix](Qualification/ReleaseLines.md) separates the eight-library
+1.6 maintenance source from nine-library unreleased 1.7.0-dev. The website tracks
+development main; use matching release assets for a stable compiled reference.
+
 Start with the [package README](../README.md) for installation, product selection
 and executable examples. This index leads from everyday usage to the exact
 behavioral contracts and native qualification procedure.

@@ -1,5 +1,8 @@
 # Contributor instructions
 
+This is the 1.6.1 maintenance source: eight libraries plus CLI and eight catalogs,
+with no JSONInspection or new public API. Preserve its 1.6 deployment floors.
+
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.

@@ -1,5 +1,14 @@
 # Swift-JSON
 
+This **1.6.1 maintenance edition** preserves the eight-library public API and
+runtime behavior of 1.6.0. It incorporates documentation/source-authority and
+generated CLI identity corrections; the CLI reports `1.6.1`. JSONInspection
+and other 1.7 proposals are outside this source.
+
+See the [release-line matrix](Documentation/Qualification/ReleaseLines.md) for exact
+source scopes and publication boundaries. Version metadata identifies source; the
+[official releases](https://github.com/ThorFuchs/Swift-JSON/releases) establish publication.
+
 **Exact JSON values, offline schema validation, transactional patches, pull streams, HTML exports and bounded queries for modern Swift.**
 
 Swift-JSON gives applications one consistent JSON model from input bytes to validated,
@@ -20,7 +29,8 @@ reproducible builds; `main` tracks ongoing development.
 **1.6.0** provides eight libraries and the CLI. It adds opt-in verified schema
 examples and structural traversal, structured HTML previews and bounded native
 composition. Exact JSON and offline schema validation remain the semantic authorities.
-The CLI reports `1.6.0` and a deterministic source-content digest.
+The published 1.6.0 CLI reports `1.6.0`; this maintenance source reports `1.6.1`.
+Both use a deterministic source-content digest.
 The [published 1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0)
 is pinned to `f975ac1c5a18af9b422db0994cbc551fd37eee2f`; JSONNavigation
 is included, with eight library DocC catalogs. Historical N0/N1 plans and later
@@ -30,7 +40,9 @@ unmerged candidates are distinguished in the
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the
 [1.6 qualification and compatibility notes](Documentation/Qualification/Release1.6.0.md)
-for source-bound evidence, finite-capacity boundaries and known DocC limitations.
+for the original source-bound evidence, finite-capacity boundaries and known DocC
+limitations; [1.6.1 maintenance notes](Documentation/Qualification/Release1.6.1.md)
+describe this edition and its separately bound receipts.
 
 ## Why Swift-JSON?
 

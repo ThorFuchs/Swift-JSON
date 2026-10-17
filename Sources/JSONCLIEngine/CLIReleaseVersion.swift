@@ -2,5 +2,5 @@
 
 // Version of this source distribution. Publication is a separate action.
 package enum CLIReleaseVersion {
-    package static let value = "1.6.0"
+    package static let value = "1.6.1"
 }
