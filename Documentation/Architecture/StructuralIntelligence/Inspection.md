@@ -1,10 +1,12 @@
-# Array evidence public-product candidate
+# Array evidence source contract
 
 JSONInspection is an opt-in library depending on JSON and JSONNavigation. Core
-never re-exports it. This isolated promotion candidate is unmerged and unreleased.
-It reports observations rather than table/schema admission. Navigation public
-declarations and semantics are unchanged. See [public surface review](N2Promotion.md)
-and the [DocC guide](../../../Sources/JSONInspection/Documentation.docc/ArrayEvidence.md).
+never re-exports it. This source includes the unreleased Inspection product; the
+published 1.6.0 tag and assets do not. It reports observations rather than table/schema
+admission. Navigation public declarations and semantics are unchanged. The
+[public surface review](N2Promotion.md) preserves its original candidate-stage decision;
+source availability is distinguished in [source authority](SOURCE-AUTHORITY.md). See
+also the [DocC guide](../../../Sources/JSONInspection/Documentation.docc/ArrayEvidence.md).
 
 `JSONShapeInspector(document:limits:)` captures one canonical source.
 `inspectArray(at:sampling:maximumColumns:includeSourceSpan:)` selects an existing
@@ -67,7 +69,7 @@ nonnumeric arrays, full-source admission, inclusive work/retention/column limits
 inner cancellation, source coherence and independent shared-source invocations.
 `Scripts/ci.py --lane inspection` enforces exact discovery and compiler outcomes.
 Current native/Linux/WASI/platform receipts must qualify final source; this document
-does not turn an unexecuted lane into a pass. No N2 merge or release is authorized.
+does not turn an unexecuted lane into a pass. This contract grants no release authority.
 
 Snapshots, persistent indexes, projections, retrieval, BFS, JSONPath, HTML/CLI
 integration, schema inference and numeric matrices remain deferred.
