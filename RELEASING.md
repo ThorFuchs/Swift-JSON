@@ -9,6 +9,9 @@ is preparation evidence only: independently resolve the actual version tag after
 publication. Metadata-only maintenance reuses unchanged-workload performance
 dispositions; this does not close any held controlled-performance gate.
 
+See the [maintenance CI procedure](Documentation/Qualification/MaintenanceCI.md)
+for branch coverage, source-bound checks and build-incident handling.
+
 Maintainer: @ThorFuchs. Version tags use semantic versions such as `1.0.0`.
 Publication requires an explicit maintainer instruction; CI never creates tags
 or releases. Published version tags are protected against updates and deletion.
