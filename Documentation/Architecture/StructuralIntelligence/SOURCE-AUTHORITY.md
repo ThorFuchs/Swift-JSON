@@ -15,6 +15,21 @@ historical source editions. In particular, their experimental/no-public-product
 and latest-release statements apply to their recorded stage, not to 1.6.0.
 The [N1 promotion record](N1Promotion.md) likewise preserves its original decisions.
 
+### Unreleased N2 source scope
+
+This source includes opt-in JSONInspection alongside JSONNavigation: nine libraries
+plus the CLI and nine source DocC catalogs. Inspection depends only on JSON and
+JSONNavigation; its 44 authored declarations are separate from the unchanged
+56-declaration Navigation surface. The [Inspection contract](Inspection.md) defines
+observed-only row/column evidence, full-source admission and one cumulative ledger.
+This source availability does not alter the published 1.6.0 tag, assets or
+eight-library/eight-catalog release scope. No later release is claimed.
+
+The N2 promotion and NAV6/NAV7 records preserve their original candidate-stage
+source and decisions. The table below is the dated 16 October observation, including
+original #46; it does not classify this source as awaiting N2 API acceptance.
+N3 snapshots, private P1 and the other proposals retain their separate gates.
+
 ### Unmerged candidates observed on 16 October 2026
 
 These are source-bound draft proposals, not accepted, merged or released additions.

@@ -45,10 +45,11 @@ Online references track main; tagged releases include matching compiled catalogu
 
 ## Consumers, qualification and maintenance
 
-- [Seven-library compiled example](../Examples/Consumer/README.md)
+- [Eight-library compiled source example](../Examples/Consumer/README.md)
 - [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
 - [Published Navigation and historical N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md), [original traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md) and [N1 promotion history](Architecture/StructuralIntelligence/N1Promotion.md). JSONNavigation is released in 1.6.0; the original N0/N1 stage gates remain dated history.
-- The source authority map separates unmerged N2 inspection, N3 snapshots and private P1 projections from composition accounting, root reuse, DSL and deployment candidates. Their own source-bound qualification and approval boundaries remain separate from the released API.
+- [Unreleased N2 Inspection source](Architecture/StructuralIntelligence/Inspection.md) adds opt-in observed array evidence. This source has nine library catalogs; the published 1.6.0 tag and assets retain eight.
+- The source authority map distinguishes this unreleased Inspection source from the dated unmerged-candidate record. N3 snapshots, private P1, composition accounting, root reuse, DSL and deployment retain separate source-bound qualification and approval gates.
 
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)

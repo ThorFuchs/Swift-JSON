@@ -27,6 +27,10 @@ is included, with eight library DocC catalogs. Historical N0/N1 plans and later
 unmerged candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
+This unreleased source includes opt-in JSONInspection: nine libraries plus the CLI,
+ten products in total. Inspection is not part of the published 1.6.0 tag or assets.
+Use this source checkout for Inspection; no later version or release is claimed.
+
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the
 [1.6 qualification and compatibility notes](Documentation/Qualification/Release1.6.0.md)
@@ -83,12 +87,14 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
+| **JSONInspection** | Unreleased source: observed array kinds, exact first-seen columns and explicit complete/prefix row coverage |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
 `JSONRegexRuntime` is an implementation detail and has no public product. The root
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
-packages.
+packages. The unreleased JSONInspection product depends only on JSON and
+JSONNavigation; core never re-exports it.
 
 The optional `JSONSchemaExamples` product depends only on JSON and
 JSONSchema. It prepares immutable offline resources and offers exact declared hints
@@ -132,9 +138,10 @@ Then add products to your target dependencies:
 Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`
 or `JSONSchemaExamples` in the same way when needed. A local checkout can
 use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [seven-library consumer](Examples/Consumer) for a complete buildable
+releases. See the [eight-library source consumer](Examples/Consumer) for a complete buildable
 manifest. The website tracks `main`; release assets include compiled DocC catalogues
-for the exact released source.
+for the exact released source. JSONInspection requires this unreleased source
+checkout; the 1.6.0 tag does not contain it.
 
 ## Quick entry points and native bridges (available in the 1.4.0 tag and 1.5.0 release)
 
@@ -517,11 +524,12 @@ claims. Known
 web-client limitations and direct-link/reload guidance are recorded in the
 [qualification notes](Documentation/Qualification/Release1.6.0.md#documentation).
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The eight DocC catalogs
+The [documentation index](Documentation/README.md) links the behavior contracts. The eight released DocC catalogs
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-Build all eight catalogs on a supported native host:
+This source adds unreleased Inspection as a ninth catalog. Build the eight released
+catalogs plus the Inspection source catalog on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -574,7 +582,7 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Command-line tool (released in 1.5.0)
 
-`swift-json` accompanies the eight libraries. It provides strict formatting, validation, Pointer selection, staged
+`swift-json` accompanies the eight libraries in published 1.6.0. It provides strict formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
 for command semantics, cumulative budgets and qualification boundaries. The pull
@@ -594,7 +602,8 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-The package has eight libraries plus the executable, with no external root
+Published 1.6.0 has eight libraries plus the executable; this unreleased source has nine
+libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
@@ -640,7 +649,32 @@ Add the JSONNavigation product and import it explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
-opt-in in the published 1.6.0 release; one-node lookup remains in JSON. N2 inspection,
-N3 snapshots and private P1 projections remain separate unmerged candidates;
+opt-in in the published 1.6.0 release; one-node lookup remains in JSON. This source
+also includes unreleased N2 inspection. N3 snapshots and private P1 projections
+remain separate unmerged candidates;
 see the [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 They do not expand the released Navigation API or promote public E11 projection.
+
+## Inspect array evidence (unreleased source)
+
+Add the opt-in JSONInspection product and import it explicitly. Inspect a complete
+array or a deterministic prefix without changing its exact values. Column counts
+use observed object rows: present includes null, while missing excludes nonobject
+rows. Prefix observations make no statement about an unseen suffix.
+
+```swift
+import JSONInspection
+
+let shapeSource = try JSON.parse(#"[{"name":"Ada","note":null},{"name":"Grace"},false]"#)
+let shapeReport = try JSONShapeInspector(document: JSONDocument(root: shapeSource))
+    .inspectArray(sampling: .prefix(maximumRows: 2))
+precondition(shapeReport.result.rowCoverage == .prefix(examined: 2, total: 3))
+precondition(shapeReport.result.firstSeenColumns[1].explicitNull == 1)
+precondition(shapeReport.result.firstSeenColumns[1].missing == 1)
+precondition(shapeReport.statistics[.workUnits] > 0)
+```
+
+Full source admission still includes the unobserved suffix. Complete row evidence
+can have restricted descendant traversal; structural rectangular width is not
+numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
+[public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).

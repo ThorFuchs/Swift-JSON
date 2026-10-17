@@ -27,7 +27,8 @@ GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONPatch': ('Choosing and applying patches', 'applyingpatches'),
           'JSONHTML': ('Exact interactive HTML', 'interactiverendering'),
           'JSONBridges': ('Opt-in native conversions', 'numericfidelity'),
-          'JSONNavigation': ('Exact bounded structural traversal', 'traversal')}
+          'JSONNavigation': ('Exact bounded structural traversal', 'traversal'),
+          'JSONInspection': ('Observed array evidence', 'arrayevidence')}
 DESCRIPTIONS = {
     'JSON': 'Exact values, strict UTF-8, native Codable, Pointer, presence and finite resource reports.',
     'JSONSchema': 'Draft 2020-12, explicit offline registries, immutable plans, annotations and bounded regex.',
@@ -36,7 +37,8 @@ DESCRIPTIONS = {
     'JSONPatch': 'Transactional RFC 6902 JSON Patch and RFC 7396 Merge Patch with exact value semantics.',
     'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
     'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.',
-    'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.'}
+    'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.',
+    'JSONInspection': 'Complete or prefix-scoped array evidence, exact ordered columns and cumulative finite reports.'}
 
 
 class Links(HTMLParser):
