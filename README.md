@@ -27,20 +27,23 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-**1.6.0** provides eight libraries and the CLI. It adds opt-in verified schema
-examples and structural traversal, structured HTML previews and bounded native
-composition. Exact JSON and offline schema validation remain the semantic authorities.
-The published CLI reports `1.6.0`; this development source reports `1.7.0-dev`.
+**1.6.1** is the latest stable maintenance release: eight libraries plus CLI,
+eight DocC catalogs and the unchanged 1.6 API/runtime. The optional verified schema
+examples, structural traversal, structured HTML previews and bounded composition
+were introduced in 1.6.0. Exact JSON and offline schema validation remain the
+semantic authorities.
+The published CLI reports `1.6.1`; this development source reports `1.7.0-dev`.
 Both use a deterministic source-content digest.
-The [published 1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0)
-is pinned to `f975ac1c5a18af9b422db0994cbc551fd37eee2f`; JSONNavigation
-is included, with eight library DocC catalogs. Historical N0/N1 plans and later
-unmerged candidates are distinguished in the
+The [published 1.6.1 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1)
+is pinned to `e431f157ececc0cf3d061192420b0e36a9062f83`. Use its matching eight-catalog
+DocC and qualification assets for the stable reference; see the
+[maintenance qualification notes](Documentation/Qualification/Release1.6.1.md).
+Historical N0/N1 plans and later candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
 This 1.7.0-dev source includes opt-in JSONInspection: nine libraries plus the CLI,
-ten products in total. Inspection is not part of the published 1.6.0 tag or assets.
-Use this source checkout for Inspection; no later version or release is claimed.
+ten products in total. Inspection is absent from stable 1.6 releases. Use this
+source checkout for Inspection; its inclusion in main does not publish 1.7.0.
 
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the

@@ -15,7 +15,7 @@ Documentation/Architecture before changing behavior.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
   The approved CLI and E2 additions preserve historical product contracts.
   JSONNavigation is a released opt-in product depending on JSON only; future merge/release remain human-gated.
-  Published 1.6.0 has eight libraries plus CLI; this unreleased source includes
+  Published 1.6.1 has eight libraries plus CLI; this unreleased source includes
   JSONInspection as the ninth library. Its API is separate from released Navigation.
   Future merge and release decisions remain human-gated.
   JSONInspection depends on JSON and JSONNavigation only; core re-exports neither.
