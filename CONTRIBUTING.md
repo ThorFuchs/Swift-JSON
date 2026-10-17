@@ -1,6 +1,13 @@
 # Contributing
 
-Open a focused pull request against `main` at
+Choose the source line deliberately: maintenance changes use the 1.6 line;
+new capabilities target unreleased 1.7.0-dev. Keep the lines' API inventories
+separate and map applicable maintenance corrections forward by content/commit,
+without assuming a squashed maintenance tip is an ancestor of main. See the
+[release-line matrix](Documentation/Qualification/ReleaseLines.md).
+
+Open a focused pull request against the appropriate source line (`release/1.6`
+for maintenance, `main` for development) at
 [ThorFuchs/Swift-JSON](https://github.com/ThorFuchs/Swift-JSON). Maintainer:
 [@ThorFuchs](https://github.com/ThorFuchs). Contributions require Swift 6.4+,
 Swift language mode 6 and macOS/SDK 27+ for native validation.

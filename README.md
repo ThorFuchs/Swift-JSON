@@ -1,5 +1,15 @@
 # Swift-JSON
 
+This source is **1.7.0-dev**, the unreleased development line. It retains the
+admitted JSONInspection API (44 authored declarations) alongside the unchanged
+56-declaration JSONNavigation API: nine libraries, ten products and nine catalogs.
+The stable 1.6 line has eight libraries and eight catalogs. Do not use a main
+snapshot as a 1.6 maintenance release.
+
+See the [release-line matrix](Documentation/Qualification/ReleaseLines.md) for exact
+source scopes and publication boundaries. Version metadata identifies source; the
+[official releases](https://github.com/ThorFuchs/Swift-JSON/releases) establish publication.
+
 **Exact JSON values, offline schema validation, transactional patches, pull streams, HTML exports and bounded queries for modern Swift.**
 
 Swift-JSON gives applications one consistent JSON model from input bytes to validated,
@@ -20,14 +30,15 @@ reproducible builds; `main` tracks ongoing development.
 **1.6.0** provides eight libraries and the CLI. It adds opt-in verified schema
 examples and structural traversal, structured HTML previews and bounded native
 composition. Exact JSON and offline schema validation remain the semantic authorities.
-The CLI reports `1.6.0` and a deterministic source-content digest.
+The published CLI reports `1.6.0`; this development source reports `1.7.0-dev`.
+Both use a deterministic source-content digest.
 The [published 1.6.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.0)
 is pinned to `f975ac1c5a18af9b422db0994cbc551fd37eee2f`; JSONNavigation
 is included, with eight library DocC catalogs. Historical N0/N1 plans and later
 unmerged candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
-This unreleased source includes opt-in JSONInspection: nine libraries plus the CLI,
+This 1.7.0-dev source includes opt-in JSONInspection: nine libraries plus the CLI,
 ten products in total. Inspection is not part of the published 1.6.0 tag or assets.
 Use this source checkout for Inspection; no later version or release is claimed.
 

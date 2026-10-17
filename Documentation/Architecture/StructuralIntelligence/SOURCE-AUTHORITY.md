@@ -1,5 +1,15 @@
 # N0 source authority
 
+## Release-line authority — 17 October 2026
+
+The [release matrix](../../Qualification/ReleaseLines.md) distinguishes the
+published 1.6.0 tag and API-compatible 1.6.1 maintenance edition from development
+main 1.7.0-dev. PR #52 admitted the observation-only N2 source on main at
+`2b24f47e7405821240cf8dfc66b840c9a7f8efa5`; it is absent from the 1.6 line.
+Original #41/#46 remain preserved historical proposals, superseded by #52
+for source integration. Their dated records below remain unchanged. N3/P1,
+composition accounting, root reuse, DSL and lower floors retain separate gates.
+
 ## Published authority — 16 October 2026
 
 The published [1.6.0 source](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0)

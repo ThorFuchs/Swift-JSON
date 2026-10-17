@@ -20,6 +20,8 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 REPOSITORY = 'https://github.com/ThorFuchs/Swift-JSON'
 BASE_PATH = '/Swift-JSON'
 SITE_URL = 'https://thorfuchs.github.io' + BASE_PATH + '/'
+SOURCE_VERSION = '1.7.0-dev'
+STABLE_VERSION = '1.6.0'
 GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONSchema': ('Offline schema validation', 'offlinevalidation'),
           'JSONSchemaExamples': ('Verified exact candidates', 'verifiedcandidates'),
@@ -103,10 +105,11 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <a class="skip" href="#content">Skip to documentation</a>
 <header><nav class="container" aria-label="Main navigation"><a class="brand" href="{BASE_PATH}/">Swift-JSON</a>
 <div class="nav-links"><a href="{REPOSITORY}#installation">Get started</a><a href="{REPOSITORY}">GitHub</a><a href="{REPOSITORY}/issues">Support</a></div></nav></header>
-<main id="content" class="container"><div class="eyebrow">Public Swift documentation</div>
+<main id="content" class="container"><div class="eyebrow">Unreleased {SOURCE_VERSION} documentation</div>
 <h1>Exact JSON. Clear contracts.</h1>
-<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore eight Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
+<p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore {len(PRODUCTS)} Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
+<p class="baseline">Development main includes JSONInspection. Stable <a href="{REPOSITORY}/releases/tag/{STABLE_VERSION}">{STABLE_VERSION}</a> has eight library catalogs; use its matching compiled DocC assets or <a href="{REPOSITORY}/tree/{STABLE_VERSION}/Sources">tagged source documentation</a>.</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>
 <p>Read the <a href="{REPOSITORY}#readme">package overview and executable examples</a>, then choose a reference above. The <a href="{REPOSITORY}/blob/main/Documentation/README.md">behavior contracts</a> explain exact numbers, scalar identity, offline schema evaluation, cumulative budgets and stream completion.</p>
@@ -277,7 +280,9 @@ def main():
             'ci_run': REPOSITORY + '/actions/runs/' + os.environ['GITHUB_RUN_ID'] if os.environ.get('GITHUB_RUN_ID') else None,
             'swift': receipt['environment']['swift'], 'sdk': receipt['environment']['sdk'],
             'macos': receipt['environment']['macos'], 'swift_language_mode': '6',
-            'products': list(PRODUCTS), 'channel': 'main'}, indent=2) + '\n')
+            'products': list(PRODUCTS), 'channel': 'development',
+            'source_version': SOURCE_VERSION, 'latest_stable_observed': STABLE_VERSION,
+            'stable_release': REPOSITORY + '/releases/tag/' + STABLE_VERSION}, indent=2) + '\n')
         routes = sorted(p.relative_to(site).parent.as_posix() + '/' for p in site.rglob('index.html'))
         urls = [SITE_URL if route == './' else SITE_URL + urllib.parse.quote(route, safe='/') for route in routes]
         (site / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>' + html.escape(url) + '</loc></url>\n' for url in urls) + '</urlset>\n')
