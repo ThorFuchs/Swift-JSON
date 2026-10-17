@@ -1,5 +1,14 @@
 # N0 source authority
 
+## Latest stable publication
+
+[Swift-JSON 1.6.1](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1)
+is published from `e431f157ececc0cf3d061192420b0e36a9062f83`,
+tree `9d4c3969fad53f4734265ff585dc482ebea943d3`. It keeps the eight-library 1.6 API,
+1,077 authored declarations and 56 Navigation declarations, with no Inspection.
+Development main remains 1.7.0-dev with N2; the dated integration and research
+records below retain their original identities and scope.
+
 ## Release-line authority — 17 October 2026
 
 The [release matrix](../../Qualification/ReleaseLines.md) distinguishes the

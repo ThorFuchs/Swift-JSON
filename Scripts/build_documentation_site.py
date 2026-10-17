@@ -21,7 +21,7 @@ REPOSITORY = 'https://github.com/ThorFuchs/Swift-JSON'
 BASE_PATH = '/Swift-JSON'
 SITE_URL = 'https://thorfuchs.github.io' + BASE_PATH + '/'
 SOURCE_VERSION = '1.7.0-dev'
-STABLE_VERSION = '1.6.0'
+STABLE_VERSION = '1.6.1'
 GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONSchema': ('Offline schema validation', 'offlinevalidation'),
           'JSONSchemaExamples': ('Verified exact candidates', 'verifiedcandidates'),

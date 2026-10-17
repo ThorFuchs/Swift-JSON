@@ -10,6 +10,11 @@
 
 ## 1.6.1
 
+- Publish the eight-library maintenance source with matching source, DocC and
+  qualification assets; see [1.6.1 qualification](Documentation/Qualification/Release1.6.1.md).
+- Run the existing full Native/Linux matrices automatically on release/1.6
+  pushes and document bounded build-incident handling; main retains its Pages guard.
+
 - Reconcile published Navigation, eight-library/eight-catalog authority and
   historical candidate records without changing the public API or runtime.
 - Report the maintenance source version `1.6.1` with a regenerated deterministic
