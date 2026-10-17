@@ -1,7 +1,7 @@
 # Building and maintaining the DocC catalogs
 
 Swift source comments are the API documentation authority. Native compiler symbol
-graphs supply the declarations and links for eight Swift DocC catalogs. Each catalog
+graphs supply the declarations and links for nine candidate Swift DocC catalogs. Each catalog
 combines the product reference with curated Topics and a focused usage guide.
 See the [Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
@@ -19,7 +19,7 @@ python3 Scripts/ci.py --lane docs
 The lane records native preflight, extracts fresh public symbol graphs, requires
 summaries and named-parameter documentation on every authored public declaration,
 checks README Swift fences against their executable consumer source, runs that
-consumer, and compiles all eight DocC catalogs with warnings as errors. Zero public
+consumer, and compiles all nine candidate DocC catalogs with warnings as errors. Zero public
 symbols, missing comments, stale examples or a failed catalog fail the lane.
 
 The lane also executes the standalone schema-examples consumer (15 preserved cases and two
@@ -39,12 +39,13 @@ statistics; the consumer imports no private meters.
 | `.build/handoff/docc/JSONPatch.doccarchive` | Patch API and choosing/applying patches guide |
 | `.build/handoff/docc/JSONBridges.doccarchive` | Opt-in native numeric conversion and fidelity guide |
 | `.build/handoff/docc/JSONNavigation.doccarchive` | Opt-in exact structural traversal and coverage |
+| `.build/handoff/docc/JSONInspection.doccarchive` | Observed array evidence and row coverage |
 | `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |
-| `.build/handoff/docc/compiled-catalogs.tar.gz` | All eight compiled catalogs with their exact native filenames |
+| `.build/handoff/docc/compiled-catalogs.tar.gz` | All nine candidate compiled catalogs with their exact native filenames |
 | `.build/handoff/docc/compiled-catalogs.MANIFEST.sha256` | Independently verifiable hashes for every archived catalog file |
-| `.build/handoff/pages/site/` | Static site, landing page and all eight references under the project base path |
+| `.build/handoff/pages/site/` | Static site, landing page and all nine candidate references under the project base path |
 | `.build/handoff/pages/receipt.json` | Native transformations, input/output hashes and route/asset verification |
 
 Open a `.doccarchive` in Xcode for the compiled reference. To preview a source
@@ -73,7 +74,7 @@ The manifest and receipt preserve file-level and archive-level digests.
 
 The docs lane uses native `docc process-archive transform-for-static-hosting` to
 prepare each qualified archive under `/Swift-JSON/<product>`. A shared landing
-page links all eight references and guides. The build verifies product/guide routes,
+page links all nine candidate references and guides. The build verifies product/guide routes,
 local HTML links and assets, rejects private-path/credential markers and symlinks,
 and records a file manifest. Only the generated site is packaged for Pages;
 source graphs, command logs and private maintainer records are not website content.
@@ -90,7 +91,7 @@ native docs lane; run them separately with `python3 -B Scripts/test_documentatio
 
 Browser acceptance must also open a guide directly, confirm the sidebar has links
 without a fetching error, follow a sidebar symbol link and return to a guide.
-Repeat direct guide navigation for all eight catalogs and the five schema-example
+Repeat direct guide navigation for all nine candidate catalogs and the five schema-example
 guides. A successful article render or static HTML-link check alone does not prove
 that the client fetched its navigator index.
 
@@ -161,6 +162,6 @@ swift run --package-path Examples/SchemaExamplesConsumer SchemaExamplesConsumer 
 Review the generated DocumentationExamples.swift diff after editing a guide. Missing,
 extra, empty or foreign-import snippets and source drift fail qualification. The
 `#sourceLocation` directives map compiler errors to the authored guide. The root
-README has fourteen executable Swift fences in its separate seven-library consumer;
+README has fifteen executable Swift fences in its separate eight-library consumer;
 installation fragments remain manifest examples, checked by real package manifests.
 Native DocC checks symbol links and the site verifies the new limits-guide route.
