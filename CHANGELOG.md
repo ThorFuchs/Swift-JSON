@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.1
+
+- Reconcile published Navigation, eight-library/eight-catalog authority and
+  historical candidate records without changing the public API or runtime.
+- Report the maintenance source version `1.6.1` with a regenerated deterministic
+  CLI source identity. Preserve Swift 6.4/language 6, Apple OS/SDK 27+, Linux/WASI
+  scope, empty dependencies, upstream notices and all 49 finite policies.
+- Clarify stable versus development documentation and branch-specific release
+  inventories. Version headings describe source; official release metadata
+  determines publication status.
+
 ## 1.6.0 — 2026-10-16
 
 - Add opt-in JSONSchemaExamples: deterministic exact candidates, conservative typed
