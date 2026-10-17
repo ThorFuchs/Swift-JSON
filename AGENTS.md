@@ -1,5 +1,9 @@
 # Contributor instructions
 
+Development source is 1.7.0-dev; admitted N2 remains unreleased. The stable 1.6
+line has eight libraries and no JSONInspection. Preserve the branch-specific
+inventory and do not publish this development tree as a patch release.
+
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.

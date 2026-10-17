@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 from build_documentation_site import (PRODUCTS, install_guide_navigation_index,
-                                      verify_navigation_indexes, verify_site)
+                                      verify_navigation_indexes, verify_site, landing, SOURCE_VERSION, STABLE_VERSION)
 
 
 class GuideNavigationTests(unittest.TestCase):
@@ -42,6 +42,12 @@ class GuideNavigationTests(unittest.TestCase):
 
     def test_all_catalogs_keep_native_bytes_and_existing_files(self):
         before = {p.relative_to(self.site): p.read_bytes() for p in self.site.rglob('*') if p.is_file()}
+        page = landing('2b24f47e7405821240cf8dfc66b840c9a7f8efa5')
+        self.assertIn('Unreleased ' + SOURCE_VERSION + ' documentation', page)
+        self.assertIn('Explore ' + str(len(PRODUCTS)) + ' Swift libraries', page)
+        self.assertIn('/releases/tag/' + STABLE_VERSION, page)
+        self.assertIn('/tree/' + STABLE_VERSION + '/Sources', page)
+        self.assertIn('Development main includes JSONInspection', page)
         records = verify_navigation_indexes(self.site)
         self.assertEqual({r['product'] for r in records}, set(PRODUCTS))
         for product in PRODUCTS:

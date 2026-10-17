@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.7.0 — Unreleased
+
+- Retain admitted opt-in JSONInspection: observation-only array evidence, exact
+  first-seen columns and explicit complete/prefix coverage; 44 authored
+  declarations, with all 56 Navigation declarations unchanged.
+- Identify development source as `1.7.0-dev`, separate from the eight-library
+  1.6 maintenance line. No N3/P1, DSL, accounting or deployment change is implied.
+
+## 1.6.1
+
+- Reconcile published Navigation, eight-library/eight-catalog authority and
+  historical candidate records without changing the public API or runtime.
+- Report the maintenance source version `1.6.1` with a regenerated deterministic
+  CLI source identity. Preserve Swift 6.4/language 6, Apple OS/SDK 27+, Linux/WASI
+  scope, empty dependencies, upstream notices and all 49 finite policies.
+- Clarify stable versus development documentation and branch-specific release
+  inventories. Version headings describe source; official release metadata
+  determines publication status.
+
 ## 1.6.0 — 2026-10-16
 
 - Add opt-in JSONSchemaExamples: deterministic exact candidates, conservative typed
