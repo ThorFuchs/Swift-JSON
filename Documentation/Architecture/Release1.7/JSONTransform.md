@@ -82,6 +82,27 @@ statistics are a bounded entry snapshot; cancellation does not borrow the loaned
 context. Snapshot work (66 units) and fixed owner/health/snapshot storage (1,152
 logical bytes) are admitted in the same invocation. No unsafe isolation, lock or
 alternate evaluator is introduced. Public reports use the existing core domain.
-Twenty public-engine behavior functions cover the repaired boundary, typed runtime
+Twenty-one public-engine behavior functions cover the repaired boundary, typed runtime
 caps and a twenty-row exact dialect matrix. Independent qualification remains
 source-bound; older successful receipts cannot qualify changed code.
+
+## Common-scope ownership review
+
+The common private context deliberately retains the CLI-only limits-file marker,
+issue cap and committed-result report counters. Public construction cannot set or
+observe those host fields. The private kernel imports JSON only and performs no
+ambient file/process I/O. Numeric division policy and frame/binding/collection
+ownership remain kernel concerns. Retaining this one private scope preserves the
+CLI's aggregate parse/compile/execute/write/diagnostic budget and refund authority;
+creating a second public-runtime meter would break that composition. The health
+cell stores only terminal state and observations, never a second quota ledger.
+This is the selected extraction boundary, rather than a pending source move.
+
+## Terminal output refunds
+
+A separate public-consumer probe demonstrated that a last output alias released
+only after scope failure could leave a pending reservation in observations. The
+public pull now drains the existing deferred ARC refund queue before rethrowing
+terminal health; work is never refunded and the original error still wins.
+A regression covers resource, explicit-cancellation and uncaught-language failures,
+including live alias ownership across scope exit and zero live bytes after release.

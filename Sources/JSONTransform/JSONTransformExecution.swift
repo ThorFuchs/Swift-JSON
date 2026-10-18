@@ -139,8 +139,9 @@ public final class JSONTransformExecution {
         health.pulling = true
         defer { health.pulling = false }
         do {
-            try health.check(context: &context)
+            // Drain deferred ARC refunds even when terminal health will throw.
             try context.checkpoint()
+            try health.check(context: &context)
             guard !closed else { throw JSONTransformFailure(.configuration, "scopeClosed") }
             guard var active = vm else { return nil }
             vm = nil

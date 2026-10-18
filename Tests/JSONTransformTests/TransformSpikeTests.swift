@@ -320,3 +320,31 @@ private func values(_ source: String, input: JSON = .null) throws -> [JSON] {
     let report = try plan.withExecution(input: .null, bindings: ["a_1": 7]) { execution in try execution.next()?.value }
     #expect(report.result == 7)
 }
+
+@Test func jtxTerminalAliasesRefundBeforeThrowingTheSameFailure() throws {
+    let root = try JSON.parse("{\"a\":1,\"padding\":\"" + String(repeating: "x", count: 4096) + "\"}")
+    for category in [JSONTransformFailure.Category.resource, .cancelled, .language] {
+        let query = category == .language ? ".a,error(\"bad\")" : ".a,.a"
+        let plan = try JSONTransformProgram.compile(query)
+        var limits = JSONTransformLimits()
+        if category == .resource { limits[.results] = 1 }
+        var escaped: JSONTransformExecution?
+        var output: JSONTransformOutput?
+        do {
+            _ = try plan.withExecution(input: root, limits: limits) { execution in
+                escaped = execution
+                output = try execution.next()
+                if category == .cancelled { execution.cancel() }
+                _ = try execution.next()
+            }
+            Issue.record("Expected terminal scope failure")
+        } catch let error as JSONTransformFailure { #expect(error.category == category) }
+        let execution = try #require(escaped)
+        #expect(output?.value == 1)
+        withExtendedLifetime(output) { #expect(execution.statistics[.retainedBytes] > 4096) }
+        output = nil
+        do { _ = try execution.next(); Issue.record("Terminal scope resumed") }
+        catch let error as JSONTransformFailure { #expect(error.category == category) }
+        #expect(execution.statistics[.retainedBytes] == 0)
+    }
+}

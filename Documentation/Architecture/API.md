@@ -1,8 +1,12 @@
 # Public API contract
 
-This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the eight DocC catalogs. Examples
-in the [README](../../README.md) are compiled and executed by the public consumer.
+The product table below records the published 1.6 line: eight libraries plus the
+CLI and eight DocC catalogs. The current unreleased 1.7 source also contains
+JSONInspection, as described in the README and structural authority map. This
+feature candidate adds JSONTransform as a tenth library and tenth catalog; its
+additive contract appears below. Existing published contracts remain unchanged.
+Native compiler symbol graphs supply the complete declarations. Examples in the
+[README](../../README.md) are compiled and executed by public consumers.
 
 ## Products and ownership
 
@@ -12,6 +16,7 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONNavigation | JSONTraversal, JSONTraversalScope, JSONTraversalOptions | Exact many-node DFS, strict physical/virtual scopes, bounded metadata and explicit coverage; one core read-scope meter |
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
+| JSONSchemaExamples | JSONSchemaExampleGenerator, JSONSchemaExampleResult | Conservative deterministic witnesses certified by the existing native validator; separate finite preparation and cumulative generation |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
 | swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters and private CLI engine/filter runtime; no public query library |
@@ -288,3 +293,43 @@ the generated identity file itself. It is not a Git commit, binary digest or cla
 of publication. Generation/checking needs no Git, time, environment or network.
 
 JSONNavigation product promotion preserves all 56 N1 public declarations and resource semantics. Full-source admission precedes invalid depth/record-option validation, including oversized sources; N1Promotion.md records this preserved precedence. JSON imports no Navigation symbols implicitly.
+
+## Provisional JSONTransform extraction (1.7 feature branch)
+
+JSONTransform is an opt-in public product depending on JSON and the private
+JSONFilterRuntime kernel. JSON and JSONSchema do not import or re-export it.
+JSONCLIEngine uses its package-only accounted adapters; both callers execute the
+same FilterCompiler/FilterVM. The public interface contains no CLI context, file,
+process, exit-code or private-runtime signature.
+
+- `JSONTransformProgram.compile(_:variables:limits:)` creates an immutable Sendable
+  plan under finite compilation limits. Variable names are ASCII identifiers,
+  without `$`; JSON values retain exact native number and scalar-key semantics.
+- `withExecution(input:bindings:limits:source:_:)` creates a synchronous guarded
+  invocation and returns `JSONOperationReport<Result>`. Root admission, bindings,
+  all pulls/provider values and output results share one cumulative ledger.
+- `JSONTransformExecution.next()` returns `JSONTransformOutput?`. Nil means EOF;
+  a present handle may contain JSON null. Handles share one owner and are not
+  Sendable. Scope exit invalidates data access and releases provider/frame/root
+  ownership; output aliases retain their source reservation until last release.
+- `statistics`, `used(_:)` and `remainingWorkUnits` expose finite accounting without
+  exporting a mutable meter. During provider callbacks they report the bounded
+  callback-entry snapshot. `cancel()` latches terminal cancellation.
+- `JSONTransformLimits` combines the existing native policy with eleven mapped
+  transform ceilings. `JSONTransformFailure` distinguishes compilation, language,
+  resource, cancelled, provider and configuration failures. Owned operational
+  failures bypass query catches and remain terminal after caller catches.
+
+Provider work/allocations and extracted JSON copies belong to the caller; logical
+retention does not cap process RSS. Re-entering next() from the same provider
+throws `configuration/reentrantExecution` before accessing its borrowed context.
+The CLI retains one ledger across parsing, transformation, writing and diagnostics,
+its sixteen existing metric names and its own completion/EOF duties. Public
+compilation and execution are separate finite scopes, not one combined claim.
+
+See the [actual API/ownership decision](Release1.7/JSONTransform.md),
+[DocC guide](../../Sources/JSONTransform/Documentation.docc/ScopedTransforms.md)
+and [standalone public SwiftPM consumer](../../Tools/TransformQualification).
+This is an unreleased candidate, absent from published 1.6.1. No merge, tag,
+publication, new dialect, implicit floating bridge or feature from another draft
+follows from this contract.
