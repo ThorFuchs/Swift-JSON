@@ -4,8 +4,8 @@ This feature-branch API is provisional. Stable 1.6.1 and development main remain
 separate authorities. This source adds JSONTransform to the nine development
 libraries; it does not remove JSONInspection or import another candidate.
 
-The chosen spike uses one private JSONFilterRuntime kernel. JSONTransform owns an
-opaque Sendable `JSONTransformProgram` and scoped noncopyable
+The chosen extraction prototype uses one private JSONFilterRuntime kernel. JSONTransform owns an
+opaque Sendable `JSONTransformProgram` and scoped guarded
 `JSONTransformExecution`. An execution pulls `JSONTransformOutput?`: nil means EOF,
 while a present handle may contain JSON null. Handles share source leases and are
 not Sendable. JSON extracted from a handle is caller-owned; the scope's logical
@@ -57,3 +57,16 @@ when a callback captured the borrowed facade into an escaping closure. That is
 a failed compiler gate, not a valid negative diagnostic or a compiler fix.
 The next bounded experiment is a guarded, non-Sendable reference handle; copies
 must share one state and scope exit must invalidate it and release root/provider.
+
+## Guarded-handle successor
+
+The current provisional API uses a final, non-Sendable reference handle. Copies
+share exactly one private noncopyable ledger. Callback parameters cannot substitute
+the invocation owner. Scope exit invalidates next(), clears provider/VM state and
+releases reservations; observation remains available. This trades static lifetime
+rejection for explicit guarded invalidation. Thirteen real-engine behavior cases
+include same-ledger aliases, escaped-handle invalidation and weak provider release.
+The rejected noncopyable compiler crash remains an unresolved toolchain finding.
+The full native/safety/docs/Linux/WASI/performance/reproduction gates remain open;
+source-bound receipts, including failures, are in the private return. Do not infer
+release readiness or final API freeze from the prototype.

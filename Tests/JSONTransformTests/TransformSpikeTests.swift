@@ -150,3 +150,36 @@ private func values(_ source: String, input: JSON = .null) throws -> [JSON] {
         catch let failure as JSONTransformFailure { #expect(failure.category == .resource && failure.metric == metric.rawValue) }
     }
 }
+
+@Test func jtxCopiedHandlesShareOneCumulativeLedger() throws {
+    let plan = try JSONTransformProgram.compile("1,2")
+    var limits = JSONTransformLimits(); limits[.results] = 1
+    do {
+        _ = try plan.withExecution(input: .null, limits: limits) { execution in
+            let alias = execution
+            let first = try alias.next()
+            #expect(first?.value == 1 && execution.used(.results) == 1)
+            _ = try execution.next()
+        }
+        Issue.record("A handle copy must not reset results")
+    } catch let failure as JSONTransformFailure { #expect(failure.category == .resource && failure.metric == "results") }
+}
+@Test func jtxEscapedHandleInvalidatesAndReleasesProvider() throws {
+    final class Marker {}
+    weak var marker: Marker?
+    var escaped: JSONTransformExecution?
+    func makeProvider() -> () throws -> JSON? {
+        let held = Marker(); marker = held
+        return { _ = held; return nil }
+    }
+    _ = try JSONTransformProgram.compile(".").withExecution(input: .array([1,2]), source: makeProvider()) { execution in
+        escaped = execution
+        #expect(marker != nil)
+        // Early exit deliberately leaves a live VM. Scope exit must clear it.
+    }
+    #expect(marker == nil)
+    let handle = try #require(escaped)
+    #expect(handle.statistics[.retainedBytes] == 0)
+    do { _ = try handle.next(); Issue.record("Escaped scope accepted data access") }
+    catch let failure as JSONTransformFailure { #expect(failure.category == .configuration && failure.code == "scopeClosed") }
+}

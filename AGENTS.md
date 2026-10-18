@@ -8,8 +8,8 @@ Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
-- Keep ten public products in this source: JSON, JSONSchema, JSONSchemaExamples, JSONStreaming,
-  JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection and the swift-json executable.
+- Keep eleven public products in this feature source: JSON, JSONSchema, JSONSchemaExamples, JSONStreaming,
+  JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection, JSONTransform and the swift-json executable.
   JSONSchemaExamples is opt-in and depends on JSON and JSONSchema only.
   JSONFilterRuntime and JSONCLIEngine are package-private.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
@@ -44,3 +44,7 @@ Documentation/Architecture before changing behavior.
 Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
 P2 graph/store/set/matrix/retrieval/persistence and JSON text-sequence framing remain deferred.
+
+JSONTransform is a provisional feature-branch extraction with one private compiler/VM.
+It depends on JSON and the package-private JSONFilterRuntime kernel. The CLI borrows
+the same ledger through its package adapter. No release or final API freeze is implied.

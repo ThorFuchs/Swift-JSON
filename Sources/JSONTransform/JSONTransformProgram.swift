@@ -29,9 +29,9 @@ public struct JSONTransformProgram: Sendable {
         } catch { throw JSONTransformFailure.classify(error) }
     }
 
-    /// Runs a synchronous, invocation-owned throwing pull scope.
+    /// Runs a synchronous, invocation-owned guarded pull scope.
     ///
-    /// A present null result is distinct from EOF. The scope releases frames,
+    /// A present null result is distinct from EOF. Copies of the execution handle share one cumulative ledger. The scope releases frames,
     /// provider and owned bindings on exit. Extracted JSON copies become caller
     /// storage; keep the output handle alive while using its accounted alias.
     /// A caught operational failure still prevents successful scope completion.
@@ -44,7 +44,7 @@ public struct JSONTransformProgram: Sendable {
     public func withExecution<Result>(input: JSON, bindings: [String: JSON] = [:],
                                       limits: JSONTransformLimits = .init(),
                                       source: (() throws -> JSON?)? = nil,
-                                      _ body: (borrowing JSONTransformExecution) throws -> Result) throws -> JSONOperationReport<Result> {
+                                      _ body: (JSONTransformExecution) throws -> Result) throws -> JSONOperationReport<Result> {
         let execution = try JSONTransformExecution.make(plan: self, input: input, bindings: bindings, limits: limits, source: source)
         let result: Result
         do { result = try body(execution) }

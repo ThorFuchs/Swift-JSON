@@ -32,37 +32,12 @@ private struct SuppliedInput: FilterInput {
     }
 }
 
-/// A borrowed noncopyable, non-Sendable pull facade for one execution scope.
+/// A guarded, non-Sendable pull handle borrowed by one synchronous scope.
 ///
-/// The private state owns one cumulative meter. A borrowing callback cannot swap
-/// or replace this facade with another invocation. Only plans are Sendable.
-public struct JSONTransformExecution: ~Copyable {
-    private let state: TransformExecutionState
-    private init(state: TransformExecutionState) { self.state = state }
-    static func make(plan: JSONTransformProgram, input: JSON, bindings: [String: JSON],
-                     limits: JSONTransformLimits, source: (() throws -> JSON?)?) throws -> Self {
-        .init(state: try TransformExecutionState.make(plan: plan, input: input, bindings: bindings, limits: limits, source: source))
-    }
-    /// Pulls the next ordered output, or nil at completed evaluation.
-    ///
-    /// Resource, provider and cancellation failures latch and bypass language
-    /// catches. A present output containing JSON null is distinct from EOF.
-    public func next() throws -> JSONTransformOutput? { try state.next() }
-    /// Current native cumulative statistics, including after a failed pull.
-    public var statistics: JSONOperationStatistics { state.statistics }
-    /// Remaining shared work; arbitrary caller instructions are not capped.
-    public var remainingWorkUnits: UInt64 { state.remainingWorkUnits }
-    /// Reads a live or cumulative transform counter without exporting a meter.
-    /// - Parameter metric: The counter whose usage to inspect.
-    public func used(_ metric: JSONTransformLimits.Metric) -> UInt64 { state.used(metric) }
-    /// Latches cancellation for later pulls and scope completion.
-    public func cancel() { state.cancel() }
-    func checkCompletion() throws { try state.checkCompletion() }
-    func close() throws { try state.close() }
-    func recordCleanupFailure(_ error: any Error) { state.recordCleanupFailure(error) }
-}
-
-private final class TransformExecutionState {
+/// Copies share one invocation and cannot reset its cumulative meter. Scope exit
+/// releases the provider and VM and invalidates data access through escaped
+/// handles. Reports remain observable. Only immutable plans are Sendable.
+public final class JSONTransformExecution {
     private var context: TransformRuntimeContext
     private var vm: FilterVM?
     private var input: SuppliedInput
@@ -79,11 +54,11 @@ private final class TransformExecutionState {
         vm = nil
     }
     static func make(plan: JSONTransformProgram, input root: JSON, bindings: [String: JSON],
-                     limits: JSONTransformLimits, source: (() throws -> JSON?)?) throws -> TransformExecutionState {
+                     limits: JSONTransformLimits, source: (() throws -> JSON?)?) throws -> JSONTransformExecution {
         do {
             var context = try TransformRuntimeContext(limits: limits.runtime)
             try context.meter.retain(128) // Fixed invocation state, before allocation.
-            let execution = TransformExecutionState(context: consume context, source: source)
+            let execution = JSONTransformExecution(context: consume context, source: source)
             try execution.prepare(plan: plan, root: root, bindings: bindings)
             return execution
         } catch { throw JSONTransformFailure.classify(error) }
@@ -113,7 +88,7 @@ private final class TransformExecutionState {
     ///
     /// A resource, provider or cancellation failure latches and bypasses query
     /// catches. Later pulls cannot create a fresh successful execution.
-    func next() throws -> JSONTransformOutput? {
+    public func next() throws -> JSONTransformOutput? {
         do {
             try context.checkpoint()
             if let failure { throw failure }
@@ -132,17 +107,18 @@ private final class TransformExecutionState {
         }
     }
     /// Current cumulative native statistics, also available after a failed pull.
-    var statistics: JSONOperationStatistics { context.meter.statistics() }
+    public var statistics: JSONOperationStatistics { context.meter.statistics() }
     /// Remaining shared owned work; this is not a caller instruction quota.
-    var remainingWorkUnits: UInt64 {
+    public var remainingWorkUnits: UInt64 {
         let cap = min(context.limits.core[.workUnits], context.limits[.totalWorkUnits])
         return cap - min(cap, context.used(.totalWorkUnits))
     }
     /// Reads a transform counter without exposing its mutable meter.
     /// - Parameter metric: The cumulative or live transform counter.
-    func used(_ metric: JSONTransformLimits.Metric) -> UInt64 { context.used(metric.runtime) }
+    public func used(_ metric: JSONTransformLimits.Metric) -> UInt64 { context.used(metric.runtime) }
     /// Latches cancellation. The next pull and scope completion both throw.
-    func cancel() {
+    public func cancel() {
+        guard !closed else { return }
         let cancelled = JSONTransformFailure(.cancelled, "cancelled")
         if failure == nil { failure = cancelled }
         context.latch(cancelled)

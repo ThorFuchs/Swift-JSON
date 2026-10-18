@@ -1,5 +1,13 @@
 # Changelog
 
+## Provisional JSONTransform extraction
+
+- Add an optional public compiler/pull API over the single existing private query kernel.
+- Preserve CLI ownership through package-only cumulative adapters; add real-engine
+  lifecycle, exactness, provider and typed failure tests and a standalone consumer.
+- Retain rejected inout substitution and Swift 6.4 borrowed-capture compiler failure
+  evidence; the guarded handle API and release qualification remain provisional.
+
 ## 1.7.0 — Unreleased
 
 - Retain admitted opt-in JSONInspection: observation-only array evidence, exact

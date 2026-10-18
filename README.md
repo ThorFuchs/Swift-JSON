@@ -2,7 +2,7 @@
 
 This source is **1.7.0-dev**, the unreleased development line. It retains the
 admitted JSONInspection array-evidence API plus source-attached snapshots and
-tree/sparse-table projections alongside the unchanged 56-declaration Navigation API: nine libraries, ten products and nine catalogs.
+tree/sparse-table projections alongside the unchanged 56-declaration Navigation API. This feature candidate also prototypes JSONTransform: ten libraries, eleven products and ten source catalogs.
 The stable 1.6 line has eight libraries and eight catalogs. Do not use a main
 snapshot as a 1.6 maintenance release.
 
@@ -41,8 +41,8 @@ DocC and qualification assets for the stable reference; see the
 Historical N0/N1 plans and later candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
-This 1.7.0-dev source includes opt-in JSONInspection: nine libraries plus the CLI,
-ten products in total. Inspection is absent from stable 1.6 releases. Use this
+This feature source includes opt-in JSONInspection and provisional JSONTransform:
+ten libraries plus the CLI, eleven products in total. Inspection is absent from stable 1.6 releases. Use this
 source checkout for Inspection; its inclusion in main does not publish 1.7.0.
 
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
@@ -101,6 +101,7 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
+| **JSONTransform** | Provisional feature: exact query plans, guarded pull execution and finite cumulative limits; see the [extraction checkpoint](Documentation/Architecture/Release1.7/JSONTransform.md) |
 | **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees and strict sparse object-row tables |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
@@ -714,3 +715,12 @@ location/value/span lookup is an explicitly separate full-source-admitted operat
 Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
 These additions are absent from published 1.6.1 and do not publish 1.7.0.
+
+## Provisional public transformation library
+
+The JSONTransform feature candidate exposes the existing query compiler and pull VM
+without CLI imports. The CLI uses the same engine. Plans are immutable and Sendable;
+scoped handles share one cumulative ledger and invalidate on scope exit. The public
+[guide](Sources/JSONTransform/Documentation.docc/ScopedTransforms.md) and
+[standalone consumer](Tools/TransformQualification) document the provisional API.
+This product is absent from stable 1.6.1 and remains subject to full qualification.

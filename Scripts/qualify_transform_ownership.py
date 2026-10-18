@@ -17,8 +17,10 @@ def main():
     positive = output / 'PublicConsumer.swift'
     positive.write_text('import JSON\nimport JSONTransform\nfunc send<T: Sendable>(_: T) {}\nfunc check(_ p: JSONTransformProgram) throws { send(p); _ = try p.withExecution(input: .null) { e in try e.next()?.value } }\n')
     cases = [('public-consumer', positive, True, None)]
-    for name, diagnostic in [('ReplaceScope', 'cannot pass immutable value as inout argument'), ('DoubleConsume', 'consumed more than once'), ('SendExecution', 'does not conform to the'), ('EscapeScope', 'escaping closure')]:
+    for name, diagnostic in [('ReplaceScope', 'cannot pass immutable value as inout argument'), ('SendExecution', 'does not conform to the')]:
         cases.append((name, ROOT / 'Tests/CompileNegative/JSONTransform' / (name + '.swift'), False, diagnostic))
+    for name in ['EscapeScope', 'HandleAliases']:
+        cases.append((name, ROOT / 'Tests/CompilePositive/JSONTransform' / (name + '.swift'), True, None))
     rows = []
     for name, source, positive_case, diagnostic in cases:
         command = base + [str(source), '-o', str(output / (name + '.o'))]
