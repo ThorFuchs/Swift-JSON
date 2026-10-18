@@ -1,3 +1,22 @@
+# NAV9 Branch B experimental qualification
+
+Adds exactly46 package-only set/matrix/core functions: 825 native /809 Linux /
+721 WASI, with unchanged325/288 parameter invocations. Inspection requires122
+functions and sharing requires53 native /52 Linux (six Inspection). Exact P1
+P01–P32, new SSET01–18/MAT01–18/CORE01–10 identities, all49 core caps and126
+maintenance identities remain required. The harness now requires19 tests.
+
+Native/Linux and focused Inspection also require the independent20-fixture
+premise oracle, D0 full codegen (two positive/ten ordinary negative cases and
+seven runtime cases/configuration), and private isolation consumer (six cases
+per configuration/twelve negative codegen cases). Original reducer2-positive/
+20-negative and public P1 consumer checks remain separate. Debug/Release/ASan,
+strict-memory, thread sanitizer and supported portable lanes are required;
+receipts establish actual passes, these counts only specify gates. The opt-in
+public graph stays ten products/nine libraries, empty root dependencies and
+Navigation56/Inspection95 declarations. Graph/store have no runtime qualification.
+Branch A owns G4; no Branch B timing result or speed claim is inherited.
+
 # NAV8 Navigation V1 integration
 
 Current required discovery retains 779 native /763 Linux /675 WASI functions,
