@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "kit_version": "0.1.0",
+  "validated_library": {
+    "version": "1.6.1",
+    "commit": "e431f157ececc0cf3d061192420b0e36a9062f83",
+    "tree": "9d4c3969fad53f4734265ff585dc482ebea943d3",
+    "repository": "https://github.com/ThorFuchs/Swift-JSON.git"
+  },
+  "baseline": {
+    "swift_tools_compiler": "6.4+",
+    "swift_language_mode": "6",
+    "apple": "macOS/SDK 27+; iOS/iPadOS 27+",
+    "linux": "separately qualified 64-bit Ubuntu 24.04/glibc",
+    "wasi": "separately qualified full-language wasm32-unknown-wasip1 core scope"
+  },
+  "products": [
+    "JSON",
+    "JSONSchema",
+    "JSONSchemaExamples",
+    "JSONStreaming",
+    "JSONPatch",
+    "JSONHTML",
+    "JSONBridges",
+    "JSONNavigation"
+  ],
+  "cli": "swift-json",
+  "unreleased": {
+    "source_version": "1.7.0-dev",
+    "additional_library": "JSONInspection",
+    "validated_by_this_kit": false
+  },
+  "recipes": [
+    {
+      "id": "exact-presence",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE exact-presence",
+      "sources": [
+        {
+          "path": "Sources/JSON/Codec/JSONParser.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Codec/JSONParser.swift",
+          "sha256": "9cf5f49d6902d4b837249415a8981f1d9da16f9c6f1dc56e8f68821e1788fee9"
+        },
+        {
+          "path": "Sources/JSON/Codec/JSONWriter.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Codec/JSONWriter.swift",
+          "sha256": "aab11e0c955428baaa171550d8623d7fe431375c140821faea88d3c45548344d"
+        },
+        {
+          "path": "Sources/JSON/Documentation.docc/QuickEntryPoints.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Documentation.docc/QuickEntryPoints.md",
+          "sha256": "a1134f57009a57ff742607a9fc6fcb6647bbffda76be0e29f555a47796ab27aa"
+        },
+        {
+          "path": "Sources/JSON/Value/JSON.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Value/JSON.swift",
+          "sha256": "25ffc8de088d856c4024000c0f15a26ab83166d0fbd2c76eae6ff3ae7cddf85d"
+        },
+        {
+          "path": "Sources/JSON/Value/JSONObject.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Value/JSONObject.swift",
+          "sha256": "a418915f32a4c17cc1ebec6f21ae2e53c955e294e209cdfa130704dd4c14a9db"
+        },
+        {
+          "path": "Sources/JSON/Reading/JSONReadCursor.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Reading/JSONReadCursor.swift",
+          "sha256": "3fbb2d769b334f372059d185797b042d8cb331455d7491c1b6f27cb7c0242877"
+        }
+      ]
+    },
+    {
+      "id": "native-bridge",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE native-bridge",
+      "sources": [
+        {
+          "path": "Sources/JSONBridges/DoubleConversions.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONBridges/DoubleConversions.swift",
+          "sha256": "619da122f2b420873c1f5ead454bbc188bc16769c451ac4af6a014d48deb3ffd"
+        },
+        {
+          "path": "Sources/JSONBridges/IntegerConversions.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONBridges/IntegerConversions.swift",
+          "sha256": "2023b74d6ba1482795f674bafe881989caaed48fcc6d5db54f8f0e34356dcf2a"
+        },
+        {
+          "path": "Sources/JSONBridges/Documentation.docc/NumericFidelity.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONBridges/Documentation.docc/NumericFidelity.md",
+          "sha256": "d86bf5742da61adeeb940f0f6bb5326cf8a50e4637d71d28f514a63aa64595dc"
+        }
+      ]
+    },
+    {
+      "id": "schema",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE schema",
+      "sources": [
+        {
+          "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "sha256": "35e778b77a0d19605720aaade9ebcbba50d19820bc71f5d24f977cfd7f4a6271"
+        },
+        {
+          "path": "Sources/JSONSchema/Evaluation/JSONSchemaValidator.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Evaluation/JSONSchemaValidator.swift",
+          "sha256": "4501f8a82579e2e83ed47fb4cfbb4c1f71a1cf4404611c6b71b84877eead9868"
+        },
+        {
+          "path": "Sources/JSONSchema/Output/JSONValidationResult.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Output/JSONValidationResult.swift",
+          "sha256": "f0660738bc64492243d9b59b92d8dc31a9305c618ee59db66db8da17ae055a3d"
+        },
+        {
+          "path": "Sources/JSONSchema/Limits/JSONSchemaOptions.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Limits/JSONSchemaOptions.swift",
+          "sha256": "6e85ae15308b9d547b6a876a7a931b17a3775083491453501ffd3c5a6bfe4ec1"
+        },
+        {
+          "path": "Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
+          "sha256": "2e2fff0b67e6762c48a64a58ebc880562afbc1c6147ef65521e3a5fea226e8cc"
+        }
+      ]
+    },
+    {
+      "id": "examples",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE examples",
+      "sources": [
+        {
+          "path": "Sources/JSONSchemaExamples/JSONSchemaExampleGenerator.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchemaExamples/JSONSchemaExampleGenerator.swift",
+          "sha256": "7de03913f53b1fd5604be4c6fa744aa4b8f6ae42a28d9dfd933413baf28e0317"
+        },
+        {
+          "path": "Sources/JSONSchemaExamples/JSONSchemaExampleResult.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchemaExamples/JSONSchemaExampleResult.swift",
+          "sha256": "a252e9bde1b59269dfbafe27c4a512cc07fb980372cc9bf04a23eed537eb610e"
+        },
+        {
+          "path": "Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md",
+          "sha256": "91084d313255da246a4caaa3004038c10a42319f5bdcd455be1652da03f83468"
+        }
+      ]
+    },
+    {
+      "id": "streaming",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE streaming",
+      "sources": [
+        {
+          "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+          "sha256": "4a92da97cf87388701b2047c1b5e04bbc411be3fb735b6201efd285ea7591d36"
+        },
+        {
+          "path": "Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
+          "sha256": "3a17263b55165b2bc351a7461232e28a6d32d42cea979534440baab3117d6abe"
+        }
+      ]
+    },
+    {
+      "id": "navigation",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE navigation",
+      "sources": [
+        {
+          "path": "Sources/JSONNavigation/JSONTraversal.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONNavigation/JSONTraversal.swift",
+          "sha256": "e7a48a015a437a5d7f5b27ca809e9edfcb62393b609061a198e4fd8f2ab3349c"
+        },
+        {
+          "path": "Sources/JSONNavigation/JSONTraversalTypes.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONNavigation/JSONTraversalTypes.swift",
+          "sha256": "4500c2ccdf1d7c55f038fbfa4d1ff261587bb83a473cd9da0b0b43f6d888fcb6"
+        },
+        {
+          "path": "Sources/JSONNavigation/Documentation.docc/Traversal.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONNavigation/Documentation.docc/Traversal.md",
+          "sha256": "266755bf0fa2a1a6336ccb52e435adc7b53911a44ef5255fa7629892bc9790ef"
+        }
+      ]
+    },
+    {
+      "id": "patch",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE patch",
+      "sources": [
+        {
+          "path": "Sources/JSONPatch/JSONPatch.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONPatch/JSONPatch.swift",
+          "sha256": "32fd877d902264be2ea83acd89d1b68f1f2320b66e525e3ca1426a9a2707172e"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONPatchResult.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONPatch/JSONPatchResult.swift",
+          "sha256": "3efdac61fa5f1e0954d092e9ea149199a29915944ad4b5f435569c530c3278e2"
+        },
+        {
+          "path": "Sources/JSONPatch/JSONMergePatch.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONPatch/JSONMergePatch.swift",
+          "sha256": "e6489707e583c0a98253b9463cf4c9949f03d8be1fd6e4b4922ae3cee3cacbdb"
+        }
+      ]
+    },
+    {
+      "id": "html",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE html",
+      "sources": [
+        {
+          "path": "Sources/JSONHTML/JSONHTMLRenderer.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONHTML/JSONHTMLRenderer.swift",
+          "sha256": "5ecce38aff754fe90afc2d90463bf60d98b4cf1c0990dc0c8794d06562e934d1"
+        },
+        {
+          "path": "Sources/JSONHTML/Documentation.docc/FormattedRendering.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONHTML/Documentation.docc/FormattedRendering.md",
+          "sha256": "56cbae8a68471d8138b0de5061236a30abbdca768483cdcf5c2a7b5d382ee172"
+        }
+      ]
+    }
+  ],
+  "local_files": [
+    {
+      "path": "LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "7c7329de79c00297cc87f638c5b0d785c0166f6284f846eb6b91bea0aea294f5",
+      "bytes": 10259
+    },
+    {
+      "path": "assets/consumer/Package.swift",
+      "sha256": "78efacb71d2444fdc7a6a6bb92e17a7e95acaa1f5ec5ac550e931168c3f64303",
+      "bytes": 896
+    },
+    {
+      "path": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "sha256": "86cf9ede263d2151500362eeb7319426b53cfea2ed660055e6b129e5e5c8f27c",
+      "bytes": 10073
+    },
+    {
+      "path": "references/installation.md",
+      "sha256": "6e3af4461a4feae5665bc29840d3ee0ce47d7a900a385c4453b4bf4103e04ba0",
+      "bytes": 1928
+    },
+    {
+      "path": "references/recipes.md",
+      "sha256": "958c98c4b0f1d3af798d413870f4328cefee166d7284d3c4091cd8f3c2daca09",
+      "bytes": 2267
+    },
+    {
+      "path": "references/semantics.md",
+      "sha256": "deaeabc36df3446db8f1e3005baffcab4f644e2bb5c5170178ed950fc49e846e",
+      "bytes": 3240
+    },
+    {
+      "path": "references/troubleshooting.md",
+      "sha256": "01b0f4b9985bdbf0d07e7566083b9473b818bc67854ffd0c879ff0279a564245",
+      "bytes": 1742
+    },
+    {
+      "path": "references/versions.md",
+      "sha256": "a39aaaf86a0c155fe57147450e477afcf1f48a4dc067ed3e0a2ba56f1979c17b",
+      "bytes": 2130
+    }
+  ],
+  "authoring_sources": [
+    {
+      "url": "https://developers.openai.com/plugins/build/plugins",
+      "observed": "2026-10-18"
+    },
+    {
+      "url": "https://developers.openai.com/plugins/build/skills",
+      "observed": "2026-10-18"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "observed": "2026-10-18"
+    }
+  ]
+}

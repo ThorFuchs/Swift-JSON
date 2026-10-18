@@ -44,3 +44,8 @@ Public API changes need useful Swift documentation comments and a focused guide 
 semantics span multiple calls. README Swift examples must match their compiled consumer.
 See [documentation tooling](Documentation/DocumentationTooling.md) for coverage checks,
 compiled examples and native DocC builds.
+
+The optional [consumer developer kit](Documentation/AgentDeveloperKit.md) is
+separate from these contributor instructions. Keep its canonical skill, pinned
+public recipes and standalone/plugin distributions in sync through the focused
+acceptance harness; independent review precedes merge and distribution.
