@@ -20,7 +20,7 @@ package enum FilterCompiler {
         "error":[0,1], "input":[0], "inputs":[0],
         "add":[0], "abs":[0], "floor":[0], "ceil":[0], "trunc":[0], "round":[0], "range":[1,2,3], "while":[2], "until":[2], "recurse":[0,1,2], "walk":[1], "path":[1], "paths":[0,1], "getpath":[1], "setpath":[2], "delpaths":[1], "del":[1]
     ].merging(FilterStringBuiltins.arities) { old, _ in old }.merging(FilterCollectionBuiltins.arities) { old, _ in old }
-    package static func compile(_ source: String, variables: Set<String> = ["ARGS"], context: inout CLIJobContext) throws -> FilterProgram {
+    package static func compile(_ source: String, variables: Set<String> = ["ARGS"], context: inout TransformRuntimeContext) throws -> FilterProgram {
         try context.domain(.core)
         let tokens = try FilterLexer.lex(source, context: &context)
         guard !tokens.isEmpty else { throw FilterCompileFailure("emptyFilter", at: 0) }
@@ -39,14 +39,14 @@ package enum FilterCompiler {
         }
         guard nesting.isEmpty else { throw FilterCompileFailure("unclosedDelimiter", at: tokens[nesting.last!.0].range.lowerBound) }
         var nodes: [FilterProgram.Node] = [], ranges: [Range<Int>] = [], work: [Work] = [], functions:[FilterProgram.Function]=[], patterns:[FilterBindingPattern]=[]
-        func slot(_ span: Range<Int>, depth: UInt64, variables: Set<String>, functions:[String:Int]=[:],parameters:Set<String>=[],declarations:Set<String>=[], context: inout CLIJobContext) throws -> Int {
+        func slot(_ span: Range<Int>, depth: UInt64, variables: Set<String>, functions:[String:Int]=[:],parameters:Set<String>=[],declarations:Set<String>=[], context: inout TransformRuntimeContext) throws -> Int {
             guard !span.isEmpty else { throw FilterCompileFailure("missingExpression", at: source.utf8.count) }
             try context.require(.queryDepth, depth); try context.charge(.astNodes); try context.meter.retain(128)
             let id = nodes.count; nodes.append(.pending); ranges.append(tokens[span.lowerBound].range.lowerBound..<tokens[span.upperBound-1].range.upperBound)
             try context.meter.retain(48); work.append(.init(range:span,destination:id,depth:depth,variables:variables,functions:functions,parameters:parameters,declarations:declarations)); return id
         }
         var taskScratch: UInt64 = 0
-        func top(_ span: Range<Int>, context: inout CLIJobContext) throws -> [Int] {
+        func top(_ span: Range<Int>, context: inout TransformRuntimeContext) throws -> [Int] {
             var result: [Int] = [], i = span.lowerBound
             while i < span.upperBound {
                 try context.work(); try context.meter.retain(8); taskScratch += 8; result.append(i)
@@ -65,7 +65,7 @@ package enum FilterCompiler {
                 guard !span.isEmpty else { throw FilterCompileFailure("missingExpression", at: ranges[task.destination].lowerBound) }
             }
             let lo = span.lowerBound, hi = span.upperBound, first = tokens[lo].text
-            func child(_ range: Range<Int>, context: inout CLIJobContext) throws -> Int { try slot(range,depth:task.depth+1,variables:task.variables,functions:task.functions,parameters:task.parameters,declarations:task.declarations,context:&context) }
+            func child(_ range: Range<Int>, context: inout TransformRuntimeContext) throws -> Int { try slot(range,depth:task.depth+1,variables:task.variables,functions:task.functions,parameters:task.parameters,declarations:task.declarations,context:&context) }
             let positions = try top(span, context:&context)
             if first=="def" {
                 guard let semi=matches[lo],semi+1<hi,case .name(let name)=tokens[lo+1].kind else{throw FilterCompileFailure("invalidDefinition",at:tokens[lo].range.lowerBound)}
@@ -230,7 +230,7 @@ package enum FilterCompiler {
                 }
                 nodes[task.destination] = .object(fields);continue
             }
-            func interpolationArguments(_ start:Int,context:inout CLIJobContext)throws->[Int]{
+            func interpolationArguments(_ start:Int,context:inout TransformRuntimeContext)throws->[Int]{
                 guard start+1<hi,tokens[start+1].text=="(",matches[start+1]==hi-1 else{throw FilterCompileFailure("invalidInterpolation",at:tokens[start].range.lowerBound)}
                 let inside=(start+2)..<(hi-1),semis=try top(inside,context:&context).filter{tokens[$0].text==";"}
                 var arguments:[Int]=[]

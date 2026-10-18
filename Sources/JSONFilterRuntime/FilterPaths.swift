@@ -3,17 +3,17 @@ import JSON
 
 /// Path arrays retain their dialect identity, independent of Pointer token syntax.
 package enum FilterPaths {
-    package static func segments(_ value:JSON,context:inout CLIJobContext)throws->[JSON]{
+    package static func segments(_ value:JSON,context:inout TransformRuntimeContext)throws->[JSON]{
         guard case .array(let values)=value else{throw FilterLanguageFailure("expectedPathArray")}
         for segment in values{try context.work();switch segment{case .string:break;case .number(let n):guard n.isInteger else{throw FilterLanguageFailure("invalidPathSegment")};default:throw FilterLanguageFailure("invalidPathSegment")}}
         return values
     }
-    package static func get(_ input:JSON,path:[JSON],context:inout CLIJobContext)throws->JSON{
+    package static func get(_ input:JSON,path:[JSON],context:inout TransformRuntimeContext)throws->JSON{
         var value=input
         for segment in path{try context.work();value=try FilterValues.index(value,key:segment,context:&context)}
         return value
     }
-    private static func index(_ number:JSONNumber,count:Int,creating:Bool,context:inout CLIJobContext)throws->Int?{
+    private static func index(_ number:JSONNumber,count:Int,creating:Bool,context:inout TransformRuntimeContext)throws->Int?{
         guard number.isInteger else{throw FilterLanguageFailure("invalidPathSegment")}
         if number.isNegative{
             if try number.compare(to:JSONNumber(integer:-count),meter:&context.meter) == .orderedAscending{return nil}
@@ -31,7 +31,7 @@ package enum FilterPaths {
         }
         return try number.integer(as:Int.self,meter:&context.meter)
     }
-    package static func set(_ input:JSON,path:[JSON],replacement:JSON?,context:inout CLIJobContext)throws->FilterYield?{
+    package static func set(_ input:JSON,path:[JSON],replacement:JSON?,context:inout TransformRuntimeContext)throws->FilterYield?{
         try context.checkpoint();let entry=context.meter.used(.retainedBytes)
         var owned:UInt64=0,collections:UInt64=0,transferred=false
         defer{try? context.meter.release(context.meter.used(.retainedBytes)-entry-owned);if !transferred{try? context.release(.collectionValues,collections)}}
@@ -91,15 +91,15 @@ package enum FilterPaths {
         guard let candidate else{return nil}
         let result=try FilterValues.produced(candidate,collections:collections,context:&context);owned=result.lease?.retained ?? 0;transferred=true;return result
     }
-    package static func same(_ a:[JSON],_ b:[JSON],context:inout CLIJobContext)throws->Bool{
+    package static func same(_ a:[JSON],_ b:[JSON],context:inout TransformRuntimeContext)throws->Bool{
         guard a.count==b.count else{return false}
         for index in a.indices{try context.work();if try !FilterValues.equals(a[index],b[index],context:&context){return false}};return true
     }
-    package static func prefix(_ a:[JSON],_ b:[JSON],context:inout CLIJobContext)throws->Bool{
+    package static func prefix(_ a:[JSON],_ b:[JSON],context:inout TransformRuntimeContext)throws->Bool{
         guard a.count<b.count else{return false}
         for index in a.indices{try context.work();if try !FilterValues.equals(a[index],b[index],context:&context){return false}};return true
     }
-    package static func normalized(_ input:JSON,path:[JSON],context:inout CLIJobContext)throws->[JSON]{
+    package static func normalized(_ input:JSON,path:[JSON],context:inout TransformRuntimeContext)throws->[JSON]{
         var result:[JSON]=[],current=input
         for segment in path{
             try context.work();var normalized=segment
@@ -108,7 +108,7 @@ package enum FilterPaths {
         }
         return result
     }
-    package static func targets(_ input:JSON,paths:[[JSON]],context:inout CLIJobContext)throws->[[JSON]]{
+    package static func targets(_ input:JSON,paths:[[JSON]],context:inout TransformRuntimeContext)throws->[[JSON]]{
         var result:[[JSON]]=[]
         for path in paths{
             try context.work();let normalized=try normalized(input,path:path,context:&context)
@@ -118,7 +118,7 @@ package enum FilterPaths {
         }
         return result
     }
-    package static func deletionOrder(_ paths:[[JSON]],context:inout CLIJobContext)throws->[Int]{
+    package static func deletionOrder(_ paths:[[JSON]],context:inout TransformRuntimeContext)throws->[Int]{
         var result:[Int]=[]
         for index in paths.indices{
             try context.work();try context.meter.retain(8);var position=result.count

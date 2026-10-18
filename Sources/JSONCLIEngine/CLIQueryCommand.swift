@@ -2,6 +2,7 @@
 import Foundation
 import JSON
 import JSONFilterRuntime
+import JSONTransform
 
 package enum CLIQueryCommand {
     package static func run(_ arguments: CLIArguments, context: inout CLIJobContext) throws -> Int32 {
@@ -33,7 +34,7 @@ package enum CLIQueryCommand {
             try? context.reclaimValueLeases()
         }
         bindings = try makeBindings(arguments, context: &context)
-        let program = try FilterCompiler.compile(source, variables: Set(bindings.keys), context: &context)
+        let program = try JSONTransformProgram.compileAccounted(source, variables: Set(bindings.keys), context: &context)
         try context.domain(.core)
         let output = try CLIOutput(destination: arguments.options["output"], overwrite: arguments.overwrite, inputs: inputFiles + auxiliary, context: &context)
         let framing: CLIInputFraming
@@ -47,7 +48,7 @@ package enum CLIQueryCommand {
         var finalTruth: Bool?
         func evaluate(_ input: FilterYield, cursor: inout CLIInputCursor, context: inout CLIJobContext) throws {
             try context.domain(.core)
-            var vm = try FilterVM(program: program, input: input, bindings: bindings, context: &context)
+            var vm = try program.makeAccountedExecution(input: input, bindings: bindings, context: &context)
             defer { try? vm.close(context: &context) }
             while true {
                 try context.domain(.core)

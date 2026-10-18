@@ -1,0 +1,47 @@
+# JSONTransform extraction checkpoint
+
+This feature-branch API is provisional. Stable 1.6.1 and development main remain
+separate authorities. This source adds JSONTransform to the nine development
+libraries; it does not remove JSONInspection or import another candidate.
+
+The chosen spike uses one private JSONFilterRuntime kernel. JSONTransform owns an
+opaque Sendable `JSONTransformProgram` and scoped noncopyable
+`JSONTransformExecution`. An execution pulls `JSONTransformOutput?`: nil means EOF,
+while a present handle may contain JSON null. Handles share source leases and are
+not Sendable. JSON extracted from a handle is caller-owned; the scope's logical
+accounting is not RSS and does not meter arbitrary callbacks.
+
+`compile(_:variables:limits:)` has its own finite compilation ledger. The plan
+conservatively reserves its compiler-retained bytes in each standalone execution.
+`withExecution(input:bindings:limits:source:_:)` owns one cumulative native meter
+across admission, every pull, provider value and result. It returns a native
+operation report. `used(_:)`, `statistics` and `remainingWorkUnits` expose counters
+without exporting a meter. `cancel()` latches an operational failure. Catching a
+failed pull cannot make scope completion successful. Provider EOF is distinct from
+JSON null; callback work and upstream allocations remain caller-owned.
+
+For CLI composition the same program offers package-only `compileAccounted` and
+`makeAccountedExecution` adapters borrowing the existing noncopyable operation
+context. They invoke the same compiler and VM. There is no fresh per-record meter
+and no second evaluator. The host still owns files, framing, source draining,
+output, process statuses and the sixteen original CLI metric names. All 49 core
+metrics remain unchanged. Package-only CLI aliases preserve existing host tests
+and ownership probes during migration; these are not public API.
+
+Option B (one common private operation scope) is selected for the spike over a
+second transform sub-ledger or per-next meters. Borrowing only the raw native
+meter would also need to carry live frame/binding/collection counters and the
+refund queue; splitting them risks two health/ownership authorities. The current
+common scope preserves those invariants. Host metadata still stored in that
+private context needs further ownership review before final API freeze.
+
+Swift 6.4 rejected a throwing initializer that conditionally initialized a
+noncopyable owner across a catch. A factory now fully initializes the owner before
+fallible preparation. No unsafe annotations or compiler flags were introduced.
+A standalone external consumer in Tools/TransformQualification and eleven Swift
+Testing functions exercise the actual engine. The private execution receipts bind
+their exact source revisions; a working spike is not full release qualification.
+
+JTX-2 through JTX-7 remain separate qualification gates. No merge, tag, publication,
+Linux/WASI runtime support, complete conformance, controlled performance or final
+API acceptance follows from this checkpoint.
