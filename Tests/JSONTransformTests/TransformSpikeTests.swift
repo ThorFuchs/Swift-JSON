@@ -183,3 +183,140 @@ private func values(_ source: String, input: JSON = .null) throws -> [JSON] {
     do { _ = try handle.next(); Issue.record("Escaped scope accepted data access") }
     catch let failure as JSONTransformFailure { #expect(failure.category == .configuration && failure.code == "scopeClosed") }
 }
+
+@Test func jtxReentrantProviderFailureLatchesWithoutAccessConflict() throws {
+    let plan = try JSONTransformProgram.compile("try inputs catch null")
+    var handle: JSONTransformExecution?
+    var calls = 0
+    do {
+        _ = try plan.withExecution(input: .null, source: {
+            calls += 1
+            do { _ = try handle!.next(); Issue.record("Expected re-entry rejection") }
+            catch let error as JSONTransformFailure { #expect(error.category == .configuration && error.code == "reentrantExecution") }
+            return 1 // Catching the error must not publish this value.
+        }) { execution in
+            handle = execution
+            for _ in 0..<2 {
+                do { _ = try execution.next(); Issue.record("Expected terminal re-entry failure") }
+                catch let error as JSONTransformFailure { #expect(error.code == "reentrantExecution") }
+            }
+        }
+        Issue.record("Expected terminal scope failure")
+    } catch let error as JSONTransformFailure { #expect(error.code == "reentrantExecution") }
+    #expect(calls == 1 && handle?.statistics[.retainedBytes] == 0)
+}
+@Test func jtxProviderCanObserveSnapshotAndCancelAfterOwnedProgress() throws {
+    let plan = try JSONTransformProgram.compile("inputs")
+    var handle: JSONTransformExecution?
+    var calls = 0
+    do {
+        _ = try plan.withExecution(input: .null, source: {
+            calls += 1
+            let execution = handle!
+            #expect(execution.statistics.domain == .core)
+            #expect(execution.used(.workUnits) == execution.statistics[.workUnits])
+            #expect(execution.statistics[.workUnits] > 0 && execution.remainingWorkUnits > 0)
+            #expect(execution.used(.inputValues) == 1)
+            execution.cancel()
+            return 1
+        }) { execution in
+            handle = execution
+            _ = try execution.next()
+        }
+        Issue.record("Expected callback cancellation")
+    } catch let error as JSONTransformFailure { #expect(error.category == .cancelled) }
+    #expect(calls == 1 && handle?.used(.results) == 0 && handle?.statistics[.retainedBytes] == 0)
+}
+@Test func jtxTaskCancellationIsObservedAfterProviderOwnedProgress() async throws {
+    let plan = try JSONTransformProgram.compile("inputs")
+    let checked = await Task {
+        var handle: JSONTransformExecution?
+        var calls = 0
+        do {
+            _ = try plan.withExecution(input: .null, source: {
+                calls += 1
+                withUnsafeCurrentTask { $0?.cancel() }
+                return 1
+            }) { execution in handle = execution; _ = try execution.next() }
+            return false
+        } catch let failure as JSONTransformFailure {
+            return failure.category == .cancelled && calls == 1 && handle?.used(.results) == 0 && handle?.statistics[.retainedBytes] == 0
+        } catch { return false }
+    }.value
+    #expect(checked)
+}
+@Test func jtxReportsUseCoreDomainAndCallerErrorRetainsIdentity() throws {
+    enum CallerError: Error, Equatable { case sentinel }
+    let plan = try JSONTransformProgram.compile(".")
+    var limits = JSONTransformLimits(); limits[.workUnits] = 4096
+    var work: UInt64 = 0
+    let report = try plan.withExecution(input: 1, limits: limits) { execution in
+        _ = try execution.next(); _ = try execution.next()
+        work = execution.used(.workUnits)
+        #expect(execution.remainingWorkUnits == 4096 - work)
+    }
+    #expect(report.statistics.domain == .core && report.statistics[.workUnits] == work)
+    #expect(report.statistics[.retainedBytes] == 0)
+    var escaped: JSONTransformExecution?
+    do {
+        _ = try plan.withExecution(input: .array([1,2])) { execution in
+            escaped = execution
+            _ = try execution.next()
+            throw CallerError.sentinel
+        }
+        Issue.record("Expected caller error")
+    } catch let error as CallerError { #expect(error == .sentinel) }
+    #expect(escaped?.statistics[.retainedBytes] == 0)
+}
+@Test func jtxRuntimeCapsRejectBeforePublishingAndRemainTyped() throws {
+    for metric in [JSONTransformLimits.Metric.frames, .bindings, .retainedBytes, .workUnits] {
+        let plan = try JSONTransformProgram.compile("$v", variables: ["v"])
+        var limits = JSONTransformLimits(); limits[metric] = 0
+        do {
+            _ = try plan.withExecution(input: .null, bindings: ["v": 1], limits: limits) { execution in try execution.next() }
+            Issue.record("Expected finite runtime cap")
+        } catch let error as JSONTransformFailure {
+            #expect(error.category == .resource && error.metric == metric.rawValue && error.limit == 0)
+        }
+    }
+    var invalid = JSONTransformLimits(); invalid[.results] = UInt64.max
+    do { _ = try JSONTransformProgram.compile(".", limits: invalid); Issue.record("Expected finite policy") }
+    catch let error as JSONTransformFailure { #expect(error.category == .configuration) }
+}
+@Test func jtxPublicEngineMatchesNativeExactDialectMatrix() throws {
+    let rows: [(String,String,String)] = [
+        (".a,.b", "{\"a\":1,\"b\":2}", "[1,2]"),
+        (".missing,.present", "{\"present\":null}", "[null,null]"),
+        ("map(.+1)", "[1,2]", "[[2,3]]"),
+        ("map_values(.+1)", "{\"a\":1}", "[{\"a\":2}]"),
+        (".[] | select(.>1)", "[1,2,3]", "[2,3]"),
+        ("sort_by(.k)", "[{\"k\":2,\"v\":0},{\"k\":1},{\"k\":2,\"v\":1}]", "[[{\"k\":1},{\"k\":2,\"v\":0},{\"k\":2,\"v\":1}]]"),
+        ("group_by(.)", "[2,1,2]", "[[[1],[2,2]]]"),
+        ("unique", "[2,1,2]", "[[1,2]]"),
+        ("first(.[]),last(.[])", "[1,2]", "[1,2]"),
+        ("reduce .[] as $n (0; .+$n)", "[1,2,3]", "[6]"),
+        ("foreach .[] as $n (0; .+$n)", "[1,2,3]", "[1,3,6]"),
+        (".a += 2", "{\"a\":1}", "[{\"a\":3}]"),
+        ("setpath([\"a\"];2)", "{}", "[{\"a\":2}]"),
+        ("def inc: .+1; inc", "2", "[3]"),
+        (". as $x | $x+1", "2", "[3]"),
+        ("walk(if type == \"number\" then .+1 else . end)", "{\"a\":[1]}", "[{\"a\":[2]}]"),
+        (".[1:3]", "\"e\\u0301x\"", "[\"\\u0301x\"]"),
+        (". < \"z\"", "\"é\"", "[false]"),
+        ("{a:1,a:2}", "null", "[{\"a\":2}]"),
+        ("-0,1.00", "null", "[0,1]"),
+    ]
+    for (query, input, expected) in rows {
+        #expect(try values(query, input: JSON.parse(input)) == JSON.parse(expected).arrayValue!, "\(query)")
+    }
+}
+
+@Test func jtxBindingNamesUseTheCompilerIdentifierGrammar() throws {
+    for name in ["", "é", "a-b", "$x", "1a"] {
+        do { _ = try JSONTransformProgram.compile(".", variables: [name]); Issue.record("Expected invalid variable name") }
+        catch let error as JSONTransformFailure { #expect(error.category == .configuration && error.code == "invalidVariableName") }
+    }
+    let plan = try JSONTransformProgram.compile("$a_1", variables: ["a_1"])
+    let report = try plan.withExecution(input: .null, bindings: ["a_1": 7]) { execution in try execution.next()?.value }
+    #expect(report.result == 7)
+}

@@ -70,3 +70,18 @@ The rejected noncopyable compiler crash remains an unresolved toolchain finding.
 The full native/safety/docs/Linux/WASI/performance/reproduction gates remain open;
 source-bound receipts, including failures, are in the private return. Do not infer
 release readiness or final API freeze from the prototype.
+
+## Callback re-entry repair
+
+A subprocess reproduced an exclusivity trap when an input provider re-entered
+its public handle during the VM's inout context loan. This is a concrete rejected
+checkpoint, not a passing negative case. The successor uses a separate private
+health cell to reject re-entry before context access and latch the first failure.
+The provider adapter observes health before/after callback execution. Callback
+statistics are a bounded entry snapshot; cancellation does not borrow the loaned
+context. Snapshot work (66 units) and fixed owner/health/snapshot storage (1,152
+logical bytes) are admitted in the same invocation. No unsafe isolation, lock or
+alternate evaluator is introduced. Public reports use the existing core domain.
+Twenty public-engine behavior functions cover the repaired boundary, typed runtime
+caps and a twenty-row exact dialect matrix. Independent qualification remains
+source-bound; older successful receipts cannot qualify changed code.

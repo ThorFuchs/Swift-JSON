@@ -54,3 +54,15 @@ opens no files and reads no ambient process input. Async providers are not offer
 provider and configuration errors. Operational failures bypass language catches
 and latch. Catching a failed pull cannot yield a successful operation report.
 `cancel()` likewise prevents later pulls and successful scope completion.
+
+## Callback health
+
+Input callbacks may read accounting observations and request cancellation. Their
+observations are the fixed snapshot captured on callback entry, with the same
+cumulative owned ledger. Snapshot work is charged before caller code runs.
+Re-entering `next()` on the same execution throws `configuration/reentrantExecution`
+and latches terminal health even if the callback catches it. Cancellation after
+owned progress is checked before a callback value or EOF can be accepted.
+The invocation reserves 1,152 logical bytes for owner/health/observation storage;
+this logical weight is neither an allocation measurement nor a process RSS cap.
+ASCII identifier names follow the compiler grammar and omit the `$` prefix.

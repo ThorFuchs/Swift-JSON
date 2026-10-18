@@ -14,7 +14,7 @@ public struct JSONTransformProgram: Sendable {
     /// Compiles explicit source using finite native and transform limits.
     /// - Parameters:
     ///   - source: Query source in the documented jq-inspired subset.
-    ///   - variables: Names supplied by each invocation, without `$` prefixes.
+    ///   - variables: ASCII identifiers supplied by each invocation, without `$` prefixes.
     ///   - limits: Finite compilation policy; execution has its own bounded scope.
     public static func compile(_ source: String, variables: Set<String> = [],
                                limits: JSONTransformLimits = .init()) throws -> Self {
@@ -23,6 +23,16 @@ public struct JSONTransformProgram: Sendable {
             for name in variables {
                 try context.charge(.bindings)
                 try JSONAdmission.text(name, key: true, meter: &context.meter, owned: true)
+                var first = true
+                for byte in name.utf8 {
+                    try context.work()
+                    let letter = byte == 95 || (65...90).contains(byte) || (97...122).contains(byte)
+                    guard letter || (!first && (48...57).contains(byte)) else {
+                        throw JSONTransformFailure(.configuration, "invalidVariableName")
+                    }
+                    first = false
+                }
+                guard !first else { throw JSONTransformFailure(.configuration, "invalidVariableName") }
             }
             let program = try FilterCompiler.compile(source, variables: variables, context: &context)
             return .init(program: program, planReservation: context.meter.used(.retainedBytes), variables: variables)
