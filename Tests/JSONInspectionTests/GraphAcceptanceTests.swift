@@ -9,7 +9,9 @@ import JSONNavigation
 private let graphProfile = JSONGraphProfile(nodesAt: [.key("nodes")], edgesAt: [.key("edges")],
     nodeIDKey: "id", edgeSourceKey: "from", edgeTargetKey: "to")
 private func graphDocument(_ name: String) throws -> JSONDocument {
-    let url = try #require(Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "GraphFixtures"))
+    // Match the existing P1 loader: WASI Foundation named lookup truncates extensions.
+    let root = try #require(Bundle.module.resourceURL)
+    let url = URL(fileURLWithPath: root.path + "/GraphFixtures/" + name + ".json")
     return try JSONParser().parseDocument(Data(contentsOf: url))
 }
 private func graphBuild(_ name: String, profile: JSONGraphProfile = graphProfile) throws -> JSONOperationReport<JSONGraphProjection> {
@@ -39,7 +41,8 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
         let kind: String; let ids_codepoints: [[UInt32]]?; let edge_pairs: [[Int]]?
         let outgoing_edge_ordinals: [[Int]]?; let bfs_from_node0: [Int]?
     }
-    let url = try #require(Bundle.module.url(forResource: "GRAPH-FIXTURE-ORACLE", withExtension: "json", subdirectory: "GraphFixtures"))
+    let bundle = try #require(Bundle.module.resourceURL)
+    let url = URL(fileURLWithPath: bundle.path + "/GraphFixtures/GRAPH-FIXTURE-ORACLE.json")
     let oracle = try JSONValueDecoder().decode(Oracle.self, from: JSON.parse(Data(contentsOf: url)))
     var evaluated = 0
     for entry in oracle.cases where entry.expected.kind == "valid" {
@@ -189,6 +192,14 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
     #expect(try graph.nodeValue(at: 0).result == JSONPointer(parsing: "/0/nodes/0").resolve(in: graph.document.root))
     let wrong = JSONGraphProfile(nodesAt: [.index(0), .key("nodes")], edgesAt: profile.edgesAt, nodeIDKey: profile.nodeIDKey, edgeSourceKey: profile.edgeSourceKey, edgeTargetKey: profile.edgeTargetKey)
     #expect(graphCore { _ = try JSONGraphProjection.build(document: graph.document, profile: wrong) }?.code == .wrongKind)
+    let special = JSONDocument(root: try JSON.parse(#"{"a/b~":{"": [{"id":"A"}]},"edges":[]}"#))
+    let exact = JSONGraphProfile(nodesAt: [.key("a/b~"), .key("")], edgesAt: [.key("edges")], nodeIDKey: "id", edgeSourceKey: "from", edgeTargetKey: "to")
+    let nested = try JSONGraphProjection.build(document: special, profile: exact).result
+    #expect(try nested.nodeValue(at: 0).result == JSONPointer(parsing: "/a~1b~0//0").resolve(in: special.root))
+    let arrays = JSONDocument(root: try JSON.parse(#"[[{"id":"A"}],[]]"#))
+    let indexed = JSONGraphProfile(nodesAt: [.index(0)], edgesAt: [.index(1)], nodeIDKey: "id", edgeSourceKey: "from", edgeTargetKey: "to")
+    #expect(try JSONGraphProjection.build(document: arrays, profile: indexed).result.nodeIDs == ["A"])
+
 }
 @Test func graphG24OverlapAndDuplicateRootsFailBeforeRows() throws {
     for paths in [([], [.key("nodes")]), ([.key("nodes")], [.key("nodes")])] as [([JSONLocationComponent], [JSONLocationComponent])] {
@@ -265,7 +276,7 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
     var keyLimits = JSONLimits.balanced; keyLimits[.keyBytes] = 5
     #expect(graphCore { _ = try JSONGraphProjection.build(document: empty, profile: hugeKey, limits: keyLimits) }?.resource?.metric == .keyBytes)
     #expect(graphCore { _ = try ProjectionAccounting.next(Int.max, limits: .balanced) }?.code == .counterOverflow)
-    #expect(graphCore { _ = try ProjectionAccounting.bytes(Int.max, unit: 256, limits: .balanced) }?.code == .counterOverflow)
+    #expect(graphCore { _ = try ProjectionAccounting.bytes(Int.max, unit: UInt64.max, limits: .balanced) }?.code == .counterOverflow)
 }
 @Test func graphG28CancellationStopsBuildAndBFS() async throws {
     let doc = try graphDocument("g22-diamond"), graph = try graphBuild("g22-diamond").result
@@ -320,6 +331,15 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
     #expect(graphFailure { _ = try JSONGraphProjection.build(document: doc, profile: graphProfile) } == .rowNotObject(at: [.key("nodes"), .index(0)], kind: .boolean))
     var limits = JSONLimits.balanced; limits[.workUnits] = 0
     #expect(graphCore { _ = try JSONGraphProjection.build(document: doc, profile: graphProfile, limits: limits) }?.category == .resource)
+    let prefix = (0..<32).map { "{\"id\":\"n\($0)\"}" }.joined(separator: ",")
+    let late = JSONDocument(root: try JSON.parse("{\"nodes\":[" + prefix + ",{\"id\":\"n0\"}],\"edges\":[{\"from\":\"X\",\"to\":\"Y\"}]}"))
+    #expect(graphFailure { _ = try JSONGraphProjection.build(document: late, profile: graphProfile) } == .duplicateNodeID(first: [.key("nodes"), .index(0)], second: [.key("nodes"), .index(32)]))
+    #expect(graphFailure { _ = try JSONGraphProjection.build(document: late, profile: graphProfile, maximumNodes: 32) } == .nodeLimitExceeded(limit: 32))
+    let admitted = try JSONTraversal(document: late).visit(options: .init(depthLimit: 0)) { _,_ in .continue }
+    limits = .balanced; limits[.workUnits] = admitted.statistics[.workUnits] + 100
+    #expect(graphCore { _ = try JSONGraphProjection.build(document: late, profile: graphProfile, limits: limits) }?.category == .resource)
+    let fields = JSONDocument(root: try JSON.parse(#"{"nodes":[{"id":"A"}],"edges":[{"from":"MISSING","to":null}]}"#))
+    #expect(graphFailure { _ = try JSONGraphProjection.build(document: fields, profile: graphProfile) } == .idNull(at: [.key("edges"), .index(0), .key("to")]))
     struct Catcher: JSONTraversalOwnedReducer {
         enum Replacement: Error { case caller }
         mutating func observe(_ hit: JSONTraversalHit, value: JSON, context: inout JSONTraversalContext) throws -> JSONTraversalAction {

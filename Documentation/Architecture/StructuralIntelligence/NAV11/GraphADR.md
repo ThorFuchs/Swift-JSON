@@ -49,3 +49,9 @@ These are logical quotas, not allocator/RSS or caller-instruction guarantees.
 No public promotion, merge, release, timing or speed claim. Controlled performance
 remains HOLD. Store, persistence, graph editing, weights, algorithms other than BFS,
 query/CLI/HTML/network adapters and NAV10 batching remain separate work.
+
+BFS entry precedence is negative capacities, node bounds, whole source/metadata
+admission, then enqueue's frontier/visited/result ceilings. Work/cancellation that
+is observed first takes precedence. Edge rows validate source field then target
+field before resolving source then target IDs, then compare ordered pairs. All
+node rows precede all edge rows; a late duplicate node outranks a dangling edge.
