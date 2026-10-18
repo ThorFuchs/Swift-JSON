@@ -577,9 +577,11 @@ records conformance coverage and the Base64 accounting correction.
 ## Contributing, support and licensing
 
 For optional agent assistance in an application using this package, see the
-[developer kit candidate](Documentation/AgentDeveloperKit.md). Kit 0.1.0 targets
-released library 1.6.1; its skill and skills-only plugin await independent review
-before distribution. It keeps unreleased Inspection separate from stable recipes.
+[developer kit](Documentation/AgentDeveloperKit.md) and its
+[0.1.0 preview downloads](https://github.com/ThorFuchs/Swift-JSON/releases/tag/developer-kit-v0.1.0).
+The standalone skill and skills-only plugin target released library 1.6.1 and
+keep unreleased Inspection separate from stable recipes. Plugin installation
+and public directory availability retain the limits described in the kit guide.
 
 Focused improvements, reproducible issues and documentation corrections are welcome.
 Read [CONTRIBUTING](CONTRIBUTING.md) for the native development workflow:
