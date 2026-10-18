@@ -53,6 +53,27 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
         for node in 0..<graph.nodeCount { outgoing.append(try graph.outgoingEdges(of: node).result) }
         #expect(outgoing == entry.expected.outgoing_edge_ordinals)
         if graph.nodeCount > 0 { #expect(try graph.breadthFirst(fromNode: 0).result == entry.expected.bfs_from_node0) }
+        let document = graph.document
+        #expect(try JSONGraphProjection.build(document: document, profile: profile, maximumNodes: graph.nodeCount, maximumEdges: graph.edgeCount).result.edges == graph.edges)
+        if graph.nodeCount > 0 {
+            #expect(graphFailure { _ = try JSONGraphProjection.build(document: document, profile: profile, maximumNodes: graph.nodeCount - 1) } == .nodeLimitExceeded(limit: graph.nodeCount - 1))
+            let reached = try #require(entry.expected.bfs_from_node0)
+            var seen = Set<Int>([0]), queue = [0], head = 0, peak = 1
+            while head < queue.count {
+                let node = queue[head]; head += 1
+                for pair in try #require(entry.expected.edge_pairs) where pair[0] == node {
+                    if seen.insert(pair[1]).inserted { queue.append(pair[1]); peak = max(peak, queue.count - head) }
+                }
+            }
+            #expect(queue == reached)
+            #expect(try graph.breadthFirst(fromNode: 0, maximumFrontier: peak, maximumVisited: reached.count, maximumResults: reached.count).result == reached)
+            #expect(graphFailure { _ = try graph.breadthFirst(fromNode: 0, maximumFrontier: peak - 1) } == .frontierLimitExceeded(limit: peak - 1))
+            #expect(graphFailure { _ = try graph.breadthFirst(fromNode: 0, maximumVisited: reached.count - 1) } == .visitedLimitExceeded(limit: reached.count - 1))
+            #expect(graphFailure { _ = try graph.breadthFirst(fromNode: 0, maximumResults: reached.count - 1) } == .resultLimitExceeded(limit: reached.count - 1))
+        }
+        if graph.edgeCount > 0 {
+            #expect(graphFailure { _ = try JSONGraphProjection.build(document: document, profile: profile, maximumEdges: graph.edgeCount - 1) } == .edgeLimitExceeded(limit: graph.edgeCount - 1))
+        }
         evaluated += 1
     }
     #expect(evaluated == 12)
