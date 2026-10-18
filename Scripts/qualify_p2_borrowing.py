@@ -99,10 +99,15 @@ NEGATIVES={
  'external':("func illegal(_ c:inout JSONTraversalContext) throws { _=try c.equalArrayElements(at:[],lhs:0,rhs:0) }","cannot find type 'JSONTraversalContext' in scope",True)
 }
 CHECKS={'delegate-differential','one-admission','exact-cumulative-delta','inclusive-work','terminal-failure','root-state-release','inner-comparison-cancellation'}
+TARGET='JSONNavigation'
+MODULES=['JSON','JSONNavigation']
+CHECK_PREFIX='P2_BORROW_CHECK'
+RUNTIME_LINE='P2_BORROW_RUNTIME passed cases=7'
+SUMMARY='P2_BORROW_COMPILER {status} positive=2 negative=10 runtime_cases=7/config commands=20'
 def main():
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',required=True);args=parser.parse_args();out=ROOT/args.output;out.mkdir(parents=True,exist_ok=True)
  inputs=[{'path':p.relative_to(ROOT).as_posix(),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files()]
- receipt={'status':'running','source_head':checkout_head(ROOT),'source_inputs':inputs,'source_manifest_sha256':hashlib.sha256(json.dumps(inputs,sort_keys=True).encode()).hexdigest(),'commands':[],'policy':'Only same-ledger package delegate; compiler crash/unrelated diagnostic/empty runtime fails. Original 2-positive/20-negative proof remains separate and required.'}
+ receipt={'status':'running','source_head':checkout_head(ROOT),'source_inputs':inputs,'source_manifest_sha256':hashlib.sha256(json.dumps(inputs,sort_keys=True).encode()).hexdigest(),'commands':[],'runtime_results':{},'policy':'Only same-ledger package delegate; compiler crash/unrelated diagnostic/empty runtime fails. Original 2-positive/20-negative proof remains separate and required.'}
  def save():(out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
  def run(name,command,expected=None):
   try:p=subprocess.run(command,cwd=ROOT,capture_output=True,text=True,timeout=1200);text=p.stdout+p.stderr;code=p.returncode
@@ -117,20 +122,21 @@ def main():
   identity=re.sub(r'[^a-zA-Z0-9_]','_',ROOT.name.lower());identity='_'+identity if identity[0].isdigit() else identity
   source=out/'positive.swift';source.write_text(POSITIVE)
   for config in ['debug','release']:
-   run(config+'-build',['swift','build','-c',config,'--target','JSONNavigation','-Xswiftc','-warnings-as-errors'])
+   run(config+'-build',['swift','build','-c',config,'--target',TARGET,'-Xswiftc','-warnings-as-errors'])
    binpath=pathlib.Path(run(config+'-path',['swift','build','-c',config,'--show-bin-path']).strip());modules=binpath/'Modules' if (binpath/'Modules').is_dir() else binpath
    common=['swiftc','-swift-version','6','-warnings-as-errors','-I',str(modules),'-Onone' if config=='debug' else '-O','-parse-as-library']
    run(config+'-positive-codegen',common+['-package-name',identity,'-module-name','P2BorrowProbe','-c',str(source),'-o',str(out/(config+'-positive.o'))])
    for name,(body,diagnostic,external) in NEGATIVES.items():
-    file=out/(name+'.swift');file.write_text('import JSON\nimport JSONNavigation\n'+body+'\n')
+    file=out/(name+'.swift');file.write_text(''.join('import '+m+'\n' for m in MODULES)+body+'\n')
     run(config+'-'+name,common+['-package-name','outside_p2_consumer' if external else identity,'-module-name','P2BorrowProbe','-c',str(file),'-o',str(out/(config+'-'+name+'.o'))],diagnostic)
    objects=[]
-   for module in ['JSON','JSONNavigation']:
+   for module in MODULES:
     aggregate=binpath/(module+'.o');selected=[aggregate] if aggregate.is_file() else sorted((binpath/(module+'.build')).glob('*.o'));assert selected,'Missing '+module+' objects';objects.extend(str(p) for p in selected)
    binary=out/(config+'-runtime');run(config+'-link',common+['-package-name',identity,str(source),*objects,'-o',str(binary)])
-   text=run(config+'-runtime',[str(binary)]);cases=re.findall(r'^P2_BORROW_CHECK (\S+) passed$',text,re.M)
-   if len(cases)!=7 or set(cases)!=CHECKS or 'P2_BORROW_RUNTIME passed cases=7' not in text.splitlines():raise ValueError('Runtime identity/count mismatch')
+   text=run(config+'-runtime',[str(binary)]);cases=re.findall(r'^'+re.escape(CHECK_PREFIX)+r' (\S+) passed$',text,re.M)
+   if len(cases)!=len(CHECKS) or set(cases)!=CHECKS or RUNTIME_LINE not in text.splitlines():raise ValueError('Runtime identity/count mismatch')
+   receipt['runtime_results'][config]=cases;save()
   receipt['status']='passed'
  except (ValueError,AssertionError,OSError,subprocess.TimeoutExpired) as error:receipt.update(status='failed',error=str(error))
- save();print('P2_BORROW_COMPILER '+receipt['status']+' positive=2 negative=10 runtime_cases=7/config commands=20');return 0 if receipt['status']=='passed' else 1
+ save();print(SUMMARY.format(status=receipt['status']));return 0 if receipt['status']=='passed' else 1
 if __name__=='__main__':raise SystemExit(main())

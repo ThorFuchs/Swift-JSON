@@ -714,3 +714,7 @@ location/value/span lookup is an explicitly separate full-source-admitted operat
 Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
 These additions are absent from published 1.6.1 and do not publish 1.7.0.
+
+The current development branch also contains package-private structural set and
+exact numeric matrix experiments. They add no public API; see the
+[NAV9 qualification contract](Documentation/Architecture/StructuralIntelligence/NAV9/PrototypeQualification.md).

@@ -43,4 +43,6 @@ Documentation/Architecture before changing behavior.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
-P2 graph/store/set/matrix/retrieval/persistence and JSON text-sequence framing remain deferred.
+NAV9 package-only structural-set/numeric-matrix proofs are experimental, not released.
+Graph/store engines, retrieval/persistence and JSON text-sequence framing remain deferred.
+Do not promote the P2 types or add products without a separate review.
