@@ -120,7 +120,9 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
 @Test func graphG06EqualPayloadsPreserveRows() throws {
     let graph = try graphBuild("g06-equal-payload-distinct-id").result
     #expect(graph.nodeCount == 2 && graph.nodeIDs == ["A", "B"])
-    #expect(try graph.nodeValue(at: 0).result.objectValue?["payload"] == graph.nodeValue(at: 1).result.objectValue?["payload"])
+    let left = try #require(graph.nodeValue(at: 0).result.objectValue?["same"])
+    let right = try #require(graph.nodeValue(at: 1).result.objectValue?["same"])
+    #expect(try JSONComparison.equals(left, right))
 }
 @Test func graphG07MissingNodeID() throws {
     #expect(graphFailure { _ = try graphBuild("g07-node-id-missing") } == .idMissing(at: [.key("nodes"), .index(0), .key("id")]))
