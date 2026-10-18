@@ -1,0 +1,133 @@
+{
+  "status": "independent fixture generation only; not Swift execution",
+  "fixtures": [
+    {
+      "file": "sparse-1.json",
+      "rows": 1,
+      "columns": 1,
+      "present_members": 1,
+      "source_nodes": 3,
+      "row_offsets": "0...rows inclusive",
+      "first_seen_columns": [
+        "k0"
+      ],
+      "bytes": 14,
+      "sha256": "73cce88a6c9b32a311d1a668b0b292d5d1f23627da1756a48fa42e7a67613395"
+    },
+    {
+      "file": "sparse-16.json",
+      "rows": 16,
+      "columns": 16,
+      "present_members": 16,
+      "source_nodes": 33,
+      "row_offsets": "0...rows inclusive",
+      "first_seen_columns": [
+        "k0",
+        "k1",
+        "k2",
+        "k3",
+        "k4",
+        "k5",
+        "k6",
+        "k7",
+        "k8",
+        "k9",
+        "k10",
+        "k11",
+        "k12",
+        "k13",
+        "k14",
+        "k15"
+      ],
+      "bytes": 320,
+      "sha256": "74287abc7240ac53069eff68f2a0abf3bcdab00b35d2cb35c451c40e24543b25"
+    },
+    {
+      "file": "sparse-1024.json",
+      "rows": 1024,
+      "columns": 16,
+      "present_members": 1024,
+      "source_nodes": 2049,
+      "row_offsets": "0...rows inclusive",
+      "first_seen_columns": [
+        "k0",
+        "k1",
+        "k2",
+        "k3",
+        "k4",
+        "k5",
+        "k6",
+        "k7",
+        "k8",
+        "k9",
+        "k10",
+        "k11",
+        "k12",
+        "k13",
+        "k14",
+        "k15"
+      ],
+      "bytes": 20858,
+      "sha256": "820e1f166d82a34b112d6b100cf510a35a387dfc76325abe15f8959acf240d24"
+    },
+    {
+      "file": "sparse-10000.json",
+      "rows": 10000,
+      "columns": 16,
+      "present_members": 10000,
+      "source_nodes": 20001,
+      "row_offsets": "0...rows inclusive",
+      "first_seen_columns": [
+        "k0",
+        "k1",
+        "k2",
+        "k3",
+        "k4",
+        "k5",
+        "k6",
+        "k7",
+        "k8",
+        "k9",
+        "k10",
+        "k11",
+        "k12",
+        "k13",
+        "k14",
+        "k15"
+      ],
+      "bytes": 203744,
+      "sha256": "916c4e6ff7756cb92436253ae8b8c4ae3258be0671759a972fe273c57b962af0"
+    },
+    {
+      "file": "deep-16.json",
+      "source_nodes": 17,
+      "maximum_node_depth": 16,
+      "root_children": 1,
+      "bytes": 34,
+      "sha256": "614e865f3ee7c118620d8f7551be5d29cf0be346acf527eb511180252dee1171"
+    },
+    {
+      "file": "deep-64.json",
+      "source_nodes": 65,
+      "maximum_node_depth": 64,
+      "root_children": 1,
+      "bytes": 130,
+      "sha256": "f8e98d56449d4c90792a9368b4558e287a6e96fc9cd94059b42f99577f7c38a8"
+    },
+    {
+      "file": "deep-256.json",
+      "source_nodes": 257,
+      "maximum_node_depth": 256,
+      "root_children": 1,
+      "bytes": 514,
+      "sha256": "d8191b41f00b69c70e3ff2e868ba2e4a25bbdbc085e9c93ba92de97d3a5be973"
+    },
+    {
+      "file": "wide-1024.json",
+      "source_nodes": 1025,
+      "root_children": 1024,
+      "bytes": 11094,
+      "sha256": "0f8b3a0b866ec2c5447e501f8c0916ac874e4f3f5d29e8d3c87b89dee77fb8c8"
+    }
+  ]
+}
