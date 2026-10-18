@@ -2,18 +2,32 @@
 import JSON
 import JSONNavigation
 
-/// Experimental complete rectangular view of original exact numeric cells.
-/// No dense grid, binary conversion, arithmetic, padding or JSON materializer.
-package struct JSONNumericMatrixProjection: Sendable {
-    package let document: JSONDocument
-    package let selectedArrayPath: [JSONLocationComponent]
-    package let originalRowCount: Int
-    package let originalColumnCount: Int
-    package let isTransposed: Bool
-    package var rowCount: Int { isTransposed ? originalColumnCount : originalRowCount }
-    package var columnCount: Int { isTransposed ? originalRowCount : originalColumnCount }
-    package let elementCount: Int
-    package let traversal: JSONTraversalSummary
+/// A complete rectangular view of original exact JSON numeric cells.
+///
+/// Every row and cell is checked under one construction ledger. The view stores
+/// dimensions and orientation, without a dense numeric buffer or binary conversion.
+/// Later element reads independently admit the captured full source. Empty `[]` is
+/// zero by zero; `[[],[]]` transposes from two by zero to zero by two. No JSON
+/// materializer can preserve that independent empty dimension.
+public struct JSONNumericMatrixProjection: Sendable {
+    /// The immutable original document, including its coherent source map when available.
+    public let document: JSONDocument
+    /// The exact typed physical path to the selected original array.
+    public let selectedArrayPath: [JSONLocationComponent]
+    /// The row count in the original physical source, independent of orientation.
+    public let originalRowCount: Int
+    /// The original rectangular width; an empty source array has width zero.
+    public let originalColumnCount: Int
+    /// Whether logical coordinates exchange the original row and column positions.
+    public let isTransposed: Bool
+    /// The logical row count in the current orientation.
+    public var rowCount: Int { isTransposed ? originalColumnCount : originalRowCount }
+    /// The logical column count, retained even when the logical row count is zero.
+    public var columnCount: Int { isTransposed ? originalRowCount : originalColumnCount }
+    /// The checked product of the original dimensions; unchanged by transposition.
+    public let elementCount: Int
+    /// The completed constructor traversal, after every row and numeric cell was checked.
+    public let traversal: JSONTraversalSummary
 
     fileprivate init(document: JSONDocument, selectedArrayPath: [JSONLocationComponent],
                      rows: Int, columns: Int, elementCount: Int, isTransposed: Bool = false,
@@ -23,11 +37,21 @@ package struct JSONNumericMatrixProjection: Sendable {
         self.elementCount = elementCount; self.isTransposed = isTransposed; self.traversal = traversal
     }
 
-    /// One original N1 ledger covers complete source admission, every row/cell,
-    /// shape checks and output. Defaults are inclusive finite counts100000/100000/1000000.
-    /// Logical output128 +typed selection +captured source; no per-cell JSON alias.
-    /// [] is0x0; [[],[]] is2x0. Only complete evidence can build this view.
-    package static func build(document: JSONDocument, at path: [JSONLocationComponent] = [],
+    /// Admits a complete rectangular numeric array under one cumulative ledger.
+    ///
+    /// Source admission, every row and cell, shape checks and output share the
+    /// original traversal scope. Logical output reserves 128 fixed bytes, the
+    /// typed selection and captured source, with no per-cell JSON storage.
+    /// - Parameters:
+    ///   - document: The original source to admit completely, including unselected siblings.
+    ///   - path: Exact typed selection of an existing array; the empty path selects the root.
+    ///   - limits: Finite cumulative limits for this construction.
+    ///   - maximumRows: Inclusive original row capacity, defaulting to 100,000.
+    ///   - maximumColumns: Inclusive original column capacity, defaulting to 100,000.
+    ///   - maximumElements: Inclusive cell capacity, defaulting to 1,000,000.
+    /// - Returns: A completely admitted exact numeric view and construction statistics.
+    /// - Throws: Configuration, selection, shape, capacity, resource or cancellation errors.
+    public static func build(document: JSONDocument, at path: [JSONLocationComponent] = [],
                               limits: JSONLimits = .balanced, maximumRows: Int = 100_000,
                               maximumColumns: Int = 100_000, maximumElements: Int = 1_000_000)
         throws -> JSONOperationReport<Self> {
@@ -40,9 +64,11 @@ package struct JSONNumericMatrixProjection: Sendable {
             scope: .subtree(at: path), options: .init(depthLimit: 2), reducer: &reducer)
     }
 
-    /// Fixed-size immutable orientation copy, like ordinary caller-owned value copying.
-    /// 2x0 becomes0x2 without pretending [] can losslessly represent that shape.
-    package func transposed() -> Self {
+    /// Returns an immutable orientation copy without traversing or copying cells.
+    ///
+    /// Two by zero becomes zero by two without a lossy empty-array materialization.
+    /// - Returns: A source-sharing copy with exchanged logical dimensions.
+    public func transposed() -> Self {
         .init(document: document, selectedArrayPath: selectedArrayPath, rows: originalRowCount,
               columns: originalColumnCount, elementCount: elementCount, isTransposed: !isTransposed,
               traversal: traversal)
@@ -50,7 +76,16 @@ package struct JSONNumericMatrixProjection: Sendable {
 
     /// New explicit full-source-admitted operation and report, never a constructor
     /// budget remainder. Typed logical bounds map to exact original physical indices.
-    package func element(row: Int, column: Int, limits: JSONLimits = .balanced)
+    /// Row bounds precede column bounds, then valid reads admit the entire source.
+    /// Repeated calls repeat admission; no constructor remainder or cache is shared.
+    /// - Parameters:
+    ///   - row: A zero-based logical row in the current orientation.
+    ///   - column: A zero-based logical column in the current orientation.
+    ///   - limits: Finite limits for this independent read.
+    /// - Returns: The original exact number, including its admitted numeric lexeme,
+    ///   and independent read statistics.
+    /// - Throws: Row or column bounds, core resource errors or cancellation.
+    public func element(row: Int, column: Int, limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<JSONNumber> {
         guard row >= 0, row < rowCount else { throw JSONP2ProjectionFailure.rowOutOfBounds(row) }
         guard column >= 0, column < columnCount else { throw JSONP2ProjectionFailure.columnOutOfBounds(column) }

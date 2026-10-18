@@ -2,17 +2,29 @@
 import JSON
 import JSONNavigation
 
-/// Experimental refusals; no additions to the released public error surface.
-package enum JSONP2ProjectionFailure: Error, Sendable, Equatable {
+/// Exact set and numeric matrix shape, capacity and coordinate refusals.
+///
+/// Core selection, resource and cancellation errors retain their original types.
+public enum JSONP2ProjectionFailure: Error, Sendable, Equatable {
+    /// Adding a new structural representative would exceed the inclusive unique capacity.
     case uniqueItemLimitExceeded(limit: Int)
+    /// The complete original row count exceeds the inclusive row capacity.
     case rowLimitExceeded(limit: Int)
+    /// The original first-row width exceeds the inclusive column capacity.
     case columnLimitExceeded(limit: Int)
+    /// The checked original dimension product exceeds the inclusive cell capacity.
     case elementLimitExceeded(limit: Int)
+    /// The requested representative position is negative or outside the unique member count.
     case memberOutOfBounds(Int)
+    /// The logical row is negative or outside the current orientation.
     case rowOutOfBounds(Int)
+    /// The logical column is negative or outside the current orientation.
     case columnOutOfBounds(Int)
+    /// The original row at the exact physical path has the reported non-array kind.
     case nonArrayRow(at: [JSONLocationComponent], kind: JSONTraversalKind)
+    /// The original row width differs from the first row; no padding is performed.
     case raggedRow(at: [JSONLocationComponent], expected: Int, actual: Int)
+    /// The original cell at the exact physical path is not a JSON number.
     case nonNumericCell(at: [JSONLocationComponent], kind: JSONTraversalKind)
 }
 

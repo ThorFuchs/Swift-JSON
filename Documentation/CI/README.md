@@ -314,3 +314,26 @@ The focused composition lane also runs on the Linux architecture jobs and Native
 Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
 The qualification harness now has 15 regression functions, retaining its original 14.
 See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.
+
+## NAV10 public exact projections
+
+The current source keeps ten products and the original Navigation56/Inspection95
+public baseline, adding 33 authored set/matrix/error declarations inside Inspection.
+Expected discovery is 130 Inspection, 833 Mac/817 Linux/729 WASI functions, with
+unchanged 325 native/Linux and 288 WASI parameter invocations; shared scopes are
+54 Mac/53 Linux. All 46 donor functions, 49 cap witnesses and 126 maintenance
+identities remain required. Eight new public-only metamorphic/precedence/resource
+functions and one shared-state identity are exact-count additions.
+
+Native and docs also run the separate exact projection SwiftPM consumer, requiring
+20 named outcomes in Debug/Release/ASan, three compiled/executed DocC fences per
+configuration, 24 ordinary external full-codegen refusals and 0/16/128-sibling
+logical access-cost witnesses. Original reducer ownership and package-only
+comparison proofs remain separate. Donor type-invisibility probes become reducer/
+accounting invisibility probes after deliberate public promotion. Source-bound
+receipts qualify actual execution; these expectations alone are not passes.
+
+For an ineligible timing host, `--lane wasm --skip-host-measurements` explicitly
+records optional host samples as NOT RUN. It preserves every runtime/corpus/cap/
+strict/ABI gate and the default lane's timing protocol. This flag grants no G4
+PASS and produces no performance evidence.

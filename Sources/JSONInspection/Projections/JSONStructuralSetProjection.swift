@@ -2,16 +2,26 @@
 import JSON
 import JSONNavigation
 
-/// Experimental complete structural set over one immutable physical array.
-/// Representatives are original source indices, never IDs, hashes or JSON copies.
-/// Equality delegates to core under the constructor's one cumulative ledger.
-package struct JSONStructuralSetProjection: Sendable {
-    package let document: JSONDocument
-    package let selectedArrayPath: [JSONLocationComponent]
-    package let inputCount: Int
-    package let representativeIndices: [Int]
-    package var uniqueCount: Int { representativeIndices.count }
-    package let traversal: JSONTraversalSummary
+/// A complete first-occurrence structural set over one immutable original array.
+///
+/// Exact decimal and scalar identity, order-independent object equality and ordered
+/// array equality delegate to core under one cumulative construction ledger.
+/// Representatives retain source positions, rather than copied values or persistent
+/// identities. Worst-case construction uses quadratic comparisons, each with exact
+/// value and selection costs. Later member reads independently admit the full source.
+public struct JSONStructuralSetProjection: Sendable {
+    /// The immutable original document, including its coherent source map when available.
+    public let document: JSONDocument
+    /// The exact typed physical path to the selected original array.
+    public let selectedArrayPath: [JSONLocationComponent]
+    /// The complete selected array length, including duplicate occurrences.
+    public let inputCount: Int
+    /// First-occurrence offsets in the original array, in increasing source order. These are source-local positions, not persistent IDs.
+    public let representativeIndices: [Int]
+    /// The number of distinct structural equality classes in the selected array.
+    public var uniqueCount: Int { representativeIndices.count }
+    /// The completed constructor traversal; descendants may be pruned after complete source admission.
+    public let traversal: JSONTraversalSummary
 
     fileprivate init(document: JSONDocument, selectedArrayPath: [JSONLocationComponent],
                      inputCount: Int, representativeIndices: [Int], traversal: JSONTraversalSummary) {
@@ -20,12 +30,21 @@ package struct JSONStructuralSetProjection: Sendable {
         self.traversal = traversal
     }
 
-    /// Full source admission, exact selection, all comparisons and output accounting
-    /// share the existing N1 scope. No prefix/partial successful artifact exists.
-    /// Inclusive unique cap100000; logical output128 +8/representative +typed path
-    /// +original captured source. Comparison scratch uses core's existing weights.
-    /// Worst case quadratic comparisons plus exact value/path costs; no speed claim.
-    package static func build(document: JSONDocument, at path: [JSONLocationComponent] = [],
+    /// Builds complete first-occurrence representatives under one cumulative ledger.
+    ///
+    /// Full source admission, exact selection, comparisons and output accounting
+    /// share the original traversal scope. Logical output reserves 128 fixed bytes,
+    /// 8 per representative, the typed path and the original source. Comparison
+    /// scratch uses core weights. These are logical policy units, not RSS bounds.
+    /// - Parameters:
+    ///   - document: The canonical source to admit completely, including unselected siblings.
+    ///   - path: Exact typed selection of an existing array; the empty path selects the root.
+    ///   - limits: Finite cumulative core limits for this construction.
+    ///   - maximumUniqueItems: Inclusive representative capacity, defaulting to 100,000.
+    /// - Returns: A complete immutable view and its construction statistics.
+    /// - Throws: Configuration, selection, capacity, resource or cancellation errors;
+    ///   no successful partial view is returned.
+    public static func build(document: JSONDocument, at path: [JSONLocationComponent] = [],
                               limits: JSONLimits = .balanced, maximumUniqueItems: Int = 100_000)
         throws -> JSONOperationReport<Self> {
         guard maximumUniqueItems >= 0 else { throw JSONFailure(.configuration, code: .invalidLimits) }
@@ -36,7 +55,14 @@ package struct JSONStructuralSetProjection: Sendable {
 
     /// New explicit finite operation over the captured whole source. Returns the
     /// first original occurrence, preserving number lexemes and object source order.
-    package func member(at position: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
+    /// Bounds are checked before source admission. This is a separately owned read,
+    /// not a continuation of construction; repeated calls repeat full-source admission.
+    /// - Parameters:
+    ///   - position: A position in `representativeIndices`, not an original array offset.
+    ///   - limits: Finite limits for this independent read.
+    /// - Returns: The original first occurrence and independent read statistics.
+    /// - Throws: A member-bounds refusal, core resource error or cancellation.
+    public func member(at position: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
         guard position >= 0, position < representativeIndices.count else {
             throw JSONP2ProjectionFailure.memberOutOfBounds(position)
         }

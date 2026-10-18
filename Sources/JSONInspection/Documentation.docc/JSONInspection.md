@@ -39,3 +39,10 @@ or numeric matrix. Sampling does not exempt any source from admission.
 - ``JSONTreeProjection``
 - ``JSONSparseTableProjection``
 - ``JSONProjectionFailure``
+
+### Use exact set and numeric shape views
+
+- <doc:ExactProjections>
+- ``JSONStructuralSetProjection``
+- ``JSONNumericMatrixProjection``
+- ``JSONP2ProjectionFailure``

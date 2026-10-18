@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Private prototype compiler/runtime consumer and external access-control proof."""
+"""Package-internal runtime proof; public types promoted, reducer/accounting storage remains hidden."""
 import qualify_p2_borrowing as gate
 
 gate.TARGET = 'JSONInspection'
@@ -10,9 +10,9 @@ gate.RUNTIME_LINE = 'P2_PRIVATE_RUNTIME passed cases=6'
 gate.SUMMARY = 'P2_ISOLATION {status} configurations=2 consumer_cases=6 negative=12'
 gate.CHECKS = {'set-exact','matrix-exact','zero-shape','typed-refusal','one-admission','independent-read'}
 gate.NEGATIVES = {
- 'external-set': ('func illegal(_ x: JSONStructuralSetProjection) {}', "cannot find type 'JSONStructuralSetProjection' in scope", True),
- 'external-matrix': ('func illegal(_ x: JSONNumericMatrixProjection) {}', "cannot find type 'JSONNumericMatrixProjection' in scope", True),
- 'external-error': ('func illegal(_ x: JSONP2ProjectionFailure) {}', "cannot find type 'JSONP2ProjectionFailure' in scope", True),
+ 'external-set-reducer': ('let x = StructuralSetReducer.self', "cannot find 'StructuralSetReducer' in scope", True),
+ 'external-matrix-reducer': ('let x = NumericMatrixReducer.self', "cannot find 'NumericMatrixReducer' in scope", True),
+ 'external-accounting': ('let x = P2Accounting.self', "cannot find 'P2Accounting' in scope", True),
  'set-constructor': ('func illegal() { _ = JSONStructuralSetProjection.init }', "initializer is inaccessible due to 'fileprivate' protection level", False),
  'matrix-constructor': ('func illegal() { _ = JSONNumericMatrixProjection.init }', "initializer is inaccessible due to 'fileprivate' protection level", False),
  'matrix-mutation': ('func illegal(_ v: JSONNumericMatrixProjection) { var copy = v; copy.rowCount = 9 }', "cannot assign to property: 'rowCount' is a get-only property", False)
