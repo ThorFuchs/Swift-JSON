@@ -14,6 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True)
     parser.add_argument('--scope', choices=['full', 'root-qa'], default='full')
+    parser.add_argument('--skip-host-measurements', action='store_true', help='Run all runtime/corpus gates but leave optional host timing explicitly NOT RUN.')
     args = parser.parse_args()
     output = ROOT / args.output; output.mkdir(parents=True, exist_ok=True)
     result = {'schema_version': 1, 'status': 'running', 'target': 'wasm32-unknown-wasip1',
@@ -137,12 +138,16 @@ def main():
         for engine in ['node','wasmkit']:
             run(engine + '-missing-resources', invoke(engine,path,'missing-resources',repo=False,resources=False), lambda c,t:c == 0 and 'MISSING_RESOURCES structured_metaSchema' in t)
         run('abi', invoke('node',path,'imports',repo=False))
-        measurements = []
-        for iteration in range(3):
-            text = run('node-runtime-sample-' + str(iteration), invoke('node',path,'benchmark',repo=False))
-            measurements.append(json.loads(re.search(r'^WASI_HOST_MEASURE (.+)$',text,re.MULTILINE).group(1)))
-        result['measurements'] = measurements
-        result['measurement_policy'] = 'Module-run time and allocated linear-memory pages; host process RSS is separate, not owned logical retention, workload allocation count or a hard bound.'
+        if args.skip_host_measurements:
+            result['measurements'] = []
+            result['measurement_policy'] = 'NOT RUN: explicit host-measurement exclusion; all runtime, corpus, cap, ABI and strict gates remain required. G4 HOLD; no timing claim.'
+        else:
+            measurements = []
+            for iteration in range(3):
+                text = run('node-runtime-sample-' + str(iteration), invoke('node',path,'benchmark',repo=False))
+                measurements.append(json.loads(re.search(r'^WASI_HOST_MEASURE (.+)$',text,re.MULTILINE).group(1)))
+            result['measurements'] = measurements
+            result['measurement_policy'] = 'Module-run time and allocated linear-memory pages; host process RSS is separate, not owned logical retention, workload allocation count or a hard bound.'
         result['materialized_outcomes'] = {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in output.glob('*.json') if p.name != 'wasi.json'}
         result['status'] = 'passed'; save(); return 0
     except (OSError,ValueError,KeyError,AttributeError) as error:
