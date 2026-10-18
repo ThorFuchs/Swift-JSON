@@ -1,0 +1,43 @@
+name: Composition performance
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/composition-performance.yml'
+      - 'Scripts/qualify_composition_performance.py'
+      - 'Scripts/composition_host.py'
+      - 'Scripts/test_composition_performance.py'
+      - 'Sources/JSON/Limits/JSONCompositionScope.swift'
+      - 'Sources/JSON/Limits/JSONWorkMeter.swift'
+      - 'Tools/CompositionQualification/Sources/CompositionBenchmark/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: composition-performance-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  compare:
+    name: Composition / quiet native Release
+    runs-on: xcode-27
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
+      SDKROOT: /Applications/Xcode_27.2.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Compare exact baseline and candidate on a quiet host
+        run: python3 -B Scripts/qualify_composition_performance.py --output .build/ci/composition-performance
+      - name: Preserve actual measurements and eligibility receipts
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: composition-performance
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            .build/ci/composition-performance/receipt.json
+            .build/ci/composition-performance/*.log
