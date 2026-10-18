@@ -1,8 +1,26 @@
 # Swift-JSON developer kit
 
-Kit **0.1.0** is a consumer-assistance candidate for independent review. Its
-library pin is released **Swift-JSON 1.6.1**. Those version numbers are separate.
-This work does not publish a plugin or add a library capability.
+Kit **0.1.0 preview** is available from its
+[dedicated download release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/developer-kit-v0.1.0).
+Its library pin is released **Swift-JSON 1.6.1**. Those version numbers are separate.
+The preview supplies consumer instructions and examples; the library API is unchanged.
+
+## Download the preview
+
+- [Skills-only plugin ZIP](https://github.com/ThorFuchs/Swift-JSON/releases/download/developer-kit-v0.1.0/swift-json-plugin-0.1.0.zip)
+- [Standalone skill ZIP](https://github.com/ThorFuchs/Swift-JSON/releases/download/developer-kit-v0.1.0/swift-json-skill-0.1.0.zip)
+- [Qualification snapshot](https://github.com/ThorFuchs/Swift-JSON/releases/download/developer-kit-v0.1.0/DeveloperKit-0.1.0-Qualification.json)
+- [SHA-256 checksums](https://github.com/ThorFuchs/Swift-JSON/releases/download/developer-kit-v0.1.0/SHA256SUMS)
+
+Use the two named kit ZIPs for these instructions. GitHub's automatic source
+archives capture the development repository at the kit tag; stable library
+consumers should continue to resolve the separate **1.6.1** library version.
+
+Standalone skill and local plugin discovery were observed with Codex CLI
+0.162.0-alpha.17.2. Plugin installation/enabling, desktop end-to-end use and
+public plugin-directory availability remain unverified. This is a downloadable
+preview with those explicit limits. The qualification snapshot records its
+prepublication evidence date; publication/download checks are recorded separately.
 
 The kit supplies one focused `swift-json` skill: identify an application's actual
 dependency, choose the smallest version-matched public products, implement exact
@@ -127,7 +145,8 @@ contexts without supplying hidden rubrics; compile resulting coding artifacts.
 Keep deterministic recipe assertions distinct from agent-use observations and
 host discovery distinct from installation. The focused
 [acceptance harness](../Tools/DeveloperKitAcceptance/README.md) explains this boundary.
-Independent review of exact bytes precedes merge and any public distribution.
+Source admission was reviewed separately from this preview distribution.
+Future revisions require review of their exact payload and compatibility evidence.
 The library-source archive includes the reviewed `plugins/swift-json/` subtree;
 other plugin subtrees need their own explicit archive-policy review. The existing
 public inventory, privacy and link checks apply to this payload. Focused archive
