@@ -1,7 +1,7 @@
 # NAV9 D0 — experimental structural set decision
 
-Status: source-reviewed design; compiler/one-ledger gate pending. This ADR precedes
-prototype code. Branch B starts at main0cb8ca40eb3c3bcf479006c2dcd88672f0a9b83b;
+Status: D0 compiler/one-ledger gate passed on Swift6.4 in Debug and Release.
+This ADR preceded prototype code; final-source qualification remains required. Branch B starts at main0cb8ca40eb3c3bcf479006c2dcd88672f0a9b83b;
 NAV8 N1/N2/N3/P1 is preserved. No public API/product, merge or release is approved.
 
 A structural set is an immutable view over one strict physical array. Retain the

@@ -1,7 +1,7 @@
 # NAV9 D0 — experimental exact numeric matrix decision
 
-Status: source-reviewed design; compiler/one-ledger gate pending. Written before
-prototype code. Package-only in existing JSONInspection; zero public additions,
+Status: D0 compiler/one-ledger gate passed on Swift6.4 in Debug and Release.
+Written before prototype code; final-source qualification remains required. Package-only in existing JSONInspection; zero public additions,
 products or dependencies. Main0cb8ca4/NAV8 and immutable stable1.6.1 are preserved.
 
 Admit one existing physical array completely, with every row an array of the same

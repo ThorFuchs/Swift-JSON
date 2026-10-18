@@ -34,6 +34,21 @@ package struct JSONTraversalContext: ~Copyable {
     package mutating func equalKeys(_ lhs: JSONKey, _ rhs: JSONKey) throws -> Bool {
         try perform { try JSONComparison.textEquals(lhs.string, rhs.string, meter: &$0.meter) }
     }
+    /// Compare only original positions in one already-admitted physical array.
+    /// Selection, comparison scratch and terminal health use the owning ledger;
+    /// neither the source values nor the mutable scope/meter escape this delegate.
+    package mutating func equalArrayElements(at path: [JSONLocationComponent], lhs: Int, rhs: Int) throws -> Bool {
+        try perform(at: path) { state in
+            try state.meter.work()
+            guard case .array(let array) = try scope.select(path, state: state) else {
+                throw JSONFailure(.typeMismatch, code: .wrongKind)
+            }
+            guard lhs >= 0, rhs >= 0 else { throw JSONFailure(.configuration, code: .invalidIndex) }
+            guard lhs < array.count, rhs < array.count else { throw JSONFailure(.missingValue, code: .missingTarget) }
+            try state.meter.work(2)
+            return try JSONComparison.equals(array[lhs], array[rhs], meter: &state.meter)
+        }
+    }
     package mutating func arrayCount(_ value: JSON, at path: [JSONLocationComponent]) throws -> Int {
         try perform(at: path) { state in
             try state.meter.work()
