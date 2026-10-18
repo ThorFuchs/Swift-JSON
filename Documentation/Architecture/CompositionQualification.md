@@ -63,7 +63,7 @@ Run python3 Scripts/ci.py --lane composition on the supported native or Linux
 runner. The lane requires 12 core functions in each build mode, separate public
 consumers, five external Swift Testing functions in Debug/Release/ASan, all eight
 scale cells and 11 compiler rejection cases. Exact module/cardinality checks
-reject missing tests and misclassified resource failures. The reconciled 597 native / 581
+reject missing tests and misclassified resource failures. The reconciled 599 native / 583
 Linux root functions, 325 parameter invocations, restored identities and 49 public
 metric probes retain their existing contracts.
 
@@ -72,6 +72,13 @@ strategies on identical input, preserve exact values and scalar keys, and catch
 late missing-target/cancellation failures before attempting normal completion.
 Finalization must still throw the original native failure. Each report retains
 its actual source, environment, command exits, counts and input hashes.
+
+Completion additionally owns a 424-byte counter report and charges 50 work units.
+The retained threshold assertions include that independent buffer, and source input
+capacity is per document while reported bytes accumulate across all documents.
+The original two-argument reservation method is retained; a checked `overhead:`
+overload is additive. See [reconciliation](../Qualification/Composition/Reconciliation.md)
+for the independent ledger/mutant and compiler proof carried from PR #36.
 
 CI runs the focused lane alongside the existing Native / native and both Linux
 architecture jobs. Their names and protection rules remain unchanged. Sanitizer

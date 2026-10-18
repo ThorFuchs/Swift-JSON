@@ -1,0 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+import JSONSchema
+_ = try JSON.withComposition { scope in try scope.release(1) }

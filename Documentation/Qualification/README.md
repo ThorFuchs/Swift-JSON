@@ -2,7 +2,7 @@
 
 The 1.5.1 repair candidate restores all 126 functions from the separate 1.2.1
 maintenance line without removing the later HTML, bridge, provider or CLI suites.
-The experimental composition increment adds 12 functions. Expected full discovery is 558 native / 542 Linux functions, with 325 parameter
+The reconciled experimental composition increment retains 12 functions and adds two owned-boundary functions. Expected full discovery is 560 native / 544 Linux functions, with 325 parameter
 invocations. The restored QA subset is 145 functions; shared-state safety is 42
 native / 41 Linux. [TestDiscovery.json](TestDiscovery.json) supplies exact module
 cardinalities, while the event reader checks identities and each parameter count.

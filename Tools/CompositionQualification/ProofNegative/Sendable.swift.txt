@@ -1,0 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+import JSONSchema
+func needsSendable<T: ~Copyable & Sendable>(_ value: borrowing T) {}
+_ = try JSON.withComposition { scope in needsSendable(scope) }
