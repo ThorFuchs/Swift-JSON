@@ -29,7 +29,7 @@ def main():
             log = run.stdout + run.stderr
             (output / (name + '.log')).write_text(log)
             records.append(dict(name=name, command=command, exit_code=run.returncode,
-                expected_diagnostic=diagnostic, status='passed' if run.returncode != 0 and diagnostic in log and 'no such module' not in log else 'failed'))
+                expected_diagnostic=diagnostic, status='passed' if run.returncode == 1 and diagnostic in log and not any(s in log for s in ['no such module', 'Stack dump', 'Please submit a bug report', 'SIL verification failed']) else 'failed'))
     receipt = dict(status='passed' if all(r['status']=='passed' for r in records) else 'failed',
                    compiler_negative_cases=len(records), records=records)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')

@@ -1,0 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+let report = try JSON.withComposition { scope in return scope.checkpoint }
+try report.result()

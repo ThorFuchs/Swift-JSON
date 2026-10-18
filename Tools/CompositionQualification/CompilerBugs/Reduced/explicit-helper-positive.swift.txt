@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: Apache-2.0
+private final class Ledger { var units = 0 }
+struct Scope: ~Copyable {
+    private let ledger = Ledger()
+    func checkpoint() throws { ledger.units += 1 }
+}
+func compose<R>(_ body: (borrowing Scope) throws -> R) rethrows -> R {
+    let scope = Scope()
+    return try body(scope)
+}
+func visit(_ scope: borrowing Scope) throws { try scope.checkpoint() }; func test() throws { try compose { scope in try visit(scope) } }
