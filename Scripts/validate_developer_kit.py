@@ -18,7 +18,8 @@ SKILL_FILES = {"SKILL.md", "LICENSE", "references/versions.md", "references/sema
                "references/troubleshooting.md", "references/installation.md", "references/compatibility.json",
                "assets/consumer/Package.swift", "assets/consumer/Sources/Consumer/Consumer.swift"}
 ALLOWED_EXACT = {"README.md", "CONTRIBUTING.md", "Documentation/AgentDeveloperKit.md",
-                 "Scripts/validate_developer_kit.py", "Scripts/package_developer_kit.py"}
+                 "Scripts/validate_developer_kit.py", "Scripts/package_developer_kit.py",
+                 "Scripts/archive_candidate.py"}
 ALLOWED_PREFIX = ("plugins/swift-json/", "Tools/DeveloperKitAcceptance/")
 
 

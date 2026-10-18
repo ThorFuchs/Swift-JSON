@@ -35,7 +35,8 @@ does not prove installation, useful execution or every host/platform combination
 
 ## Build and inspect the candidate
 
-The scripts use Python's standard library, except optional full schema validation
+Run these contributor checks from a Git checkout; the scope verifier needs its
+recorded base and history. The scripts use Python's standard library, except optional full schema validation
 using an existing local jsonschema installation. No root dependency is added.
 Both output directories below must be new; files are never overwritten:
 
@@ -127,10 +128,11 @@ Keep deterministic recipe assertions distinct from agent-use observations and
 host discovery distinct from installation. The focused
 [acceptance harness](../Tools/DeveloperKitAcceptance/README.md) explains this boundary.
 Independent review of exact bytes precedes merge and any public distribution.
-The existing library-source archive allowlist does not include `plugins/`.
-Consequently the repository public-inventory/link check rejects this new payload
-and its guide links. Admission needs a separately authorized, narrowly reviewed
-archive-policy update; this candidate preserves that check and records its failure.
-The standalone kit packager's own verified ZIPs do include the complete payload.
+The library-source archive includes the reviewed `plugins/swift-json/` subtree;
+other plugin subtrees need their own explicit archive-policy review. The existing
+public inventory, privacy and link checks apply to this payload. Focused archive
+regressions check exact canonical bytes, deterministic reproduction, generated-file
+exclusions and symlink refusal. The standalone kit packager separately verifies
+that both ZIPs contain the complete canonical payload.
 Existing compiler/performance/platform holds and the maintenance branch protection
 follow-up retain their previous scope; this kit does not reopen or promote them.

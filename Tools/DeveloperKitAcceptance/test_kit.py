@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import shutil
 import sys
+import tarfile
 import tempfile
 import unittest
 import zipfile
@@ -13,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "Scripts"))
 from validate_developer_kit import files, read_archive, safe_name, validate_plugin
 from package_developer_kit import archive
+from archive_candidate import files as source_files, archive as source_archive, verify as verify_source_archive
 
 
 class KitTests(unittest.TestCase):
@@ -114,6 +116,55 @@ class KitTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "replace"):
             archive(path, {})
         self.assertEqual(path.read_bytes(), b"preserved")
+
+
+class SourceDistributionTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="swift-json-source-kit-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.folder = Path(self.temp.name)
+        self.root = self.folder / "source"
+        self.plugin = self.root / "plugins/swift-json"
+        shutil.copytree(ROOT / "plugins/swift-json", self.plugin)
+
+    def selected(self):
+        return {p.relative_to(self.root).as_posix(): p.read_bytes() for p in source_files(self.root)}
+
+    def expected(self):
+        return {"plugins/swift-json/" + p: b for p, b in files(ROOT / "plugins/swift-json").items()}
+
+    def test_source_inventory_includes_exact_canonical_plugin(self):
+        self.assertEqual(self.selected(), self.expected())
+        self.assertEqual(len(self.selected()), 12)
+
+    def test_source_inventory_excludes_other_plugins_and_generated_files(self):
+        for name in ["plugins/private-local/fixture.txt",
+                     "plugins/swift-json/.build/generated.txt",
+                     "plugins/swift-json/__pycache__/ignored.pyc",
+                     "plugins/swift-json/.DS_Store"]:
+            path = self.root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("excluded fixture")
+        self.assertEqual(self.selected(), self.expected())
+
+    def test_source_archive_reproduces_and_verifies_exact_plugin_bytes(self):
+        a, b = self.folder / "first.tar.gz", self.folder / "second.tar.gz"
+        selected = source_files(self.root)
+        source_archive(a, selected, self.root)
+        source_archive(b, selected, self.root)
+        self.assertEqual(a.read_bytes(), b.read_bytes())
+        self.assertEqual(verify_source_archive(a), 13)
+        with tarfile.open(a, "r:gz") as source:
+            payload = {m.name.removeprefix("Swift-JSON/"): source.extractfile(m).read()
+                       for m in source.getmembers() if m.name != "Swift-JSON/MANIFEST.sha256"}
+        self.assertEqual(payload, self.expected())
+
+    def test_source_inventory_rejects_plugin_symlink(self):
+        outside = self.folder / "outside.txt"
+        outside.write_text("outside fixture")
+        (self.plugin / "escaping-link").symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "Unexpected symlink"):
+            source_files(self.root)
 
 
 if __name__ == "__main__":
