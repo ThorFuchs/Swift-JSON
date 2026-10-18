@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+import JSON
+func rejected() throws {
+    var escaped: (() throws -> Void)?
+    _ = try JSON.withComposition { (scope: borrowing JSONCompositionScope) in
+        escaped = { try scope.checkpoint() }
+    }
+    try escaped?()
+}

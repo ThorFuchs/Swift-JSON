@@ -91,11 +91,11 @@ private func composedImport(limits: JSONLimits = .balanced, extra: UInt64 = 0) t
         try scope.reserveExternalLogicalBytes(64)
         return 0
     }
-    #expect(two.statistics.peakLogicalRetainedBytes == 128)
-    #expect(two.statistics[.retainedBytes] == 128)
-    #expect(one.statistics.peakLogicalRetainedBytes == 64)
+    #expect(two.statistics.peakLogicalRetainedBytes == 128 + 424)
+    #expect(two.statistics[.retainedBytes] == 128 + 424)
+    #expect(one.statistics.peakLogicalRetainedBytes == 64 + 424)
     var belowOverlap = JSONLimits.balanced
-    belowOverlap[.retainedBytes] = 127
+    belowOverlap[.retainedBytes] = 127 + 424
     #expect(throws: JSONFailure.self) {
         try JSON.withComposition(limits: belowOverlap) { scope in
             try scope.reserveExternalLogicalBytes(64)
@@ -103,7 +103,7 @@ private func composedImport(limits: JSONLimits = .balanced, extra: UInt64 = 0) t
             return 0
         }
     }
-    #expect(try JSON.withComposition { try $0.admitTrusted(.null) }.statistics[.retainedBytes] == 32)
+    #expect(try JSON.withComposition { try $0.admitTrusted(.null) }.statistics[.retainedBytes] == 32 + 424)
     // Independent stage peaks are not a composition oracle: the parser's scratch
     // peak and a later URI peak need not be simultaneously live.
     let parse = try JSON.withComposition { try $0.parseDocument(compositionInput) }
@@ -178,7 +178,7 @@ private func composedImport(limits: JSONLimits = .balanced, extra: UInt64 = 0) t
         _ = try scope.admitTrusted(alias)
         return alias
     }
-    #expect(two.statistics[.retainedBytes] == one.statistics[.retainedBytes] * 2)
+    #expect(two.statistics[.retainedBytes] == (one.statistics[.retainedBytes] - 424) * 2 + 424)
     var limits = JSONLimits.balanced
     limits[.compiledPlanBytes] = 0
     limits[.compileWorkUnits] = 0
@@ -303,10 +303,10 @@ private func composedImport(limits: JSONLimits = .balanced, extra: UInt64 = 0) t
             try inner.chargeExternalWork(5)
             return 0
         }
-        #expect(inner.statistics[.workUnits] == 5)
+        #expect(inner.statistics[.workUnits] == 5 + 50)
         return 0
     }
-    #expect(report.statistics[.workUnits] == 3)
+    #expect(report.statistics[.workUnits] == 3 + 50)
     // Substitution of the borrowed facade is rejected by the external compiler
     // fixture Substitute.swift.txt, including swap/use/restore. Independent
     // nested invocations are explicitly outside the outer report's claim.

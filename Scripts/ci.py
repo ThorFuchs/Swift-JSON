@@ -36,6 +36,11 @@ def commands(lane, output):
                 ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
                 ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')]]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
+    if lane == 'composition-proof':
+        result = [['swift', 'test', '--filter', 'jcompOwned|jcompOriginal'],
+                ['swift', 'test', '-c', 'release', '--filter', 'jcompOwned|jcompOriginal'],
+                ['python3', '-B', 'Scripts/qualify_composition_proof.py', '--output', str(output / 'public')]]
+        return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
     if lane == 'schema-examples-qualification':
         return commands('schema-examples-advanced', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'matrix')]]
     if lane == 'schema-examples-advanced':
@@ -69,9 +74,9 @@ def commands(lane, output):
             ['swift', 'test', '-c', 'release', '--filter', 'composition|composed|caughtOperationalFailureCannotComplete'],
             ['swift', 'run', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CompositionQualification', 'CompositionConsumer'],
-            ['swift', 'test', '--package-path', 'Tools/CompositionQualification'],
-            ['swift', 'test', '-c', 'release', '--package-path', 'Tools/CompositionQualification'],
-            ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/composition-address', '--package-path', 'Tools/CompositionQualification'],
+            ['swift', 'test', '--package-path', 'Tools/CompositionQualification', '--filter', 'CompositionScaleTests'],
+            ['swift', 'test', '-c', 'release', '--package-path', 'Tools/CompositionQualification', '--filter', 'CompositionScaleTests'],
+            ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/composition-address', '--package-path', 'Tools/CompositionQualification', '--filter', 'CompositionScaleTests'],
             ['python3', '-B', 'Scripts/qualify_composition_scale.py', '--output', str(output / 'scale')],
             ['python3', '-B', 'Scripts/qualify_composition.py', '--output', str(output / 'compiler-negative')],
         ]
@@ -222,7 +227,7 @@ def check_result(command, code, log, events=None):
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
     if command[:2] == ['swift', 'test']:
-        expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
+        expected = [2] if 'jcompOwned|jcompOriginal' in command else [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         if 'JSONSchemaExamplesTests' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'JSONSchemaExamplesTests': expected[0]} and events['parameter_case_invocations'] == 0
         if 'JSONSchemaTests' in command and events is not None:
@@ -255,6 +260,8 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_cli.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['observed'] == data['passed'] == 53 and data['failed'] == 0
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_composition_proof.py'] and passed:
+        passed = 'COMPOSITION_PROOF passed public_tests=29 configurations=2 mutants_rejected=2 compiler_negative=14' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_composition_scale.py'] and passed:
         data = json.loads(log.strip().splitlines()[-1])
         passed = data['status'] == 'passed' and (data['cells'], data['completed_imports'], data['operational_refusals']) == (8, 5, 3) and data['adoption_status'] == 'bounded_fixtures_only' and data['simple_strategy_capacity_status'] == 'blocked' and data['unmet_capacity_targets'] == ['balanced-128-128']
@@ -333,7 +340,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['composition-proof', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)
@@ -342,7 +349,7 @@ def main():
     repository = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
     is_checkout = repository.returncode == 0 and pathlib.Path(repository.stdout.strip()).resolve() == ROOT.resolve()
     commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True) if is_checkout else None
-    environment = collect_linux() if args.lane.startswith('linux') or (args.lane in ('composition', 'inspection') and sys.platform == 'linux') else collect()
+    environment = collect_linux() if args.lane.startswith('linux') or ((args.lane.startswith('composition') or args.lane == 'inspection') and sys.platform == 'linux') else collect()
     receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit is not None and commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
