@@ -1,0 +1,88 @@
+{
+  "policy": "Authored NAV9 packet fixtures, unchanged bytes; independent oracle is not Swift conformance. Graph/store fixtures are design premises only.",
+  "packet_sha256": "25c1afe9ab2b2c310f9453c9268da3fc6918f6c3aa05448a4426b7fffc4032ea",
+  "files": [
+    {
+      "path": "graph-cycle.json",
+      "sha256": "b7a8229c4688db9678b358fd1898464d78aefb867831afdce1d7c3fcfee65f28"
+    },
+    {
+      "path": "graph-dangling-edge.json",
+      "sha256": "d4bd7759fa554172c6ec7e9a31e6eb7ef6e3843a0dc3f7f95890e863d4f042eb"
+    },
+    {
+      "path": "graph-duplicate-id.json",
+      "sha256": "03a9edc3ff1e50131e715bef3b46cbb1b454a4a8a5636087b79ee4e9c1d54694"
+    },
+    {
+      "path": "matrix-0x0.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "matrix-1x0.json",
+      "sha256": "a930ec39e7339fde7af6a7f1009d621c595aab52ec9324dde1e8387212ae64aa"
+    },
+    {
+      "path": "matrix-2x0.json",
+      "sha256": "a7842107726e0c37ad99f4eb4cb226fd9cdfa7e1593b8f609680550058f67913"
+    },
+    {
+      "path": "matrix-2x2.json",
+      "sha256": "9b564bd71c4213424aefa10ac186c34aa9ba1d8e373ee694dc658b3a95ca1fb9"
+    },
+    {
+      "path": "matrix-3x1.json",
+      "sha256": "16e91508a41d5227921da94b25a9cad7d2c1b81a5a912b8e35c77629a3995ca6"
+    },
+    {
+      "path": "matrix-exact.json",
+      "sha256": "ed24b5fb5c8f46c9243dff0941ef37eb20fac70864d6612819ff32d58e640392"
+    },
+    {
+      "path": "matrix-nonarray-row.json",
+      "sha256": "1ac70ca3a253c01a70c869c2874cb1d7e6db3b0907d9d87e82ae2f171cc2bcb6"
+    },
+    {
+      "path": "matrix-ragged.json",
+      "sha256": "82a7e2386a4b46a66a33cc74943d20f2005e71e79cbe029c01bb3d27d087c736"
+    },
+    {
+      "path": "matrix-root-numeric-object-key.json",
+      "sha256": "898cd62ece560c3752f2379bb5026c07b9fd524b54c56df02991e12c92d52a3e"
+    },
+    {
+      "path": "matrix-string-cell.json",
+      "sha256": "17887025675f8ef97e5ad8e910ba6358490a67d91e122763f35d99cc2f0d750a"
+    },
+    {
+      "path": "set-arrays.json",
+      "sha256": "b069a0073bda461e39bf5e9d9b7ec06d2c5fb9544662ed5e5eda1c69a68ea179"
+    },
+    {
+      "path": "set-empty.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "set-equality.json",
+      "sha256": "30aaa5868408aa45abca96ba29ec2ab84e040e775411fba1be205b48ae984ea0"
+    },
+    {
+      "path": "set-nulls.json",
+      "sha256": "d74759c60d31affb92be655dc946afdc83155756128225b3bfccdb87241046ff"
+    },
+    {
+      "path": "store-ref-data-only.json",
+      "sha256": "e2bb4d3cfdf8da7af34af17c85eb53d2d6f5f35da2ad23d89c125581f4b7aefa"
+    },
+    {
+      "path": "graph-design-premises.json",
+      "sha256": "b3c0abe12b27208b8c0b15614cc826ef9bb5407d9160344365d2cca2dbdb0162",
+      "provenance": "Original Apache-2.0 design data; not runtime engine fixtures"
+    },
+    {
+      "path": "store-design-premises.json",
+      "sha256": "4c23bba7cfcfe4b65ba4029aa5b924d29d5b2c86bd18f1ad8ec99f9e214817c4",
+      "provenance": "Original Apache-2.0 design data; not runtime engine fixtures"
+    }
+  ]
+}
