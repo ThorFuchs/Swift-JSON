@@ -576,6 +576,11 @@ records conformance coverage and the Base64 accounting correction.
 
 ## Contributing, support and licensing
 
+For optional agent assistance in an application using this package, see the
+[developer kit candidate](Documentation/AgentDeveloperKit.md). Kit 0.1.0 targets
+released library 1.6.1; its skill and skills-only plugin await independent review
+before distribution. It keeps unreleased Inspection separate from stable recipes.
+
 Focused improvements, reproducible issues and documentation corrections are welcome.
 Read [CONTRIBUTING](CONTRIBUTING.md) for the native development workflow:
 

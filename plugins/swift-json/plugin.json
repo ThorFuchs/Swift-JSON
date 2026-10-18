@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "swift-json",
+  "version": "0.1.0",
+  "description": "Version-aware consumer assistance for ThorFuchs/Swift-JSON, validated against library 1.6.1.",
+  "author": {"name": "Thorsten Fuchs", "url": "https://github.com/ThorFuchs"},
+  "repository": "https://github.com/ThorFuchs/Swift-JSON",
+  "license": "Apache-2.0",
+  "keywords": ["swift-json", "swift", "exact-json", "offline-schema"]
+}
