@@ -1,4 +1,17 @@
-# JSONTransform extraction checkpoint
+# JSONTransform extraction and release-candidate history
+
+## Current 1.7.0 candidate disposition
+
+The accepted 42-declaration public API and one compiler/VM are frozen in the
+unpublished 1.7.0 candidate. CLI adapters preserve the original cumulative job
+ledger. The former prototype/checkpoint descriptions below remain historical;
+the final guarded engine includes terminal refunds and native output admission.
+[Candidate qualification](../../Qualification/Release1.7.0.md) requires fresh
+source-bound final QA and records the one-time explicit allocation-instrumentation
+waiver. Unknown allocation events/bytes/overhead are not passed measurements.
+No merge, tag or publication is implied.
+
+## Historical extraction checkpoints
 
 This feature-branch API is provisional. Stable 1.6.1 and development main remain
 separate authorities. This source adds JSONTransform to the nine development

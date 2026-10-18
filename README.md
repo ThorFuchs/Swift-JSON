@@ -1,8 +1,9 @@
 # Swift-JSON
 
-This source is **1.7.0-dev**, the unreleased development line. It retains the
+This source is the **1.7.0 release candidate**, still unpublished. Latest stable
+remains **1.6.1**; no 1.7.0 tag or release is implied. It retains the
 admitted JSONInspection array-evidence API plus source-attached snapshots and
-tree/sparse-table projections alongside the unchanged 56-declaration Navigation API. This feature candidate also prototypes JSONTransform: ten libraries, eleven products and ten source catalogs.
+tree/sparse-table projections alongside the unchanged 56-declaration Navigation API. This candidate adds the accepted JSONTransform library: ten libraries, eleven products and ten source catalogs.
 The stable 1.6 line has eight libraries and eight catalogs. Do not use a main
 snapshot as a 1.6 maintenance release.
 
@@ -32,7 +33,7 @@ eight DocC catalogs and the unchanged 1.6 API/runtime. The optional verified sch
 examples, structural traversal, structured HTML previews and bounded composition
 were introduced in 1.6.0. Exact JSON and offline schema validation remain the
 semantic authorities.
-The published CLI reports `1.6.1`; this development source reports `1.7.0-dev`.
+The published CLI reports `1.6.1`; this candidate source reports `1.7.0`.
 Both use a deterministic source-content digest.
 The [published 1.6.1 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1)
 is pinned to `e431f157ececc0cf3d061192420b0e36a9062f83`. Use its matching eight-catalog
@@ -41,7 +42,7 @@ DocC and qualification assets for the stable reference; see the
 Historical N0/N1 plans and later candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
-This feature source includes opt-in JSONInspection and provisional JSONTransform:
+This candidate includes opt-in JSONInspection and JSONTransform:
 ten libraries plus the CLI, eleven products in total. Inspection is absent from stable 1.6 releases. Use this
 source checkout for Inspection; its inclusion in main does not publish 1.7.0.
 
@@ -101,7 +102,7 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
-| **JSONTransform** | Provisional feature: exact query plans, guarded pull execution and finite cumulative limits; see the [extraction checkpoint](Documentation/Architecture/Release1.7/JSONTransform.md) |
+| **JSONTransform** | Candidate library: exact query plans, guarded pull execution and finite cumulative limits; see the [extraction checkpoint](Documentation/Architecture/Release1.7/JSONTransform.md) |
 | **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees and strict sparse object-row tables |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
@@ -543,8 +544,8 @@ The [documentation index](Documentation/README.md) links the behavior contracts.
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-This source adds unreleased Inspection as a ninth catalog. Build the eight released
-catalogs plus the Inspection source catalog on a supported native host:
+This candidate has ten catalogs: the eight stable-line products plus Inspection
+and Transform. Build the source catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -624,7 +625,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-Published 1.6.0 has eight libraries plus the executable; this unreleased source has nine
+Published 1.6.0 has eight libraries plus the executable; this candidate has ten
 libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
@@ -672,8 +673,8 @@ remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
 opt-in in the published 1.6.0 release; one-node lookup remains in JSON. This source
-also includes unreleased N2 inspection. N3 snapshots and private P1 projections
-remain separate unmerged candidates;
+also includes unreleased N2 inspection. N3 snapshots and P1 tree/sparse-table projections are admitted in this candidate;
+other proposals remain separate;
 see the [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 They do not expand the released Navigation API or promote public E11 projection.
 
@@ -703,7 +704,7 @@ numeric matrix or schema admission. See the [compiled evidence guide](Sources/JS
 
 ## Complete source-attached structural views (unreleased)
 
-Opt-in JSONInspection on 1.7.0-dev main now combines array observations with a
+Opt-in JSONInspection in this candidate combines array observations with a
 complete parent-linked snapshot, selected physical tree views and strict sparse
 all-object tables. Use core Pointer/read for one value and Navigation for many-node
 traversal. Inspection keeps exact typed locations, source order and numeric/key
@@ -718,11 +719,15 @@ Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
 These additions are absent from published 1.6.1 and do not publish 1.7.0.
 
-## Provisional public transformation library
+## Public transformation library candidate
 
-The JSONTransform feature candidate exposes the existing query compiler and pull VM
+The JSONTransform 1.7.0 candidate exposes the existing query compiler and pull VM
 without CLI imports. The CLI uses the same engine. Plans are immutable and Sendable;
 scoped handles share one cumulative ledger and invalidate on scope exit. The public
 [guide](Sources/JSONTransform/Documentation.docc/ScopedTransforms.md) and
-[standalone consumer](Tools/TransformQualification) document the provisional API.
-This product is absent from stable 1.6.1 and remains subject to full qualification.
+[standalone consumer](Tools/TransformQualification) document the accepted API.
+See the [1.7.0 candidate qualification contract](Documentation/Qualification/Release1.7.0.md)
+for source-bound gates, the explicit allocation-instrumentation exception and
+platform limits. A path or revision consumer is preparation evidence; exact 1.7.0
+tag consumption is a postauthorization check.
+This product is absent from stable 1.6.1 and must pass qualification on its final versioned source before publication.

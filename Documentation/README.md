@@ -1,7 +1,8 @@
 # Swift-JSON documentation
 
 The [release-line matrix](Qualification/ReleaseLines.md) separates the eight-library
-1.6 maintenance source from nine-library unreleased 1.7.0-dev. The website tracks
+1.6 maintenance source from this unpublished ten-library 1.7.0 candidate.
+See [candidate qualification and exceptions](Qualification/Release1.7.0.md). The website tracks
 development main; use matching release assets for a stable compiled reference.
 
 Start with the [package README](../README.md) for installation, product selection
@@ -72,3 +73,9 @@ Original code is Apache-2.0. See the [license](../LICENSE), [notice](../NOTICE),
 from the empty library dependency graph.
 
 - [Offline provider schemas and request fragments](Architecture/Release1.4/Providers.md), [frozen profile tables](Architecture/Release1.4/ProviderProfiles.json) and the [DocC guide](../Sources/JSONSchema/Documentation.docc/ProviderSchemas.md).
+
+The candidate also provides [Inspection](../Sources/JSONInspection/Documentation.docc/JSONInspection.md)
+and [Transform](../Sources/JSONTransform/Documentation.docc/JSONTransform.md):
+ten catalogs and 1,214 authored public declarations in total. These products are
+absent from stable 1.6.1. Candidate docs do not establish publication or a platform
+runtime pass; source-bound qualification receipts define the tested scope.

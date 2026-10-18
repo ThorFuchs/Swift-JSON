@@ -46,6 +46,9 @@ source, compiler and architecture; library WASI results are a separate boundary.
 
 ## Version and source identity
 
+This candidate reports `1.7.0`; latest stable remains `1.6.1`. The source version
+does not establish a published version tag. See the [candidate scope and exception](Qualification/Release1.7.0.md).
+
 The frozen 1.5.0 executable reports `1.4.0-dev` and revision `unknown`; its release
 notes disclose that limitation. The 1.5.1 maintenance release corrects it, and
 1.6.0 reports `1.6.0`. Both use the same source-identity interface:
@@ -75,7 +78,7 @@ The [CLI reference](Architecture/Release1.4/CLIReference.md),
 
 ## Provisional programmatic transformations
 
-The 1.7 JSONTransform feature branch offers an optional public library over the
+The unpublished 1.7.0 candidate offers an optional public library over the
 same compiler and pull VM used by `swift-json query`. It does not change the CLI
 flags, framing, input cursor, diagnostics, staged files or exit codes documented
 here. Public library users supply exact native values and an explicit optional

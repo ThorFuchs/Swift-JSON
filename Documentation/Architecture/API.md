@@ -333,3 +333,12 @@ and [standalone public SwiftPM consumer](../../Tools/TransformQualification).
 This is an unreleased candidate, absent from published 1.6.1. No merge, tag,
 publication, new dialect, implicit floating bridge or feature from another draft
 follows from this contract.
+
+## 1.7.0 release-candidate authority
+
+This unpublished candidate retains the accepted Transform API (42 authored
+declarations) and Inspection API (95), with all 56 Navigation declarations
+unchanged. Historical provisional headings above remain stable link targets and
+checkpoint descriptions; the [candidate contract](../Qualification/Release1.7.0.md)
+and final compiler graphs determine current scope. API shape acceptance does not
+imply publication, measured allocations or unobserved platform execution.
