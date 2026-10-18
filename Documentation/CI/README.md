@@ -1,3 +1,17 @@
+# NAV8 Navigation V1 integration
+
+Current required discovery retains 779 native /763 Linux /675 WASI functions,
+325 native/Linux /288 WASI parameter invocations, 76 Inspection functions,
+51 native /50 Linux shared functions, all 49 core caps and 126 maintenance
+identities. Nine library catalogs and ten products remain. Native/Linux and
+focused Inspection execute both the private invariant proof and public 16-case
+projection consumer with 18 external negative codegen outcomes/three guide blocks.
+The harness requires 17 negative/cardinality tests. Counts specify gates; actual
+source-bound receipts establish passes. G4 stays HOLD, explicitly nonblocking
+for this owner's guarded merge without performance claims.
+
+Earlier sections below retain their original source histories.
+
 # NAV6 integrated inspection candidate
 
 Adds Inspection to schema-example-enabled main: ten products, nine libraries,

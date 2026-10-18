@@ -1,8 +1,8 @@
 # Swift-JSON
 
 This source is **1.7.0-dev**, the unreleased development line. It retains the
-admitted JSONInspection API (44 authored declarations) alongside the unchanged
-56-declaration JSONNavigation API: nine libraries, ten products and nine catalogs.
+admitted JSONInspection array-evidence API plus source-attached snapshots and
+tree/sparse-table projections alongside the unchanged 56-declaration Navigation API: nine libraries, ten products and nine catalogs.
 The stable 1.6 line has eight libraries and eight catalogs. Do not use a main
 snapshot as a 1.6 maintenance release.
 
@@ -101,7 +101,7 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
-| **JSONInspection** | Unreleased source: observed array kinds, exact first-seen columns and explicit complete/prefix row coverage |
+| **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees and strict sparse object-row tables |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -697,3 +697,20 @@ Full source admission still includes the unobserved suffix. Complete row evidenc
 can have restricted descendant traversal; structural rectangular width is not
 numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
 [public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).
+
+## Complete source-attached structural views (unreleased)
+
+Opt-in JSONInspection on 1.7.0-dev main now combines array observations with a
+complete parent-linked snapshot, selected physical tree views and strict sparse
+all-object tables. Use core Pointer/read for one value and Navigation for many-node
+traversal. Inspection keeps exact typed locations, source order and numeric/key
+meaning. Sparse cells distinguish missing, explicit null and values; positive
+prefix observations never certify the complete table.
+
+Read the [compiled structural guide](Sources/JSONInspection/Documentation.docc/StructuralProjections.md),
+[public consumer](Tools/ProjectionQualification) and [NAV8 source/API decision](Documentation/Architecture/StructuralIntelligence/NAV8Completion.md).
+Every construction has one cumulative finite ledger. Each later catalogue/cell/
+location/value/span lookup is an explicitly separate full-source-admitted operation.
+Ordinals are snapshot-local trusted positions, not durable identity. Logical
+retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
+These additions are absent from published 1.6.1 and do not publish 1.7.0.

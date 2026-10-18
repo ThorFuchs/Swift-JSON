@@ -40,3 +40,9 @@ lanes. Their receipts retain precise scopes; preparation does not establish a pa
 `Documentation/Qualification/TestDiscovery.json` is the reviewed exact root, QA,
 shared-state and portable inventory; it does not infer expected counts from the
 current test output. Native and Linux retain all 49 public cap outcomes.
+
+NAV8 adds `qualify_public_projections.py`: independent public SwiftPM Debug/
+Release/ASan16 checks,18 full-codegen negatives and3 executable guide blocks.
+`qualify_projections.py` retains private sparse-storage/reducer/invariant proofs.
+Both run through native/Linux and focused Inspection; all49 caps/126 maintenance
+identities and exact root/cardinality checks remain required.

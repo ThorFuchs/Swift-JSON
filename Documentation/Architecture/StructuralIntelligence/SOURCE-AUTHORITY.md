@@ -140,3 +140,12 @@ JSONOperationReport envelopes, passes the source value separately to a synchrono
 visitor, and keeps records metadata-only. Its module is experimental; **no public
 SwiftPM product is added**. API shape and all remaining release gates are recorded
 in [API-DECISIONS](API-DECISIONS.md).
+
+## NAV8 current-main completion
+
+The [NAV8 contract](NAV8Completion.md) reconciles current1.7.0-dev main e0a4185
+with only missing N3/P1 source from db991c5/bda8aef. N1/N2 are already on main;
+old draft heads are provenance, not merge bases. N3 snapshots and public immutable
+tree/sparse-table operations remain within JSONInspection. No extra product or
+release action; stable1.6.1 is unchanged. Current source-bound receipts, rather
+than the historical stage counts above, establish qualification.

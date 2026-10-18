@@ -40,7 +40,7 @@ DESCRIPTIONS = {
     'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
     'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.',
     'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.',
-    'JSONInspection': 'Complete or prefix-scoped array evidence, exact ordered columns and cumulative finite reports.'}
+    'JSONInspection': 'Array evidence, complete source-attached snapshots, tree views and strict sparse tables with finite reports.'}
 
 
 class Links(HTMLParser):

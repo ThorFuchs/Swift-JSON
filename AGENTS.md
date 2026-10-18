@@ -42,4 +42,5 @@ Documentation/Architecture before changing behavior.
   user instruction. Preserve unrelated changes.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
-optimizations. Projection and JSON text-sequence framing remain deferred.
+optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
+P2 graph/store/set/matrix/retrieval/persistence and JSON text-sequence framing remain deferred.

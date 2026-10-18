@@ -71,5 +71,7 @@ inner cancellation, source coherence and independent shared-source invocations.
 Current native/Linux/WASI/platform receipts must qualify final source; this document
 does not turn an unexecuted lane into a pass. This contract grants no release authority.
 
-Snapshots, persistent indexes, projections, retrieval, BFS, JSONPath, HTML/CLI
-integration, schema inference and numeric matrices remain deferred.
+At the original N2 milestone snapshots/projections were deferred. NAV8 adds
+source-attached snapshots and tree/sparse-table views; see NAV8Completion.md.
+Persistent indexes, retrieval, BFS, JSONPath, HTML/CLI integration, schema inference
+and numeric matrices remain deferred.

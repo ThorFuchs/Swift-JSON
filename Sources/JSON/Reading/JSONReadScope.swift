@@ -10,6 +10,7 @@ package final class JSONReadScope {
     private var rootBytes: UInt64 = 0
     private var pathBytes: UInt64 = 0
     private var retiredPathBytes: UInt64 = 0
+    private var resultOwnsDocument = false
     package init(_ document: JSONDocument, limits: JSONLimits) throws {
         let state = JSONCodingState(options: .init(limits: limits), meter: try JSONWorkMeter(limits: limits, domain: .core, trackAcceptedCapacities: true))
         try JSONAdmission.value(document.root, meter: &state.meter, owned: true)
@@ -41,11 +42,23 @@ package final class JSONReadScope {
         try state.check(); return state
     }
     package func invalidate() { document = nil; state = nil }
+    /// Transfer the original admitted source alias into a source-attached result.
+    /// Only an owned package reducer uses this one-shot completion designation;
+    /// ordinary reads/visits retain their original input-refund behavior.
+    package func transferDocumentOwnership() throws -> JSONDocument {
+        let state = try check()
+        try state.meter.work()
+        guard !resultOwnsDocument, let document else {
+            throw JSONFailure(.configuration, code: .invalidOperation)
+        }
+        resultOwnsDocument = true
+        return document
+    }
     package func complete<T>(_ result: T) throws -> JSONOperationReport<T> {
         let state = try check()
         // Paths/root/source cease to be scope-owned. Any escaped path is caller
         // storage and cannot access this invalidated root or ledger.
-        try state.meter.release(rootBytes + pathBytes)
+        try state.meter.release((resultOwnsDocument ? 0 : rootBytes) + pathBytes)
         let statistics = state.meter.statistics()
         invalidate()
         return .init(result: result, statistics: statistics)

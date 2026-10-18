@@ -69,4 +69,8 @@ package struct JSONTraversalContext: ~Copyable {
             try scope.document?.sourceMap?.span(at: path, kind: .value, meter: &state.meter)
         }
     }
+    /// Transfer already-admitted input ownership, without exposing its scope.
+    package mutating func transferDocumentOwnership() throws -> JSONDocument {
+        try perform { _ in try scope.transferDocumentOwnership() }
+    }
 }
