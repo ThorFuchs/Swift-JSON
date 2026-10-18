@@ -14,6 +14,7 @@ SHARED_TESTS += '|qaStreaming|qaE2E(SharedPlan|RootImport|NDJSONImport|AwaitedSi
 SHARED_TESTS += '|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g3SharedTypedGeneratorHasIndependentConcurrentInvocations|g4SharedAdvancedGeneratorHasIndependentConcurrentInvocations|g5SharedPreparationSeparatesConcurrentFailureAndSuccessHealth'
 SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations'
 SHARED_TESTS += '|inspectionI17CoverageSpansReplacementAndSharedInvocations'
+SHARED_TESTS += '|snapshotS19NavigationParityAndIndependentInvocations|snapshotV22ConcurrentLookupsUseIndependentAdmissionAndHealth'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -24,9 +25,9 @@ def commands(lane, output):
     output = output.relative_to(ROOT)
     if lane == 'inspection':
         result = [['python3', '-B', 'Scripts/public_check.py'],
-                ['swift', 'test', '--filter', 'inspection'],
-                ['swift', 'test', '-c', 'release', '--filter', 'inspection'],
-                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection'],
+                ['swift', 'test', '--filter', 'inspection|snapshot'],
+                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot'],
+                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot'],
                 ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/inspection-strict',
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')]]
@@ -165,6 +166,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
             ['python3', '-B', 'Scripts/qualify_navigation.py', '--output', str(output / 'navigation')],
             ['python3', '-B', 'Scripts/qualify_inspection.py', '--output', str(output / 'inspection-consumer')],
+            ['python3', '-B', 'Scripts/qualify_snapshot.py', '--output', str(output / 'snapshot-consumer')],
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
@@ -224,7 +226,7 @@ def check_result(command, code, log, events=None):
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONNavigationTests': expected[0]} and events['parameter_case_invocations'] == 0
-        if 'inspection' in command:
+        if any(f in command for f in ['inspection', 'inspection|snapshot']):
             expected = [DISCOVERY['root_functions']['JSONInspectionTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 0
@@ -298,6 +300,8 @@ def check_result(command, code, log, events=None):
         passed = passed and 'ERGONOMICS_COMPILER passed commands=8 guide_fences=3' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation_reducer.py']:
         passed = passed and 'REDUCER_CODEGEN passed positive=2 negative=20' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_snapshot.py']:
+        passed = passed and 'SNAPSHOT_COMPILER passed configurations=2 consumer_cases=14 address_cases=14 guide_fences=3 negative_probes=18' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_inspection.py']:
         passed = passed and 'INSPECTION_COMPILER passed configurations=2 consumer_cases=12 address_cases=12 guide_fences=3 negative_probes=8' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation.py']:
