@@ -1,9 +1,9 @@
 # Public transformation consumer
 
 This separate SwiftPM package imports JSON and JSONTransform only. It exercises
-11 witnesses: zero/null/multiple results, exact numbers/scalar keys, plan reuse,
-compile/language errors, cumulative provider limits, exact bindings, cancellation
-and independent concurrent invocations. These are executable assertions, not
+12 witnesses: zero/null/multiple results, exact numbers/scalar keys, plan reuse,
+compile/language errors, cumulative provider limits, exact bindings, cancellation,
+independent concurrent invocations and tighter execution value limits. These are executable assertions, not
 full dialect, platform or release qualification.
 
 Run `swift run --package-path Tools/TransformQualification TransformConsumer`.

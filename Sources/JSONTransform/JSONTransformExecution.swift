@@ -128,6 +128,8 @@ public final class JSONTransformExecution {
     ///
     /// A resource, provider or cancellation failure latches and bypasses query
     /// catches. Later pulls cannot create a fresh successful execution.
+    /// Native value bounds apply at every handoff, including literals compiled
+    /// under a broader policy; that admission uses the same cumulative meter.
     public func next() throws -> JSONTransformOutput? {
         // Check before touching the exclusively borrowed context. Caller callbacks
         // can reach this handle; same-thread re-entry must throw, never trap.
@@ -147,6 +149,9 @@ public final class JSONTransformExecution {
             vm = nil
             defer { vm = active }
             guard let value = try active.next(input: &input, context: &context) else { return nil }
+            // Compile-time literals were admitted under a different policy. Every
+            // public handoff must satisfy this invocation's native value bounds.
+            try admitOutput(value.value)
             try context.charge(.totalResults)
             return .init(value)
         } catch {
@@ -154,6 +159,19 @@ public final class JSONTransformExecution {
             health.latch(failed)
             try health.check(context: &context)
             throw failed
+        }
+    }
+    private func admitOutput(_ value: JSON) throws {
+        let before = context.meter.used(.retainedBytes)
+        do {
+            // Retire per-value capacities, preserving cumulative work/statistics.
+            try context.meter.resetValueBounds()
+            try JSONAdmission.value(value, meter: &context.meter)
+        } catch {
+            // Native admission may fail with traversal frames still reserved.
+            // The value/lease remains owned by the VM; refund only temporaries.
+            try context.meter.release(context.meter.used(.retainedBytes) - before)
+            throw error
         }
     }
     /// Current cumulative native statistics, also available after a failed pull.

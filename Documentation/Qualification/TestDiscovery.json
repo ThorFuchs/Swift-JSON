@@ -13,7 +13,7 @@
     "JSONNavigationTests": 47,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 76,
-    "JSONTransformTests": 21
+    "JSONTransformTests": 23
   },
   "parameterized_invocations": 325,
   "composition_external_functions": 5,
@@ -80,7 +80,7 @@
     "JSONNavigationTests": 47,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 76,
-    "JSONTransformTests": 21
+    "JSONTransformTests": 23
   },
   "wasi_root_functions": {
     "JSONTests": 190,
@@ -94,7 +94,7 @@
     "JSONNavigationTests": 47,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 76,
-    "JSONTransformTests": 21
+    "JSONTransformTests": 23
   },
   "wasi_parameterized_invocations": 288,
   "portable_shared_state_functions": {

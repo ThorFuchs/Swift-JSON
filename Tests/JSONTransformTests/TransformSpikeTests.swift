@@ -348,3 +348,57 @@ private func values(_ source: String, input: JSON = .null) throws -> [JSON] {
         #expect(execution.statistics[.retainedBytes] == 0)
     }
 }
+
+@Test func jtxCompiledLiteralsCannotBypassTighterExecutionValueLimits() throws {
+    let rows: [(String, JSONResourceMetric, UInt64)] = [
+        ("12345", .numberDigits, 5), ("\"abc\"", .stringBytes, 3), ("1e20", .absoluteExponent, 20)]
+    for (query, metric, bound) in rows {
+        let plan = try JSONTransformProgram.compile(query)
+        var limits = JSONTransformLimits(); limits.json[metric] = bound
+        let accepted = try plan.withExecution(input: .null, limits: limits) { e in try e.next()?.value }
+        #expect(accepted.result == (try JSON.parse(query)))
+        limits.json[metric] = bound - 1
+        var handle: JSONTransformExecution?
+        do {
+            _ = try plan.withExecution(input: .null, limits: limits) { e in
+                handle = e
+                for _ in 0..<2 {
+                    do { _ = try e.next(); Issue.record("Expected execution value refusal") }
+                    catch let failure as JSONTransformFailure {
+                        #expect(failure.category == .resource && failure.metric == metric.rawValue)
+                        #expect(failure.limit == bound - 1 && failure.attemptedUsage == bound)
+                    }
+                }
+            }
+            Issue.record("Caught output refusal made scope successful")
+        } catch let failure as JSONTransformFailure { #expect(failure.category == .resource && failure.metric == metric.rawValue) }
+        #expect(handle?.used(.results) == 0 && handle?.statistics[.retainedBytes] == 0)
+    }
+}
+@Test func jtxOutputAdmissionWorkAndTemporaryFramesStayOnTheOneLedger() throws {
+    let plan = try JSONTransformProgram.compile(".")
+    let root = JSON.array(Array(repeating: .string("abc"), count: 64))
+    var prepared: UInt64 = 0
+    var emitted: UInt64 = 0
+    _ = try plan.withExecution(input: root) { e in
+        prepared = e.used(.workUnits)
+        let output = try e.next()
+        #expect(output?.value == root)
+        emitted = e.used(.workUnits)
+    }
+    #expect(emitted > prepared + 64)
+    var limits = JSONTransformLimits(); let cap = prepared + (emitted - prepared) / 2
+    limits[.workUnits] = cap
+    var began = false
+    var handle: JSONTransformExecution?
+    do {
+        _ = try plan.withExecution(input: root, limits: limits) { e in
+            began = true; handle = e
+            _ = try e.next()
+        }
+        Issue.record("Expected cumulative output-admission work refusal")
+    } catch let failure as JSONTransformFailure {
+        #expect(failure.category == .resource && failure.metric == "workUnits" && failure.limit == cap)
+    }
+    #expect(began && handle?.used(.results) == 0 && handle?.statistics[.retainedBytes] == 0)
+}

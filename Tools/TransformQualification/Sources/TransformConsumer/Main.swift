@@ -51,6 +51,11 @@ func collect(_ plan: JSONTransformProgram, input: JSON = .null) throws -> [JSON]
             for _ in 0..<8 { group.addTask { try collect(plan, input: root) == expected } }
             for try await match in group { precondition(match) }
         }; witnesses += 1
+        var narrow = JSONTransformLimits(); narrow.json[.numberDigits] = 1
+        do {
+            _ = try JSONTransformProgram.compile("12345").withExecution(input: .null, limits: narrow) { e in try e.next() }
+            preconditionFailure("compiled literal bypassed execution value bounds")
+        } catch let failure as JSONTransformFailure { precondition(failure.category == .resource && failure.metric == "numberDigits") }; witnesses += 1
         print("{\"consumer\":\"JSON+JSONTransform\",\"witnesses\":\(witnesses),\"status\":\"passed\"}")
     }
 }

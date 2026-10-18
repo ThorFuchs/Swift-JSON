@@ -50,7 +50,7 @@ public struct JSONTransformLimits: Sendable, Equatable {
         }
     }
     var runtime: TransformRuntimeLimits
-    /// Native admission, numeric, cancellation and work ceilings.
+    /// Native admission, output-value, numeric, cancellation and work ceilings.
     public var json: JSONLimits {
         get { runtime.core }
         set { runtime.core = newValue }

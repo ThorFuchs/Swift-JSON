@@ -28,7 +28,7 @@ def main():
             for line in result.stdout.splitlines():
                 try: reports.append(json.loads(line))
                 except ValueError: continue
-            expected = dict(consumer='JSON+JSONTransform', witnesses=11, status='passed')
+            expected = dict(consumer='JSON+JSONTransform', witnesses=12, status='passed')
             passed = result.returncode == 0 and reports == [expected]
             rows.append(dict(command=command, exit_code=result.returncode, status='passed' if passed else 'failed', witnesses=reports, log=log.name, log_sha256=hashlib.sha256(log.read_bytes()).hexdigest()))
             if not passed: break

@@ -90,8 +90,8 @@ source-bound; older successful receipts cannot qualify changed code.
 
 The common private context deliberately retains the CLI-only limits-file marker,
 issue cap and committed-result report counters. Public construction cannot set or
-observe those host fields. The private kernel imports JSON only and performs no
-ambient file/process I/O. Numeric division policy and frame/binding/collection
+observe those host fields. The shared context imports JSON only. Existing kernel files retain portable
+Foundation utilities; the facade performs no ambient file/process I/O. Numeric division policy and frame/binding/collection
 ownership remain kernel concerns. Retaining this one private scope preserves the
 CLI's aggregate parse/compile/execute/write/diagnostic budget and refund authority;
 creating a second public-runtime meter would break that composition. The health
@@ -106,3 +106,14 @@ public pull now drains the existing deferred ARC refund queue before rethrowing
 terminal health; work is never refunded and the original error still wins.
 A regression covers resource, explicit-cancellation and uncaught-language failures,
 including live alias ownership across scope exit and zero live bytes after release.
+
+## Independent execution value policy
+
+A separate real-engine consumer at 61125ed demonstrated that literals admitted
+at compilation could bypass tighter invocation number-digit, string-byte and
+exponent bounds. The public output boundary now uses native JSON admission on
+the existing execution meter before publishing/counting a result. Per-value
+capacity retirement preserves cumulative work/statistics. A failed traversal
+refunds only its temporary frame reservations. The private compiler/VM and CLI
+host path remain unchanged. Regressions qualify inclusive literal boundaries,
+terminal latching, zero publication, cumulative traversal work and cleanup.

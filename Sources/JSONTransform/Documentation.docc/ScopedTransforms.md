@@ -66,3 +66,13 @@ owned progress is checked before a callback value or EOF can be accepted.
 The invocation reserves 1,152 logical bytes for owner/health/observation storage;
 this logical weight is neither an allocation measurement nor a process RSS cap.
 ASCII identifier names follow the compiler grammar and omit the `$` prefix.
+
+## Reusing a plan under tighter limits
+
+Compilation and execution have separate finite policies. Before publishing each
+public output, native JSON admission checks that value under the execution's
+policy, including compiled literals. A plan compiled with larger number/text
+bounds cannot bypass a tighter invocation. This handoff traversal shares the same
+work ledger. Per-value capacities retire into cumulative statistics; work never
+resets. Temporary traversal reservations are refunded even on terminal failure.
+The CLI retains its existing native writer admission on the shared job ledger.
