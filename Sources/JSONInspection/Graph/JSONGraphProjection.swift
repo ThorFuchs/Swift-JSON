@@ -125,7 +125,7 @@ internal struct GraphBuilder: JSONTraversalOwnedReducer {
             }
             return .continue
         }
-        guard case .object = value else { throw JSONGraphFailure.rowNotObject(at: hit.absoluteLocation, kind: hit.kind) }
+        guard case .object = value else { throw JSONGraphFailure.rowNotObject(at: try context.retainLocation(hit.absoluteLocation), kind: hit.kind) }
         if hit.scopeRootIndex == 0 {
             let id = try string(value, key: profile.nodeIDKey, at: hit.absoluteLocation, context: &context)
             for prior in ids.indices {
