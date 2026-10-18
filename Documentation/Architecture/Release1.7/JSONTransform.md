@@ -45,3 +45,15 @@ their exact source revisions; a working spike is not full release qualification.
 JTX-2 through JTX-7 remain separate qualification gates. No merge, tag, publication,
 Linux/WASI runtime support, complete conformance, controlled performance or final
 API acceptance follows from this checkpoint.
+
+## Rejected ownership experiments
+
+The first inout execution callback compiled but allowed nested scope swapping:
+two results escaped an outer results cap of one. Its local prototype checkpoint
+is retained as rejected; its green behavior tests do not qualify ownership.
+A noncopyable borrowing facade prevented replacement and passed eleven behavior
+tests. However Swift 6.4 (swiftlang-6.4.0.34.1) crashed with exit -6 in SILGenCleanup
+when a callback captured the borrowed facade into an escaping closure. That is
+a failed compiler gate, not a valid negative diagnostic or a compiler fix.
+The next bounded experiment is a guarded, non-Sendable reference handle; copies
+must share one state and scope exit must invalidate it and release root/provider.

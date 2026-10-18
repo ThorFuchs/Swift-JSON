@@ -44,10 +44,10 @@ public struct JSONTransformProgram: Sendable {
     public func withExecution<Result>(input: JSON, bindings: [String: JSON] = [:],
                                       limits: JSONTransformLimits = .init(),
                                       source: (() throws -> JSON?)? = nil,
-                                      _ body: (inout JSONTransformExecution) throws -> Result) throws -> JSONOperationReport<Result> {
-        var execution = try JSONTransformExecution.make(plan: self, input: input, bindings: bindings, limits: limits, source: source)
+                                      _ body: (borrowing JSONTransformExecution) throws -> Result) throws -> JSONOperationReport<Result> {
+        let execution = try JSONTransformExecution.make(plan: self, input: input, bindings: bindings, limits: limits, source: source)
         let result: Result
-        do { result = try body(&execution) }
+        do { result = try body(execution) }
         catch {
             // Caller callback errors keep their identity. Cleanup cannot replace
             // the originating failure or reopen the operation ledger.
