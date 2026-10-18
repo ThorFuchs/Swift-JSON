@@ -2,7 +2,7 @@
 import JSON
 
 package protocol FilterInput {
-    mutating func next(context: inout CLIJobContext) throws -> FilterYield?
+    mutating func next(context: inout TransformRuntimeContext) throws -> FilterYield?
 }
 /// Explicit, demand-driven continuations. The arena reuses slots; no language
 /// recursion becomes Swift call-stack recursion. Only immutable plans are shared.
@@ -54,11 +54,11 @@ package struct FilterVM {
     private var available: [Int] = []
     private var root = 0
     private var finished = false
-    package init(program: FilterProgram, input: FilterYield, bindings: [String: FilterYield] = [:], context: inout CLIJobContext) throws {
+    package init(program: FilterProgram, input: FilterYield, bindings: [String: FilterYield] = [:], context: inout TransformRuntimeContext) throws {
         self.program = program
         root = try create(program.root, input: input, bindings: bindings, context: &context)
     }
-    private mutating func create(_ node: Int, input: FilterYield, bindings: [String: FilterYield], functions:[Int:FunctionClosure]=[:],parameters:[String:FilterThunk]=[:], context: inout CLIJobContext) throws -> Int {
+    private mutating func create(_ node: Int, input: FilterYield, bindings: [String: FilterYield], functions:[Int:FunctionClosure]=[:],parameters:[String:FilterThunk]=[:], context: inout TransformRuntimeContext) throws -> Int {
         try context.checkpoint()
         let entry = context.meter.used(.retainedBytes)
         try context.charge(.runtimeFrames)
@@ -75,7 +75,7 @@ package struct FilterVM {
         if let id = available.popLast() { frames[id] = frame; complete = true; return id }
         try context.meter.retain(64); frames.append(frame); complete = true; return frames.count - 1
     }
-    private mutating func dispose(_ id: Int, context: inout CLIJobContext) throws {
+    private mutating func dispose(_ id: Int, context: inout TransformRuntimeContext) throws {
         // Cleanup work and its bounded integer stack are prepaid at frame creation.
         var pending = [id]
         while let id = pending.popLast() {
@@ -89,13 +89,13 @@ package struct FilterVM {
         }
         try context.reclaimValueLeases()
     }
-    package mutating func close(context: inout CLIJobContext) throws {
+    package mutating func close(context: inout TransformRuntimeContext) throws {
         if !finished { try dispose(root, context: &context) }
         try context.meter.release(UInt64(frames.count) * 64)
         frames = []; available = []; finished = true
         try context.reclaimValueLeases()
     }
-    package mutating func next<Input: FilterInput>(input: inout Input, context: inout CLIJobContext) throws -> FilterYield? {
+    package mutating func next<Input: FilterInput>(input: inout Input, context: inout TransformRuntimeContext) throws -> FilterYield? {
         if finished { return nil }
         var demands: [Int] = [], current = root
         defer { try? context.meter.release(UInt64(demands.count) * 8) }
@@ -120,24 +120,24 @@ package struct FilterVM {
             }
         }
     }
-    private mutating func child(_ node: Int, frame: inout Frame, value: FilterYield? = nil, bindings: [String: FilterYield]? = nil,functions:[Int:FunctionClosure]?=nil,parameters:[String:FilterThunk]?=nil, context: inout CLIJobContext) throws -> Int {
+    private mutating func child(_ node: Int, frame: inout Frame, value: FilterYield? = nil, bindings: [String: FilterYield]? = nil,functions:[Int:FunctionClosure]?=nil,parameters:[String:FilterThunk]?=nil, context: inout TransformRuntimeContext) throws -> Int {
         let id = try create(node, input: value ?? frame.input, bindings: bindings ?? frame.bindings,functions:functions ?? frame.functions,parameters:parameters ?? frame.parameters, context: &context)
         frame.children.append(id); return id
     }
     private func event(_ frame: inout Frame) -> Event? { let event = frame.event; frame.event = nil; return event }
-    private func capture(_ value: FilterYield, frame: inout Frame, context: inout CLIJobContext) throws {
+    private func capture(_ value: FilterYield, frame: inout Frame, context: inout TransformRuntimeContext) throws {
         try context.charge(.collectionValues); frame.collectionSlots += 1
         try context.meter.retain(24); frame.slots += 24
         frame.values.append(value)
     }
-    private func releaseCache(_ frame: inout Frame, context: inout CLIJobContext, transferring: UInt64 = 0) throws {
+    private func releaseCache(_ frame: inout Frame, context: inout TransformRuntimeContext, transferring: UInt64 = 0) throws {
         frame.values = []; frame.members = []
         try context.meter.release(frame.slots); frame.slots = 0
-        guard transferring <= frame.collectionSlots else { throw CLIError(.usage, "invalidCollectionTransfer") }
+        guard transferring <= frame.collectionSlots else { throw TransformRuntimeFailure(.usage, "invalidCollectionTransfer") }
         try context.release(.collectionValues, frame.collectionSlots - transferring); frame.collectionSlots = 0
         try context.reclaimValueLeases()
     }
-    private mutating func step<Input: FilterInput>(_ id: Int, input: inout Input, context: inout CLIJobContext) throws -> Action {
+    private mutating func step<Input: FilterInput>(_ id: Int, input: inout Input, context: inout TransformRuntimeContext) throws -> Action {
         var frame = frames[id]!
         frames[id] = nil // Unique mutation of the frame's COW buffers.
         defer { frames[id] = frame }
@@ -418,12 +418,12 @@ package struct FilterVM {
             return try object(fields, frame: &frame, incoming: incoming, context: &context)
         }
     }
-    private func captureGroup(_ value: FilterYield, group: Int, frame: inout Frame, context: inout CLIJobContext) throws {
+    private func captureGroup(_ value: FilterYield, group: Int, frame: inout Frame, context: inout TransformRuntimeContext) throws {
         try context.charge(.collectionValues); frame.collectionSlots += 1
         try context.meter.retain(24); frame.slots += 24
         frame.groups[group].append(value)
     }
-    private func advance(_ selections: inout [Int], counts: [Int], context: inout CLIJobContext) throws -> Bool {
+    private func advance(_ selections: inout [Int], counts: [Int], context: inout TransformRuntimeContext) throws -> Bool {
         for offset in selections.indices.reversed() {
             try context.work(); selections[offset] += 1
             if selections[offset] < counts[offset] { return true }
@@ -431,7 +431,7 @@ package struct FilterVM {
         }
         return false
     }
-    private mutating func slice(_ base: Int, lower: Int?, upper: Int?, frame: inout Frame, incoming: Event?, context: inout CLIJobContext) throws -> Action {
+    private mutating func slice(_ base: Int, lower: Int?, upper: Int?, frame: inout Frame, incoming: Event?, context: inout TransformRuntimeContext) throws -> Action {
         let nodes = [base, lower, upper]
         if frame.phase == 0 {
             try context.meter.retain(120); frame.slots += 120
@@ -460,7 +460,7 @@ package struct FilterVM {
         frame.flag = try !advance(&frame.selections, counts: frame.groups.map(\.count), context: &context)
         return .emit(.value(result))
     }
-    private mutating func object(_ fields: [(Int, Int)], frame: inout Frame, incoming: Event?, context: inout CLIJobContext) throws -> Action {
+    private mutating func object(_ fields: [(Int, Int)], frame: inout Frame, incoming: Event?, context: inout TransformRuntimeContext) throws -> Action {
         if frame.phase == 0 {
             try context.meter.retain(UInt64(fields.count) * 40 + 48); frame.slots += UInt64(fields.count) * 40 + 48
             frame.groups = [[], []]; frame.index = 0; frame.phase = 1
@@ -524,7 +524,7 @@ package struct FilterVM {
         frame.flag = try !advance(&frame.selections, counts: frame.choices.map(\.count), context: &context)
         return .emit(.value(result))
     }
-    private mutating func call<Input: FilterInput>(_ name: String, arguments: [Int], frame: inout Frame, incoming: Event?, input: inout Input, context: inout CLIJobContext) throws -> Action {
+    private mutating func call<Input: FilterInput>(_ name: String, arguments: [Int], frame: inout Frame, incoming: Event?, input: inout Input, context: inout TransformRuntimeContext) throws -> Action {
         if name == "paths" { return try paths(arguments.first,frame:&frame,incoming:incoming,context:&context) }
         if name == "setpath" { return try setpath(arguments,frame:&frame,incoming:incoming,context:&context) }
         if name == "del" { return try deleteExpression(arguments[0],frame:&frame,incoming:incoming,context:&context) }
@@ -672,7 +672,7 @@ package struct FilterVM {
         }
         throw FilterCompileFailure("unsupportedBuiltin", at: program.sourceRanges[frame.node].lowerBound)
     }
-    private mutating func destructure(_ source:Int,pattern:FilterBindingPattern,after:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func destructure(_ source:Int,pattern:FilterBindingPattern,after:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{frame.phase=1;return .pull(try child(source,frame:&frame,context:&context))}
         if let incoming{
             switch incoming{
@@ -700,7 +700,7 @@ package struct FilterVM {
         }
         return .pull(frame.children.last!)
     }
-    private func pathChildren(_ value:FilterYield,frame:inout Frame,context:inout CLIJobContext)throws {
+    private func pathChildren(_ value:FilterYield,frame:inout Frame,context:inout TransformRuntimeContext)throws {
         guard let location=value.location else{throw FilterLanguageFailure("invalidPath")}
         switch value.value{
         case .array(let values):
@@ -710,7 +710,7 @@ package struct FilterVM {
         default:break
         }
     }
-    private mutating func paths(_ predicate:Int?,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func paths(_ predicate:Int?,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{let root=try FilterLocationRoot(context:&context);frame.pathRoot=root;var value=frame.input;value.location = .init(root:root);try pathChildren(value,frame:&frame,context:&context);frame.phase=1}
         if let incoming{
             switch incoming{
@@ -730,7 +730,7 @@ package struct FilterVM {
         guard let location=value.location else{throw FilterLanguageFailure("invalidPath")}
         return .emit(.value(try FilterValues.array(location.segments,context:&context)))
     }
-    private mutating func setpath(_ arguments:[Int],frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func setpath(_ arguments:[Int],frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{frame.phase=1;return .pull(try child(arguments[0],frame:&frame,context:&context))}
         if let incoming{
             switch incoming{
@@ -745,7 +745,7 @@ package struct FilterVM {
         }
         return .pull(frame.children.last!)
     }
-    private mutating func deletePaths(_ value:JSON,frame:inout Frame,context:inout CLIJobContext)throws->Action {
+    private mutating func deletePaths(_ value:JSON,frame:inout Frame,context:inout TransformRuntimeContext)throws->Action {
         guard case .array(let values)=value else{throw FilterLanguageFailure("expectedPathList")}
         let entry=context.meter.used(.retainedBytes);var scratch:UInt64=0,ready=false
         defer{try? context.meter.release(ready ? scratch:context.meter.used(.retainedBytes)-entry)}
@@ -761,7 +761,7 @@ package struct FilterVM {
         }
         return .emit(.value(candidate))
     }
-    private mutating func deleteExpression(_ expression:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func deleteExpression(_ expression:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{let root=try FilterLocationRoot(context:&context);frame.pathRoot=root;var value=frame.input;value.location = .init(root:root);frame.phase=1;return .pull(try child(expression,frame:&frame,value:value,context:&context))}
         if let incoming{
             switch incoming{
@@ -773,7 +773,7 @@ package struct FilterVM {
         }
         return .pull(frame.children[0])
     }
-    private mutating func assignment(_ op:String,targets:Int,update:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func assignment(_ op:String,targets:Int,update:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{let root=try FilterLocationRoot(context:&context);frame.pathRoot=root;var value=frame.input;value.location = .init(root:root);frame.phase=1;return .pull(try child(targets,frame:&frame,value:value,context:&context))}
         if let incoming{
             switch incoming{
@@ -820,7 +820,7 @@ package struct FilterVM {
         }
         return .pull(frame.children.last!)
     }
-    private mutating func path(_ expression:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func path(_ expression:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{
             let root=try FilterLocationRoot(context:&context);frame.pathRoot=root
             var value=frame.input;value.location = .init(root:root);frame.phase=1
@@ -835,7 +835,7 @@ package struct FilterVM {
         }
         return .pull(frame.children[0])
     }
-    private mutating func interpolate(_ parts:[Int],format:String?,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func interpolate(_ parts:[Int],format:String?,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{let bytes=UInt64(parts.count)*32;try context.meter.retain(bytes);frame.slots += bytes;frame.groups=Array(repeating:[],count:parts.count);frame.selections=Array(repeating:0,count:parts.count);frame.phase=1}
         if let incoming{
             switch incoming{case .value(let value):try captureGroup(value,group:frame.index,frame:&frame,context:&context);return .pull(frame.children[0]);case .end:try dispose(frame.children.removeLast(),context:&context);frame.index += 1;case .failure(let error):throw error}
@@ -847,7 +847,7 @@ package struct FilterVM {
         if frame.flag{frame.phase=99;return .emit(.end)}
         var output="",bytes:UInt64=0
         defer{try? context.meter.release(bytes)}
-        func append(_ text:String,context:inout CLIJobContext)throws{
+        func append(_ text:String,context:inout TransformRuntimeContext)throws{
             for scalar in text.unicodeScalars{let size=UInt64(scalar.utf8.count);try context.work(size);try context.meter.require(.stringBytes,bytes+size);try context.meter.retain(size);output.unicodeScalars.append(scalar);bytes += size}
         }
         for index in parts.indices{
@@ -862,7 +862,7 @@ package struct FilterVM {
         frame.flag=try !advance(&frame.selections,counts:frame.groups.map(\.count),context:&context)
         return .emit(.value(result))
     }
-    private mutating func walk(_ filter:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func walk(_ filter:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         let count:Int,object:JSONObject?
         switch frame.input.value{case .array(let values):count=values.count;object=nil;case .object(let value):count=value.count;object=value;default:
             if frame.phase==0{frame.phase=3;return .pull(try child(filter,frame:&frame,context:&context))}
@@ -908,7 +908,7 @@ package struct FilterVM {
         try releaseCache(&frame,context:&context,transferring:transfer)
         frame.current=result;frame.phase=3;return .pull(try child(filter,frame:&frame,value:result,context:&context))
     }
-    private mutating func loop(_ name:String,arguments:[Int],frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func loop(_ name:String,arguments:[Int],frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{frame.phase=1;return .pull(try child(arguments[0],frame:&frame,context:&context))}
         if let incoming{
             switch incoming{
@@ -931,7 +931,7 @@ package struct FilterVM {
         if frame.phase==2{frame.phase=3;return .pull(try child(arguments[1],frame:&frame,context:&context))}
         return .pull(frame.children.last!)
     }
-    private mutating func recurse(_ arguments:[Int],frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func recurse(_ arguments:[Int],frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{frame.phase=1;return .emit(.value(frame.input))}
         if frame.phase==1{frame.phase=2;return .pull(try child(arguments[0],frame:&frame,context:&context))}
         if let incoming{
@@ -956,7 +956,7 @@ package struct FilterVM {
         }
         return .pull(frame.children.last!)
     }
-    private mutating func reduction(_ source:Int,name:String,initial:Int,update:Int,extract:Int?,foreach:Bool,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func reduction(_ source:Int,name:String,initial:Int,update:Int,extract:Int?,foreach:Bool,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{frame.phase=1;return .pull(try child(initial,frame:&frame,context:&context))}
         if let incoming{
             switch incoming{
@@ -997,9 +997,9 @@ package struct FilterVM {
         }
         return .pull(frame.children.last!)
     }
-    private mutating func truthReduction(_ name:String,arguments:[Int],frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func truthReduction(_ name:String,arguments:[Int],frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         let identity=name=="all"
-        func verdict(_ truth:Bool,context:inout CLIJobContext)throws->Action{try .emit(.value(FilterValues.produced(.boolean(truth),context:&context)))}
+        func verdict(_ truth:Bool,context:inout TransformRuntimeContext)throws->Action{try .emit(.value(FilterValues.produced(.boolean(truth),context:&context)))}
         if arguments.isEmpty{
             if frame.phase>0{return .emit(.end)};frame.phase=99
             guard case .array(let values)=frame.input.value else{throw FilterLanguageFailure("expectedArray")}
@@ -1034,7 +1034,7 @@ package struct FilterVM {
         }
         return .pull(frame.children.last!)
     }
-    private mutating func nth(_ arguments:[Int],frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func nth(_ arguments:[Int],frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{
             if arguments.count==1 { guard case .array=frame.input.value else{throw FilterLanguageFailure("expectedArray")} }
             try context.meter.retain(48);frame.slots += 48;frame.groups=[[],[]];frame.phase=1;return .pull(try child(arguments[0],frame:&frame,context:&context))
@@ -1055,7 +1055,7 @@ package struct FilterVM {
                     if order == .orderedDescending{allPassed=false}
                 }
                 if allPassed{try dispose(frame.children.removeLast(),context:&context);frame.phase=3}
-                else{let (next,overflow)=frame.ordinal.addingReportingOverflow(1);guard !overflow else{throw CLIError(.resource,"counterOverflow",metric:"totalWorkUnits",overflow:true)};frame.ordinal=next;return .pull(frame.children[0])}
+                else{let (next,overflow)=frame.ordinal.addingReportingOverflow(1);guard !overflow else{throw TransformRuntimeFailure(.resource,"counterOverflow",metric:"totalWorkUnits",overflow:true)};frame.ordinal=next;return .pull(frame.children[0])}
             case .end:
                 try dispose(frame.children.removeLast(),context:&context)
                 if frame.phase==1{
@@ -1087,7 +1087,7 @@ package struct FilterVM {
         }
         return .pull(frame.children[0])
     }
-    private mutating func terminalSelection(_ name:String,argument:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func terminalSelection(_ name:String,argument:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         if frame.phase==0{frame.phase=1;return .pull(try child(argument,frame:&frame,context:&context))}
         if let incoming {
             switch incoming{
@@ -1102,7 +1102,7 @@ package struct FilterVM {
         }
         return .pull(frame.children[0])
     }
-    private mutating func keyed(_ name:String,argument:Int,frame:inout Frame,incoming:Event?,context:inout CLIJobContext)throws->Action {
+    private mutating func keyed(_ name:String,argument:Int,frame:inout Frame,incoming:Event?,context:inout TransformRuntimeContext)throws->Action {
         guard case .array(let values)=frame.input.value else{throw FilterLanguageFailure("expectedArray")}
         if frame.phase==0 {
             let bytes=UInt64(values.count)*24
@@ -1124,7 +1124,7 @@ package struct FilterVM {
         let result=try FilterCollectionBuiltins.keyed(name,values:keyed,context:&context)
         frame.phase=99;return .emit(.value(result))
     }
-    private mutating func range(_ arguments: [Int], frame: inout Frame, incoming: Event?, context: inout CLIJobContext) throws -> Action {
+    private mutating func range(_ arguments: [Int], frame: inout Frame, incoming: Event?, context: inout TransformRuntimeContext) throws -> Action {
         if frame.phase == 0 {
             let bytes = UInt64(arguments.count) * 32
             try context.meter.retain(bytes); frame.slots += bytes
@@ -1160,7 +1160,7 @@ package struct FilterVM {
             frame.flag = try !advance(&frame.selections, counts: frame.groups.map(\.count), context: &context)
         }
     }
-    private func languageError(_ value: JSON, frame: inout Frame, context: inout CLIJobContext) throws -> FilterLanguageFailure {
+    private func languageError(_ value: JSON, frame: inout Frame, context: inout TransformRuntimeContext) throws -> FilterLanguageFailure {
         try context.checkpoint()
         let entry = context.meter.used(.retainedBytes)
         var building = true, scratch: UInt64 = 0

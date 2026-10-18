@@ -2,7 +2,7 @@
 import JSON
 
 package enum FilterPrimitiveBuiltins {
-    package static func apply(_ name:String,value:JSON,argument:JSON?=nil,context:inout CLIJobContext)throws->FilterYield? {
+    package static func apply(_ name:String,value:JSON,argument:JSON?=nil,context:inout TransformRuntimeContext)throws->FilterYield? {
         try context.work()
         switch name {
         case "empty":return nil

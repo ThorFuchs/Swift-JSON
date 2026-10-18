@@ -15,6 +15,7 @@ let package = Package(
         .library(name: "JSONBridges", targets: ["JSONBridges"]),
         .library(name: "JSONNavigation", targets: ["JSONNavigation"]),
         .library(name: "JSONInspection", targets: ["JSONInspection"]),
+        .library(name: "JSONTransform", targets: ["JSONTransform"]),
         .executable(name: "swift-json", targets: ["JSONCLI"])
     ],
     targets: [
@@ -35,7 +36,9 @@ let package = Package(
         .target(name: "JSONPatch", dependencies: ["JSON"]),
         .target(name: "JSONHTML", dependencies: ["JSON"], exclude: ["Assets"]),
         .target(name: "JSONFilterRuntime", dependencies: ["JSON"]),
-        .target(name: "JSONCLIEngine", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch", "JSONHTML", "JSONFilterRuntime"]),
+        .target(name: "JSONTransform", dependencies: ["JSON", "JSONFilterRuntime"]),
+        .testTarget(name: "JSONTransformTests", dependencies: ["JSON", "JSONTransform"]),
+        .target(name: "JSONCLIEngine", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch", "JSONHTML", "JSONFilterRuntime", "JSONTransform"]),
         .executableTarget(name: "JSONCLI", dependencies: ["JSONCLIEngine"]),
         .testTarget(name: "JSONCLITests", dependencies: ["JSONCLIEngine", "JSONFilterRuntime", "JSON", "JSONPatch", "JSONSchema", "JSONHTML"]),
         .testTarget(name: "JSONHTMLTests", dependencies: ["JSONHTML", "JSON"], resources: [.copy("Fixtures")]),

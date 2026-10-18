@@ -2,14 +2,14 @@
 import JSON
 
 package enum FilterLexer {
-    package static func lex(_ source: String, context: inout CLIJobContext) throws -> [FilterToken] {
+    package static func lex(_ source: String, context: inout TransformRuntimeContext) throws -> [FilterToken] {
         let count = UInt64(source.utf8.count)
         try context.charge(.querySourceBytes, count); try context.meter.retain(count); try context.work(count)
         let bytes = Array(source.utf8)
         enum Job { case scan(Range<Int>), token(FilterToken.Kind,Range<Int>) }
         var tokens: [FilterToken] = [], i = 0, end = bytes.count
         var jobs:[Job]=[]
-        func append(_ kind: FilterToken.Kind, _ start: Int, _ end: Int, context: inout CLIJobContext) throws {
+        func append(_ kind: FilterToken.Kind, _ start: Int, _ end: Int, context: inout TransformRuntimeContext) throws {
             try context.charge(.queryTokens); try context.meter.retain(48)
             tokens.append(.init(kind: kind, range: start..<end))
         }
@@ -75,7 +75,7 @@ package enum FilterLexer {
                 }
                 try context.meter.retain(24);scratch += 24;parts.append((segment..<position,false))
                 var sequence:[Job]=[]
-                func schedule(_ job:Job,context:inout CLIJobContext)throws{try context.meter.retain(32);sequence.append(job)}
+                func schedule(_ job:Job,context:inout TransformRuntimeContext)throws{try context.meter.retain(32);sequence.append(job)}
                 try schedule(.token(.generatedName("__interpolate"),start..<stop),context:&context)
                 try schedule(.token(.symbol("("),start..<stop),context:&context)
                 for (index,part) in parts.enumerated() {

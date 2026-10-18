@@ -72,3 +72,14 @@ The [CLI reference](Architecture/Release1.4/CLIReference.md),
 [arithmetic](Architecture/Release1.4/Arithmetic.md),
 [advanced filters](Architecture/Release1.4/Advanced.md) and
 [provider contract](Architecture/Release1.4/Providers.md) define exact semantics.
+
+## Provisional programmatic transformations
+
+The 1.7 JSONTransform feature branch offers an optional public library over the
+same compiler and pull VM used by `swift-json query`. It does not change the CLI
+flags, framing, input cursor, diagnostics, staged files or exit codes documented
+here. Public library users supply exact native values and an explicit optional
+provider; the CLI retains process/file ownership and closing-syntax/EOF checks.
+See the [public API](Architecture/API.md#provisional-jsontransform-extraction-17-feature-branch)
+and [runnable consumer](../Tools/TransformQualification). This product is not in
+stable 1.6.1 and this note does not publish 1.7.0.
