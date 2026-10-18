@@ -9,7 +9,7 @@ import JSONNavigation
 struct Probe: JSONTraversalOwnedReducer {
  var strings: [String] = []
  mutating func observe(_ hit: JSONTraversalHit, value: JSON, context: inout JSONTraversalContext) throws -> JSONTraversalAction {
-  if hit.relativeDepth == 0 { _ = try context.arrayCount(value, at: hit.absoluteLocation); return .continue }
+  if hit.relativeDepth == 0 { try context.retainKey("id", admittingCallerInput: true); try context.release(2); _ = try context.arrayCount(value, at: hit.absoluteLocation); return .continue }
   let field = try context.directStringMember(value, key: "id", at: hit.absoluteLocation)
   precondition(field.kind == .string)
   if let text = field.text { let equal = try context.equalStrings(text, text); precondition(equal); strings.append(text) }

@@ -19,6 +19,9 @@ The exclusive context adds mutating delegates only: direct string member selecti
 scalar-exact string comparison and matching alias release. JSONObject.lookup and
 JSONComparison.textEquals remain authorities. Missing, null and wrong kind are
 reported separately; strings own 32+UTF8 logical bytes until released or handed off.
+Profile keys are explicitly key-admitted on that meter even for empty arrays;
+the preexisting retainKey delegate gains an opt-in caller-input admission flag,
+with its original default behavior/counters preserved.
 No cursor, scope, ledger or noncopyable capability leaves the reducer. Original
 2-positive/20-negative codegen tests are unchanged; helper escape probes and runtime
 parity run separately in Debug and Release. A compiler crash blocks implementation.

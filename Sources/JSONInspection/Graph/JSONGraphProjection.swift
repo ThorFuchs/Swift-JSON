@@ -117,7 +117,7 @@ internal struct GraphBuilder: JSONTraversalOwnedReducer {
                 try context.retain(256)
                 _ = try context.retainLocation(profile.nodesAt); _ = try context.retainLocation(profile.edgesAt)
                 for key in [profile.nodeIDKey, profile.edgeSourceKey, profile.edgeTargetKey] {
-                    try context.work(); try context.retain(32); try context.retainKey(key)
+                    try context.work(); try context.retain(32); try context.retainKey(key, admittingCallerInput: true)
                 }
             } else {
                 guard count <= maximumEdges else { throw JSONGraphFailure.edgeLimitExceeded(limit: maximumEdges) }

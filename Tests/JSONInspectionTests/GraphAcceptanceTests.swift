@@ -257,6 +257,11 @@ private func graphCore(_ body: () throws -> Void) -> JSONFailure? {
     #expect(graphFailure { _ = try graph.breadthFirst(fromNode: 0, maximumFrontier: 0) } == .frontierLimitExceeded(limit: 0))
     #expect(graphFailure { _ = try graph.breadthFirst(fromNode: 0, maximumVisited: 0) } == .visitedLimitExceeded(limit: 0))
     #expect(graphFailure { _ = try graph.outgoingEdges(of: 0, maximumResults: 1) } == .resultLimitExceeded(limit: 1))
+    let empty = try graphDocument("g01-empty")
+    let hugeKey = JSONGraphProfile(nodesAt: graphProfile.nodesAt, edgesAt: graphProfile.edgesAt,
+        nodeIDKey: "unused-but-owned", edgeSourceKey: "from", edgeTargetKey: "to")
+    var keyLimits = JSONLimits.balanced; keyLimits[.keyBytes] = 5
+    #expect(graphCore { _ = try JSONGraphProjection.build(document: empty, profile: hugeKey, limits: keyLimits) }?.resource?.metric == .keyBytes)
     #expect(graphCore { _ = try ProjectionAccounting.next(Int.max, limits: .balanced) }?.code == .counterOverflow)
     #expect(graphCore { _ = try ProjectionAccounting.bytes(Int.max, unit: 256, limits: .balanced) }?.code == .counterOverflow)
 }

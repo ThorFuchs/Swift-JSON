@@ -70,8 +70,9 @@ package struct JSONTraversalContext: ~Copyable {
         }
     }
     /// Reserve an additional owned alias, not another text admission or key model.
-    package mutating func retainKey(_ key: JSONKey) throws {
+    package mutating func retainKey(_ key: JSONKey, admittingCallerInput: Bool = false) throws {
         try perform { state in
+            if admittingCallerInput { try JSONAdmission.text(key.string, key: true, meter: &state.meter) }
             for _ in key.string.utf8 { try state.meter.work(); try state.meter.retain(1) }
         }
     }
