@@ -1,0 +1,48 @@
+{
+  "status": "source fixtures created here; no Swift native execution in control tower",
+  "nativeExpectedInputPolicy": "PR36 candidate per-document input limit, cumulative final inputBytes, not Swift-OpenAPI total-source policy",
+  "files": [
+    {
+      "path": "duplicate-decoded-key.json",
+      "bytes": 19,
+      "sha256": "cdeecc00c66cefef1c2952a48555a2387569492ecf83cc1fd645e32a306163ff",
+      "strictJSONValid": true,
+      "special": "deliberate decoded-key duplicate"
+    },
+    {
+      "path": "entry-577.json",
+      "bytes": 577,
+      "sha256": "ea5e610aacf9c5016c0891764bdfccbea1db6d04263fc0b4b3e7baeea2c3303e",
+      "strictJSONValid": true,
+      "special": null
+    },
+    {
+      "path": "invalid-json.json",
+      "bytes": 14,
+      "sha256": "f505862f6c151daf0f53ec480001af4b0a1bbb3da93315e014b8faab1b302600",
+      "strictJSONValid": false,
+      "special": null
+    },
+    {
+      "path": "resource-152.json",
+      "bytes": 152,
+      "sha256": "d80a27b12fbd06f2df2d566af0b2f1138b4c0c40e9c7efb7622d4d7e2400662d",
+      "strictJSONValid": true,
+      "special": null
+    },
+    {
+      "path": "resource-578.json",
+      "bytes": 578,
+      "sha256": "009c74073c540513a841aecc3396878a962f2c04124170566fb9aa3f1a4ff081",
+      "strictJSONValid": true,
+      "special": null
+    },
+    {
+      "path": "source-exact.json",
+      "bytes": 164,
+      "sha256": "f5e4e8ec2bbbc070c857b3e2536cd8cc31c86d49136160a6611fc6cb11544791",
+      "strictJSONValid": true,
+      "special": null
+    }
+  ]
+}

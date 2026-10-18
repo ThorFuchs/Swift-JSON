@@ -1,9 +1,35 @@
+# Composition reconciled with admitted Inspection main
+
+This candidate preserves current main `07912d8b28e186589e994e537b2485877a634a6b`
+and adds PR36's two native boundary functions: 722 native / 706 Linux / 618 WASI
+functions, 325 native/Linux / 288 WASI parameter invocations, 48 native / 47 Linux
+shared functions, ten products and nine catalogs. Both composition lanes, all
+49 caps and all 126 restoration identities remain mandatory. Actual receipts
+establish outcomes; controlled performance and compiler limitations remain separate.
+
+The following sections retain their original source identities and counts.
+
 # NAV6 integrated inspection candidate
 
 Adds Inspection to schema-example-enabled main: ten products, nine libraries,
 720 native / 704 Linux / 616 WASI functions, 48 native / 47 Linux shared functions.
 All 49 caps, 126 maintenance identities and schema/composition lanes remain.
 These are discovery expectations; receipts establish execution.
+
+# Composition proof reconciled with S3
+
+Reconciliation with main `c79d48c15f83ef88bed9459d9abcf05e54bd0bea` retains
+all schema-example, Navigation and composition behavior. Exact combined roots
+are 697 Mac / 681 Linux / 593 WASI functions, with 325 Mac/Linux and 288 WASI
+parameter invocations. Shared-state counts remain 47 Mac / 46 Linux. Nine products,
+eight library DocC catalogs, all 49 cap probes and all 126 restored identities
+remain mandatory. Both focused composition lanes and the complete S3 consumer,
+ownership, construction, matrix and corpus-lifetime checks are retained. The
+15-case Python harness rejects omitted dispatch and stale integration counts.
+Required check names and protections are unchanged. Quiet-host qualification
+remains pending separately; no timing comparison is scheduled by this integration.
+
+The following sections preserve their original source-specific counts.
 
 # Combined S3 / composition / Navigation qualification
 
@@ -42,6 +68,21 @@ inspection lane enforces six commands including Debug/Release, ASan and strict
 memory compilation. Earlier sections retain their original source identities.
 
 # Native CI
+
+## Current composition proof
+
+The additive composition proof retains current main's Navigation product and
+adds two native boundary functions: exact discovery is 599 native / 583 Linux /
+495 WASI functions, with the same 325 native/Linux and 288 WASI parameter cases.
+Shared-state expectations remain 43 native / 42 Linux. Native/Linux still require
+33/29 commands, all 126 restored identities and 49 cap probes. The separate
+composition-proof lane additionally checks 26 public functions in both modes,
+two rejected omitted-charge mutants and 14 normal compiler rejections. Known
+compiler crashes remain separate limitations. Native CI now has five matrix
+lanes including composition-proof; protected names/settings are unchanged.
+The [controlled performance contract](../Qualification/Composition/Performance.md)
+requires genuine pre/post idle admission on its isolated native runner. The
+following counts retain their original stage context; receipts establish passes.
 
 ## Reconciled Navigation and composition increment
 
@@ -281,3 +322,12 @@ The focused composition lane also runs on the Linux architecture jobs and Native
 Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
 The qualification harness now has 15 regression functions, retaining its original 14.
 See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.
+
+The additive `composition-proof` lane runs two native boundary functions and the
+independent 26-function public suite in both configurations, two omitted-charge
+mutants and 14 separate diagnostic builds. Both focused lanes run on Linux;
+Native / composition-proof is separate from the protected names. The original
+reference-load lane and its exact counts remain required. The controlled
+composition performance job compares pinned main 30631e8 with this successor;
+[the reconciliation record](../Qualification/Composition/Reconciliation.md) states
+the expected accounting delta and unchanged idle/review thresholds.
