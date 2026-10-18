@@ -159,3 +159,34 @@ uninstrumented adapter allocations and process RSS are outside the claim. A publ
 JSONOperationReport initializer permits pairing statistics with another result;
 its type alone does not establish provenance or adapter completeness. See the
 [composition guide](../../Sources/JSON/Documentation.docc/Composition.md).
+
+## Composition completion accounting
+
+
+The additive borrowed scope uses one original core ledger and the existing 49
+metrics/default profiles. It does not introduce adjustable counters or widen any
+cap. `chargeExternalWork` charges aggregate work before adapter work;
+`reserveExternalLogicalBytes(bytes,count:overhead:)` checks multiplication then
+addition and live retention before growth. Zero is valid but never establishes
+that opaque caller storage is free. All reservations are conservative until scope
+exit; repeated admission and physical aliases count again. Caller instructions,
+allocator capacity and process RSS remain outside this contract.
+
+`parseDocument` checks the full Data length against input and retained limits
+before allocating its copied byte buffer, charges each copied byte, then invokes
+the existing strict parser/source mapper. Caller Data is excluded. Input capacity
+is per document: the preceding input count is checked and retired into the same
+cumulative report before the next document. Work, retention, accepted-capacity
+history and first-failure identity never restart. Remaining core counts are
+conservative across the invocation; full source bytes/root/map and re-admitted
+Pointer inputs/outputs remain charged. URI identity is core work/storage, never
+schema compilation or compiledPlanBytes.
+
+Completion admits an additional 424 logical bytes (32 header + 49 eight-byte
+counter slots) and 50 work units (49 counter copies and one final work update).
+All result reservations overlap this report buffer. Overflow, quota failure and
+cancellation prevent a completed result/report even when caught by the adapter.
+No report is emitted after an error. Native accounting-version-1 weights and the
+ordinary entry points' accounting stay unchanged. This proof slice has no public
+release/promote tokens, refunds or partial reports. Independent adapter events
+and failing omitted-charge mutants qualify the authored adapter only.
