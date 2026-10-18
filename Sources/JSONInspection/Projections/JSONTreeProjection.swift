@@ -2,15 +2,33 @@
 import JSON
 import JSONNavigation
 
-/// Experimental package-only refusals. Positions are local to the captured source.
-package enum JSONProjectionFailure: Error, Sendable, Equatable {
+/// Checked projection refusals; positions are local to the captured source.
+public enum JSONProjectionFailure: Error, Sendable, Equatable {
+    /// The local position is outside the selected physical interval.
+    /// - Parameter ordinal: Rejected snapshot-local position.
     case outsideSelectedSubtree(ordinal: Int)
+    /// The next catalogue entry exceeds the inclusive returned-record cap.
+    /// - Parameter limit: Configured nonnegative maximum.
     case recordLimitExceeded(limit: Int)
+    /// The complete array exceeds the inclusive row cap.
+    /// - Parameter limit: Configured nonnegative maximum.
     case rowLimitExceeded(limit: Int)
+    /// The next first-seen exact key exceeds the inclusive column cap.
+    /// - Parameter limit: Configured nonnegative maximum.
     case columnLimitExceeded(limit: Int)
+    /// The next present object member exceeds the inclusive sparse-cell cap.
+    /// - Parameter limit: Configured nonnegative maximum.
     case presentCellLimitExceeded(limit: Int)
+    /// A row position is outside the complete table.
+    /// - Parameter row: Rejected physical row position.
     case rowOutOfBounds(Int)
+    /// A column position is outside the first-seen exact columns.
+    /// - Parameter column: Rejected local column position.
     case columnOutOfBounds(Int)
+    /// An actual row is not an object; a prefix observation cannot admit it.
+    /// - Parameters:
+    ///   - at: Absolute exact typed location of the rejected row.
+    ///   - kind: Canonical kind of that row.
     case nonObjectRow(at: [JSONLocationComponent], kind: JSONTraversalKind)
 }
 
@@ -38,10 +56,13 @@ internal enum ProjectionAccounting {
 /// A selected physical interval in one complete sealed snapshot, not another DOM.
 /// No source replacement or detached handle is accepted. Metadata keeps original
 /// parent/depth/path meaning, even when the selected root has a physical parent.
-package struct JSONTreeProjection: Sendable {
-    package let snapshot: JSONStructuralSnapshot
-    package let rootOrdinal: Int
-    package let endExclusive: Int
+public struct JSONTreeProjection: Sendable {
+    /// Complete immutable snapshot captured by this view.
+    public let snapshot: JSONStructuralSnapshot
+    /// Selected root position in the captured snapshot; depths are not rebased.
+    public let rootOrdinal: Int
+    /// Exclusive end of this selected physical preorder interval.
+    public let endExclusive: Int
     fileprivate init(snapshot: JSONStructuralSnapshot, rootOrdinal: Int, endExclusive: Int) {
         self.snapshot = snapshot; self.rootOrdinal = rootOrdinal; self.endExclusive = endExclusive
     }
@@ -50,7 +71,13 @@ package struct JSONTreeProjection: Sendable {
     /// all retained record/key aliases and selection share the original N1 ledger.
     /// Output policy:64 view +128 snapshot header +96/record +exact edge UTF8 bytes,
     /// plus the already-admitted source. The physical COW storage may be shared.
-    package static func build(snapshot: JSONStructuralSnapshot, rootOrdinal: Int = 0,
+    /// - Parameters:
+    ///   - snapshot: Complete attached snapshot; no replacement source is accepted.
+    ///   - rootOrdinal: Local trusted position; bounds checked before admission.
+    ///   - limits: Finite quotas for this independent construction operation.
+    /// - Returns: Immutable source-attached view and cumulative construction statistics.
+    /// - Throws: Snapshot bounds, resource/configuration failures or cancellation.
+    public static func build(snapshot: JSONStructuralSnapshot, rootOrdinal: Int = 0,
                               limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<JSONTreeProjection> {
         guard rootOrdinal >= 0, rootOrdinal < snapshot.recordCount else {
@@ -62,7 +89,10 @@ package struct JSONTreeProjection: Sendable {
     }
 
     /// Ordinary fixed metadata access; there is no owned growth or new report.
-    package func record(at ordinal: Int) throws -> JSONStructuralRecord {
+    /// - Parameter ordinal: Local snapshot position within this selected interval.
+    /// - Returns: Original immutable metadata, including physical parent and depth.
+    /// - Throws: `JSONProjectionFailure.outsideSelectedSubtree` for an invalid position.
+    public func record(at ordinal: Int) throws -> JSONStructuralRecord {
         try validate(ordinal)
         return try snapshot.record(at: ordinal)
     }
@@ -74,13 +104,25 @@ package struct JSONTreeProjection: Sendable {
 
     /// New full-source-admitted operation. Every read/jump/append is charged;
     /// returned slots cost32 fixed +8/ordinal, with96 temporary record bytes.
-    package func children(of ordinal: Int, maximumRecords: Int = 100_000,
+    /// - Parameters:
+    ///   - ordinal: Local position within the selected interval.
+    ///   - maximumRecords: Inclusive returned-child cap, default 100,000.
+    ///   - limits: Finite quotas for this separate whole-source-admitted operation.
+    /// - Returns: Immediate child positions in canonical order and actual statistics.
+    /// - Throws: Invalid bounds/configuration, capacity/resource refusal or cancellation.
+    public func children(of ordinal: Int, maximumRecords: Int = 100_000,
                           limits: JSONLimits = .balanced) throws -> JSONOperationReport<[Int]> {
         try catalogue(ordinal, childrenOnly: true, maximumRecords: maximumRecords, limits: limits)
     }
     /// Includes the selected node in its finalized half-open preorder interval.
     /// An insufficient inclusive cap throws rather than returning a truncated list.
-    package func subtreeOrdinals(of ordinal: Int, maximumRecords: Int = 100_000,
+    /// - Parameters:
+    ///   - ordinal: Local position within the selected interval.
+    ///   - maximumRecords: Inclusive returned-position cap, default 100,000.
+    ///   - limits: Finite quotas for this separate whole-source-admitted operation.
+    /// - Returns: Complete preorder subtree positions and actual operation statistics.
+    /// - Throws: Invalid bounds/configuration, capacity/resource refusal or cancellation.
+    public func subtreeOrdinals(of ordinal: Int, maximumRecords: Int = 100_000,
                                  limits: JSONLimits = .balanced) throws -> JSONOperationReport<[Int]> {
         try catalogue(ordinal, childrenOnly: false, maximumRecords: maximumRecords, limits: limits)
     }
@@ -96,15 +138,32 @@ package struct JSONTreeProjection: Sendable {
 
     /// Each forwarding call delegates once to N3's independent full-source lookup.
     /// Constant local bounds checks are ordinary metadata access, not a hidden operation.
-    package func location(for ordinal: Int, limits: JSONLimits = .balanced)
+    /// - Parameters:
+    ///   - ordinal: Trusted position local to the captured snapshot and selected interval.
+    ///   - limits: Finite quotas for this separate full-source-admitted lookup.
+    /// - Returns: Absolute exact typed location and cumulative lookup statistics.
+    /// - Throws: Bounds, core resource/configuration errors or cancellation.
+    public func location(for ordinal: Int, limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<[JSONLocationComponent]> {
         try validate(ordinal); return try snapshot.location(for: ordinal, limits: limits)
     }
-    package func value(for ordinal: Int, limits: JSONLimits = .balanced)
+    /// Resolves the canonical value through the snapshot's one semantic delegate.
+    /// - Parameters:
+    ///   - ordinal: Trusted local position inside the selected interval.
+    ///   - limits: Finite quotas for a new whole-source-admitted lookup.
+    /// - Returns: Immutable read-value alias and actual lookup statistics.
+    /// - Throws: Bounds, core access/resource/configuration errors or cancellation.
+    public func value(for ordinal: Int, limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<JSON> {
         try validate(ordinal); return try snapshot.value(for: ordinal, limits: limits)
     }
-    package func sourceSpan(for ordinal: Int, limits: JSONLimits = .balanced)
+    /// Resolves a coherent original span through the captured snapshot.
+    /// - Parameters:
+    ///   - ordinal: Trusted local position inside the selected interval.
+    ///   - limits: Finite quotas for a new whole-source-admitted lookup.
+    /// - Returns: Optional original span and actual statistics; no historical map is invented.
+    /// - Throws: Bounds, core resource/configuration errors or cancellation.
+    public func sourceSpan(for ordinal: Int, limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<JSONSourceSpan?> {
         try validate(ordinal); return try snapshot.sourceSpan(for: ordinal, limits: limits)
     }

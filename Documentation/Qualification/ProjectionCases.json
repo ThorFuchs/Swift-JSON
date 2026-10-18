@@ -34,5 +34,23 @@
     "JSONInspectionTests.projectionP31CellLookupIsIndependentFullSourceAdmission()",
     "JSONInspectionTests.projectionP32FinalizationFailureCancellationAndScopeTeardownAreTerminal()"
   ],
-  "scope": "P01\u2013P32 private prototype; every exact identity required"
+  "scope": "P01\u2013P32 private prototype; every exact identity required",
+  "public_consumer_checks": [
+    "scalar-roots",
+    "selected-interval",
+    "typed-locations",
+    "exact-values",
+    "canonical-order",
+    "source-coherence",
+    "complete-columns",
+    "scalar-key-columns",
+    "presence",
+    "empty-tables",
+    "equal-physical-rows",
+    "late-row-refusal",
+    "capacity-and-bounds",
+    "separate-admission",
+    "inclusive-ledgers",
+    "cancellation-health"
+  ]
 }

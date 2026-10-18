@@ -12,9 +12,34 @@ import unittest
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
 from ci import check_result, commands
-from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, check_projection_cases
+from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, PUBLIC_CHECKS, check_projection_cases, check_public_projection_receipt
 
 class HarnessTests(unittest.TestCase):
+    def test_public_projection_receipt_rejects_incomplete_and_incidental_successes(self):
+        valid = dict(status='passed', commands=[dict(name=str(i), status='passed',
+            compiler_crash=False, expected_diagnostic='inaccessible' if i < 18 else None,
+            primary_diagnostics=['inaccessible'] if i < 18 else [], exit_code=1 if i < 18 else 0)
+            for i in range(37)], consumer_results={config: dict(cases=sorted(PUBLIC_CHECKS),
+                work_units=1, logical_retained_bytes=1, peak_logical_retained_bytes=1, admitted_nodes=1)
+                for config in ['debug', 'release', 'address']})
+        self.assertTrue(check_public_projection_receipt(valid))
+        broken = copy.deepcopy(valid); broken['commands'].pop()
+        self.assertFalse(check_public_projection_receipt(broken))
+        broken = copy.deepcopy(valid); broken['commands'][0]['primary_diagnostics'] = ['unrelated warning']
+        self.assertFalse(check_public_projection_receipt(broken))
+        broken = copy.deepcopy(valid); broken['commands'][0]['compiler_crash'] = True
+        self.assertFalse(check_public_projection_receipt(broken))
+        broken = copy.deepcopy(valid); broken['commands'][0]['exit_code'] = 0
+        self.assertFalse(check_public_projection_receipt(broken))
+        for config in ['debug', 'release', 'address']:
+            for mode in ['missing', 'duplicate', 'renamed', 'zero-resource']:
+                broken = copy.deepcopy(valid); row = broken['consumer_results'][config]
+                if mode == 'missing': row['cases'].pop()
+                elif mode == 'duplicate': row['cases'][0] = row['cases'][1]
+                elif mode == 'renamed': row['cases'][0] = 'unexpected'
+                else: row['work_units'] = 0
+                self.assertFalse(check_public_projection_receipt(broken))
+
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
         command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']
         events = dict(bundle_counts=[5], module_function_counts={'CompositionScaleTests': 5},
@@ -161,8 +186,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=16')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=17')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=16', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

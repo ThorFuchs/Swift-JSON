@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "base": "e0a4185477047d92e4b8e1a2b56303848472d9be",
+  "branch": "feature/json-navigation-v1-completion",
+  "pr": 59,
+  "N1_N2": "Already on main; implementation and authored declarations unchanged",
+  "N3_checkpoint": "09e85f6: focused six-command inspection lane passed 44 cases each Debug/Release/ASan, strict memory and 2-positive/20-negative full codegen",
+  "P1_private_checkpoint": "931c042: original donor algorithms/P01-P32 fixtures restored separately",
+  "P1_public": "28 deliberately promoted declarations within JSONInspection; independent 16-case consumer,18 negative full-codegen outcomes and3 DocC fences/config passed in initial proof",
+  "expected_final_public": {
+    "Navigation": 56,
+    "Inspection": 95,
+    "package_authored": 1172
+  },
+  "full_final_source_qualification": "Required; read exact PR/checkpoint receipts rather than infer a pass from this planning status",
+  "G4": {
+    "status": "HOLD",
+    "accepted_timing_samples": 0,
+    "owner_classification": "blocking for speed claims; explicitly nonblocking for correctness/platform-qualified NAV8 guarded merge"
+  },
+  "release_action": "Not authorized; remains unreleased1.7.0-dev",
+  "deferred": [
+    "P2",
+    "persistence",
+    "retrieval",
+    "BFS",
+    "matrix/graph/store/set",
+    "CLI/HTML",
+    "unrelated sibling work"
+  ]
+}

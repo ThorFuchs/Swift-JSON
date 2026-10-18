@@ -32,3 +32,10 @@ or numeric matrix. Sampling does not exempt any source from admission.
 - ``JSONStructuralSnapshot``
 - ``JSONStructuralRecord``
 - ``JSONStructuralSnapshotFailure``
+
+### Use complete structural projections
+
+- <doc:StructuralProjections>
+- ``JSONTreeProjection``
+- ``JSONSparseTableProjection``
+- ``JSONProjectionFailure``

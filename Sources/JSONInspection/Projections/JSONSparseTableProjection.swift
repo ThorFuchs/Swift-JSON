@@ -8,18 +8,22 @@ package struct JSONSparseTableMember: Sendable, Equatable {
     package let columnOrdinal: Int
 }
 
-/// Experimental complete all-object array metadata, never a schema/matrix verdict.
+/// Complete all-object array metadata, never a schema or numeric matrix verdict.
 /// Stores no cell JSON/path copy, dense grid, guessed row id or normalized key.
-package struct JSONSparseTableProjection: Sendable {
-    package let document: JSONDocument
-    package let selectedArrayPath: [JSONLocationComponent]
-    package let rowCount: Int
-    package let columns: [JSONKey]
+public struct JSONSparseTableProjection: Sendable {
+    /// Captured immutable source; cell lookups cannot rebind it.
+    public let document: JSONDocument
+    /// Exact absolute path of the completely checked array; [] denotes the root.
+    public let selectedArrayPath: [JSONLocationComponent]
+    /// Complete number of original array rows, including empty object rows.
+    public let rowCount: Int
+    /// Distinct decoded-scalar keys in deterministic first-seen source order.
+    public let columns: [JSONKey]
     /// Nondecreasing prefix offsets; an empty object row has an empty slice.
     package let rowOffsets: [Int]
     package let presentMembers: [JSONSparseTableMember]
     /// Descendant traversal may be restricted although every physical row was admitted.
-    package let traversal: JSONTraversalSummary
+    public let traversal: JSONTraversalSummary
     fileprivate init(document: JSONDocument, selectedArrayPath: [JSONLocationComponent],
                      rowCount: Int, columns: [JSONKey], rowOffsets: [Int],
                      presentMembers: [JSONSparseTableMember], traversal: JSONTraversalSummary) {
@@ -33,7 +37,20 @@ package struct JSONSparseTableProjection: Sendable {
     /// Negative configuration precedes admission; source/root and row failures throw.
     /// Logical policy v1:256 fixed +8/offset +64/column +exact key bytes +16/member,
     /// retained selection and captured source. No partial or prefix output exists.
-    package static func build(document: JSONDocument, at path: [JSONLocationComponent] = [],
+    /// Every selected row is checked, even when prior N2 prefix evidence was positive.
+    /// An empty array is 0-by-0; two empty objects are 2-by-0. Linear exact column
+    /// scans may be quadratic. Logical bytes are policy, not process RSS.
+    /// - Parameters:
+    ///   - document: Canonical immutable source, admitted once in this invocation.
+    ///   - path: Existing exact typed array location; keys and indices are distinct.
+    ///   - limits: One finite profile shared by selection, classification and output.
+    ///   - maximumRows: Inclusive complete-row bound, default 100,000.
+    ///   - maximumColumns: Inclusive first-seen exact-key bound, default 10,000.
+    ///   - maximumPresentCells: Inclusive present-member bound, default 1,000,000.
+    /// - Returns: Complete source-attached sparse table and cumulative statistics.
+    /// - Throws: Negative configuration, wrong-kind/missing source, nonobject row,
+    ///   capacity/resource failure or cancellation; never a partial successful table.
+    public static func build(document: JSONDocument, at path: [JSONLocationComponent] = [],
                               limits: JSONLimits = .balanced, maximumRows: Int = 100_000,
                               maximumColumns: Int = 10_000, maximumPresentCells: Int = 1_000_000)
         throws -> JSONOperationReport<JSONSparseTableProjection> {
@@ -49,7 +66,13 @@ package struct JSONSparseTableProjection: Sendable {
     /// A NEW owned whole-source-admitted lookup, not the construction meter's remainder.
     /// Row slices are scanned with charged work. Core JSONObject lookup and scalar
     /// comparison own presence/key identity. Wrong bounds never become absence/null.
-    package func cell(row: Int, column: Int, limits: JSONLimits = .balanced)
+    /// - Parameters:
+    ///   - row: Original zero-based physical array position.
+    ///   - column: Position in this table's first-seen exact columns.
+    ///   - limits: Finite quotas for this new operation, independent of construction.
+    /// - Returns: Distinct absent, explicit null or canonical value and actual statistics.
+    /// - Throws: Typed bounds, core access/resource/configuration errors or cancellation.
+    public func cell(row: Int, column: Int, limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<JSONPresence<JSON>> {
         guard row >= 0, row < rowCount else { throw JSONProjectionFailure.rowOutOfBounds(row) }
         guard column >= 0, column < columns.count else { throw JSONProjectionFailure.columnOutOfBounds(column) }

@@ -5,7 +5,7 @@ import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
-from projection_acceptance import check_projection_cases
+from projection_acceptance import check_projection_cases, check_public_projection_receipt
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -33,7 +33,8 @@ def commands(lane, output):
                 ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/inspection-strict',
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
-                ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')]]
+                ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
+                ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')]]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
     if lane == 'schema-examples-qualification':
         return commands('schema-examples-advanced', ROOT / output) + [['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'matrix')]]
@@ -171,6 +172,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_inspection.py', '--output', str(output / 'inspection-consumer')],
             ['python3', '-B', 'Scripts/qualify_snapshot.py', '--output', str(output / 'snapshot-consumer')],
             ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
+            ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')],
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
@@ -306,6 +308,9 @@ def check_result(command, code, log, events=None):
         passed = passed and 'REDUCER_CODEGEN passed positive=2 negative=20' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_snapshot.py']:
         passed = passed and 'SNAPSHOT_COMPILER passed configurations=2 consumer_cases=14 address_cases=14 guide_fences=3 negative_probes=18' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_public_projections.py']:
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_public_projection_receipt(data)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_projections.py']:
         data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
         probes = [c for c in data['commands'] if c.get('expected_diagnostic')]
@@ -323,7 +328,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=16' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=17' in log.splitlines()
     return passed, counts
 
 def main():

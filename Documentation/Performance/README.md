@@ -27,5 +27,6 @@ pattern and aggregate-byte quotas; sharing does not bypass admission or work.
 
 Logical retained bytes differ from process RSS. Darwin ru_maxrss is cumulative;
 allocator end observations are not isolated workload allocations. These results
-make no cross-machine throughput or OS-enforced memory guarantee. Projection and
-JSON text-sequence framing remain deferred.
+make no cross-machine throughput or OS-enforced memory guarantee. Source-attached structural views in unreleased Inspection carry no performance
+claim (G4 HOLD). P2 matrix/graph/store/set/retrieval and JSON text-sequence framing
+remain deferred.

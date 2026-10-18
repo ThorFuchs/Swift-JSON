@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Full-codegen proof of package-only projection access; this creates no product."""
+"""Full-codegen proof of projection invariants and package-only storage/reducers."""
 import argparse, hashlib, json, pathlib, re, subprocess
 from archive_candidate import files
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -40,9 +40,9 @@ import JSONInspection
 '''
 PROBES = [
     ('positive', POSITIVE, None, False),
-    ('external-tree', 'import JSONInspection\nlet x = JSONTreeProjection.self\n', 'cannot find', True),
-    ('external-table', 'import JSONInspection\nlet x = JSONSparseTableProjection.self\n', 'cannot find', True),
-    ('external-error', 'import JSONInspection\nlet x = JSONProjectionFailure.self\n', 'cannot find', True),
+    ('external-member', 'import JSONInspection\nlet x = JSONSparseTableMember.self\n', 'cannot find', True),
+    ('external-accounting', 'import JSONInspection\nlet x = ProjectionAccounting.self\n', 'cannot find', True),
+    ('external-reducer', 'import JSONInspection\nlet x = SparseTableReducer.self\n', 'cannot find', True),
     ('core-isolation', 'import JSON\nlet x = JSONTreeProjection.self\n', 'cannot find', True),
     ('forged-tree', 'import JSONInspection\nfunc f(_ s: JSONStructuralSnapshot) { _ = JSONTreeProjection(snapshot: s, rootOrdinal: 0, endExclusive: 1) }\n', 'initializer is inaccessible', False),
     ('immutable-source', 'import JSON\nimport JSONInspection\nfunc f(_ x: inout JSONSparseTableProjection) { x.document = JSONDocument(root: .null) }\n', "'document' is a 'let' constant", False),
@@ -53,7 +53,7 @@ CHECKS = {'tree', 'exact', 'sparse-presence', 'admission', 'late-refusal'}
 def main():
     parser = argparse.ArgumentParser(description=__doc__); parser.add_argument('--output', required=True)
     out = ROOT / parser.parse_args().output; out.mkdir(parents=True, exist_ok=True)
-    receipt = dict(status='running', scope='same-package private consumer + external-package rejection; no public projection product',
+    receipt = dict(status='running', scope='same-package sparse-storage proof + external invariant rejection; public views stay in JSONInspection',
         source_inputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in files()], commands=[])
     def save(): (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     def run(name, command, expected=None):
