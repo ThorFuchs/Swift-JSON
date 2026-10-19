@@ -249,8 +249,9 @@ def check_result(command, code, log, events=None):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
-    store_test = any(x == 'store' or x.startswith('storeR06') for x in command)
-    prepared_test = any('navigationPreparedD0' in x for x in command)
+    selected_filter = command[command.index('--filter') + 1] if '--filter' in command else None
+    store_test = selected_filter in ('store', 'storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth')
+    prepared_test = selected_filter in ('navigationPreparedD0', 'navigationPreparedD0IndependentConcurrentHealth')
     if command[:2] == ['swift', 'test']:
         expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
         if 'JSONSchemaExamplesTests' in command and events is not None:
@@ -283,7 +284,7 @@ def check_result(command, code, log, events=None):
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
         if 'thread' in command and 'JSONSchemaExamplesTests' not in command and not prepared_test and not store_test and events is not None:
-            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_store_tests(events, log, shared=True)
+            passed = passed and events['module_function_counts'] == SHARED_COUNTS and events['parameter_case_invocations'] == 0 and check_projection_cases(events, shared=True) and check_store_tests(events, log, shared=True)
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
                 passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events) and check_store_tests(events, log)
@@ -377,7 +378,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=19' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=20' in log.splitlines()
     return passed, counts
 
 def main():

@@ -11,7 +11,7 @@ import tempfile
 import unittest
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
-from ci import check_result, commands
+from ci import check_result, commands, SHARED_TESTS, SHARED_COUNTS
 from store_acceptance import FUNCTIONS as STORE_FUNCTIONS, VECTORS, check_store_tests, check_store_consumer
 from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, PUBLIC_CHECKS, check_projection_cases, check_public_projection_receipt
 
@@ -72,6 +72,23 @@ class HarnessTests(unittest.TestCase):
                 elif mode == 'renamed': row['cases'][0] = 'unexpected'
                 else: row['work_units'] = 0
                 self.assertFalse(check_public_projection_receipt(broken))
+
+    def test_full_thread_filter_is_not_misclassified_as_preparation_subset(self):
+        names = [module+'.fixture'+str(i)+'()' for module,count in SHARED_COUNTS.items() for i in range(count)]
+        names = [n for n in names if not n.startswith('JSONInspectionTests.')]+[
+            'JSONInspectionTests.inspectionI17CoverageSpansReplacementAndSharedInvocations()',
+            'JSONInspectionTests.snapshotS19NavigationParityAndIndependentInvocations()',
+            'JSONInspectionTests.snapshotV22ConcurrentLookupsUseIndependentAdmissionAndHealth()',
+            'JSONInspectionTests.projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics()',
+            'JSONInspectionTests.storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth()']
+        events=dict(function_names=names,module_function_counts=SHARED_COUNTS,
+            bundle_counts=sorted(SHARED_COUNTS.values()),parameter_case_invocations=0,parameterized_functions={})
+        command=['swift','test','--sanitize','thread','--filter',SHARED_TESTS]
+        self.assertTrue(check_result(command,0,'STORE_RUNTIME R06 passed',events)[0])
+        for bad in [dict(events,parameter_case_invocations=1),dict(events,function_names=names[:-1]),
+                    dict(events,module_function_counts=dict(SHARED_COUNTS,JSONNavigationTests=1)),
+                    dict(events,bundle_counts=sorted(SHARED_COUNTS.values())[:-1])]:
+            self.assertFalse(check_result(command,0,'STORE_RUNTIME R06 passed',bad)[0])
 
     def test_prepared_entry_rejects_missing_renamed_and_wrong_module_cases(self):
         command = ['swift', 'test', '--filter', 'navigationPreparedD0']
@@ -235,7 +252,7 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=19')[0])
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=20')[0])
         for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=16', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
