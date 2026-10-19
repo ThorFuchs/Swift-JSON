@@ -29,3 +29,20 @@ Actual compiled spelling is in Sources/JSONInspection/Graph. Constructors remain
 fileprivate. Compiler probes reject external type access, private initializers,
 mutation, internal reducers, and context escape. No public DocC examples imply
 these private declarations are available. No merge or promotion is authorized.
+
+## Public successor review
+
+The owner approved the compiler-derived 34-declaration public subset for the draft
+candidate, subject to qualification. The exact source spelling is authoritative:
+public JSONGraphProfile (immutable explicit paths/keys and initializer),
+JSONGraphProjection (checked factory, immutable document/profile/traversal/counts
+and five independent query operations), and JSONGraphFailure with fourteen typed cases.
+No existing public declaration changes. CSR buffers, ID staging, edge records,
+reducers and the noncopyable context remain inaccessible externally. The old
+public-type-invisibility negatives are replaced by internal builder/query/stage
+negatives; initializer, storage, mutation and ownership rejections remain.
+
+Sixteen public-only scenarios and a distinct-package consumer supplement all
+G01–G32 and 27 independently pinned fixtures. Three executable DocC examples and
+26 external full-codegen rejections are mandatory. This is signature approval
+for a draft, not merge/release approval or a claim of unexecuted platform passes.

@@ -12,7 +12,7 @@ import unittest
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
 from ci import check_result, commands
-from graph_acceptance import EXPECTED as GRAPH_FUNCTIONS, check_graph_cases, check_graph_receipt
+from graph_acceptance import EXPECTED as GRAPH_FUNCTIONS, check_graph_cases, check_graph_receipt, check_public_graph_receipt, PUBLIC_CHECKS as GRAPH_PUBLIC_CHECKS
 from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, PUBLIC_CHECKS, check_projection_cases, check_public_projection_receipt
 
 class HarnessTests(unittest.TestCase):
@@ -62,7 +62,7 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 108, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|graphG']),
+            ('JSONInspectionTests', 124, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|graphG']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
@@ -76,12 +76,12 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 47)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 108)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 124)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 1)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 5)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 6)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
 
     def test_private_projection_identities_cannot_be_missing_renamed_or_duplicated(self):
@@ -98,7 +98,7 @@ class HarnessTests(unittest.TestCase):
 
     def test_graph_identity_and_compiler_receipts_reject_false_success(self):
         names=sorted(GRAPH_FUNCTIONS)
-        self.assertEqual(len(names),32)
+        self.assertEqual(len(names),48)
         self.assertTrue(check_graph_cases({'function_names':names}))
         for broken in [names[:-1],names+names[:1],['WrongModule.'+names[0].split('.',1)[1]]+names[1:]]:
             self.assertFalse(check_graph_cases({'function_names':broken}))
@@ -112,6 +112,23 @@ class HarnessTests(unittest.TestCase):
             for change in [dict(compiler_crash=True),dict(exit_code=0),dict(primary_diagnostics=['unused Task'])]:
                 broken=copy.deepcopy(valid);broken['commands'][0].update(change)
                 self.assertFalse(check_graph_receipt(broken,context))
+
+    def test_public_graph_receipt_rejects_incomplete_or_incidental_success(self):
+        commands=[dict(name=str(i),status='passed',compiler_crash=False,exit_code=1 if i<26 else 0,
+            expected_diagnostic='inaccessible' if i<26 else None,primary_diagnostics=['inaccessible'] if i<26 else []) for i in range(45)]
+        valid=dict(status='passed',commands=commands,consumer_results={config:dict(cases=sorted(GRAPH_PUBLIC_CHECKS),work_units=1,logical_retained_bytes=1,peak_logical_retained_bytes=1,admitted_nodes=1) for config in ['debug','release','address']})
+        self.assertTrue(check_public_graph_receipt(valid))
+        broken=copy.deepcopy(valid);broken['commands'].pop();self.assertFalse(check_public_graph_receipt(broken))
+        for change in [dict(compiler_crash=True),dict(exit_code=0),dict(primary_diagnostics=['unrelated'])]:
+            broken=copy.deepcopy(valid);broken['commands'][0].update(change);self.assertFalse(check_public_graph_receipt(broken))
+        for config in ['debug','release','address']:
+            for mode in ['missing','duplicate','renamed','zero']:
+                broken=copy.deepcopy(valid);row=broken['consumer_results'][config]
+                if mode=='missing':row['cases'].pop()
+                elif mode=='duplicate':row['cases'][0]=row['cases'][1]
+                elif mode=='renamed':row['cases'][0]='unexpected'
+                else:row['work_units']=0
+                self.assertFalse(check_public_graph_receipt(broken))
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -204,8 +221,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=18')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=16', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=19')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=16', 'HARNESS_TESTS passed cases=17', 'HARNESS_TESTS passed cases=18', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

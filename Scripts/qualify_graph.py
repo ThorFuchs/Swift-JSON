@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Full-codegen proof of experimental graph invariants and package-only boundaries."""
+"""Full-codegen proof of graph invariants and non-public storage/reducer boundaries."""
 import argparse, hashlib, json, pathlib, re, subprocess
 from archive_candidate import files
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -29,9 +29,9 @@ import JSONInspection
 '''
 PROBES = [
  ('positive', POSITIVE, None, False),
- ('external-graph', 'import JSONInspection\nlet x = JSONGraphProjection.self\n', 'cannot find', True),
- ('external-profile', 'import JSONInspection\nlet x = JSONGraphProfile.self\n', 'cannot find', True),
- ('external-failure', 'import JSONInspection\nlet x = JSONGraphFailure.self\n', 'cannot find', True),
+ ('external-builder', 'import JSONInspection\nlet x = GraphBuilder.self\n', 'cannot find', True),
+ ('external-query', 'import JSONInspection\nlet x = GraphQuery.self\n', 'cannot find', True),
+ ('external-stage', 'import JSONInspection\nlet x = GraphWorkStage.self\n', 'cannot find', True),
  ('external-record', 'import JSONInspection\nlet x = JSONGraphEdgeRecord.self\n', 'cannot find', True),
  ('external-context', 'import JSONNavigation\nlet x = JSONTraversalContext.self\n', 'cannot find', True),
  ('core-isolation', 'import JSON\nlet x = JSONGraphProjection.self\n', 'cannot find', True),
@@ -44,7 +44,7 @@ CHECKS = {'exact', 'bfs', 'adjacency', 'values', 'admission'}
 def main():
     parser = argparse.ArgumentParser(description=__doc__); parser.add_argument('--output', required=True)
     out = ROOT / parser.parse_args().output; out.mkdir(parents=True, exist_ok=True)
-    receipt = dict(status='running', scope='same-package graph proof; all graph declarations remain non-public',
+    receipt = dict(status='running', scope='same-package graph proof; graph public surface plus private storage/reducers; same-package invariant proof',
         source_inputs=[dict(path=p.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in files()], commands=[])
     def save(): (out / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     def run(name, command, expected=None):

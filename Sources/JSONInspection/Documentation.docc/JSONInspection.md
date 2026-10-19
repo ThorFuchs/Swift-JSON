@@ -43,3 +43,10 @@ or numeric matrix. Sampling does not exempt any source from admission.
 ### Experimental scope
 
 - <doc:GraphExperiment>
+
+### Source-bound directed graphs
+
+- <doc:SourceBoundGraphs>
+- ``JSONGraphProfile``
+- ``JSONGraphProjection``
+- ``JSONGraphFailure``

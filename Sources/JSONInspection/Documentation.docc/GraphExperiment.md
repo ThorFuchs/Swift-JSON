@@ -15,3 +15,5 @@ Construction uses the original Navigation ledger. Later catalogue, source and BF
 queries are explicit independent full-source operations. Logical retained-byte
 quotas do not cap process RSS or caller computation. Public API promotion, merge
 and release require a separate owner decision. Controlled timing remains HOLD.
+
+This page records the original package-only experiment. The owner-reviewed successor candidate exposes the narrow checked API described in <doc:SourceBoundGraphs>; storage and reducers remain non-public. No release is implied.

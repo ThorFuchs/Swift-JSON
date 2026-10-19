@@ -2,17 +2,27 @@
 import JSON
 import JSONNavigation
 
-/// Experimental immutable source-attached directed simple graph. Not public API.
-package struct JSONGraphProjection: Sendable {
-    package let document: JSONDocument
-    package let profile: JSONGraphProfile
+/// An immutable directed simple graph attached to one completely admitted source document.
+///
+/// Build validates every node, edge and adjacency slot before publication. Source-local
+/// ordinals preserve physical row order; they are not durable or cross-graph identities.
+/// Later queries independently admit the whole captured source under their explicit limits.
+/// Construction uses bounded exact scans and may require quadratic work.
+public struct JSONGraphProjection: Sendable {
+    /// The original captured source, including its coherent source map when supplied.
+    public let document: JSONDocument
+    /// The explicit immutable selection and field roles validated at build.
+    public let profile: JSONGraphProfile
     package let nodeIDs: [String]
     package let edges: [JSONGraphEdgeRecord]
     package let offsets: [Int]
     package let adjacency: [Int]
-    package let traversal: JSONTraversalSummary
-    package var nodeCount: Int { nodeIDs.count }
-    package var edgeCount: Int { edges.count }
+    /// Complete construction coverage for both selected arrays.
+    public let traversal: JSONTraversalSummary
+    /// Number of completely validated original node rows.
+    public var nodeCount: Int { nodeIDs.count }
+    /// Number of completely validated original edge rows.
+    public var edgeCount: Int { edges.count }
     fileprivate init(document: JSONDocument, profile: JSONGraphProfile, nodeIDs: [String],
                      edges: [JSONGraphEdgeRecord], offsets: [Int], adjacency: [Int],
                      traversal: JSONTraversalSummary) {
@@ -21,7 +31,15 @@ package struct JSONGraphProjection: Sendable {
     }
 
     /// Complete source admission, nodes, edges and adjacency share one original meter.
-    package static func build(document: JSONDocument, profile: JSONGraphProfile,
+    /// - Parameters:
+    ///   - document: Immutable complete source; unselected subtrees are admitted too.
+    ///   - profile: Strict disjoint typed array roots and exact direct string field keys.
+    ///   - limits: One cumulative finite budget for source, validation, metadata and transfer.
+    ///   - maximumNodes: Inclusive node-row cap; defaults to 10,000.
+    ///   - maximumEdges: Inclusive edge-row cap; defaults to 50,000.
+    /// - Returns: A complete source-owning graph and its construction statistics.
+    /// - Throws: Typed graph/core selection errors, resource failure or cancellation; never a partial graph.
+    public static func build(document: JSONDocument, profile: JSONGraphProfile,
                               limits: JSONLimits = .balanced, maximumNodes: Int = 10_000,
                               maximumEdges: Int = 50_000) throws -> JSONOperationReport<Self> {
         guard maximumNodes >= 0, maximumEdges >= 0 else { throw JSONFailure(.configuration, code: .invalidLimits) }
@@ -32,7 +50,12 @@ package struct JSONGraphProjection: Sendable {
     }
 
     /// A new whole-source operation; returns original physical outgoing edge ordinals.
-    package func outgoingEdges(of node: Int, limits: JSONLimits = .balanced, maximumResults: Int = 50_000)
+    /// - Parameters:
+    ///   - node: Original node-row ordinal in this graph.
+    ///   - limits: New independent whole-source and query budget.
+    ///   - maximumResults: Inclusive returned edge-ordinal cap; defaults to 50,000.
+    /// - Returns: Every outgoing original edge-row ordinal in source order, or throws.
+    public func outgoingEdges(of node: Int, limits: JSONLimits = .balanced, maximumResults: Int = 50_000)
         throws -> JSONOperationReport<[Int]> {
         guard maximumResults >= 0 else { throw JSONFailure(.configuration, code: .invalidLimits) }
         try checkNode(node)
@@ -43,7 +66,16 @@ package struct JSONGraphProjection: Sendable {
     }
 
     /// Complete reachable component, including start; never a partial success.
-    package func breadthFirst(fromNode node: Int, limits: JSONLimits = .balanced,
+    /// Visited-at-enqueue and source-edge order make cycles/self-edges deterministic.
+    /// Queue history remains owned output; the frontier cap counts only pending nodes.
+    /// - Parameters:
+    ///   - node: Original start node ordinal, included in the result.
+    ///   - limits: New independent whole-source, metadata and traversal budget.
+    ///   - maximumFrontier: Inclusive live pending-node cap; defaults to 10,000.
+    ///   - maximumVisited: Inclusive total enqueued-node cap; defaults to 10,000.
+    ///   - maximumResults: Inclusive returned node-ordinal cap; defaults to 10,000.
+    /// - Returns: The complete reachable component in BFS order, or throws without partial success.
+    public func breadthFirst(fromNode node: Int, limits: JSONLimits = .balanced,
                               maximumFrontier: Int = 10_000, maximumVisited: Int = 10_000,
                               maximumResults: Int = 10_000) throws -> JSONOperationReport<[Int]> {
         guard maximumFrontier >= 0, maximumVisited >= 0, maximumResults >= 0 else {
@@ -57,16 +89,28 @@ package struct JSONGraphProjection: Sendable {
             .inspectOwned(options: .init(depthLimit: 0), reducer: &reducer)
     }
 
-    package func nodeValue(at node: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
+    /// Returns an original node row under a new whole-source admission and owned-output charge.
+    /// - Parameters:
+    ///   - node: Original node-row ordinal in this graph.
+    ///   - limits: Independent finite source/selection/output budget.
+    public func nodeValue(at node: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
         try checkNode(node)
         return try value(at: profile.nodesAt, row: node, limits: limits)
     }
-    package func edgeValue(at edge: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
+    /// Returns an original edge row under a new whole-source admission and owned-output charge.
+    /// - Parameters:
+    ///   - edge: Original edge-row ordinal in this graph.
+    ///   - limits: Independent finite source/selection/output budget.
+    public func edgeValue(at edge: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSON> {
         guard edge >= 0, edge < edgeCount else { throw JSONGraphFailure.edgeOutOfBounds(edge) }
         return try value(at: profile.edgesAt, row: edge, limits: limits)
     }
     /// Source-map lookup under a new explicit full-source admission.
-    package func nodeSpan(at node: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSONSourceSpan?> {
+    /// - Parameters:
+    ///   - node: Original node-row ordinal in this graph.
+    ///   - limits: Independent finite source and source-map lookup budget.
+    /// - Returns: The original value span, or nil when this source has no matching map entry.
+    public func nodeSpan(at node: Int, limits: JSONLimits = .balanced) throws -> JSONOperationReport<JSONSourceSpan?> {
         try checkNode(node)
         let scope = try JSONReadScope(document, limits: limits); defer { scope.invalidate() }
         let state = try scope.check(); let path = try rowPath(profile.nodesAt, row: node, scope: scope, state: state)

@@ -5,7 +5,7 @@ import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
-from graph_acceptance import check_graph_cases, check_graph_receipt
+from graph_acceptance import check_graph_cases, check_graph_receipt, check_public_graph_receipt
 from projection_acceptance import check_projection_cases, check_public_projection_receipt
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
@@ -17,7 +17,7 @@ SHARED_TESTS += '|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g
 SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations'
 SHARED_TESTS += '|inspectionI17CoverageSpansReplacementAndSharedInvocations'
 SHARED_TESTS += '|snapshotS19NavigationParityAndIndependentInvocations|snapshotV22ConcurrentLookupsUseIndependentAdmissionAndHealth'
-SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics|graphG30ConcurrentViewsHaveIndependentHealth'
+SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics|graphG30ConcurrentViewsHaveIndependentHealth|graphGP14ConcurrentQueries'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -36,6 +36,7 @@ def commands(lane, output):
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['python3', '-B', 'Scripts/qualify_graph_context.py', '--output', str(output / 'graph-context')],
             ['python3', '-B', 'Scripts/qualify_graph.py', '--output', str(output / 'graph-compiler')],
+            ['python3', '-B', 'Scripts/qualify_public_graph.py', '--output', str(output / 'public-graph-consumer')],
                 ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
                 ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')]]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
@@ -179,6 +180,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['python3', '-B', 'Scripts/qualify_graph_context.py', '--output', str(output / 'graph-context')],
             ['python3', '-B', 'Scripts/qualify_graph.py', '--output', str(output / 'graph-compiler')],
+            ['python3', '-B', 'Scripts/qualify_public_graph.py', '--output', str(output / 'public-graph-consumer')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
@@ -309,6 +311,9 @@ def check_result(command, code, log, events=None):
         passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=19' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_ergonomics.py']:
         passed = passed and 'ERGONOMICS_COMPILER passed commands=8 guide_fences=3' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_public_graph.py']:
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_public_graph_receipt(data)
     if command[:3] in (['python3', '-B', 'Scripts/qualify_graph_context.py'], ['python3', '-B', 'Scripts/qualify_graph.py']):
         data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
         passed = passed and check_graph_receipt(data, context='qualify_graph_context.py' in command[2])
@@ -336,7 +341,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=18' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=19' in log.splitlines()
     return passed, counts
 
 def main():

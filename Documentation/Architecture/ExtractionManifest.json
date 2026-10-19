@@ -324,5 +324,20 @@
     "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers plus a narrow explicit main-actor Apple PDF boundary using WebKit, CoreText, CoreGraphics and AppKit/UIKit paragraph styles. Core JSON imports none of these; no new root dependency.",
     "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation.",
     "pdf": "Original invocation-owned lifecycle, finite adapter accounting and visible-range pagination using Apple SDK APIs. PDFKit is independent qualification only; no third-party renderer adapted."
-  }
+  },
+  "original_components": [
+    {
+      "component": "NAV11 owner-reviewed public graph candidate",
+      "license": "Apache-2.0",
+      "source": "Original Swift-JSON public access/documentation adapters over qualified NAV11 graph donor PR #67 / 81485930f859131d0802691ca6370f482ba62911",
+      "paths": [
+        "Sources/JSONInspection/Graph",
+        "Tools/GraphPublicQualification",
+        "Tests/JSONInspectionTests/GraphPublicAcceptanceTests.swift",
+        "Sources/JSONInspection/Documentation.docc/SourceBoundGraphs.md"
+      ],
+      "validation": "G01–G32 retained; GP01–GP16 plus Debug/Release/ASan public consumer, 26 codegen negatives and three DocC examples; execution receipts required",
+      "dependencies": "No external runtime dependencies; existing JSON and JSONNavigation authorities only"
+    }
+  ]
 }
