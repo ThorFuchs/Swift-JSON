@@ -20,6 +20,7 @@ func legal(_ d: JSONDocument) throws -> JSONOperationReport<JSONDocument> {
 """
 PROBES={
  'positive':(POSITIVE,None),
+ 'raw-preparation-state':('func illegal() throws { let scope = try JSONReadScope(preparingWith: .balanced); _ = try scope.runPreparation { $0 } }', "'runPreparation' is inaccessible"),
  'return':('func illegal(_ c: inout JSONReadPreparationContext) -> JSONReadPreparationContext { consume c }','missing reinitialization of inout parameter'),
  'escape':('func illegal(_ c: inout JSONReadPreparationContext) -> () throws -> Void { { try c.checkpoint() } }',"escaping closure captures 'inout' parameter"),
  'explicit-capture':('func illegal(_ c: inout JSONReadPreparationContext) -> () -> Void { { [c = consume c] in _ = consume c } }', 'missing reinitialization of inout parameter'),

@@ -67,6 +67,15 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     let replaced = try JSONStoreBuilder(document: replacement, profile: store.profile).build().result
     #expect(replaced.document.sourceMap == nil)
     #expect(store.document.sourceMap != nil)
+    let changed = store.document.replacingRoot(try storeRows(0).root)
+    let changedStore = try JSONStoreBuilder(document:changed,profile:store.profile).build().result
+    #expect(changedStore.recordCount == 0 && changedStore.document.sourceMap == nil)
+    #expect(store.recordCount == 1 && store.document.sourceMap != nil)
+    #expect(try storeRefusal { _ = try changedStore.record(at:record.position) }.code == .invalidPosition)
+    let emptyKeyStore = try storeBuild("D064").result
+    let rootPointer = try JSONPointer(parsing:"").resolve(in:emptyKeyStore.document.root)
+    let emptyKeyPointer = try JSONPointer(parsing:"/").resolve(in:emptyKeyStore.document.root)
+    #expect(rootPointer == emptyKeyStore.document.root && rootPointer != emptyKeyPointer)
     print("STORE_RUNTIME R01 passed")
 }
 
@@ -111,6 +120,8 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
         caps[keyPath:key] = needed - 1
         let failure = try storeRefusal { _ = try storeBuild(id,caps:caps) }
         #expect(failure.code == .capacityExceeded && failure.capacity == name)
+        caps[keyPath:key] = 0
+        #expect(try storeRefusal { _ = try storeBuild(id,caps:caps) }.capacity == name)
         caps[keyPath:key] = -1
         #expect(try storeCoreRefusal { _ = try storeBuild(id,caps:caps) }.code == .invalidLimits)
         caps[keyPath:key] = Int.max
@@ -135,6 +146,8 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
             else { _ = try JSONStoreAccounting.product(UInt64.max,2) }
         }.code == .counterOverflow)
     }
+    #expect(try JSONStoreAccounting.checkedCount(UInt64(Int.max), phase: 4) == Int.max)
+    #expect(try storeRefusal { _ = try JSONStoreAccounting.checkedCount(UInt64.max, phase: 4) }.code == .counterOverflow)
     var capped = JSONStoreCaps(); capped.referenceSlots = 0
     #expect(try storeRefusal { _ = try storeBuild("D024",caps:capped) }.capacity == "referenceSlots")
     capped.referenceSlots = 1
@@ -176,10 +189,12 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     let document = try JSONParser().parseDocument(Data(text.utf8))
     let profile = storeSimpleProfile(fields:[.init(key:"friend",presence:.required,nullable:false)])
     for targetPhase in [1,2,4,5,6,7,8] {
+        let lifetime = Mutex(false)
         let task = Task {
             let state = Mutex<(phase:Int,work:UInt64,start:UInt64?)>((0,0,nil))
             var limits = JSONLimits.balanced; limits[.cancellationQuantum] = 1
             var builder = JSONStoreBuilder(document:document,profile:profile,limits:limits)
+            builder.lifetimeObserver = { root,state in lifetime.withLock { $0 = root && state } }
             builder.phaseObserver = { phase in state.withLock {
                 $0.phase = phase
                 if phase == targetPhase && $0.start == nil { $0.start = $0.work }
@@ -195,7 +210,32 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
         }
         do { _ = try await task.value; Issue.record("Expected phase \(targetPhase) cancellation") }
         catch is CancellationError { }
+        #expect(lifetime.withLock { $0 })
+        print("STORE_CANCELLATION phase=\(targetPhase) passed invalidated=1")
     }
+    // Root-only source: the final phase-5 work is the long duplicate comparison,
+    // with no later source-map scan. Calibrate exact work, never elapsed time.
+    let sameID = JSON.object(try JSONObject(members:[.init("uuid",value:.string(long))]))
+    let duplicateDocument = JSONDocument(root:.object(try JSONObject(members:[.init("collections",value:.object(
+        try JSONObject(members:[.init("users",value:.array([sameID,sameID]))])))])))
+    let progress = Mutex<(phase:Int,last:UInt64)>((0,0))
+    var duplicateLimits = JSONLimits.balanced; duplicateLimits[.cancellationQuantum] = 1
+    var calibration = JSONStoreBuilder(document:duplicateDocument,profile:storeSimpleProfile(),limits:duplicateLimits)
+    calibration.phaseObserver = { phase in progress.withLock { $0.phase = phase } }
+    calibration.checkpointObserver = { work in progress.withLock { if $0.phase == 5 { $0.last = work } } }
+    #expect(try storeRefusal { _ = try calibration.build() }.code == .duplicateRecordID)
+    let lastComparison = progress.withLock { $0.last }
+    #expect(lastComparison > 2)
+    let duplicateCancellation = Task {
+        var builder = JSONStoreBuilder(document:duplicateDocument,profile:storeSimpleProfile(),limits:duplicateLimits)
+        builder.checkpointObserver = { work in
+            if work == lastComparison - 1 { withUnsafeCurrentTask { $0?.cancel() } }
+        }
+        return try builder.build()
+    }
+    do { _ = try await duplicateCancellation.value; Issue.record("Expected cancellation inside exact duplicate comparison") }
+    catch is CancellationError { }
+    print("STORE_CANCELLATION duplicate_comparison_at=\(lastComparison-1) passed")
     let after = Task {
         let finish = Mutex(0)
         var builder = JSONStoreBuilder(document:document,profile:profile)
@@ -227,7 +267,7 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
 
 @Test func storeR07SourceAndStateInvalidatedOnEveryFailureAndSuccess() throws {
     let facts = Mutex<[(Bool,Bool)]>([])
-    for id in ["D002","D046","D004","D055","D024"] {
+    for id in ["D002","D046","D012","D014","D004","D055","D024"] {
         let fixture = try storeCase(id)
         var builder = try JSONStoreBuilder(document:storeInput(fixture),profile:storeProfile(storeMember(fixture,"profile")))
         builder.lifetimeObserver = { root,state in facts.withLock { $0.append((root,state)) } }
@@ -235,7 +275,22 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
         else { _ = try storeRefusal { _ = try builder.build() } }
     }
     let result = facts.withLock { $0 }
-    #expect(result.count == 5 && result.allSatisfy { $0.0 && $0.1 })
+    #expect(result.count == 7 && result.allSatisfy { $0.0 && $0.1 })
+    let fixture = try storeCase("D038"), source = try storeInput(fixture)
+    let profile = try storeProfile(storeMember(fixture,"profile"))
+    let ample = try JSONStoreBuilder(document:source,profile:profile).build()
+    var short = JSONLimits.balanced; short[.workUnits] = ample.statistics[.workUnits] - 1
+    var refusing = JSONStoreBuilder(document:source,profile:profile,limits:short)
+    refusing.lifetimeObserver = { root,state in facts.withLock { $0.append((root,state)) } }
+    #expect(try storeCoreRefusal { _ = try refusing.build() }.resource?.metric == .workUnits)
+    #expect(facts.withLock { $0.count == 8 && $0.allSatisfy { $0.0 && $0.1 } })
+    // Exercise report/aliases leaving lexical scope under ASan/LSan; keep only facts.
+    for _ in 0..<16 {
+        var scoped = JSONStoreBuilder(document:source,profile:profile)
+        scoped.lifetimeObserver = { root,state in facts.withLock { $0.append((root,state)) } }
+        do { let report = try scoped.build(); #expect(report.result.recordCount == 1) }
+    }
+    #expect(facts.withLock { $0.count == 24 && $0.allSatisfy { $0.0 && $0.1 } })
     print("STORE_RUNTIME R07 passed")
 }
 
@@ -248,6 +303,14 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     let b = try JSONStoreBuilder(document:document,profile:reversed).build().result
     #expect(try a.record(collection:0,row:0).path == b.record(collection:0,row:0).path)
     #expect(try a.record(collection:1,row:0).path == b.record(collection:1,row:0).path)
+    let container = try #require(document.root.objectValue?["collections"]?.objectValue)
+    let swapped = JSONDocument(root:.object(try JSONObject(members:[.init("collections",value:.object(
+        try JSONObject(members:Array(container.reversed()))))])))
+    let physical = try JSONStoreBuilder(document:swapped,profile:original).build().result
+    #expect(try a.record(collection:0,row:0).id == physical.record(collection:1,row:0).id)
+    #expect(try a.record(collection:0,row:0).path == physical.record(collection:1,row:0).path)
+    #expect(try a.record(collection:0,row:0).position.collection == 0)
+    #expect(try physical.record(collection:1,row:0).position.collection == 1)
     let rows = try storeRows(2)
     let array = try #require(rows.root.objectValue?["collections"]?.objectValue?["users"]?.arrayValue)
     let reordered = JSONDocument(root:.object(try JSONObject(members:[.init("collections",value:.object(
@@ -258,6 +321,24 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     #expect(try first.record(collection:0,row:0).path != second.record(collection:0,row:1).path)
     let exact = try storeBuild("D065").result
     #expect(try JSONComparison.equals(.string(exact.record(collection:0,row:0).id),.string(exact.record(collection:0,row:1).id)) == false)
+    let linkedProfile = storeSimpleProfile(fields:[.init(key:"friend",presence:.required,nullable:false)])
+    let permutations = [
+        #"{"collections":{"users":[{"uuid":"u","ordinary":17,"friend":{"collection":"users","id":"u"}}]}}"#,
+        #"{"collections":{"users":[{"friend":{"id":"u","collection":"users"},"ordinary":17,"uuid":"u"}]}}"#]
+    for text in permutations {
+        let view = try JSONStoreBuilder(document:JSONParser().parseDocument(Data(text.utf8)),profile:linkedProfile).build().result
+        #expect(try view.record(collection:0,row:0).id == "u")
+        if case .link(let target) = view.references[0].state { #expect(target.collection == 0 && target.row == 0) }
+        else { Issue.record("Payload/marker permutation changed link") }
+    }
+    let orderedFixture = try storeCase("D057"), orderedSource = try storeInput(orderedFixture)
+    let forward = try storeProfile(storeMember(orderedFixture,"profile"))
+    let declaration = forward.collections[0]
+    let reverseFields = JSONStoreProfile(version:.v1,collectionsAt:forward.collectionsAt,collections:[
+        .init(name:declaration.name,recordsAt:declaration.recordsAt,idKey:declaration.idKey,
+              referenceFields:Array(declaration.referenceFields.reversed()))],references:forward.references)
+    #expect(try storeRefusal { _ = try JSONStoreBuilder(document:orderedSource,profile:forward).build() }.code == .referenceMissing)
+    #expect(try storeRefusal { _ = try JSONStoreBuilder(document:orderedSource,profile:reverseFields).build() }.code == .referenceNull)
     print("STORE_RUNTIME R08 passed")
 }
 
@@ -276,6 +357,15 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     #expect(empty.result.recordCount == 0)
     _ = try storeRefusal { _ = try JSONStoreBuilder(document:storeRows(1),profile:storeSimpleProfile(),caps:zero).build() }
     #expect(try storeRefusal { _ = try storeBuild("D055") }.phase == 6)
+    let valid = JSON.object(try JSONObject(members:[.init("uuid",value:.string("first"))]))
+    for bad in [JSON.object(try JSONObject(members:[])),
+                .object(try JSONObject(members:[.init("uuid",value:.null)])),
+                .object(try JSONObject(members:[.init("uuid",value:.boolean(false))]))] {
+        let document = JSONDocument(root:.object(try JSONObject(members:[.init("collections",value:.object(
+            try JSONObject(members:[.init("users",value:.array([valid,bad]))])))])))
+        let error = try storeRefusal { _ = try JSONStoreBuilder(document:document,profile:storeSimpleProfile()).build() }
+        #expect(error.phase == 5 && error.path == [.key("collections"),.key("users"),.index(1),.key("uuid")])
+    }
     print("STORE_RUNTIME R09 passed")
 }
 

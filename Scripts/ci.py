@@ -265,7 +265,7 @@ def check_result(command, code, log, events=None):
         if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|store']):
             expected = [DISCOVERY['root_functions']['JSONInspectionTests']]
             if events is not None:
-                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameterized_functions'] == {'storeD1NativeVector(id:)': 65} and check_projection_cases(events) and check_store_tests(events, log)
+                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 65 and events['parameterized_functions'] == {'storeD1NativeVector(id:)': 65} and check_projection_cases(events) and check_store_tests(events, log)
         if prepared_test:
             expected_ids = set(DISCOVERY['prepared_entry_function_ids'])
             if 'navigationPreparedD0IndependentConcurrentHealth' in command:
@@ -351,7 +351,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_store_preparation.py']:
         data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
         probes = [x for x in data['commands'] if x.get('expected') is not None]
-        passed = passed and data['status'] == 'passed' and len(data['commands']) == 42 and len(probes) == 36
+        passed = passed and data['status'] == 'passed' and len(data['commands']) == 44 and len(probes) == 38
         passed = passed and all(x['passed'] and not x['compiler_crash'] for x in data['commands'])
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation_reducer.py']:
         passed = passed and 'REDUCER_CODEGEN passed positive=2 negative=20' in log.splitlines()

@@ -69,6 +69,17 @@ func storeTokens(_ path: [JSONLocationComponent]) -> [String] {
     path.map { switch $0 { case .key(let key): key.string; case .index(let index): String(index) } }
 }
 
+// Independent public typed-read delegate; never used inside the engine operation.
+func storeTypedValue(_ path: [JSONLocationComponent], in document: JSONDocument) throws -> JSON {
+    try document.read { cursor in
+        var selected = cursor
+        for component in path {
+            switch component { case .key(let key): selected = try selected[key]; case .index(let i): selected = try selected[i] }
+        }
+        return try selected.requiredValue()
+    }
+}
+
 private let storeBuildVectorIDs = ["D001", "D002", "D003", "D004", "D005", "D006", "D007", "D008", "D009", "D010", "D011", "D012", "D013", "D014", "D015", "D016", "D017", "D018", "D019", "D020", "D021", "D022", "D023", "D024", "D025", "D026", "D027", "D028", "D029", "D030", "D031", "D032", "D033", "D034", "D035", "D036", "D038", "D039", "D040", "D041", "D042", "D043", "D044", "D045", "D046", "D047", "D048", "D049", "D050", "D052", "D054", "D055", "D056", "D057", "D058", "D059", "D060", "D061", "D062", "D063", "D064", "D065", "D066", "D067", "D068"]
 
 @Test(arguments: storeBuildVectorIDs)
@@ -104,6 +115,30 @@ func storeD1NativeVector(id: String) throws {
                 let record = try store.record(collection: ci, row: row)
                 let pointer = try JSONPointer(tokens: storeTokens(record.idPath))
                 #expect(try pointer.resolve(in: document.root) == .string(record.id))
+                #expect(try storeTypedValue(record.idPath,in:document) == .string(record.id))
+                #expect(try JSONPointer(tokens:storeTokens(record.path)).resolve(in:document.root) == storeTypedValue(record.path,in:document))
+                for reference in store.references[record.referenceRange] {
+                    let key = try #require(reference.path.last)
+                    guard case .key(let field) = key else { Issue.record("Reference path must end in an exact key"); continue }
+                    let parent = try storeTypedValue(record.path,in:document)
+                    let presence = try parent.presence(of:field.string)
+                    switch reference.state {
+                    case .absent:
+                        #expect(presence == .absent)
+                        do { _ = try JSONPointer(tokens:storeTokens(reference.path)).resolve(in:document.root); Issue.record("Absent reference resolved") }
+                        catch let error as JSONFailure { #expect(error.category == .pointer && error.code == .missingTarget) }
+                        do { _ = try storeTypedValue(reference.path,in:document); Issue.record("Absent reference read as a value") }
+                        catch let error as JSONAccessFailure { #expect(error.cause.category == .missingValue) }
+                    case .null:
+                        #expect(presence == .null)
+                        #expect(try storeTypedValue(reference.path,in:document) == .null)
+                        #expect(try JSONPointer(tokens:storeTokens(reference.path)).resolve(in:document.root) == .null)
+                    case .link:
+                        let original = try JSONPointer(tokens:storeTokens(reference.path)).resolve(in:document.root)
+                        #expect(presence == .value(original))
+                        #expect(try storeTypedValue(reference.path,in:document) == original)
+                    }
+                }
             }
         }
         let admission = try JSONTraversal(document: document).visit { _,_ in .skipDescendants }

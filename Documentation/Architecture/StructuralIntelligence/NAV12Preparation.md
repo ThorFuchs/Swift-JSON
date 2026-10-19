@@ -17,7 +17,7 @@ admission only when the result does not own it; profile output reservations are
 not incorrectly included in the input refund.
 
 Full Debug/Release code generation supplements the unchanged original 2-positive/
-20-negative matrix with 2 positive and 36 ordinary-negative prepared-capability
+20-negative matrix with 2 positive and 38 ordinary-negative prepared-capability
 outcomes. A compiler crash, permitted escape or incidental diagnostic blocks this
 experiment. Runtime tests require every-counter no-op parity, one root admission,
 cumulative work/exact/one-below quotas, pre-admission refusal, caught-error and
@@ -31,3 +31,7 @@ the original gates and add the prepared matrix; all 49 core-cap witnesses and
 126 maintenance identities remain mandatory. Actual receipts, not this contract,
 establish execution. No public declaration/product, store-follow engine, merge
 or release is introduced by this preparation increment.
+
+The generic preparation-state closure is internal to JSON. Navigation receives
+only the strategy entry; a separate full-codegen negative rejects using that
+closure to return raw state from another target in the same package.

@@ -40,7 +40,7 @@ package final class JSONReadScope {
             limits: limits, domain: .core, trackAcceptedCapacities: true))
         phase = .preparing
     }
-    package func runPreparation<T>(_ body: (JSONCodingState) throws -> T) throws -> T {
+    internal func runPreparation<T>(_ body: (JSONCodingState) throws -> T) throws -> T {
         do {
             guard ObjectIdentifier(Thread.current) == owner, phase == .preparing,
                   document == nil, let state else {

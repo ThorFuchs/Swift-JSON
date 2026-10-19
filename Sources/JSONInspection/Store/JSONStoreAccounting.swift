@@ -19,6 +19,12 @@ internal struct JSONStoreAccounting {
         guard !overflow else { throw JSONStoreFailure(.counterOverflow, phase: 0, domain: .operation) }
         return next
     }
+    static func checkedCount(_ value: UInt64, phase: Int) throws -> Int {
+        guard let result = Int(exactly: value) else {
+            throw JSONStoreFailure(.counterOverflow, phase: phase, domain: .operation)
+        }
+        return result
+    }
     static func check(_ count: Int, _ limit: Int, name: String, phase: Int,
                       path: [JSONLocationComponent] = []) throws {
         guard count <= limit else {

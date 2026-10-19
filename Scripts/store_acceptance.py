@@ -16,7 +16,8 @@ def check_store_tests(events, log, shared=False, scoped=False):
     if len(names) != len(set(names)) or set(names) != expected:
         return False
     if scoped and (events['module_function_counts'] != {'JSONInspectionTests': len(expected)} or
-                   events['parameterized_functions'] != ({} if shared else {'storeD1NativeVector(id:)': 65})):
+                   events['parameterized_functions'] != ({} if shared else {'storeD1NativeVector(id:)': 65}) or
+                   events['parameter_case_invocations'] != (0 if shared else 65)):
         return False
     observed = re.findall(r'^STORE_VECTOR (D\d+) passed driver=(\S+) phase=(\S+) kind=(\S+)', log, re.M)
     expected_vectors = [] if shared else [(x['id'], x['execution_kind'], str(x['expected']['phase']), x['expected']['kind'])

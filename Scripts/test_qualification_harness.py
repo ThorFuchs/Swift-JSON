@@ -25,7 +25,7 @@ def store_markers():
 class HarnessTests(unittest.TestCase):
     def test_store_requires_exact_engine_vectors_runtime_and_compiler_primary_diagnostics(self):
         events = dict(function_names=sorted(STORE_FUNCTIONS), module_function_counts={'JSONInspectionTests':12},
-            parameterized_functions={'storeD1NativeVector(id:)':65})
+            parameterized_functions={'storeD1NativeVector(id:)':65}, parameter_case_invocations=65)
         log = store_markers()
         self.assertTrue(check_store_tests(events, log, scoped=True))
         for broken in [log.replace('D001','D999'), log+'\n'+log.splitlines()[0],
@@ -119,7 +119,7 @@ class HarnessTests(unittest.TestCase):
             for broken in [dict(events, bundle_counts=[count-1]),
                            dict(events, module_function_counts={'WrongModule': count}),
                            dict(events, parameter_case_invocations=1)]:
-                self.assertFalse(check_result(command, 0, '', broken)[0])
+                self.assertFalse(check_result(command, 0, evidence, broken)[0])
         policy = DISCOVERY
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 57)

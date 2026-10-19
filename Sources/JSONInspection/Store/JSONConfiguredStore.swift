@@ -192,7 +192,7 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
             try JSONStoreAccounting.check(array.count, accounting.caps.recordsPerCollection,
                                           name: "recordsPerCollection", phase: 4, path: location)
             let sum = try JSONStoreAccounting.sum(UInt64(total), UInt64(array.count))
-            guard let next = Int(exactly: sum) else { throw JSONStoreFailure(.counterOverflow, phase: 4, domain: .operation) }
+            let next = try JSONStoreAccounting.checkedCount(sum, phase: 4)
             try JSONStoreAccounting.check(next, accounting.caps.records, name: "records", phase: 4, path: location)
             collections.append(.init(profile: declaration, path: location, start: total, count: array.count))
             seen[declaration] = true; total = next
