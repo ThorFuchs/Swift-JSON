@@ -43,4 +43,7 @@ Documentation/Architecture before changing behavior.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
-P2 graph/store/set/matrix/retrieval/persistence and JSON text-sequence framing remain deferred.
+NAV11 directed simple graph has an owner-reviewed public candidate API inside JSONInspection; no new product or automatic merge.
+Store/set/matrix/retrieval/persistence and JSON text-sequence framing remain separate deferred trains.
+
+NAV11 public graph candidate adds only the approved immutable profile, checked source-bound graph and typed failures inside JSONInspection. CSR arrays, reducers and meters remain non-public; no new product or graph serialization/mutation. Future merge/release remain separately human-gated.

@@ -1,3 +1,16 @@
+# NAV11 experimental graph qualification
+
+The package graph/public API stays unchanged: nine libraries plus CLI; Navigation56
+and Inspection95. Graph symbols are package-only. Exact discovery is 108 Inspection
+functions including G01–G32, with five Inspection sharing functions. All previous
+identities, 49 core cap probes and 126 maintenance witnesses remain required. Native
+and Linux add the graph context and package-boundary codegen/runtime qualifiers;
+the original two-positive/twenty-negative ownership matrix is unchanged. Exact
+identities and genuine primary diagnostics are checked, including crash rejection.
+
+The current source-bound receipts establish outcomes; the dated sections below
+retain their original source scopes. Controlled performance remains HOLD.
+
 # NAV8 Navigation V1 integration
 
 Current required discovery retains 779 native /763 Linux /675 WASI functions,
@@ -295,3 +308,17 @@ The focused composition lane also runs on the Linux architecture jobs and Native
 Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
 The qualification harness now has 15 regression functions, retaining its original 14.
 See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.
+
+## NAV11 public graph candidate
+
+The owner-reviewed successor keeps all 32 original graph identities and adds 16
+public scenarios (124 Inspection functions). Required roots become 827 native,
+811 Linux and 723 WASI, with unchanged 325/288 parameter invocations. Shared-state
+expectations become 53 native/52 Linux. The public graph qualifier executes 16
+consumer cases in Debug/Release/ASan, three guide blocks/configuration and 26
+ordinary external full-codegen rejections. The original graph boundary matrix
+retains 18 negatives, replacing only obsolete invisible-public-type cases with
+internal builder/query/stage access rejections. Reducer 2+/20-, helper 2+/8-, all
+49 core caps and 126 maintenance identities remain. Harness cardinality is 19.
+These are requirements; actual source-bound receipts establish results. No merge
+or release follows automatically. Controlled G4 remains HOLD without speed claims.
