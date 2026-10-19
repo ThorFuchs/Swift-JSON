@@ -40,6 +40,19 @@ class HarnessTests(unittest.TestCase):
                 else: row['work_units'] = 0
                 self.assertFalse(check_public_projection_receipt(broken))
 
+    def test_prepared_entry_rejects_missing_renamed_and_wrong_module_cases(self):
+        command = ['swift', 'test', '--filter', 'navigationPreparedD0']
+        names = list(DISCOVERY['prepared_entry_function_ids'])
+        events = dict(bundle_counts=[10], module_function_counts={'JSONNavigationTests': 10},
+                      parameter_case_invocations=0, function_names=names)
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        for broken in [dict(events, function_names=names[:-1]),
+                       dict(events, function_names=names[:-1]+['Other.renamed()']),
+                       dict(events, parameter_case_invocations=1),
+                       dict(events, bundle_counts=[9]),
+                       dict(events, module_function_counts={'WrongModule': 10})]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
         command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']
         events = dict(bundle_counts=[5], module_function_counts={'CompositionScaleTests': 5},
@@ -60,7 +73,7 @@ class HarnessTests(unittest.TestCase):
 
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
-            ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
+            ('JSONNavigationTests', 57, ['swift', 'test', '--filter', 'navigation']),
             ('JSONInspectionTests', 76, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
@@ -73,12 +86,12 @@ class HarnessTests(unittest.TestCase):
                 self.assertFalse(check_result(command, 0, '', broken)[0])
         policy = DISCOVERY
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
-            self.assertEqual(policy[key]['JSONNavigationTests'], 47)
+            self.assertEqual(policy[key]['JSONNavigationTests'], 57)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
             self.assertEqual(policy[key]['JSONInspectionTests'], 76)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
-            self.assertEqual(policy[key]['JSONNavigationTests'], 1)
+            self.assertEqual(policy[key]['JSONNavigationTests'], 2)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
             self.assertEqual(policy[key]['JSONInspectionTests'], 4)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
@@ -186,7 +199,7 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=17')[0])
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=18')[0])
         for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=16', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']

@@ -10,7 +10,7 @@
     "JSONHTMLTests": 97,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
-    "JSONNavigationTests": 47,
+    "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 76
   },
@@ -33,7 +33,7 @@
     "JSONHTMLTests": 5,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
-    "JSONNavigationTests": 1,
+    "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 4
   },
@@ -74,7 +74,7 @@
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
-    "JSONNavigationTests": 47,
+    "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 76
   },
@@ -87,7 +87,7 @@
     "JSONIntegrationTests": 32,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
-    "JSONNavigationTests": 47,
+    "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 76
   },
@@ -101,12 +101,24 @@
     "JSONHTMLTests": 4,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
-    "JSONNavigationTests": 1,
+    "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 4
   },
   "export_functions": {
     "JSONSchemaTests": 1,
     "JSONHTMLTests": 39
-  }
+  },
+  "prepared_entry_function_ids": [
+    "JSONNavigationTests.navigationPreparedD0NoopMatchesOriginalEveryCounter()",
+    "JSONNavigationTests.navigationPreparedD0CumulativeWorkAndSingleSourceAdmission()",
+    "JSONNavigationTests.navigationPreparedD0ProfileTextRetainedAndCounted()",
+    "JSONNavigationTests.navigationPreparedD0InnerProfileTextCancellationPrecedesRoot()",
+    "JSONNavigationTests.navigationPreparedD0CaughtProfileFailurePrecedesAdmission()",
+    "JSONNavigationTests.navigationPreparedD0CancellationCannotBecomeReplacement()",
+    "JSONNavigationTests.navigationPreparedD0ForbiddenPreAdmissionAccessLatches()",
+    "JSONNavigationTests.navigationPreparedD0OneShotAdmissionAndTransfer()",
+    "JSONNavigationTests.navigationPreparedD0SourceTransferAndInvalidationAllExits()",
+    "JSONNavigationTests.navigationPreparedD0IndependentConcurrentHealth()"
+  ]
 }
