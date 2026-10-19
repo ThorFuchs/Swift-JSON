@@ -5,6 +5,7 @@ import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
+from graph_acceptance import check_graph_cases, check_graph_receipt
 from projection_acceptance import check_projection_cases, check_public_projection_receipt
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
@@ -16,7 +17,7 @@ SHARED_TESTS += '|g1SharedPreparedGeneratorHasIndependentConcurrentInvocations|g
 SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations'
 SHARED_TESTS += '|inspectionI17CoverageSpansReplacementAndSharedInvocations'
 SHARED_TESTS += '|snapshotS19NavigationParityAndIndependentInvocations|snapshotV22ConcurrentLookupsUseIndependentAdmissionAndHealth'
-SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics'
+SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics|graphG30ConcurrentViewsHaveIndependentHealth'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -27,12 +28,14 @@ def commands(lane, output):
     output = output.relative_to(ROOT)
     if lane == 'inspection':
         result = [['python3', '-B', 'Scripts/public_check.py'],
-                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP'],
-                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP'],
-                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP'],
+                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|graphG'],
+                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP|graphG'],
+                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP|graphG'],
                 ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/inspection-strict',
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
+            ['python3', '-B', 'Scripts/qualify_graph_context.py', '--output', str(output / 'graph-context')],
+            ['python3', '-B', 'Scripts/qualify_graph.py', '--output', str(output / 'graph-compiler')],
                 ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
                 ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')]]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
@@ -174,6 +177,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
             ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')],
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
+            ['python3', '-B', 'Scripts/qualify_graph_context.py', '--output', str(output / 'graph-context')],
+            ['python3', '-B', 'Scripts/qualify_graph.py', '--output', str(output / 'graph-compiler')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
@@ -232,20 +237,20 @@ def check_result(command, code, log, events=None):
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONNavigationTests': expected[0]} and events['parameter_case_invocations'] == 0
-        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP']):
+        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|graphG']):
             expected = [DISCOVERY['root_functions']['JSONInspectionTests']]
             if events is not None:
-                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 0 and check_projection_cases(events)
+                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 0 and check_projection_cases(events) and check_graph_cases(events)
         passed = passed and sorted(counts) == expected
         if 'Tools/CompositionQualification' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
         if 'thread' in command and 'JSONSchemaExamplesTests' not in command and events is not None:
-            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True)
+            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_graph_cases(events, shared=True)
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
-                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events)
+                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events) and check_graph_cases(events)
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == PARAMETER_INVOCATIONS)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -304,6 +309,9 @@ def check_result(command, code, log, events=None):
         passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=19' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_ergonomics.py']:
         passed = passed and 'ERGONOMICS_COMPILER passed commands=8 guide_fences=3' in log.splitlines()
+    if command[:3] in (['python3', '-B', 'Scripts/qualify_graph_context.py'], ['python3', '-B', 'Scripts/qualify_graph.py']):
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_graph_receipt(data, context='qualify_graph_context.py' in command[2])
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation_reducer.py']:
         passed = passed and 'REDUCER_CODEGEN passed positive=2 negative=20' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_snapshot.py']:
@@ -328,14 +336,17 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=17' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=18' in log.splitlines()
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--lane', choices=['composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
+    parser.add_argument('--skip-host-measurements', action='store_true', help='For WASI qualification: leave optional host timings explicitly NOT RUN.')
     args = parser.parse_args()
+    if args.skip_host_measurements and args.lane not in ('wasm', 'wasm-qa'):
+        parser.error('--skip-host-measurements applies only to WASI lanes')
     output = ROOT / (args.output or '.build/ci/' + args.lane)
     output.mkdir(parents=True, exist_ok=True)
     inputs = snapshot()
@@ -352,6 +363,8 @@ def main():
         return 2
     receipt['status'] = 'running'
     for index, command in enumerate(commands(args.lane, output)):
+        if args.skip_host_measurements and command[:3] == ['python3', '-B', 'Scripts/wasm_support.py']:
+            command += ['--skip-host-measurements']
         plugin_path = os.environ.get('SWIFT_JSON_TESTING_PLUGIN_PATH')
         if command[:2] == ['swift', 'test'] and plugin_path:
             command += ['-Xswiftc', '-plugin-path', '-Xswiftc', plugin_path]

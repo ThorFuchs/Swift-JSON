@@ -1,3 +1,16 @@
+# NAV11 experimental graph qualification
+
+The package graph/public API stays unchanged: nine libraries plus CLI; Navigation56
+and Inspection95. Graph symbols are package-only. Exact discovery is 108 Inspection
+functions including G01–G32, with five Inspection sharing functions. All previous
+identities, 49 core cap probes and 126 maintenance witnesses remain required. Native
+and Linux add the graph context and package-boundary codegen/runtime qualifiers;
+the original two-positive/twenty-negative ownership matrix is unchanged. Exact
+identities and genuine primary diagnostics are checked, including crash rejection.
+
+The current source-bound receipts establish outcomes; the dated sections below
+retain their original source scopes. Controlled performance remains HOLD.
+
 # NAV8 Navigation V1 integration
 
 Current required discovery retains 779 native /763 Linux /675 WASI functions,

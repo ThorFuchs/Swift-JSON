@@ -716,3 +716,9 @@ location/value/span lookup is an explicitly separate full-source-admitted operat
 Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
 These additions are absent from published 1.6.1 and do not publish 1.7.0.
+
+NAV11 experiments with a package-only, exact source-backed directed simple graph
+inside JSONInspection. Graph construction and BFS are not public API and are not
+part of stable 1.6.1. The [experimental contract](Documentation/Architecture/StructuralIntelligence/NAV11/GraphADR.md)
+records finite capacities, source/error precedence and one-ledger ownership. There
+is no graph product, performance claim or automatic promotion.
