@@ -64,7 +64,7 @@ public enum JSONGraphFailure: Error, Sendable, Equatable {
 
 /// Trusted row ordinals in this captured source, not durable graph identifiers.
 package struct JSONGraphEdgeRecord: Sendable, Equatable {
-    public let row: Int
-    public let source: Int
-    public let target: Int
+    package let row: Int
+    package let source: Int
+    package let target: Int
 }
