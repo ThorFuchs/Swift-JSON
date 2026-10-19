@@ -8,7 +8,9 @@ import JSONNavigation
 // Test-only typed fixture adapter: no production wire decoder and no store verdict logic.
 func storeFixture(_ path: String) throws -> Data {
     let root = try #require(Bundle.module.resourceURL)
-    return try Data(contentsOf: URL(fileURLWithPath: root.path + "/StoreFixtures/" + path))
+    let handle = try FileHandle(forReadingFrom: URL(fileURLWithPath: root.path + "/StoreFixtures/" + path))
+    defer { try? handle.close() }
+    return try handle.readToEnd() ?? Data()
 }
 func storeMember(_ value: JSON, _ key: String) throws -> JSON {
     let object = try #require(value.objectValue)
@@ -16,6 +18,10 @@ func storeMember(_ value: JSON, _ key: String) throws -> JSON {
 }
 func storeText(_ value: JSON) throws -> String { try #require(value.stringValue) }
 func storeInt(_ value: JSON) throws -> Int { try #require(value.numberValue).integer(as: Int.self) }
+func storeBool(_ value: JSON) throws -> Bool {
+    guard case .boolean(let boolean) = value else { throw JSONFailure(.typeMismatch, code: .wrongKind) }
+    return boolean
+}
 func storePath(_ value: JSON) throws -> [JSONLocationComponent] {
     try #require(value.arrayValue).map { part in
         let object = try #require(part.objectValue)
@@ -30,7 +36,7 @@ func storeProfile(_ value: JSON) throws -> JSONStoreProfile {
         let fields = try #require(try storeMember(declaration,"referenceFields").arrayValue).map { field in
             JSONStoreReferenceField(key: JSONKey(try storeText(storeMember(field,"key"))),
                 presence: try #require(JSONStoreFieldPresence(rawValue: storeText(storeMember(field,"presence")))),
-                nullable: try #require(try storeMember(field,"nullable").booleanValue as Bool?))
+                nullable: try storeBool(storeMember(field,"nullable")))
         }
         return JSONStoreCollectionProfile(name: JSONKey(try storeText(storeMember(declaration,"name"))),
             recordsAt: try storePath(storeMember(declaration,"recordsAt")),
@@ -41,18 +47,16 @@ func storeProfile(_ value: JSON) throws -> JSONStoreProfile {
     #expect(mode == "disabled" || mode == "strict")
     if mode == "strict" { #expect(try storeText(storeMember(refs,"marker")) == JSONStoreMarkerVersion.v1.rawValue) }
     let references: JSONStoreReferences = mode == "disabled" ? .disabled
-        : .strict(marker: .v1, validateTargets: try #require(try storeMember(refs,"validateTargets").booleanValue as Bool?))
+        : .strict(marker: .v1, validateTargets: try storeBool(storeMember(refs,"validateTargets")))
     return JSONStoreProfile(version: .v1, collectionsAt: try storePath(storeMember(value,"collectionsAt")),
                             collections: collections, references: references)
 }
-// Immutable independent input oracle, shared only by the test driver.
-private let frozenStoreCases: [JSON] = {
-    do {
-        let manifest = try JSONParser(options: .init(limits: .offline)).parse(storeFixture("VECTORS.json"))
-        return try #require(try storeMember(manifest,"cases").arrayValue)
-    } catch { fatalError("Required store fixture manifest failed: \(error)") }
-}()
-func storeManifestCases() throws -> [JSON] { frozenStoreCases }
+// Immutable independent input oracle, scoped to each caller. Do not retain the
+// parsed JSON in a process-global cache: Linux LSan must observe its teardown.
+func storeManifestCases() throws -> [JSON] {
+    let manifest = try JSONParser(options: .init(limits: .offline)).parse(storeFixture("VECTORS.json"))
+    return try #require(try storeMember(manifest,"cases").arrayValue)
+}
 func storeCase(_ id: String) throws -> JSON {
     let cases = try storeManifestCases()
     return try #require(cases.first { try storeText(storeMember($0,"id")) == id })
