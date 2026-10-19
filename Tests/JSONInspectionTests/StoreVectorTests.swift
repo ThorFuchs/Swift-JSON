@@ -30,7 +30,7 @@ func storeProfile(_ value: JSON) throws -> JSONStoreProfile {
         let fields = try #require(try storeMember(declaration,"referenceFields").arrayValue).map { field in
             JSONStoreReferenceField(key: JSONKey(try storeText(storeMember(field,"key"))),
                 presence: try #require(JSONStoreFieldPresence(rawValue: storeText(storeMember(field,"presence")))),
-                nullable: try #require(try storeMember(field,"nullable").booleanValue))
+                nullable: try #require(try storeMember(field,"nullable").booleanValue as Bool?))
         }
         return JSONStoreCollectionProfile(name: JSONKey(try storeText(storeMember(declaration,"name"))),
             recordsAt: try storePath(storeMember(declaration,"recordsAt")),
@@ -41,7 +41,7 @@ func storeProfile(_ value: JSON) throws -> JSONStoreProfile {
     #expect(mode == "disabled" || mode == "strict")
     if mode == "strict" { #expect(try storeText(storeMember(refs,"marker")) == JSONStoreMarkerVersion.v1.rawValue) }
     let references: JSONStoreReferences = mode == "disabled" ? .disabled
-        : .strict(marker: .v1, validateTargets: try #require(try storeMember(refs,"validateTargets").booleanValue))
+        : .strict(marker: .v1, validateTargets: try #require(try storeMember(refs,"validateTargets").booleanValue as Bool?))
     return JSONStoreProfile(version: .v1, collectionsAt: try storePath(storeMember(value,"collectionsAt")),
                             collections: collections, references: references)
 }
