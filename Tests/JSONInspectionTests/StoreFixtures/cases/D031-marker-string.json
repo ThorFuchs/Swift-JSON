@@ -1,0 +1,10 @@
+{
+  "collections": {
+    "users": [
+      {
+        "uuid": "a",
+        "friend": "users/a"
+      }
+    ]
+  }
+}

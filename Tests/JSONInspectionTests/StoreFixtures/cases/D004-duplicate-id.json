@@ -1,0 +1,12 @@
+{
+  "collections": {
+    "users": [
+      {
+        "uuid": "u1"
+      },
+      {
+        "uuid": "u1"
+      }
+    ]
+  }
+}

@@ -5,6 +5,7 @@ import argparse, datetime, hashlib, json, os, pathlib, re, subprocess, sys
 from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
+from store_acceptance import check_store_tests, check_store_consumer
 from projection_acceptance import check_projection_cases, check_public_projection_receipt
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
@@ -17,6 +18,7 @@ SHARED_TESTS += '|navigationSharedImmutableRootIndependentInvocations|navigation
 SHARED_TESTS += '|inspectionI17CoverageSpansReplacementAndSharedInvocations'
 SHARED_TESTS += '|snapshotS19NavigationParityAndIndependentInvocations|snapshotV22ConcurrentLookupsUseIndependentAdmissionAndHealth'
 SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics'
+SHARED_TESTS += '|storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -25,6 +27,17 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane == 'store':
+        return [
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+            ['swift', 'test', '--test-product', 'JSONInspectionTests', '--filter', 'store'],
+            ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--filter', 'store'],
+            ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/store-address', '--filter', 'store'],
+            ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--sanitize', 'thread', '--scratch-path', '.build/store-thread', '--filter', 'storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth'],
+            ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/store-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ['python3', '-B', 'Scripts/qualify_store.py', '--output', str(output / 'private-consumer')],
+        ]
     if lane == 'store-preparation':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -38,13 +51,14 @@ def commands(lane, output):
         ]
     if lane == 'inspection':
         result = [['python3', '-B', 'Scripts/public_check.py'],
-                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP'],
-                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP'],
-                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP'],
+                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|store'],
+                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP|store'],
+                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP|store'],
                 ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/inspection-strict',
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['python3', '-B', 'Scripts/qualify_store_preparation.py', '--output', str(output / 'prepared-codegen')],
+            ['python3', '-B', 'Scripts/qualify_store.py', '--output', str(output / 'private-store-consumer')],
                 ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
                 ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')]]
         return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
@@ -187,6 +201,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')],
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
             ['python3', '-B', 'Scripts/qualify_store_preparation.py', '--output', str(output / 'prepared-codegen')],
+            ['python3', '-B', 'Scripts/qualify_store.py', '--output', str(output / 'private-store-consumer')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
@@ -234,6 +249,7 @@ def check_result(command, code, log, events=None):
     counts = [int(n) for n in re.findall(r'Test run with (\d+) tests? in[^\n]*passed', log)]
     passed = code == 0
     if events is not None: counts = events['bundle_counts']
+    store_test = any(x == 'store' or x.startswith('storeR06') for x in command)
     prepared_test = any('navigationPreparedD0' in x for x in command)
     if command[:2] == ['swift', 'test']:
         expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
@@ -246,10 +262,10 @@ def check_result(command, code, log, events=None):
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONNavigationTests': expected[0]} and events['parameter_case_invocations'] == 0
-        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP']):
+        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|store']):
             expected = [DISCOVERY['root_functions']['JSONInspectionTests']]
             if events is not None:
-                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 0 and check_projection_cases(events)
+                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameterized_functions'] == {'storeD1NativeVector(id:)': 65} and check_projection_cases(events) and check_store_tests(events, log)
         if prepared_test:
             expected_ids = set(DISCOVERY['prepared_entry_function_ids'])
             if 'navigationPreparedD0IndependentConcurrentHealth' in command:
@@ -257,16 +273,20 @@ def check_result(command, code, log, events=None):
             expected = [len(expected_ids)]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONNavigationTests': len(expected_ids)} and set(events['function_names']) == expected_ids and events['parameter_case_invocations'] == 0
+        if store_test:
+            shared_store = any(x.startswith('storeR06') for x in command)
+            expected = [1 if shared_store else 12]
+            passed = passed and events is not None and check_store_tests(events, log, shared=shared_store, scoped=True)
         passed = passed and sorted(counts) == expected
         if 'Tools/CompositionQualification' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
-        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and not prepared_test and events is not None:
-            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True)
+        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and not prepared_test and not store_test and events is not None:
+            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_store_tests(events, log, shared=True)
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
-                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events)
+                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events) and check_store_tests(events, log)
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == PARAMETER_INVOCATIONS)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -325,6 +345,9 @@ def check_result(command, code, log, events=None):
         passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=19' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_ergonomics.py']:
         passed = passed and 'ERGONOMICS_COMPILER passed commands=8 guide_fences=3' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_store.py']:
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_store_consumer(data)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_store_preparation.py']:
         data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
         probes = [x for x in data['commands'] if x.get('expected') is not None]
@@ -354,12 +377,12 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=18' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=19' in log.splitlines()
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     args = parser.parse_args()
     output = ROOT / (args.output or '.build/ci/' + args.lane)

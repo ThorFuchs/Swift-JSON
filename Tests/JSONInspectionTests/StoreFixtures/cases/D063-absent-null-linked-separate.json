@@ -1,0 +1,20 @@
+{
+  "collections": {
+    "users": [
+      {
+        "uuid": "a"
+      },
+      {
+        "uuid": "b",
+        "friend": null
+      },
+      {
+        "uuid": "c",
+        "friend": {
+          "collection": "users",
+          "id": "a"
+        }
+      }
+    ]
+  }
+}

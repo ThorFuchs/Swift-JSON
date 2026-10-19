@@ -34,6 +34,20 @@ package struct JSONTraversalContext: ~Copyable {
     package mutating func equalKeys(_ lhs: JSONKey, _ rhs: JSONKey) throws -> Bool {
         try perform { try JSONComparison.textEquals(lhs.string, rhs.string, meter: &$0.meter) }
     }
+    /// Scalar-exact comparison charged to the original admitted scope.
+    package mutating func equalStrings(_ lhs: String, _ rhs: String) throws -> Bool {
+        try perform { try JSONComparison.textEquals(lhs, rhs, meter: &$0.meter) }
+    }
+    /// Ephemeral canonical member in the owned reducer. The requested key was admitted
+    /// by preparation; any retained string/output alias needs its own reservation.
+    package mutating func member(_ value: JSON, key: JSONKey,
+                                  at path: [JSONLocationComponent]) throws -> JSON? {
+        try perform(at: path) { state in
+            try state.meter.work()
+            guard case .object(let object) = value else { throw JSONFailure(.typeMismatch, code: .wrongKind) }
+            return try object.lookup(key.string, meter: &state.meter)
+        }
+    }
     package mutating func arrayCount(_ value: JSON, at path: [JSONLocationComponent]) throws -> Int {
         try perform(at: path) { state in
             try state.meter.work()

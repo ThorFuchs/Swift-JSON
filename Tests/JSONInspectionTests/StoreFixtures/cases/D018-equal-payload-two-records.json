@@ -1,0 +1,18 @@
+{
+  "collections": {
+    "users": [
+      {
+        "uuid": "a",
+        "payload": {
+          "x": 1
+        }
+      },
+      {
+        "uuid": "b",
+        "payload": {
+          "x": 1
+        }
+      }
+    ]
+  }
+}
