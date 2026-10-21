@@ -1,0 +1,1 @@
+{"collections":{"users":[{"id":"u1"},{"id":null}]},"note":{"$ref":{"collection":"users","id":"u1"}}}

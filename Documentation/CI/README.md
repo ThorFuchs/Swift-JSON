@@ -1,3 +1,22 @@
+# NAV9 Branch B experimental qualification
+
+Adds exactly46 package-only set/matrix/core functions: 825 native /809 Linux /
+721 WASI, with unchanged325/288 parameter invocations. Inspection requires122
+functions and sharing requires53 native /52 Linux (six Inspection). Exact P1
+P01–P32, new SSET01–18/MAT01–18/CORE01–10 identities, all49 core caps and126
+maintenance identities remain required. The harness now requires19 tests.
+
+Native/Linux and focused Inspection also require the independent20-fixture
+premise oracle, D0 full codegen (two positive/ten ordinary negative cases and
+seven runtime cases/configuration), and private isolation consumer (six cases
+per configuration/twelve negative codegen cases). Original reducer2-positive/
+20-negative and public P1 consumer checks remain separate. Debug/Release/ASan,
+strict-memory, thread sanitizer and supported portable lanes are required;
+receipts establish actual passes, these counts only specify gates. The opt-in
+public graph stays ten products/nine libraries, empty root dependencies and
+Navigation56/Inspection95 declarations. Graph/store have no runtime qualification.
+Branch A owns G4; no Branch B timing result or speed claim is inherited.
+
 # NAV8 Navigation V1 integration
 
 Current required discovery retains 779 native /763 Linux /675 WASI functions,
@@ -295,3 +314,26 @@ The focused composition lane also runs on the Linux architecture jobs and Native
 Its separate-package discovery is additive; all root and 49-cap expectations remain intact.
 The qualification harness now has 15 regression functions, retaining its original 14.
 See [composition qualification](../Architecture/CompositionQualification.md) for finite capacity outcomes.
+
+## NAV10 public exact projections
+
+The current source keeps ten products and the original Navigation56/Inspection95
+public baseline, adding 33 authored set/matrix/error declarations inside Inspection.
+Expected discovery is 130 Inspection, 833 Mac/817 Linux/729 WASI functions, with
+unchanged 325 native/Linux and 288 WASI parameter invocations; shared scopes are
+54 Mac/53 Linux. All 46 donor functions, 49 cap witnesses and 126 maintenance
+identities remain required. Eight new public-only metamorphic/precedence/resource
+functions and one shared-state identity are exact-count additions.
+
+Native and docs also run the separate exact projection SwiftPM consumer, requiring
+20 named outcomes in Debug/Release/ASan, three compiled/executed DocC fences per
+configuration, 24 ordinary external full-codegen refusals and 0/16/128-sibling
+logical access-cost witnesses. Original reducer ownership and package-only
+comparison proofs remain separate. Donor type-invisibility probes become reducer/
+accounting invisibility probes after deliberate public promotion. Source-bound
+receipts qualify actual execution; these expectations alone are not passes.
+
+For an ineligible timing host, `--lane wasm --skip-host-measurements` explicitly
+records optional host samples as NOT RUN. It preserves every runtime/corpus/cap/
+strict/ABI gate and the default lane's timing protocol. This flag grants no G4
+PASS and produces no performance evidence.

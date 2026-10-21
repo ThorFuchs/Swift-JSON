@@ -101,7 +101,7 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
-| **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees and strict sparse object-row tables |
+| **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees, strict sparse object-row tables and exact set/numeric-matrix views |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -716,3 +716,18 @@ location/value/span lookup is an explicitly separate full-source-admitted operat
 Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
 These additions are absent from published 1.6.1 and do not publish 1.7.0.
+
+The current development branch also contains package-private structural set and
+exact numeric matrix experiments. They add no public API; see the
+[NAV9 qualification contract](Documentation/Architecture/StructuralIntelligence/NAV9/PrototypeQualification.md).
+
+### Exact set and numeric matrix views (development source)
+
+JSONInspection now includes immutable first-occurrence structural sets and completely
+admitted exact numeric matrices. Sets preserve original representatives and scalar/decimal
+identity; matrices retain original JSONNumber values and zero-width transpose metadata.
+Every later member/cell read independently admits the whole captured source with finite
+limits and an operation report. These are structural views; no set algebra, matrix
+arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
+[independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
+Batch access remains explicitly deferred to NAV13. Stable 1.6.1 is unchanged.

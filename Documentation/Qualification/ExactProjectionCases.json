@@ -1,0 +1,38 @@
+{
+  "functions": [
+    "JSONInspectionTests.exactProjectionPUB01FirstRepresentativesAreMetamorphic()",
+    "JSONInspectionTests.exactProjectionPUB02TypedSelectionsRemainPhysical()",
+    "JSONInspectionTests.exactProjectionPUB03BoundsAndConfigurationPrecedence()",
+    "JSONInspectionTests.exactProjectionPUB04ReadCostIncludesUnselectedSource()",
+    "JSONInspectionTests.exactProjectionPUB05ShapeOrientationIsMetamorphic()",
+    "JSONInspectionTests.exactProjectionPUB06ParserAndShapeFailuresStayDistinct()",
+    "JSONInspectionTests.exactProjectionPUB07SharedPublicViewsKeepIndependentHealth()",
+    "JSONInspectionTests.exactProjectionPUB08CancellationKeepsCapturedSourceHealthy()"
+  ],
+  "shared_functions": [
+    "JSONInspectionTests.exactProjectionPUB07SharedPublicViewsKeepIndependentHealth()"
+  ],
+  "consumer_checks": [
+    "bounds-precedence",
+    "cancellation-health",
+    "captured-source",
+    "concurrent-reads",
+    "cumulative-reports",
+    "exact-scalars",
+    "first-lexeme",
+    "inclusive-capacity",
+    "inclusive-ledgers",
+    "large-integers",
+    "null-and-missing",
+    "numeric-matrix",
+    "ordered-and-unordered",
+    "orientation",
+    "public-import",
+    "separate-read-cost",
+    "shape-refusals",
+    "source-positions",
+    "typed-root-paths",
+    "zero-shapes"
+  ],
+  "policy": "Exact additive public identities; existing P2 46 and P1/N3/I cases remain separate. PUB01-PUB24 mappings in NAV10/Acceptance.md."
+}

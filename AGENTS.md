@@ -43,4 +43,6 @@ Documentation/Architecture before changing behavior.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
-P2 graph/store/set/matrix/retrieval/persistence and JSON text-sequence framing remain deferred.
+NAV10 exact structural-set/numeric-matrix views are public candidates in existing JSONInspection, not released.
+Graph/store engines, retrieval/persistence and JSON text-sequence framing remain deferred.
+The approved NAV10 promotion adds no product; future merge/release and wider APIs remain human-gated.
