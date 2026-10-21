@@ -1,0 +1,653 @@
+{
+  "disclaimer": "Independent test-data oracle, NOT Swift-JSON validation",
+  "cases": [
+    {
+      "name": "g01-empty",
+      "file": "g01-empty.json",
+      "sha256": "1ddf1d31190da6e68449f240aefa5e9b87896f675196008d26c8ea7431ec8b4c",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [],
+        "edge_pairs": [],
+        "outgoing_edge_ordinals": [],
+        "bfs_from_node0": []
+      }
+    },
+    {
+      "name": "g02-simple",
+      "file": "g02-simple.json",
+      "sha256": "97ce5fa7ec116a89a48606897295bbc2934fdc927b429a213d13e3474694f100",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ],
+          [
+            67
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ],
+          []
+        ],
+        "bfs_from_node0": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "g03-unicode-scalars",
+      "file": "g03-unicode-scalars.json",
+      "sha256": "47cf0ab06c0b72d663d8a7d807f46752414e34cb422ef526a4e155a60e194182",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            233
+          ],
+          [
+            101,
+            769
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ],
+          []
+        ],
+        "bfs_from_node0": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "g04-empty-and-special-ids",
+      "file": "g04-empty-and-special-ids.json",
+      "sha256": "45a06cd463be2eee805f145d4a386ab8f76d64bf53503aa5086df16724c02791",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [],
+          [
+            97,
+            47,
+            98,
+            126,
+            99
+          ],
+          [
+            48
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ],
+          [],
+          [
+            1
+          ]
+        ],
+        "bfs_from_node0": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "g05-duplicate-id",
+      "file": "g05-duplicate-id.json",
+      "sha256": "ebb7b9720976636fc4521f6b66c1e92544bae4ab1dfb244c4988af42cc56eb24",
+      "profile": {},
+      "expected": {
+        "kind": "duplicate_node_id",
+        "node_index": 1,
+        "first_index": 0
+      }
+    },
+    {
+      "name": "g06-equal-payload-distinct-id",
+      "file": "g06-equal-payload-distinct-id.json",
+      "sha256": "f740b12b7a01d74c2b86b729e56c82abc5b7ef7be2e8672313286bf18e295ddf",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ]
+        ],
+        "edge_pairs": [],
+        "outgoing_edge_ordinals": [
+          [],
+          []
+        ],
+        "bfs_from_node0": [
+          0
+        ]
+      }
+    },
+    {
+      "name": "g07-node-id-missing",
+      "file": "g07-node-id-missing.json",
+      "sha256": "3473660136a3b01aa468cbc5a1c1f1f093ae0d9ac476292a9c44f79e296376f1",
+      "profile": {},
+      "expected": {
+        "kind": "node_id_missing",
+        "node_index": 0
+      }
+    },
+    {
+      "name": "g08-node-id-null",
+      "file": "g08-node-id-null.json",
+      "sha256": "ad53d92263bb921749296c96f50470495a3758646e3777a4039c15a2dd4f548c",
+      "profile": {},
+      "expected": {
+        "kind": "node_id_null",
+        "node_index": 0
+      }
+    },
+    {
+      "name": "g09-node-id-number",
+      "file": "g09-node-id-number.json",
+      "sha256": "311961bc71d065686c2be6ddc4b3bae46c1ffab1c5906fc4c0b8c22af13e3d37",
+      "profile": {},
+      "expected": {
+        "kind": "node_id_wrong_kind",
+        "node_index": 0
+      }
+    },
+    {
+      "name": "g10-node-row-not-object",
+      "file": "g10-node-row-not-object.json",
+      "sha256": "d76618e34d1bc43d9de376b72d2a2f8cc4ed2d449b6fdc8537c901147fba4212",
+      "profile": {},
+      "expected": {
+        "kind": "node_row_wrong_kind",
+        "node_index": 0
+      }
+    },
+    {
+      "name": "g11-edge-source-missing",
+      "file": "g11-edge-source-missing.json",
+      "sha256": "77e0e2a123ee05f3d842b00181e2463042ac9580169c6571d79146b1aebf988c",
+      "profile": {},
+      "expected": {
+        "kind": "edge_source_missing",
+        "edge_index": 0
+      }
+    },
+    {
+      "name": "g12-edge-target-null",
+      "file": "g12-edge-target-null.json",
+      "sha256": "b873ad0efe1efe13215a283ec202c55407aeb1d754e8aba79dd38f72c3529244",
+      "profile": {},
+      "expected": {
+        "kind": "edge_target_null",
+        "edge_index": 0
+      }
+    },
+    {
+      "name": "g13-edge-target-number",
+      "file": "g13-edge-target-number.json",
+      "sha256": "2bbbedb9d505d32ca01228c5b63ba71ee8510299371757ad741cc17c09a5e49a",
+      "profile": {},
+      "expected": {
+        "kind": "edge_target_wrong_kind",
+        "edge_index": 0
+      }
+    },
+    {
+      "name": "g14-edge-row-not-object",
+      "file": "g14-edge-row-not-object.json",
+      "sha256": "21de4ba95ef61f4856d0eee1a02d0c17694b50cc291378fdcb05efbf6e721e01",
+      "profile": {},
+      "expected": {
+        "kind": "edge_row_wrong_kind",
+        "edge_index": 0
+      }
+    },
+    {
+      "name": "g15-dangling",
+      "file": "g15-dangling.json",
+      "sha256": "c3a9c699115be44b60da5d165544ea9a4f9d443685422f5ab99fdee59a2d8c54",
+      "profile": {},
+      "expected": {
+        "kind": "dangling_endpoint",
+        "edge_index": 0
+      }
+    },
+    {
+      "name": "g15b-dangling-empty",
+      "file": "g15b-dangling-empty.json",
+      "sha256": "074f22438edb27a566aba8491502909f894e0aefdf5dac04dd589758b0844d20",
+      "profile": {},
+      "expected": {
+        "kind": "dangling_endpoint",
+        "edge_index": 0
+      }
+    },
+    {
+      "name": "g16-duplicate-edge",
+      "file": "g16-duplicate-edge.json",
+      "sha256": "76bffe5363e00f24cb4e6951eff04214d11170682e80e8e53cbd7ab1c321419e",
+      "profile": {},
+      "expected": {
+        "kind": "duplicate_directed_edge",
+        "edge_index": 1,
+        "first_index": 0
+      }
+    },
+    {
+      "name": "g17-reverse-edges",
+      "file": "g17-reverse-edges.json",
+      "sha256": "62bc74cf4934b0c2f82d322b8f28c563dd70c1745df6661aaa1389caef55c780",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "bfs_from_node0": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "g18-self-edge",
+      "file": "g18-self-edge.json",
+      "sha256": "2bd68dc1cd578b9ac7b922c4fb2f13d2f50bfa6c4068af18966deb59e0205e8d",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            0
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ]
+        ],
+        "bfs_from_node0": [
+          0
+        ]
+      }
+    },
+    {
+      "name": "g19-cycle",
+      "file": "g19-cycle.json",
+      "sha256": "d0c0a81d2a87dfe714b963957f6b7305cdf2942df58ea2a2548aa450d1e0d349",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ],
+          [
+            67
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ],
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "bfs_from_node0": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "g20-isolate",
+      "file": "g20-isolate.json",
+      "sha256": "5137753f500607e15e29d3fc5510b62db8e23c10b647a776419972db3768f098",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ],
+          [
+            73,
+            83,
+            79
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ],
+          [],
+          []
+        ],
+        "bfs_from_node0": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "g21-bfs-source-edge-order",
+      "file": "g21-bfs-source-edge-order.json",
+      "sha256": "73166cac74801e95d7954bcd7b39b1be9e990bd7bb5d730800a1d8c7d53b77ed",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ],
+          [
+            67
+          ],
+          [
+            68
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0,
+            1,
+            2
+          ],
+          [],
+          [],
+          []
+        ],
+        "bfs_from_node0": [
+          0,
+          3,
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "name": "g22-diamond",
+      "file": "g22-diamond.json",
+      "sha256": "8b8b2934a1bdd720621c8045c54dde4e6eee9a97ce4b90020b0404d4ff26cedf",
+      "profile": {},
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            65
+          ],
+          [
+            66
+          ],
+          [
+            67
+          ],
+          [
+            68
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          []
+        ],
+        "bfs_from_node0": [
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "name": "g23-numeric-object-key",
+      "file": "g23-numeric-object-key.json",
+      "sha256": "ae3d0720da528a24240b629891b1d2d47928efa901fbb3d7c29417affb942385",
+      "profile": {
+        "nodes_at": [
+          {
+            "key": "0"
+          },
+          {
+            "key": "nodes"
+          }
+        ],
+        "edges_at": [
+          {
+            "key": "0"
+          },
+          {
+            "key": "edges"
+          }
+        ],
+        "node_id_key": "key/id",
+        "edge_source_key": "src~",
+        "edge_target_key": "dst"
+      },
+      "expected": {
+        "kind": "valid",
+        "ids_codepoints": [
+          [
+            48
+          ],
+          [
+            65
+          ]
+        ],
+        "edge_pairs": [
+          [
+            0,
+            1
+          ]
+        ],
+        "outgoing_edge_ordinals": [
+          [
+            0
+          ],
+          []
+        ],
+        "bfs_from_node0": [
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "g24-overlap",
+      "file": "g24-overlap.json",
+      "sha256": "74011485b9b4c4cf9fe70d264ffe7db4ba3796034968c0773b3213f395475e93",
+      "profile": {
+        "nodes_at": [
+          {
+            "key": "data"
+          }
+        ],
+        "edges_at": [
+          {
+            "key": "data"
+          }
+        ]
+      },
+      "expected": {
+        "kind": "overlap"
+      }
+    },
+    {
+      "name": "g25-wrong-nodes-array",
+      "file": "g25-wrong-nodes-array.json",
+      "sha256": "e91a8449e7af8b0555eaeb0b90087a580c72ae239dfb875c1c138dd128e9a8b1",
+      "profile": {},
+      "expected": {
+        "kind": "nodes_not_array"
+      }
+    },
+    {
+      "name": "g26-wrong-edges-array",
+      "file": "g26-wrong-edges-array.json",
+      "sha256": "96f22c1ec9ff60642dc39f4188c0955ceeb01da3a7bf9570cbe885ca59f012c1",
+      "profile": {},
+      "expected": {
+        "kind": "edges_not_array"
+      }
+    }
+  ]
+}

@@ -46,3 +46,8 @@ optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections
 NAV10 exact structural-set/numeric-matrix views are public candidates in existing JSONInspection, not released.
 Graph/store engines, retrieval/persistence and JSON text-sequence framing remain deferred.
 The approved NAV10 promotion adds no product; future merge/release and wider APIs remain human-gated.
+
+NAV11 directed simple graph has an owner-reviewed public candidate API inside JSONInspection; no new product or automatic merge.
+Store/set/matrix/retrieval/persistence and JSON text-sequence framing remain separate deferred trains.
+
+NAV11 public graph candidate adds only the approved immutable profile, checked source-bound graph and typed failures inside JSONInspection. CSR arrays, reducers and meters remain non-public; no new product or graph serialization/mutation. Future merge/release remain separately human-gated.

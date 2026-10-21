@@ -14,6 +14,7 @@ from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_
 from ci import check_result, commands
 from p2_acceptance import PUBLIC_FUNCTIONS, PUBLIC_SHARED, check_exact_cases, check_exact_receipt
 from p2_acceptance import EXPECTED as P2_FUNCTIONS, SHARED as P2_SHARED, BORROW_CHECKS, check_p2_cases, check_borrow_receipt, check_private_receipt
+from graph_acceptance import EXPECTED as GRAPH_FUNCTIONS, check_graph_cases, check_graph_receipt, check_public_graph_receipt, PUBLIC_CHECKS as GRAPH_PUBLIC_CHECKS
 from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, PUBLIC_CHECKS, check_projection_cases, check_public_projection_receipt
 
 class HarnessTests(unittest.TestCase):
@@ -63,11 +64,11 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 130, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB']),
+            ('JSONInspectionTests', 178, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
-                          parameter_case_invocations=0, function_names=sorted(PROJECTION_FUNCTIONS | P2_FUNCTIONS | PUBLIC_FUNCTIONS) if module == 'JSONInspectionTests' else [])
+                          parameter_case_invocations=0, function_names=sorted(PROJECTION_FUNCTIONS | P2_FUNCTIONS | PUBLIC_FUNCTIONS | GRAPH_FUNCTIONS) if module == 'JSONInspectionTests' else [])
             self.assertTrue(check_result(command, 0, '', events)[0])
             for broken in [dict(events, bundle_counts=[count-1]),
                            dict(events, module_function_counts={'WrongModule': count}),
@@ -77,12 +78,12 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 47)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 130)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 178)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 1)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 7)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 9)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
 
     def test_private_projection_identities_cannot_be_missing_renamed_or_duplicated(self):
@@ -149,6 +150,39 @@ class HarnessTests(unittest.TestCase):
             self.assertFalse(check_exact_cases({'function_names': broken}))
         self.assertTrue(check_exact_cases({'function_names': sorted(PUBLIC_SHARED)}, shared=True))
         self.assertFalse(check_exact_receipt({'status': 'passed', 'commands': [], 'consumer_results': {}}))
+    def test_graph_identity_and_compiler_receipts_reject_false_success(self):
+        names=sorted(GRAPH_FUNCTIONS)
+        self.assertEqual(len(names),48)
+        self.assertTrue(check_graph_cases({'function_names':names}))
+        for broken in [names[:-1],names+names[:1],['WrongModule.'+names[0].split('.',1)[1]]+names[1:]]:
+            self.assertFalse(check_graph_cases({'function_names':broken}))
+        for context,count,negatives in [(True,18,8),(False,28,18)]:
+            commands=[dict(name=str(n),status='passed',compiler_crash=False,exit_code=1 if n<negatives else 0,
+                expected_diagnostic='escaping inout' if n<negatives else None,
+                primary_diagnostics=['escaping inout'] if n<negatives else []) for n in range(count)]
+            valid=dict(status='passed',commands=commands)
+            self.assertTrue(check_graph_receipt(valid,context))
+            self.assertFalse(check_graph_receipt(dict(valid,commands=commands[:-1]),context))
+            for change in [dict(compiler_crash=True),dict(exit_code=0),dict(primary_diagnostics=['unused Task'])]:
+                broken=copy.deepcopy(valid);broken['commands'][0].update(change)
+                self.assertFalse(check_graph_receipt(broken,context))
+
+    def test_public_graph_receipt_rejects_incomplete_or_incidental_success(self):
+        commands=[dict(name=str(i),status='passed',compiler_crash=False,exit_code=1 if i<26 else 0,
+            expected_diagnostic='inaccessible' if i<26 else None,primary_diagnostics=['inaccessible'] if i<26 else []) for i in range(45)]
+        valid=dict(status='passed',commands=commands,consumer_results={config:dict(cases=sorted(GRAPH_PUBLIC_CHECKS),work_units=1,logical_retained_bytes=1,peak_logical_retained_bytes=1,admitted_nodes=1) for config in ['debug','release','address']})
+        self.assertTrue(check_public_graph_receipt(valid))
+        broken=copy.deepcopy(valid);broken['commands'].pop();self.assertFalse(check_public_graph_receipt(broken))
+        for change in [dict(compiler_crash=True),dict(exit_code=0),dict(primary_diagnostics=['unrelated'])]:
+            broken=copy.deepcopy(valid);broken['commands'][0].update(change);self.assertFalse(check_public_graph_receipt(broken))
+        for config in ['debug','release','address']:
+            for mode in ['missing','duplicate','renamed','zero']:
+                broken=copy.deepcopy(valid);row=broken['consumer_results'][config]
+                if mode=='missing':row['cases'].pop()
+                elif mode=='duplicate':row['cases'][0]=row['cases'][1]
+                elif mode=='renamed':row['cases'][0]='unexpected'
+                else:row['work_units']=0
+                self.assertFalse(check_public_graph_receipt(broken))
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -241,8 +275,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=20')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=22')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

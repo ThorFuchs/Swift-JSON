@@ -49,6 +49,34 @@ package struct JSONTraversalContext: ~Copyable {
             return try JSONComparison.equals(array[lhs], array[rhs], meter: &state.meter)
         }
     }
+    /// Scalar-exact comparison charged to the original admitted scope.
+    package mutating func equalStrings(_ lhs: String, _ rhs: String) throws -> Bool {
+        try perform { try JSONComparison.textEquals(lhs, rhs, meter: &$0.meter) }
+    }
+    /// Direct-member string selection. Nil kind means absent; null and other
+    /// kinds remain distinguishable. A returned string owns 32+UTF8 logical bytes.
+    /// No JSONKey hashing, second admission, cursor or ledger is created.
+    package mutating func directStringMember(_ value: JSON, key: JSONKey,
+                                             at path: [JSONLocationComponent]) throws
+        -> (text: String?, kind: JSONTraversalKind?) {
+        try perform(at: path) { state in
+            try JSONAdmission.text(key.string, key: true, meter: &state.meter)
+            try state.meter.work()
+            guard case .object(let object) = value else { throw JSONFailure(.typeMismatch, code: .wrongKind) }
+            guard let member = try object.lookup(key.string, meter: &state.meter) else { return (nil, nil) }
+            guard case .string(let text) = member else { return (nil, JSONTraversalKind(member)) }
+            try state.meter.retain(32)
+            for _ in text.utf8 { try state.meter.work(); try state.meter.retain(1) }
+            return (text, .string)
+        }
+    }
+    /// Relinquish a directStringMember alias after its last owned use.
+    package mutating func releaseStringAlias(_ text: String) throws {
+        try perform { state in
+            for _ in text.utf8 { try state.meter.work(); try state.meter.release(1) }
+            try state.meter.release(32)
+        }
+    }
     package mutating func arrayCount(_ value: JSON, at path: [JSONLocationComponent]) throws -> Int {
         try perform(at: path) { state in
             try state.meter.work()
@@ -57,8 +85,9 @@ package struct JSONTraversalContext: ~Copyable {
         }
     }
     /// Reserve an additional owned alias, not another text admission or key model.
-    package mutating func retainKey(_ key: JSONKey) throws {
+    package mutating func retainKey(_ key: JSONKey, admittingCallerInput: Bool = false) throws {
         try perform { state in
+            if admittingCallerInput { try JSONAdmission.text(key.string, key: true, meter: &state.meter) }
             for _ in key.string.utf8 { try state.meter.work(); try state.meter.retain(1) }
         }
     }

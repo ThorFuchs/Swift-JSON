@@ -731,3 +731,28 @@ limits and an operation report. These are structural views; no set algebra, matr
 arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
 [independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
 Batch access remains explicitly deferred to NAV13. Stable 1.6.1 is unchanged.
+
+NAV11 experiments with a package-only, exact source-backed directed simple graph
+inside JSONInspection. Graph construction and BFS are not public API and are not
+part of stable 1.6.1. The [experimental contract](Documentation/Architecture/StructuralIntelligence/NAV11/GraphADR.md)
+records finite capacities, source/error precedence and one-ledger ownership. There
+is no graph product, performance claim or automatic promotion.
+
+## Source-bound graph candidate (unreleased)
+
+This development candidate extends JSONInspection with an explicit directed simple
+graph view of two disjoint physical arrays. An immutable `JSONGraphProfile` names
+exact typed paths and direct string ID/endpoint keys. Checked construction rejects
+duplicate scalar-exact IDs, dangling endpoints and repeated directed pairs; self
+edges, cycles, reverse edges and isolates remain valid data. BFS returns the complete
+reachable component in source-edge order or throws. Node/edge values and original
+node spans stay attached to the captured source.
+
+Each later read or query has its own explicit finite whole-source admission.
+Build defaults to 10,000 nodes/50,000 edges; BFS defaults to 10,000 frontier,
+visited and result entries. Storage and reducers stay private. Construction can
+require quadratic work, and repeated reads re-admit the source. Logical retained
+bytes are not RSS; controlled G4 performance remains HOLD with no speed claim.
+See the [compiled graph guide](Sources/JSONInspection/Documentation.docc/SourceBoundGraphs.md)
+and [standalone public consumer](Tools/GraphPublicQualification). This candidate
+adds no product and does not establish a published release or merge approval.

@@ -6,6 +6,7 @@ from archive_candidate import files
 from preflight import collect, collect_linux
 from testing_events import read_events, ROOT_PARAMETER_CASES
 from p2_acceptance import check_p2_cases, check_borrow_receipt, check_private_receipt, check_exact_cases, check_exact_receipt
+from graph_acceptance import check_graph_cases, check_graph_receipt, check_public_graph_receipt
 from projection_acceptance import check_projection_cases, check_public_projection_receipt
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
@@ -20,6 +21,7 @@ SHARED_TESTS += '|snapshotS19NavigationParityAndIndependentInvocations|snapshotV
 SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics'
 SHARED_TESTS += '|exactProjectionPUB07SharedPublicViewsKeepIndependentHealth'
 SHARED_TESTS += '|p2SetSSET18SharedImmutableViewsHaveIndependentLedgers|p2MatrixMAT18SharedTransposesHaveIndependentReads'
+SHARED_TESTS += '|graphG30ConcurrentViewsHaveIndependentHealth|graphGP14ConcurrentQueries'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -30,12 +32,15 @@ def commands(lane, output):
     output = output.relative_to(ROOT)
     if lane == 'inspection':
         result = [['python3', '-B', 'Scripts/public_check.py'],
-                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB'],
-                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB'],
-                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB'],
+                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG'],
+                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG'],
+                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG'],
                 ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/inspection-strict',
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
+            ['python3', '-B', 'Scripts/qualify_graph_context.py', '--output', str(output / 'graph-context')],
+            ['python3', '-B', 'Scripts/qualify_graph.py', '--output', str(output / 'graph-compiler')],
+            ['python3', '-B', 'Scripts/qualify_public_graph.py', '--output', str(output / 'public-graph-consumer')],
                 ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
                 ['python3', '-B', 'Scripts/verify_p2_fixtures.py'],
                 ['python3', '-B', 'Scripts/qualify_p2_borrowing.py', '--output', str(output / 'p2-borrowing')],
@@ -185,6 +190,9 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_exact_projections.py', '--output', str(output / 'exact-projection-consumer')],
             ['python3', '-B', 'Scripts/qualify_public_projections.py', '--output', str(output / 'public-projection-consumer')],
             ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
+            ['python3', '-B', 'Scripts/qualify_graph_context.py', '--output', str(output / 'graph-context')],
+            ['python3', '-B', 'Scripts/qualify_graph.py', '--output', str(output / 'graph-compiler')],
+            ['python3', '-B', 'Scripts/qualify_public_graph.py', '--output', str(output / 'public-graph-consumer')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
@@ -244,20 +252,20 @@ def check_result(command, code, log, events=None):
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONNavigationTests': expected[0]} and events['parameter_case_invocations'] == 0
-        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|p2|exactProjectionPUB']):
+        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG']):
             expected = [DISCOVERY['root_functions']['JSONInspectionTests']]
             if events is not None:
-                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 0 and check_projection_cases(events) and check_p2_cases(events) and check_exact_cases(events)
+                passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 0 and check_projection_cases(events) and check_p2_cases(events) and check_exact_cases(events) and check_graph_cases(events)
         passed = passed and sorted(counts) == expected
         if 'Tools/CompositionQualification' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
         if 'thread' in command and 'JSONSchemaExamplesTests' not in command and events is not None:
-            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_p2_cases(events, shared=True) and check_exact_cases(events, shared=True)
+            passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_p2_cases(events, shared=True) and check_exact_cases(events, shared=True) and check_graph_cases(events, shared=True)
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
-                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events) and check_p2_cases(events) and check_exact_cases(events)
+                passed = passed and events['module_function_counts'] == ROOT_COUNTS and check_restored(events) and check_projection_cases(events) and check_p2_cases(events) and check_exact_cases(events) and check_graph_cases(events)
             passed = passed and (events['parameterized_functions'] == ROOT_PARAMETER_CASES if events is not None else sum(int(n) for n in re.findall(r'with (\d+) test cases passed', log)) == PARAMETER_INVOCATIONS)
         if 'Tools/Qualification' in command:
             probes = re.findall(r'^CAP_PROBE (\w+) (\S+)$', log, re.MULTILINE)
@@ -316,6 +324,12 @@ def check_result(command, code, log, events=None):
         passed = passed and 'TESTING_EVENT_RECEIPTS passed cases=19' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_ergonomics.py']:
         passed = passed and 'ERGONOMICS_COMPILER passed commands=8 guide_fences=3' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_public_graph.py']:
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_public_graph_receipt(data)
+    if command[:3] in (['python3', '-B', 'Scripts/qualify_graph_context.py'], ['python3', '-B', 'Scripts/qualify_graph.py']):
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_graph_receipt(data, context='qualify_graph_context.py' in command[2])
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation_reducer.py']:
         passed = passed and 'REDUCER_CODEGEN passed positive=2 negative=20' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_snapshot.py']:
@@ -351,7 +365,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=20' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=22' in log.splitlines()
     return passed, counts
 
 def main():
