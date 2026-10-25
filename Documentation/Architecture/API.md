@@ -1,26 +1,21 @@
 # Current API inventory
 
-Unreleased1.7.0-dev consolidation has twelve library products plus swift-json and
+Unreleased 1.7.0-dev consolidation has twelve library products plus swift-json and
 thirteen DocC catalogs including the non-product JSONDSLCore reference. The native
 compiler graphs define the complete authored inventory. JSONTransform and the
 trusted-authored DSLs are opt-in; the core products retain their semantic authority.
-The stable1.6 inventory and chronological component records below retain their
+The stable 1.6 inventory and chronological component records below retain their
 original scope, not the current combined product count. See
 [combined qualification](../Qualification/Consolidation2026.md).
 
 # Public API contract
 
-The product table below records the published 1.6 line: eight libraries plus the
-CLI and eight DocC catalogs. The current unreleased 1.7 source also contains
-JSONInspection, as described in the README and structural authority map. This
-feature candidate adds JSONTransform as a tenth library and tenth catalog; its
-additive contract appears below. Existing published contracts remain unchanged.
-Native compiler symbol graphs supply the complete declarations. Examples in the
-[README](../../README.md) are compiled and executed by public consumers.
-
-This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the eight product DocC catalogs and the shared DSL structure reference. Examples
-in the [README](../../README.md) are compiled and executed by the public consumer.
+The current product table below describes this development source. Stable 1.6.1
+retains eight libraries plus CLI and eight catalogs. Development adds Inspection,
+Transform and both optional authored DSL products, with a shared JSONDSLCore
+reference catalog. Existing released contracts remain unchanged. Compiler symbol
+graphs supply the complete authored declarations; the README examples are compiled
+and executed by public consumers.
 
 ## Products and ownership
 
@@ -28,7 +23,8 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | --- | --- | --- |
 | JSON | JSON, JSONNumber, JSONObject, JSONParser, JSONWriter, JSONValueEncoder, JSONValueDecoder, JSONPointer, JSONDocument | Shared strict codec, exact decimal model, bounded traversal and native coding |
 | JSONNavigation | JSONTraversal, JSONTraversalScope, JSONTraversalOptions | Exact many-node DFS, strict physical/virtual scopes, bounded metadata and explicit coverage; one core read-scope meter |
-
+| JSONInspection | JSONShapeInspector, JSONStructuralSnapshot, JSONGraphProjection | Source-attached observed evidence, immutable exact projections, set/matrix and directed graph views; finite invocation-owned reads |
+| JSONTransform | JSONTransformProgram, JSONTransformOutput, JSONTransformExecution | Shared query compiler/pull VM, exact native values, finite guarded execution and typed terminal errors |
 | JSONValueDSL | JSONValueDSL.object/array, Field, Element, Elements | Trusted authored staging; finite iterative exact finalization |
 | JSONSchemaDSL | JSONSchemaDSL.document/boolean, Schema, Property, Definition, PatternProperty, DependentSchema, RequiredDependency, Rule | Trusted authored schema declarations; existing document/compiler/validator authority |
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
@@ -36,19 +32,20 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | JSONSchemaExamples | JSONSchemaExampleGenerator, JSONSchemaExampleResult | Conservative deterministic witnesses certified by the existing native validator; separate finite preparation and cumulative generation |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
-| swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters and private CLI engine/filter runtime; no public query library |
+| swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters; the public Transform facade and CLI use the same private query compiler/VM |
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch, HTML, Bridges and Navigation depend on JSON.
-JSONSchemaExamples depends only on JSON and JSONSchema. There are nine public products: eight libraries and the swift-json executable,
-and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
-uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
-value, schema, Patch and streaming contracts do not acquire UI semantics.
-
-JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are eight public
-products and no external root-package dependencies. Runtime code uses no HTTP,
-UI, MCP or documentation-tool dependencies.
+JSONSchemaExamples depends only on JSON and JSONSchema. JSONInspection depends on
+JSON and JSONNavigation. JSONTransform depends on JSON and the package-private
+JSONFilterRuntime; JSONCLIEngine uses the same engine. Optional DSL products depend
+on JSON/JSONSchema and JSONDSLCore as declared in Package.swift. There are twelve
+library products plus swift-json and no external root-package dependencies. The
+shared helper has no standalone library product. JSONHTML conditionally uses Apple
+SDK frameworks for explicit native transfer/PDF preparation; core value, schema,
+Patch and streaming semantics remain portable. Package-only store preparation is
+not a public API or a second ledger. No online resolver or runtime dependency is added.
 
 Immutable facades store value configuration. Every operation owns its mutable
 context; every stream iterator requires exclusive access. Sendable follows the

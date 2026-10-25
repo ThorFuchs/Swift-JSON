@@ -46,8 +46,9 @@ Historical N0/N1 plans and later candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
 This development source includes opt-in Inspection, Transform and authored DSLs:
-twelve libraries plus the CLI, thirteen products in total. Inspection is absent from stable 1.6 releases. Use this
-source checkout for Inspection; its inclusion in main does not publish 1.7.0.
+twelve libraries plus the CLI, thirteen products in total. Inspection, Transform and DSLs are absent from stable 1.6 releases. Pin a reviewed
+unreleased source commit to use those products; the compatible stable installation
+requirement below does not supply them. Integration into main does not publish 1.7.0.
 
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the

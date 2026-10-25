@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | Published 1.6.0 | `f975ac1c5a18af9b422db0994cbc551fd37eee2f` | Eight libraries plus CLI, eight catalogs, 1,077 authored declarations |
 | Published 1.6.1 (latest stable) | `e431f157ececc0cf3d061192420b0e36a9062f83` | Same eight-library public API and runtime as 1.6.0; no Inspection |
-| Development main before candidate integration | Main, retaining N2 admitted at `2b24f47e7405821240cf8dfc66b840c9a7f8efa5` | Twelve libraries plus CLI; thirteen catalogs including shared JSONDSLCore; compiler-derived API inventory required |
+| Consolidated development source | Main, retaining N2 admitted at `2b24f47e7405821240cf8dfc66b840c9a7f8efa5` | Twelve libraries plus CLI; thirteen catalogs including shared JSONDSLCore; compiler-derived API inventory required |
 
 Source versions do not establish publication. Consult the
 [official releases](https://github.com/ThorFuchs/Swift-JSON/releases) for published
@@ -37,7 +37,7 @@ Stable 1.6.1 has neither. Consolidated development source stays 1.7.0-dev with t
 performance remains HOLD without speed claims; this is distinct from technical
 qualification and does not authorize any release/tag.
 
-## Unpublished 1.7.0 candidate
+## Historical JTX10 unpublished 1.7.0 candidate
 
 The isolated JTX10 successor integrates main
 `1a0306d076a08c8c43281f91412a11cd744ff3f6` with accepted Transform

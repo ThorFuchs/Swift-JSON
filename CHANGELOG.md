@@ -1,6 +1,20 @@
 # Changelog
 
-## 1.7.0 — Release candidate (unpublished)
+## Unreleased — 1.7.0-dev consolidation
+
+- Reconcile admitted set/matrix APIs with the reviewed public directed graph,
+  shared JSONTransform compiler/pull VM and optional exact value/schema DSLs.
+- Retain package-only configured-store preparation/construction with one original
+  scope/ledger; no public store, follow or persistence API is introduced.
+- Keep twelve libraries plus CLI and thirteen DocC catalogs including the shared
+  JSONDSLCore reference. Root dependencies and Apple deployment floors remain unchanged.
+- Preserve finite exact semantics and all predecessor fixtures, failures and
+  performance/platform holds. Require fresh combined-source qualification; a merge
+  is development integration and does not publish a version.
+- See [combined qualification](Documentation/Qualification/Consolidation2026.md).
+
+### Historical JTX10 release-candidate checkpoint (unpublished)
+
 
 - Add opt-in JSONTransform over the existing shared compiler and pull VM; retain
   immutable Sendable plans, guarded invocation-owned execution, exact native output

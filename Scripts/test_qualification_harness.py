@@ -359,6 +359,9 @@ class HarnessTests(unittest.TestCase):
         self.assertIn('--scope', commands('wasm-qa', output)[1])
         self.assertNotIn('--scope', commands('wasm', output)[1])
         self.assertEqual(commands('coverage', output), commands('linux-coverage', output))
+        linux_full = commands('linux', output)
+        self.assertEqual(sum('Scripts/qualify_dual_dsl.py' in c for c in linux_full), 1)
+        self.assertFalse(any('Tools/MobileQualification' in c or 'Scripts/qualify_release_1_1.py' in c for c in linux_full))
         self.assertEqual(commands('linux-coverage', output)[1][1:3], ['-B', 'Scripts/coverage.py'])
 
     def test_darwin_executable_membership_is_exact(self):
