@@ -9,6 +9,8 @@ from qualify_release_1_1 import checkout_head
 from generate_cli_identity import rendered
 import tempfile
 import unittest
+from unittest.mock import patch
+import documentation_catalog
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
 from ci import check_result, commands, SHARED_TESTS, SHARED_COUNTS
@@ -26,6 +28,30 @@ def store_markers():
         'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
 
 class HarnessTests(unittest.TestCase):
+    def test_scoped_catalog_check_cannot_weaken_the_full_site_inventory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            source = root / 'Sources/JSONNavigation/Probe.swift'
+            source.parent.mkdir(parents=True); source.write_text('public struct Probe {}\n')
+            graphs = root / 'graphs'; graphs.mkdir()
+            symbol = dict(location=dict(uri=source.as_uri()), kind=dict(identifier='swift.struct'),
+                accessLevel='public', identifier=dict(precise='probe'), names=dict(title='Probe'),
+                pathComponents=['Probe'], docComment=dict(lines=[dict(text='A scoped probe.')]))
+            graph = graphs / 'JSONNavigation.symbols.json'
+            graph.write_text(json.dumps(dict(module=dict(name='JSONNavigation'), symbols=[symbol])))
+            with patch.object(documentation_catalog, 'ROOT', root):
+                with self.assertRaisesRegex(ValueError, 'No authored symbols for JSON'):
+                    documentation_catalog.public_symbols(graphs)
+                with patch.object(documentation_catalog, 'CATALOGS', ('JSONNavigation',)):
+                    symbols = documentation_catalog.public_symbols(graphs)
+                    self.assertEqual(len(symbols), 1)
+                    self.assertEqual(documentation_catalog.verify_comments(symbols)['errors'], [])
+                    symbol['accessLevel'] = 'package'
+                    graph.write_text(json.dumps(dict(module=dict(name='JSONNavigation'), symbols=[symbol])))
+                    with self.assertRaisesRegex(ValueError, 'Non-public symbol'):
+                        documentation_catalog.public_symbols(graphs)
+            self.assertEqual(len(documentation_catalog.CATALOGS), 13)
+
     def test_store_requires_exact_engine_vectors_runtime_and_compiler_primary_diagnostics(self):
         events = dict(function_names=sorted(STORE_FUNCTIONS), module_function_counts={'JSONInspectionTests':12},
             parameterized_functions={'storeD1NativeVector(id:)':65}, parameter_case_invocations=65)
@@ -338,8 +364,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=25')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=26')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

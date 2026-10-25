@@ -1,4 +1,17 @@
-# Qualification
+# Current combined-source qualification
+
+The unreleased consolidation requires 975 native / 959 Linux / 871 WASI functions,
+390 native/Linux and 353 WASI parameter invocations, plus 60 native / 59 portable
+sharing functions. These are gate cardinalities, not preclaimed passes. Use
+[TestDiscovery.json](TestDiscovery.json), actual source-bound receipts and the
+[consolidation contract](Consolidation2026.md). All 49 cap probes, independent
+fixture policies and 126 restoration identities remain required. Ordinary invalid
+schema instances, operational failures and suite policy exclusions remain distinct.
+
+The chronological notes below retain their original source scope and counts;
+they do not describe this combined tree or inherit a pass onto it.
+
+## Historical qualification checkpoints
 
 The 1.5.1 repair candidate restores all 126 functions from the separate 1.2.1
 maintenance line without removing the later HTML, bridge, provider or CLI suites.

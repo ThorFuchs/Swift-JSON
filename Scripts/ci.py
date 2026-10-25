@@ -431,7 +431,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=25' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=26' in log.splitlines()
     return passed, counts
 
 def main():

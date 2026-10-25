@@ -132,8 +132,8 @@ def main():
             for path in (ROOT / '.build/out/symbolgraph').glob('JSONNavigation*.symbols.json'):
                 shutil.copyfile(path, graphs / path.name)
             import documentation_catalog
-            # The public site separately qualifies the complete seven-library inventory.
-            documentation_catalog.PRODUCTS = ('JSONNavigation',)
+            # The public site separately qualifies the complete catalog inventory.
+            documentation_catalog.CATALOGS = ('JSONNavigation',)
             coverage = documentation_catalog.verify_comments(documentation_catalog.public_symbols(graphs))
             receipt['experimental_api_coverage'] = coverage
             if coverage['errors']:

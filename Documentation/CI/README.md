@@ -1,9 +1,9 @@
 # Current combined-source qualification
 
 The 25 October2026 consolidation combines exact set/matrix, graph, Transform and
-trusted-authored DSL proposals. Required discovery is953 native /937 Linux /849
-WASI functions,325 native/Linux and288 WASI parameter invocations, and58 native/
-57 portable sharing functions. These are required cardinalities, not observed passes.
+trusted-authored DSL and package-only store construction proposals. Required
+discovery is 975 native / 959 Linux / 871 WASI functions, 390 native/Linux and
+353 WASI parameter invocations, and 60 native / 59 portable sharing functions. These are required cardinalities, not observed passes.
 All49 core cap probes,16 CLI metrics,126 restoration identities, public consumers,
 ordinary compiler rejections and existing product lanes stay required. Twelve
 library products have thirteen catalogs because JSONDSLCore has a shared reference
