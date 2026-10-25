@@ -1,6 +1,43 @@
 # Changelog
 
-## 1.7.0 — Unreleased
+## Unreleased — 1.7.0-dev consolidation
+
+- Reconcile admitted set/matrix APIs with the reviewed public directed graph,
+  shared JSONTransform compiler/pull VM and optional exact value/schema DSLs.
+- Retain package-only configured-store preparation/construction with one original
+  scope/ledger; no public store, follow or persistence API is introduced.
+- Keep twelve libraries plus CLI and thirteen DocC catalogs including the shared
+  JSONDSLCore reference. Root dependencies and Apple deployment floors remain unchanged.
+- Preserve finite exact semantics and all predecessor fixtures, failures and
+  performance/platform holds. Require fresh combined-source qualification; a merge
+  is development integration and does not publish a version.
+- See [combined qualification](Documentation/Qualification/Consolidation2026.md).
+
+### Historical JTX10 release-candidate checkpoint (unpublished)
+
+
+- Add opt-in JSONTransform over the existing shared compiler and pull VM; retain
+  immutable Sendable plans, guarded invocation-owned execution, exact native output
+  admission and package-only cumulative CLI adapters. No second interpreter.
+- Include admitted Inspection array evidence, source-attached snapshots, trees and
+  sparse tables: ten libraries plus CLI, ten catalogs, 1,214 authored declarations.
+- Report candidate source version 1.7.0 with deterministic CLI identity; stable
+  remains 1.6.1. Publication and exact-version consumption are separate later gates.
+- Preserve loaded-host timing limits, original 8M refusal and separately approved
+  private 100k16M profile. Record the explicit one-time allocation-instrumentation
+  waiver; events, allocated bytes and profiler overhead remain unknown.
+- See [candidate qualification](Documentation/Qualification/Release1.7.0.md) for
+  source-bound gates, Apple/Linux/scoped WASI claims and historical holds.
+
+### Historical JSONTransform extraction checkpoints
+
+- Add an optional public compiler/pull API over the single existing private query kernel.
+- Preserve CLI ownership through package-only cumulative adapters; add real-engine
+  lifecycle, exactness, provider and typed failure tests and a standalone consumer.
+- Retain rejected inout substitution and Swift 6.4 borrowed-capture compiler failure
+  evidence; the guarded handle API and release qualification remain provisional.
+
+### Earlier 1.7 development metadata checkpoint (historical)
 
 - Retain admitted opt-in JSONInspection: observation-only array evidence, exact
   first-seen columns and explicit complete/prefix coverage; 44 authored
@@ -75,6 +112,11 @@
 
 The protected public version tag exists; its separate GitHub release remains draft.
 These additive APIs are also included in the published 1.5.0 release.
+
+- Add opt-in JSONValueDSL and JSONSchemaDSL products for typed, trusted authored
+  values and Draft 2020-12 declarations. Exact values and schema semantics remain
+  owned by the existing engine. Finalization uses one finite iterative ledger;
+  authored staging and callbacks are explicitly outside its resource accounting.
 
 - Add E2's shallow JSON parsing, checked object construction, decimal-text and
   pre-parsed Pointer entry points; exact-key membership and three-state presence

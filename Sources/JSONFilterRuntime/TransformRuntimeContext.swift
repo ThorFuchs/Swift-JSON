@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import JSON
 
-/// CLI-only quotas. Core metric identifiers and their 49 meanings remain unchanged.
-package enum CLIResourceMetric: String, CaseIterable, Sendable {
+/// Shared private operation quotas. CLI names and all 49 native metrics remain unchanged.
+package enum TransformRuntimeMetric: String, CaseIterable, Sendable {
     case argvBytes, querySourceBytes, queryTokens, astNodes, queryDepth
     case runtimeFrames, bindings, collectionValues, totalInputBytes, totalOutputBytes
     case totalRecords, totalResults, totalWorkUnits, retainedBytes, diagnosticBytes, diskStagingBytes
@@ -33,7 +33,7 @@ package enum CLIResourceMetric: String, CaseIterable, Sendable {
         }
     }
 }
-package struct CLILimits: Sendable, Equatable {
+package struct TransformRuntimeLimits: Sendable, Equatable {
     package var core: JSONLimits
     package let profileName: String
     private var caps: [UInt64]
@@ -45,15 +45,15 @@ package struct CLILimits: Sendable, Equatable {
         case .offline: profileName = "offline"; caps = [1048576,1048576,262144,131072,2048,32768,4096,8388608,17179869184,17179869184,8388608,8388608,2147483648,536870912,262144,17179869184]
         }
     }
-    package subscript(_ metric: CLIResourceMetric) -> UInt64 {
+    package subscript(_ metric: TransformRuntimeMetric) -> UInt64 {
         get { caps[metric.index] }
         set { caps[metric.index] = newValue }
     }
     package func validate() throws {
         try core.validate()
-        for metric in CLIResourceMetric.allCases {
+        for metric in TransformRuntimeMetric.allCases {
             let cap = self[metric]
-            guard cap < UInt64.max, metric.cumulative || cap < UInt64(Int.max) else { throw CLIError(.usage, "invalidLimits") }
+            guard cap < UInt64.max, metric.cumulative || cap < UInt64(Int.max) else { throw TransformRuntimeFailure(.usage, "invalidLimits") }
         }
     }
     package var effectiveCore: JSONLimits {
@@ -63,7 +63,7 @@ package struct CLILimits: Sendable, Equatable {
         return result
     }
 }
-package struct CLIError: Error, Sendable, Equatable {
+package struct TransformRuntimeFailure: Error, Sendable, Equatable {
     package enum Category: String, Sendable { case usage, compile, language, input, resource, io, cancelled }
     package let category: Category
     package let code: String
@@ -77,35 +77,26 @@ package struct CLIError: Error, Sendable, Equatable {
         self.category = category; self.code = code; self.metric = metric
         self.limit = limit; self.attemptedUsage = attemptedUsage; self.overflow = overflow; self.byteOffset = byteOffset
     }
-    package var exit: Int32 {
-        switch category {
-        case .usage: 2
-        case .compile: 3
-        case .language, .input: 5
-        case .resource: 6
-        case .io: 7
-        case .cancelled: 130
-        }
-    }
+
 }
-/// One noncopyable job spans argv, files, native grammars, query execution and output.
+/// One noncopyable operation scope. Hosts may compose parsing, transformation and writing.
 /// Mutable runtime state belongs to the invocation; immutable plans may be shared.
-package struct CLIJobContext: ~Copyable {
+package struct TransformRuntimeContext: ~Copyable {
     package var meter: JSONWorkMeter
-    package let leaseRefunds: CLILeaseRefunds
-    package private(set) var limits: CLILimits
-    private var counters = Array(repeating: UInt64(0), count: CLIResourceMetric.allCases.count)
+    package let leaseRefunds: TransformLeaseRefunds
+    package private(set) var limits: TransformRuntimeLimits
+    private var counters = Array(repeating: UInt64(0), count: TransformRuntimeMetric.allCases.count)
     private var failure: (any Error)?
     package var limitsFileApplied = false
     package var maxIssues: UInt64? = nil
     package var roundedDivisions: UInt64 = 0
     package var divisionScale: Int? = nil
     package var committedResults: UInt64 = 0
-    package init(limits: CLILimits = .init()) throws {
+    package init(limits: TransformRuntimeLimits = .init()) throws {
         try limits.validate()
         meter = try .init(limits: limits.effectiveCore, domain: .parsing, trackAcceptedCapacities: true)
         self.limits = limits
-        leaseRefunds = CLILeaseRefunds()
+        leaseRefunds = TransformLeaseRefunds()
     }
     /// Refund dead value storage even when data operations are terminal. Work is
     /// never refunded; the single native ledger remains authoritative.
@@ -123,24 +114,24 @@ package struct CLIJobContext: ~Copyable {
         catch { latch(error); throw error }
     }
     package mutating func latch(_ error: any Error) { if failure == nil { failure = error; meter.recordFailure(error) } }
-    package func used(_ metric: CLIResourceMetric) -> UInt64 {
+    package func used(_ metric: TransformRuntimeMetric) -> UInt64 {
         switch metric {
         case .totalWorkUnits: meter.used(.workUnits)
         case .retainedBytes: meter.used(.retainedBytes)
         default: counters[metric.index]
         }
     }
-    package mutating func require(_ metric: CLIResourceMetric, _ attempted: UInt64) throws {
+    package mutating func require(_ metric: TransformRuntimeMetric, _ attempted: UInt64) throws {
         try checkpoint()
         guard attempted <= limits[metric] else {
-            let error = CLIError(.resource, "limitExceeded", metric: metric.rawValue, limit: limits[metric], attemptedUsage: attempted)
+            let error = TransformRuntimeFailure(.resource, "limitExceeded", metric: metric.rawValue, limit: limits[metric], attemptedUsage: attempted)
             latch(error); throw error
         }
     }
-    package mutating func charge(_ metric: CLIResourceMetric, _ amount: UInt64 = 1) throws {
+    package mutating func charge(_ metric: TransformRuntimeMetric, _ amount: UInt64 = 1) throws {
         try checkpoint() // Refund dead live capacities before computing the next charge.
         let (next, overflow) = used(metric).addingReportingOverflow(amount)
-        guard !overflow else { let error = CLIError(.resource, "counterOverflow", metric: metric.rawValue, limit: limits[metric], overflow: true); latch(error); throw error }
+        guard !overflow else { let error = TransformRuntimeFailure(.resource, "counterOverflow", metric: metric.rawValue, limit: limits[metric], overflow: true); latch(error); throw error }
         try require(metric, next)
         switch metric {
         case .totalWorkUnits: try meter.work(amount)
@@ -148,8 +139,8 @@ package struct CLIJobContext: ~Copyable {
         default: counters[metric.index] = next
         }
     }
-    package mutating func release(_ metric: CLIResourceMetric, _ amount: UInt64) throws {
-        guard !metric.cumulative, amount <= used(metric) else { throw CLIError(.usage, "invalidRefund") }
+    package mutating func release(_ metric: TransformRuntimeMetric, _ amount: UInt64) throws {
+        guard !metric.cumulative, amount <= used(metric) else { throw TransformRuntimeFailure(.usage, "invalidRefund") }
         if metric == .retainedBytes { try meter.release(amount) }
         else { counters[metric.index] -= amount }
     }
@@ -161,14 +152,14 @@ package struct CLIJobContext: ~Copyable {
     /// The only post-terminal accounting mutation spends previously reserved diagnostic work.
     /// It cannot reopen data operations, refund work or exceed aggregate diagnostic capacity.
     package mutating func acceptTerminalDiagnostics(_ bytes: UInt64) -> Bool {
-        let (next, overflow) = counters[CLIResourceMetric.diagnosticBytes.index].addingReportingOverflow(bytes)
+        let (next, overflow) = counters[TransformRuntimeMetric.diagnosticBytes.index].addingReportingOverflow(bytes)
         guard !overflow, next <= limits[.diagnosticBytes] else { return false }
-        counters[CLIResourceMetric.diagnosticBytes.index] = next
+        counters[TransformRuntimeMetric.diagnosticBytes.index] = next
         return true
     }
-    package mutating func configure(_ requested: CLILimits) throws {
+    package mutating func configure(_ requested: TransformRuntimeLimits) throws {
         try requested.validate(); try checkpoint()
-        for metric in CLIResourceMetric.allCases { guard used(metric) <= requested[metric] else { throw CLIError(.resource, "limitExceeded", metric: metric.rawValue, limit: requested[metric], attemptedUsage: used(metric)) } }
+        for metric in TransformRuntimeMetric.allCases { guard used(metric) <= requested[metric] else { throw TransformRuntimeFailure(.resource, "limitExceeded", metric: metric.rawValue, limit: requested[metric], attemptedUsage: used(metric)) } }
         try meter.configure(requested.effectiveCore)
         limits = requested
     }

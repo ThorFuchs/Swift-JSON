@@ -5,23 +5,23 @@ import JSON
 /// Bounded text encoders. @sh produces inert text and never invokes a process.
 package enum FilterFormats {
     package static let names: Set<String> = ["text","json","html","uri","csv","tsv","sh","base64","base64d"]
-    package static func apply(_ name:String,value:JSON,context:inout CLIJobContext)throws->FilterYield {
+    package static func apply(_ name:String,value:JSON,context:inout TransformRuntimeContext)throws->FilterYield {
         try context.checkpoint()
         let entry=context.meter.used(.retainedBytes)
         var owned:UInt64=0,output="",bytes:UInt64=0
         defer{try? context.meter.release(context.meter.used(.retainedBytes)-entry-owned)}
-        func append(_ text:String,context:inout CLIJobContext)throws {
+        func append(_ text:String,context:inout TransformRuntimeContext)throws {
             for scalar in text.unicodeScalars {
                 let size=UInt64(scalar.utf8.count)
                 try context.work(size);try context.meter.require(.stringBytes,bytes+size);try context.meter.retain(size)
                 output.unicodeScalars.append(scalar);bytes += size
             }
         }
-        func text(_ value:JSON,context:inout CLIJobContext)throws->String {try FilterStringBuiltins.text(value,context:&context)}
-        func scalar(_ value:JSON,context:inout CLIJobContext)throws->String {
+        func text(_ value:JSON,context:inout TransformRuntimeContext)throws->String {try FilterStringBuiltins.text(value,context:&context)}
+        func scalar(_ value:JSON,context:inout TransformRuntimeContext)throws->String {
             switch value{case .array,.object:throw FilterLanguageFailure("formatExpectedScalar");case .null:return "";default:return try text(value,context:&context)}
         }
-        func quoteShell(_ source:String,context:inout CLIJobContext)throws {
+        func quoteShell(_ source:String,context:inout TransformRuntimeContext)throws {
             try append("'",context:&context)
             for scalar in source.unicodeScalars {try append(scalar.value==39 ? "'\\''" : String(scalar),context:&context)}
             try append("'",context:&context)
@@ -76,7 +76,7 @@ package enum FilterFormats {
             guard input.count%4==0 else{throw FilterLanguageFailure("invalidBase64")}
             func digit(_ byte:UInt8)throws->UInt8{switch byte{case 65...90:return byte-65;case 97...122:return byte-97+26;case 48...57:return byte-48+52;case 43:return 62;case 47:return 63;default:throw FilterLanguageFailure("invalidBase64")}}
             var decoded:[UInt8]=[],index=0
-            func byte(_ value:UInt8,context:inout CLIJobContext)throws{try context.work();try context.meter.require(.stringBytes,UInt64(decoded.count)+1);try context.meter.retain(1);decoded.append(value)}
+            func byte(_ value:UInt8,context:inout TransformRuntimeContext)throws{try context.work();try context.meter.require(.stringBytes,UInt64(decoded.count)+1);try context.meter.retain(1);decoded.append(value)}
             while index<input.count {
                 try context.work();let a=try digit(input[index]),b=try digit(input[index+1]);try byte((a<<2)|(b>>4),context:&context)
                 if input[index+2]==61{guard index+4==input.count,input[index+3]==61,b&15==0 else{throw FilterLanguageFailure("invalidBase64")}}

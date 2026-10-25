@@ -271,6 +271,90 @@
       "attribution": "User-authored packet fixture input; original integration/tests Apache-2.0. Packet source/provenance retained separately.",
       "validation": "TypedConstructionTests.swift and public G3Acceptance consumer; strict native compiler/evaluator authority",
       "evidence": "Release1.6/G3 qualification and materialized per-case receipts"
+    },
+    {
+      "repository": "ThorFuchs/Swift-JSON",
+      "commit": "1a0306d076a08c8c43281f91412a11cd744ff3f6",
+      "destination": "Sources/JSONInspection/Graph",
+      "disposition": "Original Apache-2.0 NAV11 experimental source-backed directed simple graph; no upstream graph code adapted. Canonical Navigation/context and JSON comparison remain authorities. Independent packet fixtures retained with SHA-bound oracle.",
+      "validation": [
+        "Tests/JSONInspectionTests/GraphAcceptanceTests.swift",
+        "Scripts/qualify_graph_context.py",
+        "Scripts/qualify_graph.py"
+      ],
+      "evidence": "Scripts/ci.py source-bound native/Linux/safety/compiler receipts; private symbols only"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Sources/JSONDSLCore/JSONContent.swift",
+      "original_sha256": "278865ff3843c3bc3f697f3ce56329c35418ae6598201aa743effa3b75c1fa4a",
+      "destination": "Sources/JSONDSLCore",
+      "disposition": "Typed authored DSL adapted against actual Swift 6.4 JSON/JSONSchema; flat iterative IR and shared finalization meter replace prototype recursive lowering. Neither shim copied.",
+      "attribution": "SPDX Apache-2.0 prototype notices retained; integration is original Apache-2.0 code.",
+      "validation": [
+        "Tests/JSONDSLTests",
+        "Tests/CompileNegative/DualDSL",
+        "Examples/DualDSL"
+      ],
+      "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Sources/JSONValueDSL/JSONValueDSL.swift",
+      "original_sha256": "7a846ed54455977a585fb53f5646795e5dbcae3a949a0e8be43f0b333f2a025e",
+      "destination": "Sources/JSONValueDSL",
+      "disposition": "Typed authored DSL adapted against actual Swift 6.4 JSON/JSONSchema; flat iterative IR and shared finalization meter replace prototype recursive lowering. Neither shim copied.",
+      "attribution": "SPDX Apache-2.0 prototype notices retained; integration is original Apache-2.0 code.",
+      "validation": [
+        "Tests/JSONDSLTests",
+        "Tests/CompileNegative/DualDSL",
+        "Examples/DualDSL"
+      ],
+      "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Sources/JSONSchemaDSL/JSONSchemaDSL.swift",
+      "original_sha256": "852ec7d7c9f6d5957fa3711c3e1b5ea3daeadf0ea67241ceb90ed1511bbd2f48",
+      "destination": "Sources/JSONSchemaDSL",
+      "disposition": "Typed authored DSL adapted against actual Swift 6.4 JSON/JSONSchema; flat iterative IR and shared finalization meter replace prototype recursive lowering. Neither shim copied.",
+      "attribution": "SPDX Apache-2.0 prototype notices retained; integration is original Apache-2.0 code.",
+      "validation": [
+        "Tests/JSONDSLTests",
+        "Tests/CompileNegative/DualDSL",
+        "Examples/DualDSL"
+      ],
+      "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Tests/DSLPrototypesTests/DSLPrototypeTests.swift",
+      "original_sha256": "57ea84d6729740abb326819a316cd72cd756aec2e4c7990a5b9bb2f61000f2b8",
+      "destination": "Tests/JSONDSLTests/DSLPrototypeTests.swift",
+      "disposition": "Ported all16 XCTest prototype cases to Swift Testing and actual JSONLimits; full schemas also compile and evaluate actual positive/negative or explicitly operational outcomes. No shim is used.",
+      "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
+      "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
+      "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Tests/DSLPrototypesTests/StressTypeCheckTests.swift",
+      "original_sha256": "56a803836cb115e84c35abe65c15a3800e082e11593096a4143b73f76f3ff98c",
+      "destination": "Tests/JSONDSLTests/StressTypeCheckTests.swift",
+      "disposition": "Ported all16 XCTest prototype cases to Swift Testing and actual JSONLimits; full schemas also compile and evaluate actual positive/negative or explicitly operational outcomes. No shim is used.",
+      "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
+      "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
+      "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
     }
   ],
   "original_implementation_notes": [
@@ -304,7 +388,9 @@
     "NAV6 snapshot access-level promotion, external consumer, independent 28-record maintainer oracle, terminal-transfer/concurrent lookup proofs and compiled DocC are original Apache-2.0 contributions. No upstream engine, new semantic authority, dependency or additional product is adapted.",
     "NAV8 current-main N3/P1 reconciliation, minimal public immutable projection API, independent 16-case consumer and DocC/access-control proofs are original Apache-2.0 contributions. NAV7 donor db991c5/bda8aef and packet SHA-256 57ca72cb817272ed466a7cb8810043d56a079190d830ea7b995abd308070f98d retain provenance. No external engine, dependency or product is added.",
     "NAV9 Branch B package-only structural-set and exact numeric-matrix prototypes, narrow same-ledger comparator, ownership/isolation probes, ADRs and tests are original Apache-2.0 code. Eighteen synthetic packet fixtures are unchanged from NAV9 packet SHA-256 25c1afe9ab2b2c310f9453c9268da3fc6918f6c3aa05448a4426b7fffc4032ea; exact pins are in Qualification/P2Fixtures.json. Additional graph/store data proves design premises only. Legacy RhoeJSONAccessPlane projection source was reviewed for incompatibilities, not adapted; no engine, product, public API or dependency is added.",
-    "NAV10 selective integration from NAV9 donor 6aa5fab9af3990b1ef21604611f0f8e0cf20179a onto main 1a0306d076a08c8c43281f91412a11cd744ff3f6, minimal public set/matrix/error promotion, external consumer, metamorphic tests and DocC are original Apache-2.0 contributions. Input packet SHA-256 3a328c57c614819b69dd0bfe5de9e57922365195a8c5997754c5696abc3b61ea. No third-party engine, new product, dependency, number/equality authority or graph/store runtime is added."
+    "NAV10 selective integration from NAV9 donor 6aa5fab9af3990b1ef21604611f0f8e0cf20179a onto main 1a0306d076a08c8c43281f91412a11cd744ff3f6, minimal public set/matrix/error promotion, external consumer, metamorphic tests and DocC are original Apache-2.0 contributions. Input packet SHA-256 3a328c57c614819b69dd0bfe5de9e57922365195a8c5997754c5696abc3b61ea. No third-party engine, new product, dependency, number/equality authority or graph/store runtime is added.",
+    "JSONTransform provisional public facade, shared private context naming, guarded invocation handle and tests are original Apache-2.0. The existing query compiler/VM algorithms are reused unchanged; no external interpreter, subprocess wrapper, input packet source or dependency is adapted.",
+    "NAV12 D0/D1 private configured-store preparation, immutable source-local metadata, one-ledger integration and native semantic/compiler/runtime tests are original Apache-2.0 code. JSONTraversalContext.equalStrings reuses the same original delegate as sibling NAV11 PR #67 at 81485930f859131d0802691ca6370f482ba62911; no sibling implementation is merged. Frozen maintainer-authored synthetic S0 inputs are copied unchanged, with per-file and archive hashes in Tests/JSONInspectionTests/StoreFixtures/PROVENANCE.json and VECTORS.json. No store public declaration, follow engine, parser/serialization authority, upstream runtime dependency or new product is introduced."
   ],
   "jsonhtml_export_original_contributions": {
     "license": "Apache-2.0",
@@ -314,5 +400,20 @@
     "framework_boundary": "Conditional CoreTransferable/UniformTypeIdentifiers plus a narrow explicit main-actor Apple PDF boundary using WebKit, CoreText, CoreGraphics and AppKit/UIKit paragraph styles. Core JSON imports none of these; no new root dependency.",
     "rtf": "Original bounded strict-token emitter; AppKit/UIKit native decoding only in tests and qualification consumers, not generation.",
     "pdf": "Original invocation-owned lifecycle, finite adapter accounting and visible-range pagination using Apple SDK APIs. PDFKit is independent qualification only; no third-party renderer adapted."
-  }
+  },
+  "original_components": [
+    {
+      "component": "NAV11 owner-reviewed public graph candidate",
+      "license": "Apache-2.0",
+      "source": "Original Swift-JSON public access/documentation adapters over qualified NAV11 graph donor PR #67 / 81485930f859131d0802691ca6370f482ba62911",
+      "paths": [
+        "Sources/JSONInspection/Graph",
+        "Tools/GraphPublicQualification",
+        "Tests/JSONInspectionTests/GraphPublicAcceptanceTests.swift",
+        "Sources/JSONInspection/Documentation.docc/SourceBoundGraphs.md"
+      ],
+      "validation": "G01–G32 retained; GP01–GP16 plus Debug/Release/ASan public consumer, 26 codegen negatives and three DocC examples; execution receipts required",
+      "dependencies": "No external runtime dependencies; existing JSON and JSONNavigation authorities only"
+    }
+  ]
 }

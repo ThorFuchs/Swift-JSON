@@ -1,0 +1,5399 @@
+{
+  "version": 1,
+  "status": "Declarative D1 expectations; premise checks are NOT Swift conformance",
+  "cases": [
+    {
+      "id": "D001",
+      "name": "empty",
+      "file": "cases/D001-empty.json",
+      "sha256": "08e6ca68120665df8617898e6a58f4f299b380a51adec2afc5ca6330ba748bd0",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "collectionCount": 0,
+        "recordCount": 0,
+        "referenceSlots": 0,
+        "links": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            }
+          ],
+          "kind": "object"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D002",
+      "name": "one",
+      "file": "cases/D002-one.json",
+      "sha256": "861f2a13b0bb6d8ae5e480cd1291dec040b7259d4eede956d6f394934e795794",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 1,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "u1"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D003",
+      "name": "same-id-cross-collections",
+      "file": "cases/D003-same-id-cross-collections.json",
+      "sha256": "0dfe6bfbb850954e8ab6ed96c290383f06572655a36baf7c826645de41adabda",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          },
+          {
+            "name": "posts",
+            "recordsAt": [
+              {
+                "key": "posts"
+              }
+            ],
+            "idKey": "pid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 2,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "u1"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "posts"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "pid"
+            }
+          ],
+          "value": "u1"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D004",
+      "name": "duplicate-id",
+      "file": "cases/D004-duplicate-id.json",
+      "sha256": "65ee7f7f145d83efb1ad78ca68fb02e9ebc4d366a13bc716eb7443a4331fc000",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "duplicateRecordID",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 1
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "firstAt": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "u1"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "u1"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D005",
+      "name": "missing-id",
+      "file": "cases/D005-missing-id.json",
+      "sha256": "4a3150a2bf1b5e074958e45049130002a835a1776203195189b3bfb2ef390884",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D006",
+      "name": "null-id",
+      "file": "cases/D006-null-id.json",
+      "sha256": "6e7cbd87dcc20c272e6a6f4782c3d3e668c78a6adec1cc039969f642fd0ac677",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDNull",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D007",
+      "name": "id-number",
+      "file": "cases/D007-id-number.json",
+      "sha256": "b4cd489627602ffbbfd4a51b63e8c338997078da7c5324145f1c6d958c96f1d1",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "number"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D008",
+      "name": "id-boolean",
+      "file": "cases/D008-id-boolean.json",
+      "sha256": "26c5827bfa8ec84f7833bca17aac787788df1b3ad78673bfdce125298fa65645",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "boolean"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D009",
+      "name": "id-array",
+      "file": "cases/D009-id-array.json",
+      "sha256": "7beb327faa3c6ade20ac44542b1b26a9aa4195c9f46a86141c882d6448ac2194",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D010",
+      "name": "id-object",
+      "file": "cases/D010-id-object.json",
+      "sha256": "c695856e014c021fbfc3a5470d2be7e6aec6d1c003888a9db0413c36d6950300",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "object"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D011",
+      "name": "scalar-record",
+      "file": "cases/D011-scalar-record.json",
+      "sha256": "d083d4a17645009409d996ab309cc30a2241d38e8689ea25ad848805add802ac",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            }
+          ],
+          "kind": "string"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D012",
+      "name": "null-collection",
+      "file": "cases/D012-null-collection.json",
+      "sha256": "22d8e61258c38c870ac954fc93991246d4fa308eaa24189839edd9d8456b61ff",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 4,
+        "kind": "collectionNotArray",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D013",
+      "name": "container-array",
+      "file": "cases/D013-container-array.json",
+      "sha256": "ef8d0a99763e822fe6036ec48ec94665bbc14bfbd2191a0ea2738339848c8669",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 3,
+        "kind": "collectionsNotObject",
+        "at": [
+          {
+            "key": "collections"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D014",
+      "name": "missing-container",
+      "file": "cases/D014-missing-container.json",
+      "sha256": "3554e4987cd73891fe8cc2822b44cc9c2764393218e8463065176690d51c996e",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 3,
+        "kind": "selectionMissing",
+        "at": [
+          {
+            "key": "collections"
+          }
+        ],
+        "coreCause": "missingMember",
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D015",
+      "name": "wrong-ancestor",
+      "file": "cases/D015-wrong-ancestor.json",
+      "sha256": "fba16fc16d67a625a464d059d0161bfac9bed0c9ad3c6b310835c27ed9b8bd43",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "outer"
+          },
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 3,
+        "kind": "selectionWrongKind",
+        "at": [
+          {
+            "key": "outer"
+          },
+          {
+            "key": "collections"
+          }
+        ],
+        "coreCause": "wrongKind",
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "outer"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D016",
+      "name": "scalar-distinct-collections",
+      "file": "cases/D016-scalar-distinct-collections.json",
+      "sha256": "83ce5acac1507bb229b28682d5dfa38bf6c706f3348a35cd8fb822066ee7479e",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "é",
+            "recordsAt": [
+              {
+                "key": "é"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          },
+          {
+            "name": "é",
+            "recordsAt": [
+              {
+                "key": "é"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "collectionCount": 2,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactKeys",
+          "path": [
+            {
+              "key": "collections"
+            }
+          ],
+          "keys": [
+            "é",
+            "é"
+          ]
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D017",
+      "name": "scalar-distinct-ids",
+      "file": "cases/D017-scalar-distinct-ids.json",
+      "sha256": "fb3a0d0da5fed99401b7f07057e05b41ff7c8051870705daae28868d42bcb196",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 2,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "scalarDifferent",
+          "domain": "source",
+          "left": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "right": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "uuid"
+            }
+          ]
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D018",
+      "name": "equal-payload-two-records",
+      "file": "cases/D018-equal-payload-two-records.json",
+      "sha256": "1100172eae0a9b0ef780afc3ea4e0eecb18886efb1fd3d140b692f3794a7480a",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 2,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "scalarDifferent",
+          "domain": "source",
+          "left": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "right": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "uuid"
+            }
+          ]
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "payload"
+            }
+          ],
+          "value": {
+            "x": 1
+          }
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "payload"
+            }
+          ],
+          "value": {
+            "x": 1
+          }
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D019",
+      "name": "configured-id-only",
+      "file": "cases/D019-configured-id-only.json",
+      "sha256": "fbd38b0652f6229a198f30f1ce209b69ba682f5e988bcb163b729e4daa121f55",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordIDMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "a"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "_id"
+            }
+          ],
+          "value": "b"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D020",
+      "name": "unconfigured-ref-inert",
+      "file": "cases/D020-unconfigured-ref-inert.json",
+      "sha256": "b3ed3c8073897b25e4f19fd0f25ff49f91f417b08a1bb933c6aa4b538ed717a6",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "referenceSlots": 0,
+        "links": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "$ref"
+            },
+            {
+              "key": "collection"
+            }
+          ],
+          "value": "bad"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D021",
+      "name": "disabled-with-fields",
+      "file": "cases/D021-disabled-with-fields.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "disabledReferencesConflict",
+        "at": [
+          {
+            "key": "references"
+          },
+          {
+            "key": "mode"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "references"
+            },
+            {
+              "key": "mode"
+            }
+          ],
+          "value": "disabled"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D022",
+      "name": "forward-target",
+      "file": "cases/D022-forward-target.json",
+      "sha256": "aef1e26ae78d45d5af213d632179afec471f1a7eb06d75c7c47c76c654fec3f8",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "links": 2,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "b"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "b"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D023",
+      "name": "unknown-collection",
+      "file": "cases/D023-unknown-collection.json",
+      "sha256": "d0657caf40a9f5020f3351fdbcfadbbeb25990c11ac1bd83e8fdbf27dd07d4c2",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 7,
+        "kind": "referenceUnknownCollection",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "collection"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "collection"
+            }
+          ],
+          "value": "posts"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D024",
+      "name": "dangling-id",
+      "file": "cases/D024-dangling-id.json",
+      "sha256": "104224445baed4327b782141e5a5144dfc7c79ed7efc2cddb8d4f829355d785d",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 7,
+        "kind": "referenceDanglingID",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "id"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "bad"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "a"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D025",
+      "name": "required-absent",
+      "file": "cases/D025-required-absent.json",
+      "sha256": "3b90aa42daef3f06894c1d3e75cf7306be0dba9a080ef6d3f3dea4f3d9ab2613",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D026",
+      "name": "optional-absent",
+      "file": "cases/D026-optional-absent.json",
+      "sha256": "3b90aa42daef3f06894c1d3e75cf7306be0dba9a080ef6d3f3dea4f3d9ab2613",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "optional",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "states": [
+          "absent"
+        ],
+        "referenceSlots": 1,
+        "links": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D027",
+      "name": "required-null-False",
+      "file": "cases/D027-required-null-False.json",
+      "sha256": "585bc3a98b4f4e74f01574cfd860d0bb3c37612f795cf30aad39191596ee22b2",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceNull",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D028",
+      "name": "required-null-True",
+      "file": "cases/D028-required-null-True.json",
+      "sha256": "585bc3a98b4f4e74f01574cfd860d0bb3c37612f795cf30aad39191596ee22b2",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": true
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "states": [
+          "null"
+        ],
+        "referenceSlots": 1,
+        "links": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D029",
+      "name": "optional-null-False",
+      "file": "cases/D029-optional-null-False.json",
+      "sha256": "585bc3a98b4f4e74f01574cfd860d0bb3c37612f795cf30aad39191596ee22b2",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "optional",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceNull",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D030",
+      "name": "optional-null-True",
+      "file": "cases/D030-optional-null-True.json",
+      "sha256": "585bc3a98b4f4e74f01574cfd860d0bb3c37612f795cf30aad39191596ee22b2",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "optional",
+                "nullable": true
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "states": [
+          "null"
+        ],
+        "referenceSlots": 1,
+        "links": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D031",
+      "name": "marker-string",
+      "file": "cases/D031-marker-string.json",
+      "sha256": "5dccc805daed6aec2c02675c10a9f037e955e7ad49175d1cc28088a03557771b",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "string"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D032",
+      "name": "marker-id-missing",
+      "file": "cases/D032-marker-id-missing.json",
+      "sha256": "2a54f01a3d1ec197df8bbcae30f14eda192332ee094e2b361a5dbaaf031d40f4",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "id"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D033",
+      "name": "marker-id-null",
+      "file": "cases/D033-marker-id-null.json",
+      "sha256": "c81d5128eaf06d55de6babcea7d1dd405f2c6f8bf1247132869beb1a7850764b",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMemberWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "id"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D034",
+      "name": "marker-extra",
+      "file": "cases/D034-marker-extra.json",
+      "sha256": "5f91412213ef43381bfe08804fb601863938239c65a6def15a8059fc0c6e6276",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerExtra",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "other"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "other"
+            }
+          ],
+          "value": 1
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D035",
+      "name": "marker-missing-beats-extra",
+      "file": "cases/D035-marker-missing-beats-extra.json",
+      "sha256": "42945b733fcd1500398573f10a3d3ea9811202b90fa1b2a1b9ef7fc4ee976bb2",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "id"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "extra"
+            }
+          ],
+          "value": 1
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D036",
+      "name": "marker-kind-beats-extra",
+      "file": "cases/D036-marker-kind-beats-extra.json",
+      "sha256": "114b15de6b1b1142f2b0e856ad06e147a4324a14f64a2959103c4efb0fdf9c00",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMemberWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "collection"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "collection"
+            }
+          ],
+          "kind": "number"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "extra"
+            }
+          ],
+          "value": 1
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D037",
+      "name": "raw-duplicate-marker",
+      "file": "cases/D037-raw-duplicate-marker.json",
+      "sha256": "af9711082da00dba32644e0d2255b5d5b55bf7273286bb93d13c45e3d57bae3e",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "parse",
+      "expected": {
+        "phase": "parse",
+        "kind": "duplicateDecodedKey",
+        "at": [],
+        "domain": "syntax"
+      },
+      "premises": [
+        {
+          "assert": "rawDuplicate",
+          "key": "id"
+        }
+      ],
+      "execution_kind": "strict-parser"
+    },
+    {
+      "id": "D038",
+      "name": "self-cycle",
+      "file": "cases/D038-self-cycle.json",
+      "sha256": "69e752c46db3f2ed4d114cd6a7bc895a94f160a37d576688a92d0b89e1477157",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "links": 1,
+        "followExpected": [
+          [
+            "users",
+            0
+          ]
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "a"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "a"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D039",
+      "name": "mutual-cycle",
+      "file": "cases/D039-mutual-cycle.json",
+      "sha256": "aef1e26ae78d45d5af213d632179afec471f1a7eb06d75c7c47c76c654fec3f8",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "links": 2,
+        "followExpected": [
+          [
+            "users",
+            0
+          ],
+          [
+            "users",
+            1
+          ]
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "b"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "a"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D040",
+      "name": "slash-tilde",
+      "file": "cases/D040-slash-tilde.json",
+      "sha256": "5f975b10a98fa222268c36b04ee894057120c5f8d25c784d1fcf78fe8de4f7c7",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "a/b~",
+            "recordsAt": [
+              {
+                "key": "a/b~"
+              }
+            ],
+            "idKey": "u/id~",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 2,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "a/b~"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "u/id~"
+            }
+          ],
+          "value": "0"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D041",
+      "name": "empty-identities",
+      "file": "cases/D041-empty-identities.json",
+      "sha256": "c195973392fbedd25eaaa0b0f9f317df242e023fff0ae6c09adf7f59a96ede2d",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "",
+            "recordsAt": [
+              {
+                "key": ""
+              }
+            ],
+            "idKey": "",
+            "referenceFields": [
+              {
+                "key": "r",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "links": 1,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": ""
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": ""
+            }
+          ],
+          "value": ""
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D042",
+      "name": "numeric-key-not-index",
+      "file": "cases/D042-numeric-key-not-index.json",
+      "sha256": "b31be933d56d90870caacb58beb9b2526bc432d051554e058145358617145e10",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "index": 0
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 3,
+        "kind": "selectionWrongKind",
+        "at": [
+          {
+            "index": 0
+          }
+        ],
+        "coreCause": "wrongKind",
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [],
+          "kind": "object"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D043",
+      "name": "numeric-key",
+      "file": "cases/D043-numeric-key.json",
+      "sha256": "b31be933d56d90870caacb58beb9b2526bc432d051554e058145358617145e10",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "0"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "0"
+            },
+            {
+              "key": "users"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D044",
+      "name": "configured-collection-absent",
+      "file": "cases/D044-configured-collection-absent.json",
+      "sha256": "08e6ca68120665df8617898e6a58f4f299b380a51adec2afc5ca6330ba748bd0",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 4,
+        "kind": "missingConfiguredCollection",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D045",
+      "name": "unconfigured-collection",
+      "file": "cases/D045-unconfigured-collection.json",
+      "sha256": "f048ff30e948c1c1e7a5498f336f0ae8f6f85220036fb82c9c805d7cab575843",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 4,
+        "kind": "unconfiguredCollection",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "other"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "other"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D046",
+      "name": "duplicate-declaration",
+      "file": "cases/D046-duplicate-declaration.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          },
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "duplicateCollectionDeclaration",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "index": 1
+          },
+          {
+            "key": "name"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "name"
+            }
+          ],
+          "value": "users"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "name"
+            }
+          ],
+          "value": "users"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D047",
+      "name": "scalar-distinct-ref-fields",
+      "file": "cases/D047-scalar-distinct-ref-fields.json",
+      "sha256": "ba8294e86a4ba4f566b699537918041682c4b680240cbc2383ce34b5aa553a07",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "é",
+                "presence": "optional",
+                "nullable": false
+              },
+              {
+                "key": "é",
+                "presence": "optional",
+                "nullable": true
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "states": [
+          "absent",
+          "null"
+        ],
+        "referenceSlots": 2,
+        "links": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "é"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "é"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D048",
+      "name": "id-ref-collision",
+      "file": "cases/D048-id-ref-collision.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "uuid",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "idReferenceFieldCollision",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "referenceFields"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "key"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "idKey"
+            }
+          ],
+          "value": "uuid"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "referenceFields"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "key"
+            }
+          ],
+          "value": "uuid"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D049",
+      "name": "duplicate-ref-field",
+      "file": "cases/D049-duplicate-ref-field.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              },
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "duplicateReferenceField",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "referenceFields"
+          },
+          {
+            "index": 1
+          },
+          {
+            "key": "key"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "referenceFields"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "key"
+            }
+          ],
+          "value": "friend"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D050",
+      "name": "nested-array-refused",
+      "file": "cases/D050-nested-array-refused.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "nested"
+              },
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "invalidRecordsAt",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "recordsAt"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "recordsAt"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "key"
+            }
+          ],
+          "value": "nested"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D051",
+      "name": "unknown-version",
+      "file": "cases/D051-unknown-version.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/2",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "unsupportedProfileVersion",
+        "at": [
+          {
+            "key": "version"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "version"
+            }
+          ],
+          "value": "nav12.store-profile/2"
+        }
+      ],
+      "execution_kind": "profile-schema/compiler-negative"
+    },
+    {
+      "id": "D052",
+      "name": "negative-profile-index",
+      "file": "cases/D052-negative-profile-index.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "index": -1
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "invalidTypedComponent",
+        "at": [
+          {
+            "key": "collectionsAt"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "index"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collectionsAt"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "index"
+            }
+          ],
+          "value": -1
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D053",
+      "name": "nullable-must-be-boolean",
+      "file": "cases/D053-nullable-must-be-boolean.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": "yes"
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "invalidNullablePolicy",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "referenceFields"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "nullable"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "referenceFields"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "nullable"
+            }
+          ],
+          "kind": "string"
+        }
+      ],
+      "execution_kind": "profile-schema/compiler-negative"
+    },
+    {
+      "id": "D054",
+      "name": "duplicate-beats-dangling",
+      "file": "cases/D054-duplicate-beats-dangling.json",
+      "sha256": "6db9fb7ceb44f3a4573183199a5e1281a9793ef506d58676549215e0aeb329df",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "duplicateRecordID",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 1
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "firstAt": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "uuid"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "a"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "a"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "bad"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D055",
+      "name": "late-malformed-beats-dangling",
+      "file": "cases/D055-late-malformed-beats-dangling.json",
+      "sha256": "947de8c3e61b154f63e3f69ba66f29081ea25d140c92980ebece0a514ca3d688",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 1
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "id"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "bad"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "kind": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D056",
+      "name": "all-headers-before-records",
+      "file": "cases/D056-all-headers-before-records.json",
+      "sha256": "48ef5bf0e68d5e42def5afe51e351a7a90b1e6c237da075fcbe256c7f2ddc8bb",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          },
+          {
+            "name": "posts",
+            "recordsAt": [
+              {
+                "key": "posts"
+              }
+            ],
+            "idKey": "pid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 4,
+        "kind": "collectionNotArray",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "posts"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "posts"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D057",
+      "name": "configured-field-order",
+      "file": "cases/D057-configured-field-order.json",
+      "sha256": "6273bd4f23a6919e62b51288264ec9a86b27a9da45fb2e75c9f037c60a0bbe49",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "first",
+                "presence": "required",
+                "nullable": false
+              },
+              {
+                "key": "second",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "first"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "first"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "second"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D058",
+      "name": "unknown-before-dangling",
+      "file": "cases/D058-unknown-before-dangling.json",
+      "sha256": "41ea5546361389413f8d111e810111b945aac1d89ce04797733bfe9dfde90419",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 7,
+        "kind": "referenceUnknownCollection",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "collection"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "collection"
+            }
+          ],
+          "value": "bad"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "missing"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D059",
+      "name": "marker-collection-null",
+      "file": "cases/D059-marker-collection-null.json",
+      "sha256": "2bede9cbd0932509bd434825177c045e008a0a529510b94460d8c421f3bc9598",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMemberWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "collection"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "collection"
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D060",
+      "name": "lookalike-marker-key",
+      "file": "cases/D060-lookalike-marker-key.json",
+      "sha256": "ca35c419e298704e010174cac26b54344351ec7a60752e0f833dbf2f059a7047",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 6,
+        "kind": "referenceMarkerMissing",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          },
+          {
+            "key": "friend"
+          },
+          {
+            "key": "collection"
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "collection"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "collectión"
+            }
+          ],
+          "value": "users"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D061",
+      "name": "explicit-dollar-ref-field",
+      "file": "cases/D061-explicit-dollar-ref-field.json",
+      "sha256": "81b67061a45a19ecaf259fe02e5b9a933d9620736d514aea4e1af92ab1c4de88",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "$ref",
+                "presence": "required",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "links": 1,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "$ref"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "a"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D062",
+      "name": "physical-root-container",
+      "file": "cases/D062-physical-root-container.json",
+      "sha256": "22119f3ed20c291c757cd7683b4eb9cdee0c17c68882713c6713c48d5ccb184d",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 1,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "a"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D063",
+      "name": "absent-null-linked-separate",
+      "file": "cases/D063-absent-null-linked-separate.json",
+      "sha256": "71bf894dfb4c3762b09fbe4dcd19ba54c3f48e68262cfbe3f9171470b188fe6e",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "optional",
+                "nullable": true
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "states": [
+          "absent",
+          "null",
+          "link"
+        ],
+        "referenceSlots": 3,
+        "links": 1,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "missing"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "null"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 2
+            },
+            {
+              "key": "friend"
+            }
+          ],
+          "kind": "object"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D064",
+      "name": "empty-key-container",
+      "file": "cases/D064-empty-key-container.json",
+      "sha256": "bfbdb740452fff857dd13335f29add0a959dc1d198ed3a5a847e9f062a0afbe4",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": ""
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": ""
+            },
+            {
+              "key": "users"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D065",
+      "name": "exact-reference-id",
+      "file": "cases/D065-exact-reference-id.json",
+      "sha256": "083529843664ad250c805923a7203855ba911d32dcffd166bc7026018072d81c",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": [
+              {
+                "key": "friend",
+                "presence": "optional",
+                "nullable": false
+              }
+            ]
+          }
+        ],
+        "references": {
+          "mode": "strict",
+          "marker": "collection-id/1",
+          "validateTargets": true
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "targetRow": 1,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "scalarDifferent",
+          "domain": "source",
+          "left": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "right": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 1
+            },
+            {
+              "key": "uuid"
+            }
+          ]
+        },
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 2
+            },
+            {
+              "key": "friend"
+            },
+            {
+              "key": "id"
+            }
+          ],
+          "value": "é"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D066",
+      "name": "null-record",
+      "file": "cases/D066-null-record.json",
+      "sha256": "126f6eab6a4ff0a7b0e7bd17cbdb392de61f9859e4496ab11109d1883881a36c",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 5,
+        "kind": "recordWrongKind",
+        "at": [
+          {
+            "key": "collections"
+          },
+          {
+            "key": "users"
+          },
+          {
+            "index": 0
+          }
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            }
+          ],
+          "kind": "null"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D067",
+      "name": "empty-selected-array",
+      "file": "cases/D067-empty-selected-array.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "recordCount": 0,
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            }
+          ],
+          "kind": "array"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D068",
+      "name": "number-payload-lexemes",
+      "file": "cases/D068-number-payload-lexemes.json",
+      "sha256": "8d3fbb3a46831dfa15c4be84e3a5339d78fc3c86e1abb49fa0a76732fe6982ca",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        }
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 8,
+        "kind": "success",
+        "at": [],
+        "lexemes": [
+          "9007199254740993",
+          "1e0"
+        ],
+        "domain": "source"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "uuid"
+            }
+          ],
+          "value": "a"
+        },
+        {
+          "assert": "pathKind",
+          "domain": "source",
+          "path": [
+            {
+              "key": "collections"
+            },
+            {
+              "key": "users"
+            },
+            {
+              "index": 0
+            },
+            {
+              "key": "n"
+            }
+          ],
+          "kind": "number"
+        }
+      ],
+      "execution_kind": "native-build"
+    },
+    {
+      "id": "D069",
+      "name": "unknown-profile-field",
+      "file": "cases/D069-unknown-profile-field.json",
+      "sha256": "b294e2a06cc551ccc5c2e01803d1e094ee207a16b33342244cd30fb956340957",
+      "profile": {
+        "version": "nav12.store-profile/1",
+        "collectionsAt": [
+          {
+            "key": "collections"
+          }
+        ],
+        "collections": [
+          {
+            "name": "users",
+            "recordsAt": [
+              {
+                "key": "users"
+              }
+            ],
+            "idKey": "uuid",
+            "referenceFields": []
+          }
+        ],
+        "references": {
+          "mode": "disabled"
+        },
+        "guessID": true
+      },
+      "operation": "build",
+      "expected": {
+        "phase": 1,
+        "kind": "unknownProfileField",
+        "at": [
+          {
+            "key": "guessID"
+          }
+        ],
+        "domain": "profile"
+      },
+      "premises": [
+        {
+          "assert": "exactValue",
+          "domain": "profile",
+          "path": [
+            {
+              "key": "guessID"
+            }
+          ],
+          "value": true
+        }
+      ],
+      "execution_kind": "profile-schema/compiler-negative"
+    }
+  ]
+}

@@ -9,14 +9,74 @@ from qualify_release_1_1 import checkout_head
 from generate_cli_identity import rendered
 import tempfile
 import unittest
+from unittest.mock import patch
+import documentation_catalog
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
-from ci import check_result, commands
+from ci import check_result, commands, SHARED_TESTS, SHARED_COUNTS
 from p2_acceptance import PUBLIC_FUNCTIONS, PUBLIC_SHARED, check_exact_cases, check_exact_receipt
 from p2_acceptance import EXPECTED as P2_FUNCTIONS, SHARED as P2_SHARED, BORROW_CHECKS, check_p2_cases, check_borrow_receipt, check_private_receipt
+from graph_acceptance import EXPECTED as GRAPH_FUNCTIONS, check_graph_cases, check_graph_receipt, check_public_graph_receipt, PUBLIC_CHECKS as GRAPH_PUBLIC_CHECKS
+from store_acceptance import FUNCTIONS as STORE_FUNCTIONS, VECTORS, check_store_tests, check_store_consumer
 from projection_acceptance import EXPECTED as PROJECTION_FUNCTIONS, PUBLIC_CHECKS, check_projection_cases, check_public_projection_receipt
 
+
+def store_markers():
+    return '\n'.join(['STORE_VECTOR %s passed driver=%s phase=%s kind=%s' %
+        (x['id'],x['execution_kind'],x['expected']['phase'],x['expected']['kind'])
+        for x in VECTORS if x['execution_kind'] in ('native-build','strict-parser')]+[
+        'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
+
 class HarnessTests(unittest.TestCase):
+    def test_scoped_catalog_check_cannot_weaken_the_full_site_inventory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary).resolve()
+            source = root / 'Sources/JSONNavigation/Probe.swift'
+            source.parent.mkdir(parents=True); source.write_text('public struct Probe {}\n')
+            graphs = root / 'graphs'; graphs.mkdir()
+            symbol = dict(location=dict(uri=source.as_uri()), kind=dict(identifier='swift.struct'),
+                accessLevel='public', identifier=dict(precise='probe'), names=dict(title='Probe'),
+                pathComponents=['Probe'], docComment=dict(lines=[dict(text='A scoped probe.')]))
+            graph = graphs / 'JSONNavigation.symbols.json'
+            graph.write_text(json.dumps(dict(module=dict(name='JSONNavigation'), symbols=[symbol])))
+            with patch.object(documentation_catalog, 'ROOT', root):
+                with self.assertRaisesRegex(ValueError, 'No authored symbols for JSON'):
+                    documentation_catalog.public_symbols(graphs)
+                with patch.object(documentation_catalog, 'CATALOGS', ('JSONNavigation',)):
+                    symbols = documentation_catalog.public_symbols(graphs)
+                    self.assertEqual(len(symbols), 1)
+                    self.assertEqual(documentation_catalog.verify_comments(symbols)['errors'], [])
+                    symbol['accessLevel'] = 'package'
+                    graph.write_text(json.dumps(dict(module=dict(name='JSONNavigation'), symbols=[symbol])))
+                    with self.assertRaisesRegex(ValueError, 'Non-public symbol'):
+                        documentation_catalog.public_symbols(graphs)
+            self.assertEqual(len(documentation_catalog.CATALOGS), 13)
+
+    def test_store_requires_exact_engine_vectors_runtime_and_compiler_primary_diagnostics(self):
+        events = dict(function_names=sorted(STORE_FUNCTIONS), module_function_counts={'JSONInspectionTests':12},
+            parameterized_functions={'storeD1NativeVector(id:)':65}, parameter_case_invocations=65)
+        log = store_markers()
+        self.assertTrue(check_store_tests(events, log, scoped=True))
+        for broken in [log.replace('D001','D999'), log+'\n'+log.splitlines()[0],
+                       log.replace('driver=native-build','driver=python-premise'), log.replace('R10 passed','R10 skipped')]:
+            self.assertFalse(check_store_tests(events, broken, scoped=True))
+        self.assertFalse(check_store_tests(dict(events,function_names=sorted(STORE_FUNCTIONS)[:-1]),log))
+        self.assertFalse(check_store_tests(dict(events,parameterized_functions={'storeD1NativeVector(id:)':64}),log,scoped=True))
+        valid = dict(status='passed',commands=[dict(name=str(i),passed=True,compiler_crash=False,
+            expected='inaccessible' if i<16 else None,exit=1 if i<16 else 0,
+            primary_diagnostics=['inaccessible'] if i<16 else []) for i in range(26)],
+            vector_compiler_results=[dict(id=i,configuration=c,driver='profile-schema/compiler-negative',passed=True)
+                for i in ['D051','D053','D069'] for c in ['debug','release']])
+        self.assertTrue(check_store_consumer(valid))
+        for mode in ['missing','incidental','crash','zero','vector']:
+            bad=copy.deepcopy(valid)
+            if mode=='missing': bad['commands'].pop()
+            elif mode=='incidental': bad['commands'][0]['primary_diagnostics']=['unrelated error']
+            elif mode=='crash': bad['commands'][0]['compiler_crash']=True
+            elif mode=='zero': bad['commands'][0]['exit']=0
+            else: bad['vector_compiler_results'].pop()
+            self.assertFalse(check_store_consumer(bad))
+
     def test_public_projection_receipt_rejects_incomplete_and_incidental_successes(self):
         valid = dict(status='passed', commands=[dict(name=str(i), status='passed',
             compiler_crash=False, expected_diagnostic='inaccessible' if i < 18 else None,
@@ -42,6 +102,36 @@ class HarnessTests(unittest.TestCase):
                 else: row['work_units'] = 0
                 self.assertFalse(check_public_projection_receipt(broken))
 
+    def test_full_thread_filter_is_not_misclassified_as_preparation_subset(self):
+        names = [module+'.fixture'+str(i)+'()' for module,count in SHARED_COUNTS.items() for i in range(count)]
+        names = [n for n in names if not n.startswith('JSONInspectionTests.')]+[
+            'JSONInspectionTests.inspectionI17CoverageSpansReplacementAndSharedInvocations()',
+            'JSONInspectionTests.snapshotS19NavigationParityAndIndependentInvocations()',
+            'JSONInspectionTests.snapshotV22ConcurrentLookupsUseIndependentAdmissionAndHealth()',
+            'JSONInspectionTests.projectionP16SharedViewsHaveIndependentHealthAndLegacyStatistics()',
+            'JSONInspectionTests.storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth()', *sorted(P2_SHARED | PUBLIC_SHARED), 'JSONInspectionTests.graphG30ConcurrentViewsHaveIndependentHealth()', 'JSONInspectionTests.graphGP14ConcurrentQueries()']
+        events=dict(function_names=names,module_function_counts=SHARED_COUNTS,
+            bundle_counts=sorted(SHARED_COUNTS.values()),parameter_case_invocations=0,parameterized_functions={})
+        command=['swift','test','--sanitize','thread','--filter',SHARED_TESTS]
+        self.assertTrue(check_result(command,0,'STORE_RUNTIME R06 passed',events)[0])
+        for bad in [dict(events,parameter_case_invocations=1),dict(events,function_names=names[:-1]),
+                    dict(events,module_function_counts=dict(SHARED_COUNTS,JSONNavigationTests=99)),
+                    dict(events,bundle_counts=sorted(SHARED_COUNTS.values())[:-1])]:
+            self.assertFalse(check_result(command,0,'STORE_RUNTIME R06 passed',bad)[0])
+
+    def test_prepared_entry_rejects_missing_renamed_and_wrong_module_cases(self):
+        command = ['swift', 'test', '--filter', 'navigationPreparedD0']
+        names = list(DISCOVERY['prepared_entry_function_ids'])
+        events = dict(bundle_counts=[10], module_function_counts={'JSONNavigationTests': 10},
+                      parameter_case_invocations=0, function_names=names)
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        for broken in [dict(events, function_names=names[:-1]),
+                       dict(events, function_names=names[:-1]+['Other.renamed()']),
+                       dict(events, parameter_case_invocations=1),
+                       dict(events, bundle_counts=[9]),
+                       dict(events, module_function_counts={'WrongModule': 10})]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+
     def test_composition_discovery_and_capacity_limits_are_not_blanket_successes(self):
         command = ['swift', 'test', '--package-path', 'Tools/CompositionQualification']
         events = dict(bundle_counts=[5], module_function_counts={'CompositionScaleTests': 5},
@@ -62,27 +152,27 @@ class HarnessTests(unittest.TestCase):
 
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
-            ('JSONNavigationTests', 47, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 130, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB']),
+            ('JSONNavigationTests', 57, ['swift', 'test', '--filter', 'navigation']),
+            ('JSONInspectionTests', 190, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
-                          parameter_case_invocations=0, function_names=sorted(PROJECTION_FUNCTIONS | P2_FUNCTIONS | PUBLIC_FUNCTIONS) if module == 'JSONInspectionTests' else [])
-            self.assertTrue(check_result(command, 0, '', events)[0])
+                          parameter_case_invocations=65 if module == 'JSONInspectionTests' else 0, parameterized_functions={'storeD1NativeVector(id:)':65} if module == 'JSONInspectionTests' else {}, function_names=sorted(PROJECTION_FUNCTIONS | P2_FUNCTIONS | PUBLIC_FUNCTIONS | GRAPH_FUNCTIONS | STORE_FUNCTIONS) if module == 'JSONInspectionTests' else [])
+            self.assertTrue(check_result(command, 0, store_markers() if module == 'JSONInspectionTests' else '', events)[0])
             for broken in [dict(events, bundle_counts=[count-1]),
                            dict(events, module_function_counts={'WrongModule': count}),
                            dict(events, parameter_case_invocations=1)]:
-                self.assertFalse(check_result(command, 0, '', broken)[0])
+                self.assertFalse(check_result(command, 0, store_markers() if module == 'JSONInspectionTests' else '', broken)[0])
         policy = DISCOVERY
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
-            self.assertEqual(policy[key]['JSONNavigationTests'], 47)
+            self.assertEqual(policy[key]['JSONNavigationTests'], 57)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 130)
-            self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 190)
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 34)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
-            self.assertEqual(policy[key]['JSONNavigationTests'], 1)
+            self.assertEqual(policy[key]['JSONNavigationTests'], 2)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 7)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 10)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
 
     def test_private_projection_identities_cannot_be_missing_renamed_or_duplicated(self):
@@ -149,6 +239,39 @@ class HarnessTests(unittest.TestCase):
             self.assertFalse(check_exact_cases({'function_names': broken}))
         self.assertTrue(check_exact_cases({'function_names': sorted(PUBLIC_SHARED)}, shared=True))
         self.assertFalse(check_exact_receipt({'status': 'passed', 'commands': [], 'consumer_results': {}}))
+    def test_graph_identity_and_compiler_receipts_reject_false_success(self):
+        names=sorted(GRAPH_FUNCTIONS)
+        self.assertEqual(len(names),48)
+        self.assertTrue(check_graph_cases({'function_names':names}))
+        for broken in [names[:-1],names+names[:1],['WrongModule.'+names[0].split('.',1)[1]]+names[1:]]:
+            self.assertFalse(check_graph_cases({'function_names':broken}))
+        for context,count,negatives in [(True,18,8),(False,28,18)]:
+            commands=[dict(name=str(n),status='passed',compiler_crash=False,exit_code=1 if n<negatives else 0,
+                expected_diagnostic='escaping inout' if n<negatives else None,
+                primary_diagnostics=['escaping inout'] if n<negatives else []) for n in range(count)]
+            valid=dict(status='passed',commands=commands)
+            self.assertTrue(check_graph_receipt(valid,context))
+            self.assertFalse(check_graph_receipt(dict(valid,commands=commands[:-1]),context))
+            for change in [dict(compiler_crash=True),dict(exit_code=0),dict(primary_diagnostics=['unused Task'])]:
+                broken=copy.deepcopy(valid);broken['commands'][0].update(change)
+                self.assertFalse(check_graph_receipt(broken,context))
+
+    def test_public_graph_receipt_rejects_incomplete_or_incidental_success(self):
+        commands=[dict(name=str(i),status='passed',compiler_crash=False,exit_code=1 if i<26 else 0,
+            expected_diagnostic='inaccessible' if i<26 else None,primary_diagnostics=['inaccessible'] if i<26 else []) for i in range(45)]
+        valid=dict(status='passed',commands=commands,consumer_results={config:dict(cases=sorted(GRAPH_PUBLIC_CHECKS),work_units=1,logical_retained_bytes=1,peak_logical_retained_bytes=1,admitted_nodes=1) for config in ['debug','release','address']})
+        self.assertTrue(check_public_graph_receipt(valid))
+        broken=copy.deepcopy(valid);broken['commands'].pop();self.assertFalse(check_public_graph_receipt(broken))
+        for change in [dict(compiler_crash=True),dict(exit_code=0),dict(primary_diagnostics=['unrelated'])]:
+            broken=copy.deepcopy(valid);broken['commands'][0].update(change);self.assertFalse(check_public_graph_receipt(broken))
+        for config in ['debug','release','address']:
+            for mode in ['missing','duplicate','renamed','zero']:
+                broken=copy.deepcopy(valid);row=broken['consumer_results'][config]
+                if mode=='missing':row['cases'].pop()
+                elif mode=='duplicate':row['cases'][0]=row['cases'][1]
+                elif mode=='renamed':row['cases'][0]='unexpected'
+                else:row['work_units']=0
+                self.assertFalse(check_public_graph_receipt(broken))
 
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -241,8 +364,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=20')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=26')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'
@@ -262,6 +385,9 @@ class HarnessTests(unittest.TestCase):
         self.assertIn('--scope', commands('wasm-qa', output)[1])
         self.assertNotIn('--scope', commands('wasm', output)[1])
         self.assertEqual(commands('coverage', output), commands('linux-coverage', output))
+        linux_full = commands('linux', output)
+        self.assertEqual(sum('Scripts/qualify_dual_dsl.py' in c for c in linux_full), 1)
+        self.assertFalse(any('Tools/MobileQualification' in c or 'Scripts/qualify_release_1_1.py' in c for c in linux_full))
         self.assertEqual(commands('linux-coverage', output)[1][1:3], ['-B', 'Scripts/coverage.py'])
 
     def test_darwin_executable_membership_is_exact(self):

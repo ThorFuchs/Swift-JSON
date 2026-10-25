@@ -1,8 +1,21 @@
+# Current API inventory
+
+Unreleased 1.7.0-dev consolidation has twelve library products plus swift-json and
+thirteen DocC catalogs including the non-product JSONDSLCore reference. The native
+compiler graphs define the complete authored inventory. JSONTransform and the
+trusted-authored DSLs are opt-in; the core products retain their semantic authority.
+The stable 1.6 inventory and chronological component records below retain their
+original scope, not the current combined product count. See
+[combined qualification](../Qualification/Consolidation2026.md).
+
 # Public API contract
 
-This document describes the implemented public interface. Native compiler symbol
-graphs supply the complete declarations in the eight DocC catalogs. Examples
-in the [README](../../README.md) are compiled and executed by the public consumer.
+The current product table below describes this development source. Stable 1.6.1
+retains eight libraries plus CLI and eight catalogs. Development adds Inspection,
+Transform and both optional authored DSL products, with a shared JSONDSLCore
+reference catalog. Existing released contracts remain unchanged. Compiler symbol
+graphs supply the complete authored declarations; the README examples are compiled
+and executed by public consumers.
 
 ## Products and ownership
 
@@ -10,19 +23,29 @@ in the [README](../../README.md) are compiled and executed by the public consume
 | --- | --- | --- |
 | JSON | JSON, JSONNumber, JSONObject, JSONParser, JSONWriter, JSONValueEncoder, JSONValueDecoder, JSONPointer, JSONDocument | Shared strict codec, exact decimal model, bounded traversal and native coding |
 | JSONNavigation | JSONTraversal, JSONTraversalScope, JSONTraversalOptions | Exact many-node DFS, strict physical/virtual scopes, bounded metadata and explicit coverage; one core read-scope meter |
+| JSONInspection | JSONShapeInspector, JSONStructuralSnapshot, JSONGraphProjection | Source-attached observed evidence, immutable exact projections, set/matrix and directed graph views; finite invocation-owned reads |
+| JSONTransform | JSONTransformProgram, JSONTransformOutput, JSONTransformExecution | Shared query compiler/pull VM, exact native values, finite guarded execution and typed terminal errors |
+| JSONValueDSL | JSONValueDSL.object/array, Field, Element, Elements | Trusted authored staging; finite iterative exact finalization |
+| JSONSchemaDSL | JSONSchemaDSL.document/boolean, Schema, Property, Definition, PatternProperty, DependentSchema, RequiredDependency, Rule | Trusted authored schema declarations; existing document/compiler/validator authority |
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
+| JSONSchemaExamples | JSONSchemaExampleGenerator, JSONSchemaExampleResult | Conservative deterministic witnesses certified by the existing native validator; separate finite preparation and cumulative generation |
 | JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
-| swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters and private CLI engine/filter runtime; no public query library |
+| swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters; the public Transform facade and CLI use the same private query compiler/VM |
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |
 
 JSON imports no siblings. JSONSchema depends on JSON and package-private
 JSONRegexRuntime. Streaming, Patch, HTML, Bridges and Navigation depend on JSON.
-JSONSchemaExamples depends only on JSON and JSONSchema. There are nine public products: eight libraries and the swift-json executable,
-and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
-uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
-value, schema, Patch and streaming contracts do not acquire UI semantics.
+JSONSchemaExamples depends only on JSON and JSONSchema. JSONInspection depends on
+JSON and JSONNavigation. JSONTransform depends on JSON and the package-private
+JSONFilterRuntime; JSONCLIEngine uses the same engine. Optional DSL products depend
+on JSON/JSONSchema and JSONDSLCore as declared in Package.swift. There are twelve
+library products plus swift-json and no external root-package dependencies. The
+shared helper has no standalone library product. JSONHTML conditionally uses Apple
+SDK frameworks for explicit native transfer/PDF preparation; core value, schema,
+Patch and streaming semantics remain portable. Package-only store preparation is
+not a public API or a second ledger. No online resolver or runtime dependency is added.
 
 Immutable facades store value configuration. Every operation owns its mutable
 context; every stream iterator requires exclusive access. Sendable follows the
@@ -288,3 +311,74 @@ the generated identity file itself. It is not a Git commit, binary digest or cla
 of publication. Generation/checking needs no Git, time, environment or network.
 
 JSONNavigation product promotion preserves all 56 N1 public declarations and resource semantics. Full-source admission precedes invalid depth/record-option validation, including oversized sources; N1Promotion.md records this preserved precedence. JSON imports no Navigation symbols implicitly.
+
+## Provisional JSONTransform extraction (1.7 feature branch)
+
+JSONTransform is an opt-in public product depending on JSON and the private
+JSONFilterRuntime kernel. JSON and JSONSchema do not import or re-export it.
+JSONCLIEngine uses its package-only accounted adapters; both callers execute the
+same FilterCompiler/FilterVM. The public interface contains no CLI context, file,
+process, exit-code or private-runtime signature.
+
+- `JSONTransformProgram.compile(_:variables:limits:)` creates an immutable Sendable
+  plan under finite compilation limits. Variable names are ASCII identifiers,
+  without `$`; JSON values retain exact native number and scalar-key semantics.
+- `withExecution(input:bindings:limits:source:_:)` creates a synchronous guarded
+  invocation and returns `JSONOperationReport<Result>`. Root admission, bindings,
+  all pulls/provider values and output results share one cumulative ledger.
+- `JSONTransformExecution.next()` returns `JSONTransformOutput?`. Nil means EOF;
+  a present handle may contain JSON null. Handles share one owner and are not
+  Sendable. Scope exit invalidates data access and releases provider/frame/root
+  ownership; output aliases retain their source reservation until last release.
+- `statistics`, `used(_:)` and `remainingWorkUnits` expose finite accounting without
+  exporting a mutable meter. During provider callbacks they report the bounded
+  callback-entry snapshot. `cancel()` latches terminal cancellation.
+- `JSONTransformLimits` combines the existing native policy with eleven mapped
+  transform ceilings. `JSONTransformFailure` distinguishes compilation, language,
+  resource, cancelled, provider and configuration failures. Owned operational
+  failures bypass query catches and remain terminal after caller catches.
+
+Provider work/allocations and extracted JSON copies belong to the caller; logical
+retention does not cap process RSS. Re-entering next() from the same provider
+throws `configuration/reentrantExecution` before accessing its borrowed context.
+The CLI retains one ledger across parsing, transformation, writing and diagnostics,
+its sixteen existing metric names and its own completion/EOF duties. Public
+compilation and execution are separate finite scopes, not one combined claim.
+
+See the [actual API/ownership decision](Release1.7/JSONTransform.md),
+[DocC guide](../../Sources/JSONTransform/Documentation.docc/ScopedTransforms.md)
+and [standalone public SwiftPM consumer](../../Tools/TransformQualification).
+This is an unreleased candidate, absent from published 1.6.1. No merge, tag,
+publication, new dialect, implicit floating bridge or feature from another draft
+follows from this contract.
+
+## 1.7.0 release-candidate authority
+
+This unpublished candidate retains the accepted Transform API (42 authored
+declarations) and Inspection API (95), with all 56 Navigation declarations
+unchanged. Historical provisional headings above remain stable link targets and
+checkpoint descriptions; the [candidate contract](../Qualification/Release1.7.0.md)
+and final compiler graphs determine current scope. API shape acceptance does not
+imply publication, measured allocations or unobserved platform execution.
+
+## Optional Dual DSL P1.2
+
+The two DSL products do not change or re-export the existing core entry points.
+JSONDSLCore has no standalone product; its public structural builder types occur
+in the optional generic signatures. See the [decisions](DualDSL/Decisions.md).
+Callbacks, content emission and staging are trusted and unmetered. Finalization
+uses one finite invocation ledger through iterative construction and, for schemas,
+document admission. This does not imply whole-pipeline cumulative billing, staging
+retention, caller instruction or RSS bounds. No whole-DSL report is supplied.
+
+Exact duplicate names throw JSONFailure/duplicateKey. Decoded scalar identity and
+order are preserved. Missing declarations emit nothing; null, empty containers and
+Boolean schemas differ. Array flattening requires Elements(contentsOf:). Implicit
+numbers accept BinaryInteger only, with explicit JSONNumber for decimals. E2 and
+JSONBridges remain unchanged; DSL targets import neither bridge nor framework DSL.
+
+Schema rawKeyword preserves declarations for existing compiler classification.
+No requiredness/default/format/reference/annotation policy is inferred. Invalid
+instances return false; malformed schemas, offline missing resources, nonproductive
+cycles, resource failures and cancellation remain operational errors. Factories
+never validate or publish a candidate schema as already compiled.

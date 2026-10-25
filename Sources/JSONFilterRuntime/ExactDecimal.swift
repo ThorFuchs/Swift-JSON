@@ -10,33 +10,33 @@ package enum ExactDecimal {
         init(_ number: JSONNumber, storage: DecimalMagnitude? = nil) { self.number = number; self.storage = storage }
         init(components: DecimalComponents) { number = .init(components: components); storage = nil }
     }
-    private static func failure(_ context: inout CLIJobContext, metric: JSONResourceMetric = .absoluteExponent) throws -> Never {
+    private static func failure(_ context: inout TransformRuntimeContext, metric: JSONResourceMetric = .absoluteExponent) throws -> Never {
         let error = JSONFailure(.resource, code: .counterOverflow, resource: .init(domain: context.meter.domain, metric: metric, limit: context.meter.limits[metric], attemptedUsage: nil, overflow: true))
         context.latch(error); throw error
     }
-    private static func addExponent(_ a: Int64, _ b: Int64, context: inout CLIJobContext) throws -> Int64 {
+    private static func addExponent(_ a: Int64, _ b: Int64, context: inout TransformRuntimeContext) throws -> Int64 {
         let (sum, overflow) = a.addingReportingOverflow(b); if overflow { try failure(&context) }; return sum
     }
-    private static func subtractExponent(_ a: Int64, _ b: Int64, context: inout CLIJobContext) throws -> Int64 {
+    private static func subtractExponent(_ a: Int64, _ b: Int64, context: inout TransformRuntimeContext) throws -> Int64 {
         let (difference, overflow) = a.subtractingReportingOverflow(b); if overflow { try failure(&context) }; return difference
     }
-    private static func admit(_ number: JSONNumber, context: inout CLIJobContext) throws {
+    private static func admit(_ number: JSONNumber, context: inout TransformRuntimeContext) throws {
         try context.meter.resetValueBounds(); try JSONAdmission.value(.number(number), meter: &context.meter)
     }
-    private static func admitToken(_ number: JSONNumber, context: inout CLIJobContext) throws {
+    private static func admitToken(_ number: JSONNumber, context: inout TransformRuntimeContext) throws {
         let c = number.components
         var bytes = UInt64(c.digits.count) + (c.negative ? 1 : 0)
         if c.exponent != 0 { try context.work(20); bytes += 1 + UInt64(String(c.exponent).utf8.count) }
         try context.meter.require(.numberTokenBytes, bytes)
     }
-    private static func normalized(_ magnitude: DecimalMagnitude, negative: Bool, exponent: Int64, context: inout CLIJobContext) throws -> Result {
+    private static func normalized(_ magnitude: DecimalMagnitude, negative: Bool, exponent: Int64, context: inout TransformRuntimeContext) throws -> Result {
         if magnitude.isZero { try DecimalMagnitude.step(&context); return Result(JSONNumber(integer: 0)) }
         var value = try magnitude.coefficient(context: &context), exponent = exponent
         while try value.removingTrailingZero(context: &context) { exponent = try addExponent(exponent, 1, context: &context) }
         try context.meter.require(.numberDigits, UInt64(value.count)); try context.meter.require(.absoluteExponent, exponent.magnitude)
         return Result(.init(components: .init(negative: negative, digits: value.coefficientDigits, exponent: exponent)), storage: value)
     }
-    package static func binary(_ op: String, _ lhs: JSONNumber, _ rhs: JSONNumber, context: inout CLIJobContext) throws -> FilterYield {
+    package static func binary(_ op: String, _ lhs: JSONNumber, _ rhs: JSONNumber, context: inout TransformRuntimeContext) throws -> FilterYield {
         try context.checkpoint(); try admit(lhs, context: &context); try admit(rhs, context: &context)
         let number: Result
         switch op {
@@ -65,7 +65,7 @@ package enum ExactDecimal {
             return try FilterValues.produced(.number(number.number), context: &context)
         }
     }
-    private static func adding(_ lhs: JSONNumber, _ rhs: JSONNumber, subtract: Bool, context: inout CLIJobContext) throws -> Result {
+    private static func adding(_ lhs: JSONNumber, _ rhs: JSONNumber, subtract: Bool, context: inout TransformRuntimeContext) throws -> Result {
         let a = lhs.components, originalB = rhs.components
         let b = DecimalComponents(negative: !originalB.isZero && (originalB.negative != subtract), digits: originalB.digits, exponent: originalB.exponent)
         if a.isZero { return .init(components: b) }
@@ -79,11 +79,11 @@ package enum ExactDecimal {
         else { value = try .subtract(right, left, context: &context); negative = b.negative }
         return try normalized(value, negative: negative, exponent: exponent, context: &context)
     }
-    private static func discarded(context: inout CLIJobContext) throws {
+    private static func discarded(context: inout TransformRuntimeContext) throws {
         let (next, overflow) = context.roundedDivisions.addingReportingOverflow(1)
         if overflow { try failure(&context, metric: .workUnits) }; context.roundedDivisions = next
     }
-    private static func quantized(_ input: Result, scale: Int, context: inout CLIJobContext) throws -> Result {
+    private static func quantized(_ input: Result, scale: Int, context: inout TransformRuntimeContext) throws -> Result {
         return try withExtendedLifetime(input) {
         let c = input.number.components, target = -Int64(scale)
         if c.isZero || c.exponent >= target { return input }
@@ -106,7 +106,7 @@ package enum ExactDecimal {
         return try normalized(quotient, negative: c.negative, exponent: target, context: &context)
         }
     }
-    private static func dividing(_ lhs: JSONNumber, _ rhs: JSONNumber, context: inout CLIJobContext) throws -> Result {
+    private static func dividing(_ lhs: JSONNumber, _ rhs: JSONNumber, context: inout TransformRuntimeContext) throws -> Result {
         guard !rhs.isZero else { throw FilterLanguageFailure("divisionByZero") }
         if lhs.isZero { return Result(JSONNumber(integer: 0)) }
         let a = lhs.components, b = rhs.components
@@ -155,7 +155,7 @@ package enum ExactDecimal {
         }
         return try normalized(quotient, negative: negative, exponent: -Int64(scale), context: &context)
     }
-    package static func unary(_ name: String, _ number: JSONNumber, context: inout CLIJobContext) throws -> FilterYield {
+    package static func unary(_ name: String, _ number: JSONNumber, context: inout TransformRuntimeContext) throws -> FilterYield {
         try context.checkpoint(); try admit(number, context: &context)
         let c = number.components, output: Result
         if name == "positive" { output = .init(components: c) }

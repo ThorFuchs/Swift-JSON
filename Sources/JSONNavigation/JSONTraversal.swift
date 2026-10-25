@@ -69,6 +69,21 @@ public struct JSONTraversal: Sendable {
         })
     }
 
+    /// Profile preparation, admission and the ordinary reducer share one original scope.
+    package func inspectPreparedOwned<Reducer: JSONTraversalOwnedReducer & JSONReadPreparation>(
+        scope: JSONTraversalScope = .subtree(at: []),
+        options: JSONTraversalOptions = .init(), reducer: inout Reducer)
+        throws -> JSONOperationReport<Reducer.Result> {
+        try execute(scope: scope, options: options, collectionLimit: nil, prepared: true,
+            prepare: { try $0.prepare(&reducer) }, { hit, value, context in
+                do { return try reducer.observe(hit, value: value, context: &context) }
+                catch { try context.recordFailure(error); throw error }
+            }, finish: { collection, context in
+                do { return try reducer.finish(collection.summary, context: &context) }
+                catch { try context.recordFailure(error); throw error }
+            })
+    }
+
     private struct Frame {
         let value: JSON
         let path: JSONReadPath
@@ -83,13 +98,21 @@ public struct JSONTraversal: Sendable {
 
     private func execute<Result>(scope selection: JSONTraversalScope, options: JSONTraversalOptions,
                          collectionLimit: Int?,
+                         prepared: Bool = false,
+                         prepare: (JSONReadScope) throws -> Void = { _ in },
                          _ visitor: (JSONTraversalHit, JSON, inout JSONTraversalContext) throws -> JSONTraversalAction,
                          finish: (JSONTraversalCollection, inout JSONTraversalContext) throws -> Result)
         throws -> JSONOperationReport<Result> {
-        let scope = try JSONReadScope(document, limits: limits)
+        let scope = try prepared ? JSONReadScope(preparingWith: limits)
+            : JSONReadScope(document, limits: limits)
         defer {
             scope.invalidate()
             lifetimeObserver?(scope.document == nil, scope.state == nil)
+        }
+        if prepared {
+            scope.state?.meter.checkpointObserver = checkpointObserver
+            try prepare(scope)
+            try scope.admitPrepared(document)
         }
         let state = try scope.check()
         var context = JSONTraversalContext(scope: scope)

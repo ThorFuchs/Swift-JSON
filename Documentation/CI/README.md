@@ -1,3 +1,28 @@
+# Current combined-source qualification
+
+The 25 October2026 consolidation combines exact set/matrix, graph, Transform and
+trusted-authored DSL and package-only store construction proposals. Required
+discovery is 975 native / 959 Linux / 871 WASI functions, 390 native/Linux and
+353 WASI parameter invocations, and 60 native / 59 portable sharing functions. These are required cardinalities, not observed passes.
+All49 core cap probes,16 CLI metrics,126 restoration identities, public consumers,
+ordinary compiler rejections and existing product lanes stay required. Twelve
+library products have thirteen catalogs because JSONDSLCore has a shared reference
+without an independently selectable product. See
+[the source-bound contract](../Qualification/Consolidation2026.md).
+
+The predecessor notes below are retained historical checkpoints; their counts,
+partial scopes and green receipts do not qualify this combined source.
+
+# Local NAV10 + NAV11 scratch seam (not a merge-qualified graph candidate)
+
+This task-owned composite retains all NAV10 and graph source/test identities. Expected
+union: 178 Inspection, 881 native / 865 Linux / 777 WASI functions; shared scopes
+56 native / 55 Linux; unchanged 325/288 parameter counts and 49 caps/126 maintenance
+identities. API union would be 1,239 (1,205 NAV10 plus graph34), subject to a fresh
+compiler graph audit. The 22 harness tests retain both parents' assertions.
+These are scratch expectations, not full platform/CI results. Neither PR #68 nor
+store refs have been updated. G4 remains HOLD.
+
 # NAV9 Branch B experimental qualification
 
 Adds exactly46 package-only set/matrix/core functions: 825 native /809 Linux /
@@ -16,6 +41,38 @@ receipts establish actual passes, these counts only specify gates. The opt-in
 public graph stays ten products/nine libraries, empty root dependencies and
 Navigation56/Inspection95 declarations. Graph/store have no runtime qualification.
 Branch A owns G4; no Branch B timing result or speed claim is inherited.
+
+# NAV11 experimental graph qualification
+
+The package graph/public API stays unchanged: nine libraries plus CLI; Navigation56
+and Inspection95. Graph symbols are package-only. Exact discovery is 108 Inspection
+functions including G01–G32, with five Inspection sharing functions. All previous
+identities, 49 core cap probes and 126 maintenance witnesses remain required. Native
+and Linux add the graph context and package-boundary codegen/runtime qualifiers;
+the original two-positive/twenty-negative ownership matrix is unchanged. Exact
+identities and genuine primary diagnostics are checked, including crash rejection.
+
+The current source-bound receipts establish outcomes; the dated sections below
+retain their original source scopes. Controlled performance remains HOLD.
+
+# 1.7.0 candidate qualification authority
+
+This candidate's exact discovery requires **802 native /786 Linux** functions,
+325 parameter invocations each, and 52 native /51 Linux shared-state sanitizer
+functions. It has ten library catalogs and eleven products, including the accepted
+42-declaration JSONTransform facade over the unchanged compiler/VM. All 49 native
+cap probes, 16 CLI metrics, 126 maintenance identities, pinned-suite policies,
+public consumers and ownership/cardinality proofs remain required. Native has
+four lanes (native/safety/docs/archive); Linux has behavior/safety on both supported
+architectures, with composition separate and additive. Actual source-bound receipts
+establish execution; discovery expectations and this page are not pass claims.
+
+The [candidate contract](../Qualification/Release1.7.0.md) records loaded-host timing
+and the explicit one-time P4 instrumentation waiver: events/bytes/overhead remain
+unknown, not measured zero or a passed allocation gate. It preserves platform
+claims, the original x86 planner incident and inherited NAV8 G4 speed-claim HOLD.
+WASI Transform evidence is scoped; no full-root or mobile runtime pass is inferred.
+Earlier sections below retain their historical source/count contexts.
 
 # NAV8 Navigation V1 integration
 
@@ -142,6 +199,8 @@ Pushes to main, pull requests and manual dispatch run four lanes:
 
 - Native: public inventory, manifest/dependency graph, release build, debug and
   release Swift Testing, six-library example, rooted JSON/JSONSchema consumer,
+
+  release Swift Testing, public multi-product example, rooted JSON/JSONSchema consumer,
   public cap tests and pinned independent suites under an external timeout.
 - Safety: full Address Sanitizer tests, targeted shared-state Thread Sanitizer
   tests, and strict memory safety compilation with warnings as errors.
@@ -151,6 +210,8 @@ Pushes to main, pull requests and manual dispatch run four lanes:
   complete source manifest.
 - Documentation: public symbol graphs, complete authored API/parameter comments,
   executed README examples, seven native DocC catalogs with warnings as errors,
+
+  executed README examples, eight product DocC catalogs plus the shared DSL structure reference with warnings as errors,
   native static-hosting transforms and site route/asset checks.
 
 Actions are pinned by commit. Jobs have read-only repository permissions and
@@ -200,7 +261,7 @@ distribution, architecture or libc claims.
 
 `python3 Scripts/ci.py --lane wasm` requires the matching Swift.org 6.4.0 compiler,
 SDK and WasmKit plus Node. It records cross-build and runtime outcomes separately.
-Node executes the complete 256-function/173-parameter portable root suites,
+Node executes the current 329-function/173-parameter portable root suites,
 independent corpus policies and all 49 cap outcomes. Both hosts execute the frozen
 public consumer; WasmKit retains its separately recorded 14-function consumer scope. The
 [WASI contract](../Architecture/WebAssembly.md) defines host/safety scopes.
@@ -214,9 +275,9 @@ Apple SDK declaration probes. It builds all five products in iPhoneOS and
 simulator consumers. A bounded offscreen WebPage region experiment remains outside
 the production API. The lane establishes native API/file transport and SDK builds,
 not share sheets or receiving-editor UI. Explicit paginated PDF and simulator/device execution have separate materialized receipts.
-Current root discovery is 270 functions on Mac (75 HTML) and 256 on Linux/WASI
-(61 HTML). The focused export lane requires 38 functions on Mac. Ten Mac shared
-functions, including independent PDF cancellation, run under Thread Sanitizer. All 49 cap checks
+Current root discovery is 343 functions on Mac (75 HTML, 47 DSL) and 329 on Linux/WASI
+(61 HTML, 47 DSL). The focused export lane requires 38 functions on Mac. Thirteen Mac shared
+functions, including independent PDF cancellation and DSL finalization, run under Thread Sanitizer. All 49 cap checks
 and the 173 baseline parameterized invocations remain required.
 
 ## Structured Swift Testing receipts
@@ -337,3 +398,32 @@ For an ineligible timing host, `--lane wasm --skip-host-measurements` explicitly
 records optional host samples as NOT RUN. It preserves every runtime/corpus/cap/
 strict/ABI gate and the default lane's timing protocol. This flag grants no G4
 PASS and produces no performance evidence.
+
+## NAV11 public graph candidate
+
+The owner-reviewed successor keeps all 32 original graph identities and adds 16
+public scenarios (124 Inspection functions). Required roots become 827 native,
+811 Linux and 723 WASI, with unchanged 325/288 parameter invocations. Shared-state
+expectations become 53 native/52 Linux. The public graph qualifier executes 16
+consumer cases in Debug/Release/ASan, three guide blocks/configuration and 26
+ordinary external full-codegen rejections. The original graph boundary matrix
+retains 18 negatives, replacing only obsolete invisible-public-type cases with
+internal builder/query/stage access rejections. Reducer 2+/20-, helper 2+/8-, all
+49 core caps and 126 maintenance identities remain. Harness cardinality is 19.
+These are requirements; actual source-bound receipts establish results. No merge
+or release follows automatically. Controlled G4 remains HOLD without speed claims.
+
+## Dual DSL development qualification
+
+`python3 Scripts/ci.py --lane dsl` runs all 47 actual-engine DSL Swift Testing
+functions in Debug and Release, six intended-domain compiler rejections in both
+configurations, qualified-name collision probes, native compiler scaling experiments
+and the separate public consumer in both configurations. Native/Linux lanes also
+require the DSL imports and consumer. Root discovery is 343 functions on Mac and
+329 on Linux/WASI, in eight exact bundles; all 173 parameter invocations and 49
+baseline metric probes remain unchanged. Native shared-state TSan discovery is
+13 functions (12 portable), including independent DSL finalization with shared plans.
+
+The P1.2 compiler experiment builds local variadic and pairwise builder modules
+against the same real engine. Measurements retain host load and compiler RSS;
+these do not imply runtime, staging-retention or caller-work guarantees.

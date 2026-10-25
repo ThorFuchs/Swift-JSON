@@ -1,7 +1,16 @@
+# Current documentation authority
+
+Unreleased 1.7.0-dev consolidation has twelve libraries plus CLI and thirteen DocC
+catalogs (including the shared non-product JSONDSLCore reference). Stable 1.6.1
+remains eight libraries. [Combined qualification](Qualification/Consolidation2026.md)
+separates current requirements from all preserved predecessor records below.
+
 # Swift-JSON documentation
 
 The [release-line matrix](Qualification/ReleaseLines.md) separates the eight-library
-1.6 maintenance source from nine-library unreleased 1.7.0-dev. The website tracks
+1.6 maintenance source from this unreleased twelve-library 1.7.0-dev source.
+See [combined qualification and holds](Qualification/Consolidation2026.md);
+[the frozen JTX10 candidate](Qualification/Release1.7.0.md) is historical. The website tracks
 development main; use matching release assets for a stable compiled reference.
 
 Start with the [package README](../README.md) for installation, product selection
@@ -52,8 +61,8 @@ Online references track main; tagged releases include matching compiled catalogu
 - [Eight-library compiled source example](../Examples/Consumer/README.md)
 - [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
 - [Published Navigation and historical N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md), [original traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md) and [N1 promotion history](Architecture/StructuralIntelligence/N1Promotion.md). JSONNavigation is released in 1.6.0; the original N0/N1 stage gates remain dated history.
-- [Unreleased N2 Inspection source](Architecture/StructuralIntelligence/Inspection.md) adds opt-in observed array evidence. This source has nine library catalogs; stable 1.6 release tags and assets retain eight.
-- The source authority map distinguishes this unreleased Inspection source from the dated unmerged-candidate record. N3 snapshots, private P1, composition accounting, root reuse, DSL and deployment retain separate source-bound qualification and approval gates.
+- [Unreleased N2 Inspection source](Architecture/StructuralIntelligence/Inspection.md) adds opt-in observed array evidence. This development source has thirteen catalogs including the DSL structure reference; stable 1.6 release tags and assets retain eight.
+- The source authority map distinguishes this unreleased Inspection source from the dated unmerged-candidate record. Snapshots, public projections and set/matrix APIs are admitted development capabilities. Graph, Transform, authored DSLs and private store construction require combined-source qualification. Composition/root and lower deployment proposals retain their held gates.
 
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)
@@ -72,3 +81,18 @@ Original code is Apache-2.0. See the [license](../LICENSE), [notice](../NOTICE),
 from the empty library dependency graph.
 
 - [Offline provider schemas and request fragments](Architecture/Release1.4/Providers.md), [frozen profile tables](Architecture/Release1.4/ProviderProfiles.json) and the [DocC guide](../Sources/JSONSchema/Documentation.docc/ProviderSchemas.md).
+
+The candidate also provides [Inspection](../Sources/JSONInspection/Documentation.docc/JSONInspection.md)
+and [Transform](../Sources/JSONTransform/Documentation.docc/JSONTransform.md):
+their guides are joined by the optional DSL catalogs and shared generic reference.
+Derive the complete authored inventory from current compiler graphs. These products are
+absent from stable 1.6.1. Candidate docs do not establish publication or a platform
+runtime pass; source-bound qualification receipts define the tested scope.
+
+## Optional authored DSLs (P1.2 development)
+
+- [Integration plan and source boundary](Architecture/DualDSL/Plan.md)
+- [Resource, naming and compiler decisions](Architecture/DualDSL/Decisions.md)
+- [Real-engine acceptance mapping](Qualification/DualDSL/README.md)
+- [Typed value guide](../Sources/JSONValueDSL/Documentation.docc/AuthoredValues.md)
+- [Typed schema guide](../Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md)

@@ -83,6 +83,12 @@ def main():
         # SwiftPM 6.4's default Swift Build engine publishes native modules/libraries here.
         products = ROOT / '.build/out/Products/Debug'
         swift = ['xcrun', 'swiftc', '-swift-version', '6']
+        if args.mode in ('ownership', 'reader'):
+            # Match the actual SwiftPM SDK rather than swiftc's embedded default.
+            # SDK selection does not lower the deployment or language baseline.
+            sdk = run('native-sdk-path', ['xcrun', '--sdk', 'macosx', '--show-sdk-path']).strip()
+            swift += ['-sdk', sdk]
+
         if args.mode == 'ownership':
             if not (products / 'libJSON.a').is_file(): raise FileNotFoundError('Run swift test first to build the real testable JSON module')
             module = directory / 'ReaderProbe.swiftmodule'

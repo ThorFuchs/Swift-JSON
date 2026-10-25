@@ -3,31 +3,31 @@ import Foundation
 import JSON
 
 package enum FilterValues {
-    package static func produced(_ value:JSON, collections:UInt64=0, context:inout CLIJobContext)throws->FilterYield {
+    package static func produced(_ value:JSON, collections:UInt64=0, context:inout TransformRuntimeContext)throws->FilterYield {
         try context.checkpoint()
         let entry=context.meter.used(.retainedBytes)
         do {
             try context.meter.resetValueBounds()
             try JSONAdmission.value(value,meter:&context.meter,owned:true)
             let bytes=context.meter.used(.retainedBytes)-entry
-            let lease=try CLIValueLease(ownedRetained:bytes,collections:collections,context:&context)
+            let lease=try TransformValueLease(ownedRetained:bytes,collections:collections,context:&context)
             return .init(value:value,lease:lease,collectedValues:collections)
         } catch {
             try context.meter.release(context.meter.used(.retainedBytes)-entry)
             throw error
         }
     }
-    package static func integer(_ value:Int, context:inout CLIJobContext)throws->FilterYield {
+    package static func integer(_ value:Int, context:inout TransformRuntimeContext)throws->FilterYield {
         try context.work(20)
         return try produced(.number(JSONNumber(integer:value)),context:&context)
     }
-    package static func array(_ values:[JSON], admittedCollectionCount:Bool=false, context:inout CLIJobContext)throws->FilterYield {
+    package static func array(_ values:[JSON], admittedCollectionCount:Bool=false, context:inout TransformRuntimeContext)throws->FilterYield {
         let count=UInt64(values.count)
         if !admittedCollectionCount { try context.charge(.collectionValues,count) }
         do { return try produced(.array(values),collections:count,context:&context) }
         catch { if !admittedCollectionCount { try context.release(.collectionValues,count) };throw error }
     }
-    package static func index(_ value:JSON,key:JSON,context:inout CLIJobContext)throws->JSON {
+    package static func index(_ value:JSON,key:JSON,context:inout TransformRuntimeContext)throws->JSON {
         switch key {
         case .string(let text):
             switch value {case .null:return .null;case .object(let object):return try object.lookup(text,meter:&context.meter) ?? .null;default:throw FilterLanguageFailure("cannotIndex")}
@@ -45,13 +45,13 @@ package enum FilterValues {
         default:throw FilterLanguageFailure("invalidIndexKind")
         }
     }
-    package static func equals(_ a: JSON, _ b: JSON, context: inout CLIJobContext) throws -> Bool {
+    package static func equals(_ a: JSON, _ b: JSON, context: inout TransformRuntimeContext) throws -> Bool {
         try context.checkpoint()
         let entry = context.meter.used(.retainedBytes)
         defer { try? context.meter.release(context.meter.used(.retainedBytes) - entry) }
         return try JSONComparison.equals(a, b, meter: &context.meter)
     }
-    package static func has(_ value:JSON,key:JSON,context:inout CLIJobContext)throws->Bool {
+    package static func has(_ value:JSON,key:JSON,context:inout TransformRuntimeContext)throws->Bool {
         switch (value,key) {
         case (.object(let object),.string(let text)):return try object.lookup(text,meter:&context.meter) != nil
         case (.array(let values),.number(let number)):
@@ -60,7 +60,7 @@ package enum FilterValues {
         default:throw FilterLanguageFailure("invalidHasDomain")
         }
     }
-    package static func textCompare(_ a:String,_ b:String,context:inout CLIJobContext)throws->Int {
+    package static func textCompare(_ a:String,_ b:String,context:inout TransformRuntimeContext)throws->Int {
         var left=a.utf8.makeIterator(),right=b.utf8.makeIterator()
         while true {
             try context.work();let a=left.next(),b=right.next()
@@ -69,7 +69,7 @@ package enum FilterValues {
             return a<b ? -1:1
         }
     }
-    package static func sortedMembers(_ object:JSONObject,context:inout CLIJobContext)throws->[JSONMember] {
+    package static func sortedMembers(_ object:JSONObject,context:inout TransformRuntimeContext)throws->[JSONMember] {
         let bytes=UInt64(object.count)*JSONLogicalWeights.member
         try context.meter.retain(bytes*2)
         var completed = false
@@ -95,7 +95,7 @@ package enum FilterValues {
         try context.meter.release(bytes); completed = true
         return values
     }
-    package static func compare(_ a:JSON,_ b:JSON,context:inout CLIJobContext)throws->Int {
+    package static func compare(_ a:JSON,_ b:JSON,context:inout TransformRuntimeContext)throws->Int {
         func rank(_ v:JSON)->Int {switch v{case .null:0;case .boolean(false):1;case .boolean(true):2;case .number:3;case .string:4;case .array:5;case .object:6}}
         var pending:[(JSON,JSON)]=[]
         try context.meter.retain(16);pending.append((a,b))
@@ -127,7 +127,7 @@ package enum FilterValues {
         }
         return 0
     }
-    package static func bound(_ value:JSON?,length:Int,default fallback:Int,context:inout CLIJobContext)throws->Int {
+    package static func bound(_ value:JSON?,length:Int,default fallback:Int,context:inout TransformRuntimeContext)throws->Int {
         guard let value else{return fallback}
         guard case .number(let number)=value,number.isInteger else{throw FilterLanguageFailure("invalidSliceBound")}
         if try number.compare(to:JSONNumber(integer:length),meter:&context.meter) != .orderedAscending{return length}
@@ -135,7 +135,7 @@ package enum FilterValues {
         let index=try number.integer(as:Int.self,meter:&context.meter)
         return index<0 ? length+index:index
     }
-    package static func slice(_ value:JSON,start:JSON?,end:JSON?,context:inout CLIJobContext)throws->FilterYield {
+    package static func slice(_ value:JSON,start:JSON?,end:JSON?,context:inout TransformRuntimeContext)throws->FilterYield {
         if case .null=value{return .init(value:.null)}
         switch value {
         case .array(let values):

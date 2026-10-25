@@ -7,8 +7,10 @@ import re
 import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PRODUCTS = ('JSON', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection')
+PRODUCTS = ('JSON', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection', 'JSONTransform', 'JSONValueDSL', 'JSONSchemaDSL')
 
+SUPPORT_MODULES = ('JSONDSLCore',)
+CATALOGS = PRODUCTS + SUPPORT_MODULES
 
 def public_symbols(graph_dir):
     """Return unique authored declarations, excluding extension containers/synthesis."""
@@ -16,7 +18,7 @@ def public_symbols(graph_dir):
     for graph in sorted(graph_dir.glob('*.json')):
         data = json.loads(graph.read_text())
         module = data['module']['name']
-        if module not in PRODUCTS:
+        if module not in CATALOGS:
             continue
         for symbol in data['symbols']:
             location = symbol.get('location')
@@ -33,7 +35,7 @@ def public_symbols(graph_dir):
                 raise ValueError('Non-public symbol in public graph')
             identifier = symbol['identifier']['precise']
             symbols[identifier] = dict(symbol, module=module, source=relative.as_posix())
-    for module in PRODUCTS:
+    for module in CATALOGS:
         if not any(s['module'] == module for s in symbols.values()):
             raise ValueError('No authored symbols for ' + module)
     return sorted(symbols.values(), key=lambda s: (s['module'], s['pathComponents'], s['identifier']['precise']))
@@ -56,7 +58,7 @@ def verify_comments(symbols):
                 failures.append(label + ': missing parameter ' + name)
     return {'authored_public_symbols': len(symbols),
             'documented_public_symbols': sum(bool(comment_text(s).strip()) for s in symbols),
-            'products': {m: sum(s['module'] == m for s in symbols) for m in PRODUCTS},
+            'products': {m: sum(s['module'] == m for s in symbols) for m in CATALOGS},
             'policy': 'All authored public declarations and named parameters; compiler-synthesized declarations and extension containers excluded.',
             'errors': failures}
 

@@ -1,10 +1,14 @@
 # Swift-JSON
 
-This source is **1.7.0-dev**, the unreleased development line. It retains the
-admitted JSONInspection array-evidence API plus source-attached snapshots and
-tree/sparse-table projections alongside the unchanged 56-declaration Navigation API: nine libraries, ten products and nine catalogs.
-The stable 1.6 line has eight libraries and eight catalogs. Do not use a main
-snapshot as a 1.6 maintenance release.
+This is **unreleased 1.7.0-dev consolidation source**. Latest stable remains
+**1.6.1**; no new tag or release is implied. It combines the existing Navigation
+and Inspection projections with the reviewed source-bound graph, JSONTransform
+and optional JSONValueDSL/JSONSchemaDSL proposals. The manifest has twelve library
+products plus the CLI. The shared JSONDSLCore module has no standalone product;
+its reference makes thirteen DocC catalogs. Stable 1.6.1 keeps eight libraries.
+
+Each combined source must pass fresh qualification; predecessor green checks do
+not qualify a new tree. See the [consolidation contract](Documentation/Qualification/Consolidation2026.md).
 
 See the [release-line matrix](Documentation/Qualification/ReleaseLines.md) for exact
 source scopes and publication boundaries. Version metadata identifies source; the
@@ -41,9 +45,10 @@ DocC and qualification assets for the stable reference; see the
 Historical N0/N1 plans and later candidates are distinguished in the
 [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 
-This 1.7.0-dev source includes opt-in JSONInspection: nine libraries plus the CLI,
-ten products in total. Inspection is absent from stable 1.6 releases. Use this
-source checkout for Inspection; its inclusion in main does not publish 1.7.0.
+This development source includes opt-in Inspection, Transform and authored DSLs:
+twelve libraries plus the CLI, thirteen products in total. Inspection, Transform and DSLs are absent from stable 1.6 releases. Pin a reviewed
+unreleased source commit to use those products; the compatible stable installation
+requirement below does not supply them. Integration into main does not publish 1.7.0.
 
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the
@@ -102,6 +107,9 @@ Choose the products your application needs:
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
 | **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees, strict sparse object-row tables and exact set/numeric-matrix views |
+| **JSONTransform** | Candidate library: exact query plans, guarded pull execution and finite cumulative limits; see the [extraction checkpoint](Documentation/Architecture/Release1.7/JSONTransform.md) |
+| **JSONValueDSL** | Trusted authored exact objects and arrays; finite checked finalization |
+| **JSONSchemaDSL** | Trusted authored Draft 2020-12 documents using the native compiler/validator |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
 
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
@@ -189,6 +197,47 @@ text is distinct from its exact binary rational. Read the
 [entry-point guide](Sources/JSON/Documentation.docc/QuickEntryPoints.md),
 [numeric fidelity guide](Sources/JSONBridges/Documentation.docc/NumericFidelity.md)
 and [before/after crosswalk](Documentation/Ergonomics/README.md).
+
+## Typed authored DSLs (P1.2 development)
+
+Select the optional `JSONValueDSL` and `JSONSchemaDSL` products explicitly. They add
+syntax over the same exact model and schema engine; neither is imported by core.
+These APIs are development additions on main's feature line, not additions to older tags.
+
+```swift
+import JSONValueDSL
+import JSONSchemaDSL
+
+let authoredTenth = try JSONNumber(parsing: "0.1")
+let authoredJSON = try JSONValueDSL.object {
+    Field("amount", exactNumber: authoredTenth)
+    Field.array("nested") { Element.array { Element(1); Element(2) } }
+}
+let authoredSchema = try JSONSchemaDSL.document {
+    Schema.type(.object)
+    Schema.properties {
+        Property("amount") { Schema.type(.number); Schema.minimum(authoredTenth) }
+    }
+    Schema.required("amount")
+}
+let authoredPlan = try JSONSchemaCompiler().compile(authoredSchema)
+let authoredResult = try JSONSchemaValidator().validate(authoredJSON, against: authoredPlan)
+precondition(authoredResult.isValid)
+```
+
+This syntax is for **trusted authored configuration**. Callbacks, wrapper collection
+and staging are unmetered. Only iterative finalization and schema-document admission
+share a finite ledger; there is no staging/RSS bound or whole-DSL cumulative report.
+Use checked accumulators or the parser for dynamic untrusted input. Exact duplicates
+throw, scalar-distinct keys remain distinct, omitted branches emit nothing, and arrays
+expand only through explicit `Elements(contentsOf:)`. There is no implicit Float/Double
+bridge, requiredness inference, default application or custom schema validator.
+
+See the [value guide](Sources/JSONValueDSL/Documentation.docc/AuthoredValues.md),
+[schema guide](Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md),
+[public-only consumer](Examples/DualDSL) and [qualification scope](Documentation/Qualification/DualDSL).
+The shared JSONDSLCore module has no standalone product; its typed composition contracts
+support the two optional APIs. Typed schema synonyms and an umbrella import remain deferred.
 
 ## Parse, inspect and write exact values
 
@@ -542,8 +591,8 @@ The [documentation index](Documentation/README.md) links the behavior contracts.
 provide public API references, focused guides, parameter descriptions and failure
 contracts, compiled from the native Swift public symbol graphs.
 
-This source adds unreleased Inspection as a ninth catalog. Build the eight released
-catalogs plus the Inspection source catalog on a supported native host:
+This development source has thirteen catalogs: twelve library references and the
+shared JSONDSLCore structure reference. Build the source catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -623,7 +672,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-Published 1.6.0 has eight libraries plus the executable; this unreleased source has nine
+Published 1.6.0 has eight libraries plus the executable; this development source has twelve
 libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
@@ -671,8 +720,8 @@ remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
 and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
 opt-in in the published 1.6.0 release; one-node lookup remains in JSON. This source
-also includes unreleased N2 inspection. N3 snapshots and private P1 projections
-remain separate unmerged candidates;
+also includes unreleased N2 inspection. N3 snapshots and P1 tree/sparse-table projections are admitted in this candidate;
+other proposals remain separate;
 see the [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
 They do not expand the released Navigation API or promote public E11 projection.
 
@@ -702,7 +751,7 @@ numeric matrix or schema admission. See the [compiled evidence guide](Sources/JS
 
 ## Complete source-attached structural views (unreleased)
 
-Opt-in JSONInspection on 1.7.0-dev main now combines array observations with a
+Opt-in JSONInspection in this candidate combines array observations with a
 complete parent-linked snapshot, selected physical tree views and strict sparse
 all-object tables. Use core Pointer/read for one value and Navigation for many-node
 traversal. Inspection keeps exact typed locations, source order and numeric/key
@@ -731,3 +780,41 @@ limits and an operation report. These are structural views; no set algebra, matr
 arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
 [independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
 Batch access remains explicitly deferred to NAV13. Stable 1.6.1 is unchanged.
+
+NAV11 experiments with a package-only, exact source-backed directed simple graph
+inside JSONInspection. Graph construction and BFS are not public API and are not
+part of stable 1.6.1. The [experimental contract](Documentation/Architecture/StructuralIntelligence/NAV11/GraphADR.md)
+records finite capacities, source/error precedence and one-ledger ownership. There
+is no graph product, performance claim or automatic promotion.
+
+## Source-bound graph candidate (unreleased)
+
+This development candidate extends JSONInspection with an explicit directed simple
+graph view of two disjoint physical arrays. An immutable `JSONGraphProfile` names
+exact typed paths and direct string ID/endpoint keys. Checked construction rejects
+duplicate scalar-exact IDs, dangling endpoints and repeated directed pairs; self
+edges, cycles, reverse edges and isolates remain valid data. BFS returns the complete
+reachable component in source-edge order or throws. Node/edge values and original
+node spans stay attached to the captured source.
+
+Each later read or query has its own explicit finite whole-source admission.
+Build defaults to 10,000 nodes/50,000 edges; BFS defaults to 10,000 frontier,
+visited and result entries. Storage and reducers stay private. Construction can
+require quadratic work, and repeated reads re-admit the source. Logical retained
+bytes are not RSS; controlled G4 performance remains HOLD with no speed claim.
+See the [compiled graph guide](Sources/JSONInspection/Documentation.docc/SourceBoundGraphs.md)
+and [standalone public consumer](Tools/GraphPublicQualification). This candidate
+adds no product and does not establish a published release or merge approval.
+
+## Public transformation library candidate
+
+The JSONTransform 1.7.0 candidate exposes the existing query compiler and pull VM
+without CLI imports. The CLI uses the same engine. Plans are immutable and Sendable;
+scoped handles share one cumulative ledger and invalidate on scope exit. The public
+[guide](Sources/JSONTransform/Documentation.docc/ScopedTransforms.md) and
+[standalone consumer](Tools/TransformQualification) document the accepted API.
+See the [1.7.0 candidate qualification contract](Documentation/Qualification/Release1.7.0.md)
+for source-bound gates, the explicit allocation-instrumentation exception and
+platform limits. A path or revision consumer is preparation evidence; exact 1.7.0
+tag consumption is a postauthorization check.
+This product is absent from stable 1.6.1 and must pass qualification on its final versioned source before publication.

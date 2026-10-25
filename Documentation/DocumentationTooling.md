@@ -1,14 +1,19 @@
 # Building and maintaining the DocC catalogs
 
 Swift source comments are the API documentation authority. Native compiler symbol
-graphs supply the declarations and links for nine candidate Swift DocC catalogs. Each catalog
-combines the product reference with curated Topics and a focused usage guide.
-See the [Swift DocC documentation](https://www.swift.org/documentation/docc/).
+graphs supply declarations and links for thirteen development DocC catalogs:
+twelve library references plus the shared non-product JSONDSLCore reference.
+Product catalogs combine the reference with curated Topics and usage guides.
+Stable 1.6.1 assets retain their separate eight-catalog scope. See the
+[Swift DocC documentation](https://www.swift.org/documentation/docc/).
 
 ## Build locally
 
 Use macOS/SDK 27+, Swift compiler/tools 6.4+ and Swift language mode 6. Select the
-supported Xcode through `DEVELOPER_DIR` if it is not the system default. DocC comes
+supported Xcode through `DEVELOPER_DIR` if it is not the system default. If the
+standalone compiler defaults to a different SDK than SwiftPM, set `SDKROOT` to
+the supported path reported by `xcrun --sdk macosx --show-sdk-path`; keep the
+selected SDK consistent across compilation and probes. DocC comes
 with that toolchain; the Python scripts use only their standard library. No extra
 documentation engine or root-package dependency is required.
 
@@ -19,8 +24,8 @@ python3 Scripts/ci.py --lane docs
 The lane records native preflight, extracts fresh public symbol graphs, requires
 summaries and named-parameter documentation on every authored public declaration,
 checks README Swift fences against their executable consumer source, runs that
-consumer, and compiles all nine candidate DocC catalogs with warnings as errors. Zero public
-symbols, missing comments, stale examples or a failed catalog fail the lane.
+consumer, and compiles all thirteen catalogs with warnings as errors. Missing
+symbols/comments, stale examples or a failed catalog fail the lane.
 
 The lane also executes the standalone schema-examples consumer (15 preserved cases and two
 expected compiler rejections), plus every Swift block in all five JSONSchemaExamples
@@ -40,13 +45,17 @@ statistics; the consumer imports no private meters.
 | `.build/handoff/docc/JSONBridges.doccarchive` | Opt-in native numeric conversion and fidelity guide |
 | `.build/handoff/docc/JSONNavigation.doccarchive` | Opt-in exact structural traversal and coverage |
 | `.build/handoff/docc/JSONInspection.doccarchive` | Observed array evidence and row coverage |
-| `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by product |
+| `.build/handoff/docc/JSONTransform.doccarchive` | Exact compiled plans, guarded pull scopes, finite reports and typed failures |
+| `.build/handoff/docc/JSONValueDSL.doccarchive` | Trusted value authoring API and guide |
+| `.build/handoff/docc/JSONSchemaDSL.doccarchive` | Trusted schema authoring API and guide |
+| `.build/handoff/docc/JSONDSLCore.doccarchive` | Shared structural reference; no standalone product |
+| `.build/handoff/docc/symbols/` | Public compiler symbol graphs grouped by module |
 | `.build/handoff/docc/coverage.json` | Counts and documentation-coverage failures |
 | `.build/handoff/docc/receipt.json` | Commands, toolchain, counts, exits and diagnostics |
-| `.build/handoff/docc/compiled-catalogs.tar.gz` | All nine candidate compiled catalogs with their exact native filenames |
-| `.build/handoff/docc/compiled-catalogs.MANIFEST.sha256` | Independently verifiable hashes for every archived catalog file |
-| `.build/handoff/pages/site/` | Static site, landing page and all nine candidate references under the project base path |
-| `.build/handoff/pages/receipt.json` | Native transformations, input/output hashes and route/asset verification |
+| `.build/handoff/docc/compiled-catalogs.tar.gz` | All thirteen catalogs with exact native filenames |
+| `.build/handoff/docc/compiled-catalogs.MANIFEST.sha256` | Hashes for every archived catalog file |
+| `.build/handoff/pages/site/` | Static site, product landing page and all thirteen references |
+| `.build/handoff/pages/receipt.json` | Transformations, input/output hashes and route/asset verification |
 
 Open a `.doccarchive` in Xcode for the compiled reference. To preview a source
 catalog in a local browser after the lane has produced its symbol graphs:
@@ -74,7 +83,9 @@ The manifest and receipt preserve file-level and archive-level digests.
 
 The docs lane uses native `docc process-archive transform-for-static-hosting` to
 prepare each qualified archive under `/Swift-JSON/<product>`. A shared landing
-page links all nine candidate references and guides. The build verifies product/guide routes,
+page links all twelve product references and guides. The supporting DSL reference
+is also deployed at `/Swift-JSON/JSONDSLCore/documentation/jsondslcore/`, without
+a product card. The build verifies product/guide and supporting-reference routes,
 local HTML links and assets, rejects private-path/credential markers and symlinks,
 and records a file manifest. Only the generated site is packaged for Pages;
 source graphs, command logs and private maintainer records are not website content.
@@ -91,7 +102,7 @@ native docs lane; run them separately with `python3 -B Scripts/test_documentatio
 
 Browser acceptance must also open a guide directly, confirm the sidebar has links
 without a fetching error, follow a sidebar symbol link and return to a guide.
-Repeat direct guide navigation for all nine candidate catalogs and the five schema-example
+Repeat direct guide navigation for all ten candidate catalogs and the five schema-example
 guides. A successful article render or static HTML-link check alone does not prove
 that the client fetched its navigator index.
 

@@ -1,4 +1,16 @@
-# N0 source authority
+# Structural source authority
+
+## Consolidated development edition — 25 October 2026
+
+This unreleased 1.7.0-dev source combines admitted N2/snapshots/projections and
+set/matrix APIs with the reviewed public directed graph, Transform and authored
+DSL proposals. It has twelve libraries plus CLI and thirteen catalogs including
+the shared non-product DSL reference. Store preparation/construction stays
+package-only. Fresh [combined qualification](../../Qualification/Consolidation2026.md)
+is required; a historical component pass does not qualify the composite. Stable
+1.6.1 remains eight libraries with no Inspection. The dated N0/N1/N2 and research
+records below are preserved history, including their earlier inventories, gates,
+compiler failures and approval boundaries. No release follows from integration.
 
 ## Latest stable publication
 

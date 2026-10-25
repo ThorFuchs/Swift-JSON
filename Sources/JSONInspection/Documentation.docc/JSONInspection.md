@@ -46,3 +46,14 @@ or numeric matrix. Sampling does not exempt any source from admission.
 - ``JSONStructuralSetProjection``
 - ``JSONNumericMatrixProjection``
 - ``JSONP2ProjectionFailure``
+
+### Experimental scope
+
+- <doc:GraphExperiment>
+
+### Source-bound directed graphs
+
+- <doc:SourceBoundGraphs>
+- ``JSONGraphProfile``
+- ``JSONGraphProjection``
+- ``JSONGraphFailure``
