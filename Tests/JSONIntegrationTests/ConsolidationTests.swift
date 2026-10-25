@@ -35,8 +35,8 @@ import JSONInspection
     #expect(validation.isValid)
     let program = try JSONTransformProgram.compile(".nodes[].count")
     let evaluation = try program.withExecution(input: value) { execution in
-        let first = try #require(execution.next())
-        let second = try #require(execution.next())
+        let first = try #require(try execution.next())
+        let second = try #require(try execution.next())
         #expect(first.value == .number(try JSONNumber(parsing: "9007199254740993")))
         #expect(second.value == .null)
         #expect(try execution.next() == nil)
@@ -55,7 +55,7 @@ import JSONInspection
     let value = try JSONValueDSL.array { Element(1); Element(2) }
     let program = try JSONTransformProgram.compile(".[]")
     var limits = JSONTransformLimits()
-    limits[.totalResults] = 1
+    limits[.results] = 1
     do {
         _ = try program.withExecution(input: value, limits: limits) { execution in
             #expect(try execution.next()?.value == 1)
@@ -65,13 +65,13 @@ import JSONInspection
             } catch let failure as JSONTransformFailure {
                 #expect(failure.category == .resource)
                 #expect(failure.code == "limitExceeded")
-                #expect(failure.metric == "totalResults")
+                #expect(failure.metric == "results")
             }
         }
         Issue.record("Catching an owned failure reopened scope completion")
     } catch let failure as JSONTransformFailure {
         #expect(failure.category == .resource)
         #expect(failure.code == "limitExceeded")
-        #expect(failure.metric == "totalResults")
+        #expect(failure.metric == "results")
     }
 }
