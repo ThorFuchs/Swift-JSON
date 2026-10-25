@@ -4,7 +4,7 @@ import JSON
 /// Type-directed exact overloads. Construction is invocation-owned and re-admitted;
 /// strings and object keys are never normalized through Swift canonical equality.
 package enum FilterOperators {
-    package static func apply(_ op: String, _ a: JSON, _ b: JSON, context: inout CLIJobContext) throws -> FilterYield {
+    package static func apply(_ op: String, _ a: JSON, _ b: JSON, context: inout TransformRuntimeContext) throws -> FilterYield {
         if case .number(let lhs) = a, case .number(let rhs) = b {
             return try ExactDecimal.binary(op, lhs, rhs, context: &context)
         }
@@ -15,7 +15,7 @@ package enum FilterOperators {
             try? context.meter.release(context.meter.used(.retainedBytes) - entry - owned)
             if !transferred { try? context.release(.collectionValues, collections) }
         }
-        func collect(_ count: UInt64, context: inout CLIJobContext) throws {
+        func collect(_ count: UInt64, context: inout TransformRuntimeContext) throws {
             try context.charge(.collectionValues, count); collections += count
             try context.meter.require(.arrayItems, collections)
             try context.meter.retain(count * 16); try context.work(count)
@@ -52,11 +52,11 @@ package enum FilterOperators {
             // Check the host index before narrowing a count; no hidden iteration limit.
             let repeats: Int
             do { repeats = try count.integer(as: Int.self, meter: &context.meter) }
-            catch let failure as JSONFailure where failure.category == .conversion { throw CLIError(.resource, "counterOverflow", metric: "stringBytes") }
+            catch let failure as JSONFailure where failure.category == .conversion { throw TransformRuntimeFailure(.resource, "counterOverflow", metric: "stringBytes") }
             var bytes: UInt64 = 0
             for _ in text.utf8 { try context.work(); bytes += 1 }
             let (total, overflow) = bytes.multipliedReportingOverflow(by: UInt64(repeats))
-            guard !overflow else { throw CLIError(.resource, "counterOverflow", metric: "stringBytes") }
+            guard !overflow else { throw TransformRuntimeFailure(.resource, "counterOverflow", metric: "stringBytes") }
             try context.meter.require(.stringBytes, total); try context.meter.retain(total)
             var output = ""
             for _ in 0..<repeats { try context.work(); for scalar in text.unicodeScalars { try context.work(UInt64(scalar.utf8.count)); output.unicodeScalars.append(scalar) } }
@@ -76,8 +76,8 @@ package enum FilterOperators {
         var position = 0
         let parentPosition: Int?
     }
-    private static func merge(_ left: JSONObject, _ right: JSONObject, recursive: Bool, context: inout CLIJobContext) throws -> JSON {
-        func frame(_ left: JSONObject, _ right: JSONObject, parent: Int?, context: inout CLIJobContext) throws -> MergeFrame {
+    private static func merge(_ left: JSONObject, _ right: JSONObject, recursive: Bool, context: inout TransformRuntimeContext) throws -> JSON {
+        func frame(_ left: JSONObject, _ right: JSONObject, parent: Int?, context: inout TransformRuntimeContext) throws -> MergeFrame {
             try context.meter.require(.objectMembers, UInt64(left.count)); try context.meter.retain(80 + UInt64(left.count) * 24); try context.work(UInt64(left.count))
             var index = JSONExactKeyIndex()
             for position in left.members.indices { _ = try index.insert(left.members[position].key, position: position, meter: &context.meter) }
@@ -108,14 +108,14 @@ package enum FilterOperators {
             }
             stack.append(current)
         }
-        throw CLIError(.resource, "mergeInvariant")
+        throw TransformRuntimeFailure(.resource, "mergeInvariant")
     }
-    package static func split(_ text: String, separator: String, context: inout CLIJobContext, collectionCount: inout UInt64) throws -> [JSON] {
+    package static func split(_ text: String, separator: String, context: inout TransformRuntimeContext, collectionCount: inout UInt64) throws -> [JSON] {
         var pattern: [Unicode.Scalar] = [], scalars: [Unicode.Scalar] = []
         for scalar in separator.unicodeScalars { try context.work(); try context.meter.retain(4); pattern.append(scalar) }
         for scalar in text.unicodeScalars { try context.work(); try context.meter.retain(4); scalars.append(scalar) }
         var results: [JSON] = [], part = "", position = 0
-        func append(_ text: String, context: inout CLIJobContext) throws {
+        func append(_ text: String, context: inout TransformRuntimeContext) throws {
             try context.charge(.collectionValues); collectionCount += 1
             try context.meter.require(.arrayItems, collectionCount); try context.meter.retain(16)
             results.append(.string(text))

@@ -6,11 +6,11 @@ package struct FilterBindingPattern:Sendable {
     package struct Shape:Sendable{let object:Bool;let path:[JSON]}
     package let bindings:[Binding]
     package let shapes:[Shape]
-    package static func compile(_ range:Range<Int>,tokens:[FilterToken],matches:[Int:Int],context:inout CLIJobContext)throws->Self{
+    package static func compile(_ range:Range<Int>,tokens:[FilterToken],matches:[Int:Int],context:inout TransformRuntimeContext)throws->Self{
         struct Work{let range:Range<Int>;let path:[JSON]}
         var work:[Work]=[],bindings:[Binding]=[],shapes:[Shape]=[]
         try context.meter.retain(40);work.append(.init(range:range,path:[]))
-        func top(_ range:Range<Int>,context:inout CLIJobContext)throws->[Int]{
+        func top(_ range:Range<Int>,context:inout TransformRuntimeContext)throws->[Int]{
             var result:[Int]=[],i=range.lowerBound
             while i<range.upperBound{try context.work();try context.meter.retain(8);result.append(i);if let close=matches[i],close>i{i=close+1}else{i += 1}}
             return result

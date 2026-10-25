@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | Published 1.6.0 | `f975ac1c5a18af9b422db0994cbc551fd37eee2f` | Eight libraries plus CLI, eight catalogs, 1,077 authored declarations |
 | Published 1.6.1 (latest stable) | `e431f157ececc0cf3d061192420b0e36a9062f83` | Same eight-library public API and runtime as 1.6.0; no Inspection |
-| Unreleased 1.7.0-dev | Main, retaining N2 admitted at `2b24f47e7405821240cf8dfc66b840c9a7f8efa5` | Nine libraries plus CLI, nine catalogs, 1,172 authored declarations (N2 plus N3/P1 additions) |
+| Development main before candidate integration | Main, retaining N2 admitted at `2b24f47e7405821240cf8dfc66b840c9a7f8efa5` | Nine libraries plus CLI, nine catalogs, 1,172 authored declarations (N2 plus N3/P1 additions) |
 
 Source versions do not establish publication. Consult the
 [official releases](https://github.com/ThorFuchs/Swift-JSON/releases) for published
@@ -36,3 +36,13 @@ within the existing Inspection product; see [the completion contract](../Archite
 Stable 1.6.1 has neither. Main stays 1.7.0-dev with ten products. G4 controlled
 performance remains HOLD without speed claims; this is distinct from technical
 qualification and does not authorize any release/tag.
+
+## Unpublished 1.7.0 candidate
+
+The isolated JTX10 successor integrates main
+`1a0306d076a08c8c43281f91412a11cd744ff3f6` with accepted Transform
+`21199f9af5bf50f1d473c6d3e67b91ae91f75089`. It reports 1.7.0 and has ten libraries
+plus CLI, ten catalogs and 1,214 authored declarations (Inspection 95, Transform 42).
+It does not change the stable 1.6 line, publish a tag, merge main or retire proposals.
+The earlier main/development observations above retain their historical scope.
+Use [the candidate contract](Release1.7.0.md) and actual source-bound receipts.

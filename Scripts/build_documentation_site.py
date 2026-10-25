@@ -30,7 +30,8 @@ GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONHTML': ('Exact interactive HTML', 'interactiverendering'),
           'JSONBridges': ('Opt-in native conversions', 'numericfidelity'),
           'JSONNavigation': ('Exact bounded structural traversal', 'traversal'),
-          'JSONInspection': ('Observed array evidence', 'arrayevidence')}
+          'JSONInspection': ('Observed array evidence', 'arrayevidence'),
+          'JSONTransform': ('Scoped exact transformations', 'scopedtransforms')}
 DESCRIPTIONS = {
     'JSON': 'Exact values, strict UTF-8, native Codable, Pointer, presence and finite resource reports.',
     'JSONSchema': 'Draft 2020-12, explicit offline registries, immutable plans, annotations and bounded regex.',
@@ -40,7 +41,8 @@ DESCRIPTIONS = {
     'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
     'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.',
     'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.',
-    'JSONInspection': 'Array evidence, complete source-attached snapshots, tree views and strict sparse tables with finite reports.'}
+    'JSONInspection': 'Array evidence, complete source-attached snapshots, tree views and strict sparse tables with finite reports.',
+    'JSONTransform': 'Exact query plans and guarded pull executions with cumulative finite limits.'}
 
 
 class Links(HTMLParser):
@@ -109,7 +111,7 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <h1>Exact JSON. Clear contracts.</h1>
 <p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore {len(PRODUCTS)} Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
-<p class="baseline">Development main includes JSONInspection. Stable <a href="{REPOSITORY}/releases/tag/{STABLE_VERSION}">{STABLE_VERSION}</a> has eight library catalogs; use its matching compiled DocC assets or <a href="{REPOSITORY}/tree/{STABLE_VERSION}/Sources">tagged source documentation</a>.</p>
+<p class="baseline">Development main includes JSONInspection; this unpublished candidate also includes JSONTransform. Stable <a href="{REPOSITORY}/releases/tag/{STABLE_VERSION}">{STABLE_VERSION}</a> has eight library catalogs; use its matching compiled DocC assets or <a href="{REPOSITORY}/tree/{STABLE_VERSION}/Sources">tagged source documentation</a>.</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>
 <p>Read the <a href="{REPOSITORY}#readme">package overview and executable examples</a>, then choose a reference above. The <a href="{REPOSITORY}/blob/main/Documentation/README.md">behavior contracts</a> explain exact numbers, scalar identity, offline schema evaluation, cumulative budgets and stream completion.</p>

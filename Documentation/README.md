@@ -1,7 +1,8 @@
 # Swift-JSON documentation
 
 The [release-line matrix](Qualification/ReleaseLines.md) separates the eight-library
-1.6 maintenance source from nine-library unreleased 1.7.0-dev. The website tracks
+1.6 maintenance source from this unpublished ten-library 1.7.0 candidate.
+See [candidate qualification and exceptions](Qualification/Release1.7.0.md). The website tracks
 development main; use matching release assets for a stable compiled reference.
 
 Start with the [package README](../README.md) for installation, product selection
@@ -52,7 +53,7 @@ Online references track main; tagged releases include matching compiled catalogu
 - [Eight-library compiled source example](../Examples/Consumer/README.md)
 - [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
 - [Published Navigation and historical N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md), [original traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md) and [N1 promotion history](Architecture/StructuralIntelligence/N1Promotion.md). JSONNavigation is released in 1.6.0; the original N0/N1 stage gates remain dated history.
-- [Unreleased N2 Inspection source](Architecture/StructuralIntelligence/Inspection.md) adds opt-in observed array evidence. This source has nine library catalogs; stable 1.6 release tags and assets retain eight.
+- [Unreleased N2 Inspection source](Architecture/StructuralIntelligence/Inspection.md) adds opt-in observed array evidence. This candidate has ten library catalogs including Transform; stable 1.6 release tags and assets retain eight.
 - The source authority map distinguishes this unreleased Inspection source from the dated unmerged-candidate record. N3 snapshots, private P1, composition accounting, root reuse, DSL and deployment retain separate source-bound qualification and approval gates.
 
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
@@ -72,3 +73,9 @@ Original code is Apache-2.0. See the [license](../LICENSE), [notice](../NOTICE),
 from the empty library dependency graph.
 
 - [Offline provider schemas and request fragments](Architecture/Release1.4/Providers.md), [frozen profile tables](Architecture/Release1.4/ProviderProfiles.json) and the [DocC guide](../Sources/JSONSchema/Documentation.docc/ProviderSchemas.md).
+
+The candidate also provides [Inspection](../Sources/JSONInspection/Documentation.docc/JSONInspection.md)
+and [Transform](../Sources/JSONTransform/Documentation.docc/JSONTransform.md):
+ten catalogs and 1,214 authored public declarations in total. These products are
+absent from stable 1.6.1. Candidate docs do not establish publication or a platform
+runtime pass; source-bound qualification receipts define the tested scope.

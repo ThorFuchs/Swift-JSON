@@ -4,13 +4,13 @@ import JSON
 /// Recursive containment uses explicit bounded frames and exact scalar matching.
 package enum FilterContainment {
     private struct Frame { let left:JSON;let right:JSON;var outer=0;var candidate=0;var waiting=false;var incoming:Bool? }
-    package static func contains(_ left:JSON,_ right:JSON,context:inout CLIJobContext)throws->Bool {
+    package static func contains(_ left:JSON,_ right:JSON,context:inout TransformRuntimeContext)throws->Bool {
         func kind(_ value:JSON)->Int{switch value{case .null:0;case .boolean:1;case .number:2;case .string:3;case .array:4;case .object:5}}
         guard kind(left)==kind(right) else{throw FilterLanguageFailure("containsTypeMismatch")}
         try context.checkpoint();let entry=context.meter.used(.retainedBytes)
         defer{try? context.meter.release(context.meter.used(.retainedBytes)-entry)}
         var stack:[Frame]=[]
-        func push(_ left:JSON,_ right:JSON,context:inout CLIJobContext)throws {
+        func push(_ left:JSON,_ right:JSON,context:inout TransformRuntimeContext)throws {
             try context.require(.runtimeFrames,context.used(.runtimeFrames)+UInt64(stack.count)+1)
             try context.meter.retain(64);stack.append(.init(left:left,right:right))
         }
@@ -52,10 +52,10 @@ package enum FilterContainment {
             default:
                 completed=kind(frame.left)==kind(frame.right) ? try FilterValues.equals(frame.left,frame.right,context:&context):false
             }
-            guard let result=completed else{throw CLIError(.resource,"containmentInvariant")}
+            guard let result=completed else{throw TransformRuntimeFailure(.resource,"containmentInvariant")}
             if stack.isEmpty{return result}
             stack[stack.count-1].incoming=result
         }
-        throw CLIError(.resource,"containmentInvariant")
+        throw TransformRuntimeFailure(.resource,"containmentInvariant")
     }
 }

@@ -1,6 +1,7 @@
 # Contributor instructions
 
-Development source is 1.7.0-dev; admitted N2 remains unreleased. The stable 1.6
+This source is the unpublished 1.7.0 release candidate; admitted Inspection remains
+absent from stable 1.6.1. Qualification exceptions and publication are separate decisions. The stable 1.6
 line has eight libraries and no JSONInspection. Preserve the branch-specific
 inventory and do not publish this development tree as a patch release.
 
@@ -8,8 +9,8 @@ Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
-- Keep ten public products in this source: JSON, JSONSchema, JSONSchemaExamples, JSONStreaming,
-  JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection and the swift-json executable.
+- Keep eleven public products in this feature source: JSON, JSONSchema, JSONSchemaExamples, JSONStreaming,
+  JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection, JSONTransform and the swift-json executable.
   JSONSchemaExamples is opt-in and depends on JSON and JSONSchema only.
   JSONFilterRuntime and JSONCLIEngine are package-private.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
@@ -43,11 +44,9 @@ Documentation/Architecture before changing behavior.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
-NAV10 exact structural-set/numeric-matrix views are public candidates in existing JSONInspection, not released.
-Graph/store engines, retrieval/persistence and JSON text-sequence framing remain deferred.
-The approved NAV10 promotion adds no product; future merge/release and wider APIs remain human-gated.
 
-NAV11 directed simple graph has an owner-reviewed public candidate API inside JSONInspection; no new product or automatic merge.
-Store/set/matrix/retrieval/persistence and JSON text-sequence framing remain separate deferred trains.
 
-NAV11 public graph candidate adds only the approved immutable profile, checked source-bound graph and typed failures inside JSONInspection. CSR arrays, reducers and meters remain non-public; no new product or graph serialization/mutation. Future merge/release remain separately human-gated.
+JSONTransform is the candidate public library over one private compiler/VM.
+It depends on JSON and the package-private JSONFilterRuntime kernel. The CLI borrows
+the same ledger through its package adapter. No publication is implied. Preserve the accepted 42 authored Transform declarations;
+see Documentation/Qualification/Release1.7.0.md for candidate scope and limitations.
