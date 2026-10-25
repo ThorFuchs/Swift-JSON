@@ -4,6 +4,7 @@ import collections
 import json
 
 ROOT_PARAMETER_CASES = {
+    'storeD1NativeVector(id:)': 65,
     'structuredCanonicalBase64MatchesPadBitGold(_:)': 16,
     'structuredInlineMatchesIndependentDialectCases(_:)': 32,
     'structuredMiniMathMatchesIndependentGold(_:)': 45,

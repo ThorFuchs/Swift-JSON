@@ -1,0 +1,10 @@
+{
+  "collections": {
+    "users": [
+      {
+        "id": "a",
+        "_id": "b"
+      }
+    ]
+  }
+}

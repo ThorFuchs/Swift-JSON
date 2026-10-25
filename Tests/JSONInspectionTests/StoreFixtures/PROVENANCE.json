@@ -1,0 +1,10 @@
+{
+  "source": "Owner-supplied NAV12 S0 design corpus",
+  "s0_zip_sha256": "2510aaa42b66505e568c5d61dca73a6bb4bf7050bfc697f2d5a334082f49de17",
+  "manifest_sha256": "82189b8349afdcbe79e71d23245a892cfcbced5e7535e9f49ee6a7a8190ce038",
+  "cases": 69,
+  "native_build_cases": 65,
+  "parser_cases": 1,
+  "compiler_cases": 3,
+  "policy": "Independent expected data, not evaluated successes or production JSON store wire format"
+}

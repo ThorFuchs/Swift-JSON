@@ -10,13 +10,13 @@
     "JSONHTMLTests": 97,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
-    "JSONNavigationTests": 47,
+    "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 178,
+    "JSONInspectionTests": 190,
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
-  "parameterized_invocations": 325,
+  "parameterized_invocations": 390,
   "composition_external_functions": 5,
   "qa_functions": {
     "JSONTests": 82,
@@ -35,9 +35,9 @@
     "JSONHTMLTests": 5,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
-    "JSONNavigationTests": 1,
+    "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
-    "JSONInspectionTests": 9,
+    "JSONInspectionTests": 10,
     "JSONTransformTests": 1,
     "JSONDSLTests": 1
   },
@@ -82,9 +82,9 @@
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
     "JSONCLITests": 88,
-    "JSONNavigationTests": 47,
+    "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 178,
+    "JSONInspectionTests": 190,
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
@@ -97,13 +97,13 @@
     "JSONIntegrationTests": 34,
     "JSONHTMLTests": 81,
     "JSONBridgesTests": 10,
-    "JSONNavigationTests": 47,
+    "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 178,
+    "JSONInspectionTests": 190,
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
-  "wasi_parameterized_invocations": 288,
+  "wasi_parameterized_invocations": 353,
   "portable_shared_state_functions": {
     "JSONTests": 4,
     "JSONSchemaTests": 3,
@@ -113,14 +113,40 @@
     "JSONHTMLTests": 4,
     "JSONBridgesTests": 1,
     "JSONCLITests": 1,
-    "JSONNavigationTests": 1,
+    "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
-    "JSONInspectionTests": 9,
+    "JSONInspectionTests": 10,
     "JSONTransformTests": 1,
     "JSONDSLTests": 1
   },
   "export_functions": {
     "JSONSchemaTests": 1,
     "JSONHTMLTests": 39
-  }
+  },
+  "prepared_entry_function_ids": [
+    "JSONNavigationTests.navigationPreparedD0NoopMatchesOriginalEveryCounter()",
+    "JSONNavigationTests.navigationPreparedD0CumulativeWorkAndSingleSourceAdmission()",
+    "JSONNavigationTests.navigationPreparedD0ProfileTextRetainedAndCounted()",
+    "JSONNavigationTests.navigationPreparedD0InnerProfileTextCancellationPrecedesRoot()",
+    "JSONNavigationTests.navigationPreparedD0CaughtProfileFailurePrecedesAdmission()",
+    "JSONNavigationTests.navigationPreparedD0CancellationCannotBecomeReplacement()",
+    "JSONNavigationTests.navigationPreparedD0ForbiddenPreAdmissionAccessLatches()",
+    "JSONNavigationTests.navigationPreparedD0OneShotAdmissionAndTransfer()",
+    "JSONNavigationTests.navigationPreparedD0SourceTransferAndInvalidationAllExits()",
+    "JSONNavigationTests.navigationPreparedD0IndependentConcurrentHealth()"
+  ],
+  "store_function_ids": [
+    "JSONInspectionTests.storeD1NativeVector(id:)",
+    "JSONInspectionTests.storeD1StrictParserD037RejectsDecodedDuplicateMarker()",
+    "JSONInspectionTests.storeR01ExactPathsSpansOwnerAndReplacement()",
+    "JSONInspectionTests.storeR02PreparationPrecedesOneFullSourceAdmission()",
+    "JSONInspectionTests.storeR03AllInclusiveCapsCheckedArithmeticAndLateRefusal()",
+    "JSONInspectionTests.storeR04PresenceSlotsRetentionAndScaleCalibration()",
+    "JSONInspectionTests.storeR05InnerCancellationAcrossPhasesAndAfterTransfer()",
+    "JSONInspectionTests.storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth()",
+    "JSONInspectionTests.storeR07SourceAndStateInvalidatedOnEveryFailureAndSuccess()",
+    "JSONInspectionTests.storeR08DeclarationAndPhysicalPermutationMetamorphisms()",
+    "JSONInspectionTests.storeR09CompleteRowsDeepSourcesAndZeroCapacity()",
+    "JSONInspectionTests.storeR10NoInferenceOrModelMutationAndExactPayloads()"
+  ]
 }

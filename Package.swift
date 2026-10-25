@@ -29,7 +29,7 @@ let package = Package(
         // Opt-in N1 product candidate; promotion does not change core navigation semantics.
         .target(name: "JSONNavigation", dependencies: ["JSON"]),
         .target(name: "JSONInspection", dependencies: ["JSON", "JSONNavigation"]),
-        .testTarget(name: "JSONInspectionTests", dependencies: ["JSONInspection", "JSONNavigation", "JSON"], resources: [.copy("ProjectionFixtures"), .copy("P2Fixtures"), .copy("GraphFixtures")]),
+        .testTarget(name: "JSONInspectionTests", dependencies: ["JSONInspection", "JSONNavigation", "JSON"], resources: [.copy("ProjectionFixtures"), .copy("P2Fixtures"), .copy("GraphFixtures"), .copy("StoreFixtures")]),
         .testTarget(name: "JSONNavigationTests", dependencies: ["JSONNavigation", "JSON"], exclude: ["Fixtures"]),
         .target(name: "JSONBridges", dependencies: ["JSON"]),
         .testTarget(name: "JSONIntegrationTests", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch", "JSONInspection", "JSONTransform", "JSONValueDSL", "JSONSchemaDSL"]),

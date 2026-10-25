@@ -1,0 +1,14 @@
+{
+  "collections": {
+    "users": [
+      {
+        "uuid": "u1"
+      }
+    ],
+    "posts": [
+      {
+        "pid": "u1"
+      }
+    ]
+  }
+}

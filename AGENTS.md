@@ -20,7 +20,7 @@ Documentation/Architecture before changing behavior.
   The approved CLI and E2 additions preserve historical product contracts.
   JSONNavigation is a released opt-in product depending on JSON only; future merge/release remain human-gated.
   Published 1.6.1 has eight libraries plus CLI; this unreleased source includes
-  JSONInspection as the ninth library. Its API is separate from released Navigation.
+  JSONInspection plus the optional Transform and DSL products. Its API is separate from released Navigation.
   Future merge and release decisions remain human-gated.
   JSONInspection depends on JSON and JSONNavigation only; core re-exports neither.
   JSONRegexRuntime is package-private. Root package dependencies remain empty.
@@ -49,8 +49,10 @@ Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
 NAV10 set/matrix and NAV11 directed-simple-graph APIs are development capabilities
 inside JSONInspection; no graph product, mutation or serializer is introduced.
-Private store preparation, wider retrieval/persistence, NAV13 batches and JSON
-text-sequence framing remain separate, unadmitted work.
+Private NAV12 store construction/preparation remains package-only and shares one
+original invocation ledger; no public store/follow API or persistence is exposed.
+Wider retrieval/persistence, NAV13 batches and JSON text-sequence framing remain
+separate, unadmitted work.
 
 JSONTransform uses one private compiler/VM and the CLI's accounted adapter.
 Preserve its accepted 42 authored declarations and exact semantics. The original

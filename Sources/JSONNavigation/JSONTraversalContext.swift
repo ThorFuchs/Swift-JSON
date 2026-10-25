@@ -84,6 +84,17 @@ package struct JSONTraversalContext: ~Copyable {
             return array.count
         }
     }
+    /// Ephemeral canonical member in the owned reducer. The requested key was admitted
+    /// by preparation; any retained string/output alias needs its own reservation.
+    package mutating func member(_ value: JSON, key: JSONKey,
+                                  at path: [JSONLocationComponent]) throws -> JSON? {
+        try perform(at: path) { state in
+            try state.meter.work()
+            guard case .object(let object) = value else { throw JSONFailure(.typeMismatch, code: .wrongKind) }
+            return try object.lookup(key.string, meter: &state.meter)
+        }
+    }
+
     /// Reserve an additional owned alias, not another text admission or key model.
     package mutating func retainKey(_ key: JSONKey, admittingCallerInput: Bool = false) throws {
         try perform { state in

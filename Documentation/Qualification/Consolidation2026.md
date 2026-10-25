@@ -5,7 +5,8 @@ unchanged. Integration, qualification and publication are separate facts; neithe
 a source version nor a merged pull request publishes a version.
 
 The consolidation combines the admitted set/matrix source with the previously
-reviewed graph, JSONTransform and optional authored DSL proposals. It introduces
+reviewed graph, JSONTransform, optional authored DSL and package-only store
+construction proposals. It introduces
 no new interpretation of JSON, schema validation, graph identity or query syntax.
 The component implementations retain their source-bound predecessor records;
 those records do not qualify a changed combined tree.
@@ -45,11 +46,16 @@ are explicit; a caller pipeline is not silently promised one global budget.
 - Thirteen actual DocC catalogs, all authored parameter documentation, compiled
   README fences, working guide indexes and source/asset privacy checks.
 
-Required root populations are **953 native**, **937 Linux**, and **849 WASI**
-functions, with 325 native/Linux and 288 WASI parameter invocations. Sharing
-requires 58 native and 57 portable functions. All 49 core caps, sixteen CLI
+Required root populations are **975 native**, **959 Linux**, and **871 WASI**
+functions, with 390 native/Linux and 353 WASI parameter invocations. Sharing
+requires 60 native and 59 portable functions. All 49 core caps, sixteen CLI
 metrics, 126 restoration identities, independent fixture pins and explicit policy
 exclusions remain. These are required cardinalities, not preclaimed passes.
+The private store adds 22 functions and 65 native-vector parameter invocations.
+Its closed profile and twelve prototype ceilings do not enlarge the 49 baseline
+caps or promise calibrated capacity. Preparation, one full-root admission and
+construction share the original ledger; ordinary entry counters must remain
+unchanged. Re-run its compiler/lifecycle/semantic matrices and 400-counter replay.
 Record every actual source SHA/tree, command, environment, exit and outcome.
 Run applicable lanes through Scripts/ci.py without weakening its checks.
 
@@ -69,7 +75,7 @@ HOLD remain. There is no new speed, allocation-efficiency or device-performance
 claim. Existing WASI, mobile SDK/runtime and physical-iPad scope limitations stay
 source-bound. New combined platform results must identify their actual scope.
 
-Held composition/root proposals, lower deployment floors, private store
-preparation, wider retrieval/persistence, NAV13 batches and text-sequence framing
-are not imported. Their preserved branches and findings require their own gates.
+Held composition/root proposals, lower deployment floors, store
+follow/public promotion, wider retrieval/persistence, NAV13 batches and text-sequence
+framing are not imported. Their preserved branches and findings require their own gates.
 No tag, release, protection change or manual deployment is part of consolidation.

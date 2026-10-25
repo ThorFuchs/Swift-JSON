@@ -1,0 +1,31 @@
+{
+  "version": "nav12.store-profile/1",
+  "collectionsAt": [
+    {
+      "key": "collections"
+    }
+  ],
+  "collections": [
+    {
+      "name": "users",
+      "recordsAt": [
+        {
+          "key": "users"
+        }
+      ],
+      "idKey": "uuid",
+      "referenceFields": [
+        {
+          "key": "friend",
+          "presence": "required",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "references": {
+    "mode": "strict",
+    "marker": "collection-id/1",
+    "validateTargets": true
+  }
+}
