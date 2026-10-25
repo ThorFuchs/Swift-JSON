@@ -1,3 +1,10 @@
+# Current documentation authority
+
+Unreleased1.7.0-dev consolidation has twelve libraries plus CLI and thirteen DocC
+catalogs (including the shared non-product JSONDSLCore reference). Stable1.6.1
+remains eight libraries. [Combined qualification](Qualification/Consolidation2026.md)
+separates current requirements from all preserved predecessor records below.
+
 # Swift-JSON documentation
 
 The [release-line matrix](Qualification/ReleaseLines.md) separates the eight-library
@@ -79,3 +86,11 @@ and [Transform](../Sources/JSONTransform/Documentation.docc/JSONTransform.md):
 ten catalogs and 1,214 authored public declarations in total. These products are
 absent from stable 1.6.1. Candidate docs do not establish publication or a platform
 runtime pass; source-bound qualification receipts define the tested scope.
+
+## Optional authored DSLs (P1.2 development)
+
+- [Integration plan and source boundary](Architecture/DualDSL/Plan.md)
+- [Resource, naming and compiler decisions](Architecture/DualDSL/Decisions.md)
+- [Real-engine acceptance mapping](Qualification/DualDSL/README.md)
+- [Typed value guide](../Sources/JSONValueDSL/Documentation.docc/AuthoredValues.md)
+- [Typed schema guide](../Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md)

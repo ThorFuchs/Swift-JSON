@@ -1,3 +1,14 @@
+# Historical frozen RC6fe8067 contract
+
+This file records the pre-consolidation RC `6fe80677a5aab9146f45b39d52c72c473568c61f`.
+Its original clauses below remain source-bound history, not a current twelve-library
+inventory or a new-source pass. The current source is 1.7.0-dev; see
+[combined qualification](Consolidation2026.md). Subsequent Instruments windows
+produced44/150 profiles and119/150 successful pairs respectively; both remained
+partial. The latter stopped on an excluded incomplete-output capture. They are
+separate windows, never concatenated into a completed population. The original
+1.7.0-only waiver is preserved, not converted into measured success or release authority.
+
 # 1.7.0 candidate qualification contract
 
 **Release candidate; unpublished.** Source version 1.7.0 identifies this candidate,

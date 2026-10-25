@@ -99,6 +99,11 @@
 The protected public version tag exists; its separate GitHub release remains draft.
 These additive APIs are also included in the published 1.5.0 release.
 
+- Add opt-in JSONValueDSL and JSONSchemaDSL products for typed, trusted authored
+  values and Draft 2020-12 declarations. Exact values and schema semantics remain
+  owned by the existing engine. Finalization uses one finite iterative ledger;
+  authored staging and callbacks are explicitly outside its resource accounting.
+
 - Add E2's shallow JSON parsing, checked object construction, decimal-text and
   pre-parsed Pointer entry points; exact-key membership and three-state presence
   composition; and direct validation from an immutable compiled schema plan.

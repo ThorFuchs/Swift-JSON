@@ -40,6 +40,12 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - name: Verify the checked-out container workspace
+        run: |
+          # The image user differs from the checkout owner. Trust this exact
+          # ephemeral workspace so Git identity and full-history checks run.
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
       - name: Public composition and reference imports
         if: matrix.lane == 'linux'

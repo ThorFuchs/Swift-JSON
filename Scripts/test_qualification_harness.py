@@ -79,7 +79,7 @@ class HarnessTests(unittest.TestCase):
             self.assertEqual(policy[key]['JSONNavigationTests'], 47)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
             self.assertEqual(policy[key]['JSONInspectionTests'], 178)
-            self.assertEqual(policy[key]['JSONIntegrationTests'], 32)
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 34)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 1)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)

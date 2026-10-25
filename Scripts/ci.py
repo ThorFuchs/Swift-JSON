@@ -23,6 +23,7 @@ SHARED_TESTS += '|projectionP16SharedViewsHaveIndependentHealthAndLegacyStatisti
 SHARED_TESTS += '|exactProjectionPUB07SharedPublicViewsKeepIndependentHealth'
 SHARED_TESTS += '|p2SetSSET18SharedImmutableViewsHaveIndependentLedgers|p2MatrixMAT18SharedTransposesHaveIndependentReads'
 SHARED_TESTS += '|graphG30ConcurrentViewsHaveIndependentHealth|graphGP14ConcurrentQueries'
+SHARED_TESTS += '|dslSharedFinalizationAndPlansAreInvocationOwned'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -171,6 +172,7 @@ def commands(lane, output):
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CLIQualification', 'ProviderConsumer'],
             ['python3', '-B', 'Scripts/qualify_schema_providers.py', '--binary', '.build/release/swift-json', '--output', str(output / 'providers.json')],
             ['python3', '-B', 'Scripts/qualify_cli_ownership.py', '--output', str(output / 'cli-ownership')],
+            ['python3', '-B', 'Scripts/test_transform_ownership.py'],
             ['python3', '-B', 'Scripts/qualify_transform_ownership.py', '--output', str(output / 'transform-ownership')],
             ['python3', '-B', 'Scripts/qualify_transform.py', '--output', str(output / 'transform-consumer')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
@@ -183,6 +185,9 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py', '--output', str(output / 'schema-example-matrix')],
             ['python3', '-B', 'Scripts/qualify_distribution.py', '--output', str(output / 'distribution')],
             ['python3', '-B', 'Scripts/qualify_ergonomics.py'],
+            ['python3', '-B', 'Scripts/qualify_dual_dsl.py', '--mode', 'imports', '--output', str(output / 'dsl-imports')],
+            ['swift', 'run', '--package-path', 'Examples/DualDSL', 'DualDSLConsumer'],
+            ['swift', 'run', '-c', 'release', '--package-path', 'Examples/DualDSL', 'DualDSLConsumer'],
             ['python3', '-B', 'Scripts/qualify_navigation.py', '--output', str(output / 'navigation')],
             ['python3', '-B', 'Scripts/qualify_inspection.py', '--output', str(output / 'inspection-consumer')],
             ['python3', '-B', 'Scripts/qualify_snapshot.py', '--output', str(output / 'snapshot-consumer')],
@@ -296,14 +301,21 @@ def check_result(command, code, log, events=None):
         passed = data['observed'] == data['passed'] == expected and data['failed'] == data['policy'] == data['blocked'] == 0
     if command == ['swift', 'package', 'dump-package'] and passed:
         d = json.loads(log)
-        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONInspection', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONTransform', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
-        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection', 'JSONTransform']}, **{'swift-json': ['JSONCLI']})
+        passed = sorted(p['name'] for p in d['products']) == ['JSON', 'JSONBridges', 'JSONHTML', 'JSONInspection', 'JSONNavigation', 'JSONPatch', 'JSONSchema', 'JSONSchemaDSL', 'JSONSchemaExamples', 'JSONStreaming', 'JSONTransform', 'JSONValueDSL', 'swift-json'] and not d['dependencies'] and d['swiftLanguageVersions'] == ['6'] and d['toolsVersion']['_version'] == '6.4.0' and d['platforms'] == [{'options': [], 'platformName': 'macos', 'version': '27.0'}, {'options': [], 'platformName': 'ios', 'version': '27.0'}]
+        passed = passed and {p['name']: p['targets'] for p in d['products']} == dict({name: [name] for name in ['JSON', 'JSONSchema', 'JSONSchemaExamples', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONBridges', 'JSONNavigation', 'JSONInspection', 'JSONTransform', 'JSONValueDSL', 'JSONSchemaDSL']}, **{'swift-json': ['JSONCLI']})
         targets = {t['name']: t for t in d['targets']}
-        passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests', 'JSONTransform', 'JSONTransformTests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
+        passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests', 'JSONTransform', 'JSONTransformTests', 'JSONDSLCore', 'JSONValueDSL', 'JSONSchemaDSL', 'JSONDSLTests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
         passed = passed and targets['JSONNavigation']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigationTests']['dependencies'] == [{'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
         passed = passed and targets['JSONTransform']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONFilterRuntime', None]}] and targets['JSONTransformTests']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONTransform', None]}]
         passed = passed and targets['JSONInspection']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONNavigation', None]}] and targets['JSONInspectionTests']['dependencies'] == [{'byName': ['JSONInspection', None]}, {'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
+        for name, dependencies in [('JSONDSLCore', ['JSON']), ('JSONValueDSL', ['JSON', 'JSONDSLCore']), ('JSONSchemaDSL', ['JSON', 'JSONSchema', 'JSONDSLCore']), ('JSONDSLTests', ['JSON', 'JSONSchema', 'JSONDSLCore', 'JSONValueDSL', 'JSONSchemaDSL'])]:
+            passed = passed and targets[name]['dependencies'] == [{'byName': [item, None]} for item in dependencies]
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_dual_dsl.py']:
+        mode = command[command.index('--mode') + 1]
+        passed = passed and ('DUAL_DSL_COMPILER passed negatives=12 configurations=2 mode=' + mode) in log.splitlines()
+    if command[:2] == ['swift', 'run'] and 'Examples/DualDSL' in command:
+        passed = passed and 'DUAL_DSL_CONSUMER passed valid=1 invalid=2 operational=1 exact_keys=2 nested_arrays=1' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_matrix.py']:
         passed = passed and 'SCHEMA_EXAMPLES_MATRIX passed schemas=64 certified=512 invalid=64 processes=2' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']:

@@ -1,8 +1,8 @@
 # Contributing
 
 Choose the source line deliberately: maintenance changes use the 1.6 line;
-new capabilities target development. This checkout is the unpublished 1.7.0
-release candidate; keep its accepted API/engine frozen during qualification. Keep the lines' API inventories
+new capabilities target development. This checkout is unreleased 1.7.0-dev consolidation source; preserve the reviewed
+component APIs/algorithms and qualify every combined source. Keep the lines' API inventories
 separate and map applicable maintenance corrections forward by content/commit,
 without assuming a squashed maintenance tip is an ancestor of main. See the
 [release-line matrix](Documentation/Qualification/ReleaseLines.md).

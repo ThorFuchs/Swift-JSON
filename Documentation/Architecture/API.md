@@ -1,3 +1,13 @@
+# Current API inventory
+
+Unreleased1.7.0-dev consolidation has twelve library products plus swift-json and
+thirteen DocC catalogs including the non-product JSONDSLCore reference. The native
+compiler graphs define the complete authored inventory. JSONTransform and the
+trusted-authored DSLs are opt-in; the core products retain their semantic authority.
+The stable1.6 inventory and chronological component records below retain their
+original scope, not the current combined product count. See
+[combined qualification](../Qualification/Consolidation2026.md).
+
 # Public API contract
 
 The product table below records the published 1.6 line: eight libraries plus the
@@ -8,12 +18,19 @@ additive contract appears below. Existing published contracts remain unchanged.
 Native compiler symbol graphs supply the complete declarations. Examples in the
 [README](../../README.md) are compiled and executed by public consumers.
 
+This document describes the implemented public interface. Native compiler symbol
+graphs supply the complete declarations in the eight product DocC catalogs and the shared DSL structure reference. Examples
+in the [README](../../README.md) are compiled and executed by the public consumer.
+
 ## Products and ownership
 
 | Product | Main entry points | Owned implementation boundary |
 | --- | --- | --- |
 | JSON | JSON, JSONNumber, JSONObject, JSONParser, JSONWriter, JSONValueEncoder, JSONValueDecoder, JSONPointer, JSONDocument | Shared strict codec, exact decimal model, bounded traversal and native coding |
 | JSONNavigation | JSONTraversal, JSONTraversalScope, JSONTraversalOptions | Exact many-node DFS, strict physical/virtual scopes, bounded metadata and explicit coverage; one core read-scope meter |
+
+| JSONValueDSL | JSONValueDSL.object/array, Field, Element, Elements | Trusted authored staging; finite iterative exact finalization |
+| JSONSchemaDSL | JSONSchemaDSL.document/boolean, Schema, Property, Definition, PatternProperty, DependentSchema, RequiredDependency, Rule | Trusted authored schema declarations; existing document/compiler/validator authority |
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONSchemaExamples | JSONSchemaExampleGenerator, JSONSchemaExampleResult | Conservative deterministic witnesses certified by the existing native validator; separate finite preparation and cumulative generation |
@@ -28,6 +45,10 @@ JSONSchemaExamples depends only on JSON and JSONSchema. There are nine public pr
 and no external root-package dependencies. No HTTP, MCP or documentation-tool dependency is introduced. JSONHTML conditionally
 uses Apple SDK frameworks for explicit native transfer/PDF preparation; the portable
 value, schema, Patch and streaming contracts do not acquire UI semantics.
+
+JSONRegexRuntime. Streaming, Patch, HTML and Bridges depend on JSON. There are eight public
+products and no external root-package dependencies. Runtime code uses no HTTP,
+UI, MCP or documentation-tool dependencies.
 
 Immutable facades store value configuration. Every operation owns its mutable
 context; every stream iterator requires exclusive access. Sendable follows the
@@ -342,3 +363,25 @@ unchanged. Historical provisional headings above remain stable link targets and
 checkpoint descriptions; the [candidate contract](../Qualification/Release1.7.0.md)
 and final compiler graphs determine current scope. API shape acceptance does not
 imply publication, measured allocations or unobserved platform execution.
+
+## Optional Dual DSL P1.2
+
+The two DSL products do not change or re-export the existing core entry points.
+JSONDSLCore has no standalone product; its public structural builder types occur
+in the optional generic signatures. See the [decisions](DualDSL/Decisions.md).
+Callbacks, content emission and staging are trusted and unmetered. Finalization
+uses one finite invocation ledger through iterative construction and, for schemas,
+document admission. This does not imply whole-pipeline cumulative billing, staging
+retention, caller instruction or RSS bounds. No whole-DSL report is supplied.
+
+Exact duplicate names throw JSONFailure/duplicateKey. Decoded scalar identity and
+order are preserved. Missing declarations emit nothing; null, empty containers and
+Boolean schemas differ. Array flattening requires Elements(contentsOf:). Implicit
+numbers accept BinaryInteger only, with explicit JSONNumber for decimals. E2 and
+JSONBridges remain unchanged; DSL targets import neither bridge nor framework DSL.
+
+Schema rawKeyword preserves declarations for existing compiler classification.
+No requiredness/default/format/reference/annotation policy is inferred. Invalid
+instances return false; malformed schemas, offline missing resources, nonproductive
+cycles, resource failures and cancellation remain operational errors. Factories
+never validate or publish a candidate schema as already compiled.

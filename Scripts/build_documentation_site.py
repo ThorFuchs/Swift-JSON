@@ -13,7 +13,7 @@ import subprocess
 import sys
 import urllib.parse
 
-from documentation_catalog import PRODUCTS
+from documentation_catalog import PRODUCTS, CATALOGS
 from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -31,7 +31,9 @@ GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONBridges': ('Opt-in native conversions', 'numericfidelity'),
           'JSONNavigation': ('Exact bounded structural traversal', 'traversal'),
           'JSONInspection': ('Observed array evidence', 'arrayevidence'),
-          'JSONTransform': ('Scoped exact transformations', 'scopedtransforms')}
+          'JSONTransform': ('Scoped exact transformations', 'scopedtransforms'),
+          'JSONValueDSL': ('Trusted exact value authoring', 'authoredvalues'),
+          'JSONSchemaDSL': ('Authored schemas, engine validation', 'authoredschemas')}
 DESCRIPTIONS = {
     'JSON': 'Exact values, strict UTF-8, native Codable, Pointer, presence and finite resource reports.',
     'JSONSchema': 'Draft 2020-12, explicit offline registries, immutable plans, annotations and bounded regex.',
@@ -42,7 +44,9 @@ DESCRIPTIONS = {
     'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.',
     'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.',
     'JSONInspection': 'Array evidence, complete source-attached snapshots, tree views and strict sparse tables with finite reports.',
-    'JSONTransform': 'Exact query plans and guarded pull executions with cumulative finite limits.'}
+    'JSONTransform': 'Exact query plans and guarded pull executions with cumulative finite limits.',
+    'JSONValueDSL': 'Trusted authored exact objects and arrays with finite finalization.',
+    'JSONSchemaDSL': 'Trusted authored schema declarations using native compilation and evaluation.'}
 
 
 class Links(HTMLParser):
@@ -244,7 +248,7 @@ def main():
         if site.exists():
             shutil.rmtree(site)
         site.mkdir()
-        for product in PRODUCTS:
+        for product in CATALOGS:
             command = ['xcrun', 'docc', 'process-archive', 'transform-for-static-hosting',
                        str(catalogs / (product + '.doccarchive')), '--output-path', str(site / product),
                        '--hosting-base-path', BASE_PATH + '/' + product]
@@ -257,8 +261,11 @@ def main():
             receipt['transforms'].append(entry)
             if result.returncode:
                 raise ValueError('Native static-hosting transformation failed: ' + product)
-            install_guide_navigation_index(site / product, product)
-            for route in [product.lower(), 'documentation/' + GUIDES[product][1]]:
+            routes = [product.lower()]
+            if product in PRODUCTS:
+                install_guide_navigation_index(site / product, product)
+                routes.append('documentation/' + GUIDES[product][1])
+            for route in routes:
                 if not (site / product / 'documentation' / route / 'index.html').is_file():
                     raise ValueError('Missing product root or guide: ' + route)
             if product == 'JSONSchemaExamples':
@@ -282,7 +289,7 @@ def main():
             'ci_run': REPOSITORY + '/actions/runs/' + os.environ['GITHUB_RUN_ID'] if os.environ.get('GITHUB_RUN_ID') else None,
             'swift': receipt['environment']['swift'], 'sdk': receipt['environment']['sdk'],
             'macos': receipt['environment']['macos'], 'swift_language_mode': '6',
-            'products': list(PRODUCTS), 'channel': 'development',
+            'products': list(PRODUCTS), 'catalogs': list(CATALOGS), 'channel': 'development',
             'source_version': SOURCE_VERSION, 'latest_stable_observed': STABLE_VERSION,
             'stable_release': REPOSITORY + '/releases/tag/' + STABLE_VERSION}, indent=2) + '\n')
         routes = sorted(p.relative_to(site).parent.as_posix() + '/' for p in site.rglob('index.html'))

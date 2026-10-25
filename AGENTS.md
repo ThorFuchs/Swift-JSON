@@ -1,16 +1,19 @@
 # Contributor instructions
 
-This source is the unpublished 1.7.0 release candidate; admitted Inspection remains
-absent from stable 1.6.1. Qualification exceptions and publication are separate decisions. The stable 1.6
-line has eight libraries and no JSONInspection. Preserve the branch-specific
-inventory and do not publish this development tree as a patch release.
+Development source is 1.7.0-dev. This consolidation retains the stable 1.6.1 line
+separately; it is not a maintenance release or the frozen 6fe8067 RC. Preserve
+all source-bound qualification history. Main integration never publishes a version.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
-- Keep eleven public products in this feature source: JSON, JSONSchema, JSONSchemaExamples, JSONStreaming,
-  JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection, JSONTransform and the swift-json executable.
+- Keep thirteen public products in this source: JSON, JSONSchema, JSONSchemaExamples,
+  JSONStreaming, JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection,
+  JSONTransform, JSONValueDSL, JSONSchemaDSL and the swift-json executable.
+  JSONDSLCore has public shared generic structure but no standalone product.
+  DSL staging/callbacks are trusted authored caller work; only finalization claims
+  a finite cumulative ledger. Core never imports or re-exports optional DSLs.
   JSONSchemaExamples is opt-in and depends on JSON and JSONSchema only.
   JSONFilterRuntime and JSONCLIEngine are package-private.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
@@ -44,9 +47,13 @@ Documentation/Architecture before changing behavior.
 
 Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
+NAV10 set/matrix and NAV11 directed-simple-graph APIs are development capabilities
+inside JSONInspection; no graph product, mutation or serializer is introduced.
+Private store preparation, wider retrieval/persistence, NAV13 batches and JSON
+text-sequence framing remain separate, unadmitted work.
 
-
-JSONTransform is the candidate public library over one private compiler/VM.
-It depends on JSON and the package-private JSONFilterRuntime kernel. The CLI borrows
-the same ledger through its package adapter. No publication is implied. Preserve the accepted 42 authored Transform declarations;
-see Documentation/Qualification/Release1.7.0.md for candidate scope and limitations.
+JSONTransform uses one private compiler/VM and the CLI's accounted adapter.
+Preserve its accepted 42 authored declarations and exact semantics. The original
+1.7.0 P4 waiver and later partial measurements are historical scoped evidence;
+no allocation, speed, RSS or controlled-performance pass follows from consolidation.
+See Documentation/Qualification/Consolidation2026.md for combined gates and holds.

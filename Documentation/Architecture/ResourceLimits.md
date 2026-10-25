@@ -159,3 +159,14 @@ uninstrumented adapter allocations and process RSS are outside the claim. A publ
 JSONOperationReport initializer permits pairing statistics with another result;
 its type alone does not establish provenance or adapter completeness. See the
 [composition guide](../../Sources/JSON/Documentation.docc/Composition.md).
+
+## Optional authored DSL boundary (P1.2)
+
+JSONValueDSL and JSONSchemaDSL explicitly accept trusted authored staging. Their
+callbacks, content collection and flat IR assembly are outside the checked phase;
+there is no staging-retention, caller-instruction, RSS or whole-DSL cumulative
+claim. This is an authoring exception, not a new untrusted-input operation.
+The iterative finalizer shares one existing ledger through schema-document
+admission, without nested resets. Returned values satisfy their finite profile.
+These additional operations do not change the 49 metrics, weights or defaults.
+See [decisions and qualification](DualDSL/Decisions.md).

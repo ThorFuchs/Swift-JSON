@@ -8,7 +8,9 @@ let package = Package(
     products: [.executable(name: "Consumer", targets: ["Consumer"])],
     dependencies: [.package(name: "Swift-JSON", path: "../..")],
     targets: [.executableTarget(name: "Consumer", dependencies: [
-        .product(name: "JSON", package: "Swift-JSON"),
+        .product(name: "JSONValueDSL", package: "Swift-JSON"),
+            .product(name: "JSONSchemaDSL", package: "Swift-JSON"),
+            .product(name: "JSON", package: "Swift-JSON"),
         .product(name: "JSONSchema", package: "Swift-JSON"),
         .product(name: "JSONSchemaExamples", package: "Swift-JSON"),
         .product(name: "JSONStreaming", package: "Swift-JSON"),

@@ -283,6 +283,78 @@
         "Scripts/qualify_graph.py"
       ],
       "evidence": "Scripts/ci.py source-bound native/Linux/safety/compiler receipts; private symbols only"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Sources/JSONDSLCore/JSONContent.swift",
+      "original_sha256": "278865ff3843c3bc3f697f3ce56329c35418ae6598201aa743effa3b75c1fa4a",
+      "destination": "Sources/JSONDSLCore",
+      "disposition": "Typed authored DSL adapted against actual Swift 6.4 JSON/JSONSchema; flat iterative IR and shared finalization meter replace prototype recursive lowering. Neither shim copied.",
+      "attribution": "SPDX Apache-2.0 prototype notices retained; integration is original Apache-2.0 code.",
+      "validation": [
+        "Tests/JSONDSLTests",
+        "Tests/CompileNegative/DualDSL",
+        "Examples/DualDSL"
+      ],
+      "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Sources/JSONValueDSL/JSONValueDSL.swift",
+      "original_sha256": "7a846ed54455977a585fb53f5646795e5dbcae3a949a0e8be43f0b333f2a025e",
+      "destination": "Sources/JSONValueDSL",
+      "disposition": "Typed authored DSL adapted against actual Swift 6.4 JSON/JSONSchema; flat iterative IR and shared finalization meter replace prototype recursive lowering. Neither shim copied.",
+      "attribution": "SPDX Apache-2.0 prototype notices retained; integration is original Apache-2.0 code.",
+      "validation": [
+        "Tests/JSONDSLTests",
+        "Tests/CompileNegative/DualDSL",
+        "Examples/DualDSL"
+      ],
+      "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Sources/JSONSchemaDSL/JSONSchemaDSL.swift",
+      "original_sha256": "852ec7d7c9f6d5957fa3711c3e1b5ea3daeadf0ea67241ceb90ed1511bbd2f48",
+      "destination": "Sources/JSONSchemaDSL",
+      "disposition": "Typed authored DSL adapted against actual Swift 6.4 JSON/JSONSchema; flat iterative IR and shared finalization meter replace prototype recursive lowering. Neither shim copied.",
+      "attribution": "SPDX Apache-2.0 prototype notices retained; integration is original Apache-2.0 code.",
+      "validation": [
+        "Tests/JSONDSLTests",
+        "Tests/CompileNegative/DualDSL",
+        "Examples/DualDSL"
+      ],
+      "evidence": "Scripts/ci.py: actual native, safety, docs and supported platform receipts; no shim qualification claim"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Tests/DSLPrototypesTests/DSLPrototypeTests.swift",
+      "original_sha256": "57ea84d6729740abb326819a316cd72cd756aec2e4c7990a5b9bb2f61000f2b8",
+      "destination": "Tests/JSONDSLTests/DSLPrototypeTests.swift",
+      "disposition": "Ported all16 XCTest prototype cases to Swift Testing and actual JSONLimits; full schemas also compile and evaluate actual positive/negative or explicitly operational outcomes. No shim is used.",
+      "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
+      "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
+      "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
+    },
+    {
+      "repository": "Maintainer-supplied SwiftJSON-DualDSL-Prototypes-P1 packet",
+      "commit": null,
+      "source_archive_sha256": "a69432b69f59d3d587502c2453fed3d00259845b9335a551b962965be10f9588",
+      "original_path": "Tests/DSLPrototypesTests/StressTypeCheckTests.swift",
+      "original_sha256": "56a803836cb115e84c35abe65c15a3800e082e11593096a4143b73f76f3ff98c",
+      "destination": "Tests/JSONDSLTests/StressTypeCheckTests.swift",
+      "disposition": "Ported all16 XCTest prototype cases to Swift Testing and actual JSONLimits; full schemas also compile and evaluate actual positive/negative or explicitly operational outcomes. No shim is used.",
+      "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
+      "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
+      "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
     }
   ],
   "original_implementation_notes": [

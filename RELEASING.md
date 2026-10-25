@@ -22,7 +22,8 @@ or releases. Published version tags are protected against updates and deletion.
 2. Derive the exact branch-specific product, catalog and API inventory from the
    candidate manifest and compiler graphs. The 1.6 maintenance line has eight
    libraries plus CLI, eight catalogs and 1,077 authored declarations; 1.7-dev
-   candidate has ten libraries plus CLI, ten catalogs and 1,214 authored declarations. Inspection
+   consolidation has twelve libraries plus CLI and thirteen catalogs including
+   the shared JSONDSLCore reference. Derive authored counts from compiler graphs. Inspection
    is not a 1.6 patch feature. Review the empty root dependency graph, compiled
    external consumers, populated pinned suites, policy exclusions, all 49 finite
    caps, schema/regex behavior and cancellation boundaries.
@@ -31,8 +32,9 @@ or releases. Published version tags are protected against updates and deletion.
    archives and Git history.
 4. Measure changed workloads on an idle supported host unless a specific maintainer
    exception is recorded. For this 1.7.0 candidate, the maintainer explicitly authorized
-   loaded-host observations and a one-time allocation-instrumentation waiver; actual
-   allocation events/bytes/overhead remain unknown, not passed measurements. See
+   loaded-host observations and a one-time allocation-instrumentation waiver; the full
+   allocation gate remains unqualified. Later 44-profile and 119-pair observations
+   are partial, loaded-host evidence, not passed population/overhead measurements. See
    Documentation/Qualification/Release1.7.0.md. A 10% median or retention
    change still triggers review. Preserve the documented streaming regression disposition;
    logical retained bytes do not imply an RSS guarantee.

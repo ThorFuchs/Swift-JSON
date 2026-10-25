@@ -4,6 +4,15 @@
 import argparse, hashlib, json, pathlib, platform, subprocess, sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
+def ordinary_rejection(exit_code, stderr, expected):
+    """Require the intended primary diagnostic and reject compiler crashes."""
+    crash_markers = ('Stack dump:', 'Assertion failed', 'fatal error encountered during compilation',
+                     'Please submit a bug report', 'compile command failed due to signal')
+    primary = [line.split(': error: ', 1)[1] for line in stderr.splitlines() if ': error: ' in line]
+    return (exit_code > 0 and 'no such module' not in stderr
+            and not any(marker in stderr for marker in crash_markers)
+            and any(expected in diagnostic for diagnostic in primary))
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True)
@@ -30,7 +39,7 @@ def main():
         command = base + [str(source), '-o', str(output / (name + '.o'))]
         result = subprocess.run(command, capture_output=True, text=True)
         log = output / (name + '.log'); log.write_text(result.stdout + result.stderr)
-        expected = result.returncode == 0 if positive_case else result.returncode != 0 and diagnostic in result.stderr and 'no such module' not in result.stderr
+        expected = result.returncode == 0 if positive_case else ordinary_rejection(result.returncode, result.stderr, diagnostic)
         rows.append(dict(id=name, command=command, exit_code=result.returncode, expected_diagnostic=diagnostic, status='passed' if expected else 'failed', source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(), log_sha256=hashlib.sha256(log.read_bytes()).hexdigest()))
     receipt = dict(status='passed' if all(r['status'] == 'passed' for r in rows) else 'failed', observed=len(cases), cases=rows)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
