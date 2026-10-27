@@ -37,6 +37,12 @@ Stable 1.6.1 has neither. Consolidated development source stays 1.7.0-dev with t
 performance remains HOLD without speed claims; this is distinct from technical
 qualification and does not authorize any release/tag.
 
+## Forward release plan
+
+See the [1.7–2.0 roadmap](../ReleaseRoadmap.md) for the proposed shared-version
+sequence, current product inventory, direct Navigation ownership and remaining
+source-bound release gates. The proposal creates no release or new API approval.
+
 ## Historical JTX10 unpublished 1.7.0 candidate
 
 The isolated JTX10 successor integrates main

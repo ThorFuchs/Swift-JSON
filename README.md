@@ -7,6 +7,9 @@ and optional JSONValueDSL/JSONSchemaDSL proposals. The manifest has twelve libra
 products plus the CLI. The shared JSONDSLCore module has no standalone product;
 its reference makes thirteen DocC catalogs. Stable 1.6.1 keeps eight libraries.
 
+The [1.7–2.0 release roadmap](Documentation/ReleaseRoadmap.md) describes the
+proposed shared-version sequence and the remaining release gates.
+
 Each combined source must pass fresh qualification; predecessor green checks do
 not qualify a new tree. See the [consolidation contract](Documentation/Qualification/Consolidation2026.md).
 

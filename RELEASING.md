@@ -1,5 +1,9 @@
 # Release process
 
+Use the [release roadmap](Documentation/ReleaseRoadmap.md) for the proposed 1.7–2.0
+sequence. All SwiftPM products in a repository tag share that version; a roadmap
+is not tag, publication or new public API approval.
+
 Keep the [stable/development matrix](Documentation/Qualification/ReleaseLines.md)
 source-bound. Prepare 1.6 maintenance releases from the pre-N2 line, not current
 main. Preserve published tags/assets and map applicable maintenance changes to
