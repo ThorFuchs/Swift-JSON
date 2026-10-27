@@ -1,17 +1,17 @@
 # Swift-JSON
 
-This is **unreleased 1.7.0-dev consolidation source**. Latest stable remains
-**1.6.1**; no new tag or release is implied. It combines the existing Navigation
-and Inspection projections with the reviewed source-bound graph, JSONTransform
-and optional JSONValueDSL/JSONSchemaDSL proposals. The manifest has twelve library
-products plus the CLI. The shared JSONDSLCore module has no standalone product;
-its reference makes thirteen DocC catalogs. Stable 1.6.1 keeps eight libraries.
+This is **Swift-JSON 1.7.0 source prepared for release**. Version metadata identifies
+the source; the [official releases](https://github.com/ThorFuchs/Swift-JSON/releases)
+establish publication. At preparation, latest stable remains **1.6.1**. No tag or
+publication is implied by this checkout. The source combines exact Navigation and
+Inspection projections/graphs, JSONTransform and optional JSONValueDSL/JSONSchemaDSL.
+It has twelve library products plus the CLI and thirteen DocC catalogs including
+the shared, non-product JSONDSLCore reference.
 
-The [1.7–2.0 release roadmap](Documentation/ReleaseRoadmap.md) describes the
-proposed shared-version sequence and the remaining release gates.
-
-Each combined source must pass fresh qualification; predecessor green checks do
-not qualify a new tree. See the [consolidation contract](Documentation/Qualification/Consolidation2026.md).
+See the [combined release checklist](Documentation/Qualification/Release1.7Preparation.md),
+[release notes](Documentation/ReleaseNotes/1.7.0.md) and
+[1.7–2.0 roadmap](Documentation/ReleaseRoadmap.md). Every final candidate claim
+requires source-bound receipts; predecessor green checks alone do not qualify it.
 
 See the [release-line matrix](Documentation/Qualification/ReleaseLines.md) for exact
 source scopes and publication boundaries. Version metadata identifies source; the
@@ -39,7 +39,7 @@ eight DocC catalogs and the unchanged 1.6 API/runtime. The optional verified sch
 examples, structural traversal, structured HTML previews and bounded composition
 were introduced in 1.6.0. Exact JSON and offline schema validation remain the
 semantic authorities.
-The published CLI reports `1.6.1`; this development source reports `1.7.0-dev`.
+The published 1.6.1 CLI reports `1.6.1`; this prepared source reports `1.7.0`.
 Both use a deterministic source-content digest.
 The [published 1.6.1 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1)
 is pinned to `e431f157ececc0cf3d061192420b0e36a9062f83`. Use its matching eight-catalog

@@ -146,7 +146,7 @@ private func integrationDirectory() throws -> URL {
 
 @Test func cliVersionIsDeterministicAndNeedsNoRepositoryOrInput() throws {
     let metadata = try JSONParser().parse(CLIHelp.versionJSON)
-    #expect(try metadata.requiredMember("version") == .string("1.7.0-dev"))
+    #expect(try metadata.requiredMember("version") == .string("1.7.0"))
     #expect(try metadata.requiredMember("revisionKind") == .string("source-sha256"))
     let revision = try #require(try metadata.requiredMember("revision").stringValue)
     #expect(revision.hasPrefix("sha256:") && revision.utf8.count == 71)

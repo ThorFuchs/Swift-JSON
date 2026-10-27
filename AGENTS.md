@@ -1,8 +1,9 @@
 # Contributor instructions
 
-Development source is 1.7.0-dev. This consolidation retains the stable 1.6.1 line
-separately; it is not a maintenance release or the frozen 6fe8067 RC. Preserve
-all source-bound qualification history. Main integration never publishes a version.
+Prepared release source is 1.7.0; publication is a separate owner action. Its
+parent development line is 1.7.0-dev and stable 1.6.1 remains separate. This is
+not a maintenance release or the frozen 6fe8067 RC. Preserve all source-bound
+qualification history; source integration never publishes a version.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in

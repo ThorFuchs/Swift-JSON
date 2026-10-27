@@ -101,8 +101,8 @@ prove whether a feature was incorporated: inspect donor source and the recorded
 component mapping. Close a proven superseded draft as superseded, not merged.
 
 Use one short-lived feature branch per independently reviewable increment, based
-on fresh main. Keep protected main/tag rules and the Native/native, Native/safety,
-Native/docs contexts unchanged. A clean worktree whose exact head is a merged PR
+on fresh main. Keep protected main/tag rules and the `Native / native`, `Native / safety`,
+`Native / docs` contexts unchanged. A clean worktree whose exact head is a merged PR
 can be archived recoverably after confirming no new work or needed ignored files.
 The app's active/shared ownership guard must be honored; retire such a checkout
 from its owning task instead of deleting directories manually. Preserve held

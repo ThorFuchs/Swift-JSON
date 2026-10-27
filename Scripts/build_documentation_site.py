@@ -20,7 +20,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 REPOSITORY = 'https://github.com/ThorFuchs/Swift-JSON'
 BASE_PATH = '/Swift-JSON'
 SITE_URL = 'https://thorfuchs.github.io' + BASE_PATH + '/'
-SOURCE_VERSION = '1.7.0-dev'
+SOURCE_VERSION = '1.7.0'
 STABLE_VERSION = '1.6.1'
 GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONSchema': ('Offline schema validation', 'offlinevalidation'),
@@ -115,7 +115,7 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <h1>Exact JSON. Clear contracts.</h1>
 <p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore {len(PRODUCTS)} Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
-<p class="baseline">Development main includes JSONInspection; this unpublished candidate also includes JSONTransform. Stable <a href="{REPOSITORY}/releases/tag/{STABLE_VERSION}">{STABLE_VERSION}</a> has eight library catalogs; use its matching compiled DocC assets or <a href="{REPOSITORY}/tree/{STABLE_VERSION}/Sources">tagged source documentation</a>.</p>
+<p class="baseline">Development main includes JSONInspection, JSONTransform and the optional authored DSLs; this source is prepared as 1.7.0. Stable <a href="{REPOSITORY}/releases/tag/{STABLE_VERSION}">{STABLE_VERSION}</a> has eight library catalogs; use its matching compiled DocC assets or <a href="{REPOSITORY}/tree/{STABLE_VERSION}/Sources">tagged source documentation</a>.</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>
 <p>Read the <a href="{REPOSITORY}#readme">package overview and executable examples</a>, then choose a reference above. The <a href="{REPOSITORY}/blob/main/Documentation/README.md">behavior contracts</a> explain exact numbers, scalar identity, offline schema evaluation, cumulative budgets and stream completion.</p>
