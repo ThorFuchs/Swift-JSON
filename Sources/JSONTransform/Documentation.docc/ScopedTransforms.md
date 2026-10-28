@@ -19,7 +19,19 @@ let report = try plan.withExecution(input: root) { execution in
 The plan uses the same exact decimal and decoded-scalar rules as JSON and the CLI.
 Nonterminating division is a language error; no approximate arithmetic is added.
 The standalone public consumer at `Tools/TransformQualification` is available
-in this feature candidate; it is absent from stable 1.6.1.
+in this unreleased source line; it is absent from stable 1.6.1.
+
+## Shared language reference
+
+The library and CLI execute the same jq-inspired subset. The shared
+[command/filter reference](https://github.com/ThorFuchs/Swift-JSON/blob/15aa7e432cbb7173aa94b91e32badd1ab2695068/Documentation/Architecture/Release1.4/CLIReference.md),
+[exact arithmetic contract](https://github.com/ThorFuchs/Swift-JSON/blob/15aa7e432cbb7173aa94b91e32badd1ab2695068/Documentation/Architecture/Release1.4/Arithmetic.md)
+and [advanced filter contract](https://github.com/ThorFuchs/Swift-JSON/blob/15aa7e432cbb7173aa94b91e32badd1ab2695068/Documentation/Architecture/Release1.4/Advanced.md)
+are pinned to the admitted consolidation source. This is not universal jq
+compatibility. Unsupported syntax/functions produce typed compilation failures.
+CLI options govern its host; they are not additional library parameters. In
+particular, the public library has exact division and explicit caller-supplied
+bindings/providers, with no ambient files or process input.
 
 ## Ownership and completion
 
@@ -35,6 +47,18 @@ Keep each output handle alive while using its accounted source alias. A JSON cop
 extracted from it, or a value handed off when the scope ends, is caller-owned.
 A callback may stop early. Transform completion does not drain or certify an
 external source: the CLI separately checks syntax, closing boundaries and EOF.
+
+Accounting observations are snapshots, not ARC synchronization barriers. Output
+leases enqueue refunds when their last handle is released; the invocation drains
+that queue at its next checkpoint. `next()` performs that checkpoint even when it
+must then throw the latched failure or `configuration/scopeClosed`. Reading
+`statistics` or `used(_:)` alone does not drain pending refunds.
+
+A returned operation report is an immutable observation at scope completion. It
+may include a source reservation still held by an output handle at that time;
+releasing the handle later does not rewrite that report. An escaped execution can
+observe the drained refund after a guarded checkpoint, while data access remains
+invalid. These logical observations do not delay ARC reclamation or measure RSS.
 
 ## Finite work and explicit providers
 

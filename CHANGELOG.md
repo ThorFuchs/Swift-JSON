@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 1.7.0-dev consolidation
+## 1.7.0 — prepared source; publication separate
 
 - Reconcile admitted set/matrix APIs with the reviewed public directed graph,
   shared JSONTransform compiler/pull VM and optional exact value/schema DSLs.
@@ -11,7 +11,12 @@
 - Preserve finite exact semantics and all predecessor fixtures, failures and
   performance/platform holds. Require fresh combined-source qualification; a merge
   is development integration and does not publish a version.
-- See [combined qualification](Documentation/Qualification/Consolidation2026.md).
+- Prepare the combined source with CLI version1.7.0 and a regenerated deterministic
+  source digest. Record exact final-source outcomes in the
+  [release checklist](Documentation/Qualification/Release1.7Preparation.md) and
+  [release notes](Documentation/ReleaseNotes/1.7.0.md).
+- Preserve [consolidation qualification](Documentation/Qualification/Consolidation2026.md)
+  and every historical failed attempt; neither preparation nor CI creates a release.
 
 ### Historical JTX10 release-candidate checkpoint (unpublished)
 
@@ -28,6 +33,14 @@
   waiver; events, allocated bytes and profiler overhead remain unknown.
 - See [candidate qualification](Documentation/Qualification/Release1.7.0.md) for
   source-bound gates, Apple/Linux/scoped WASI claims and historical holds.
+
+### Historical authored-DSL prototype checkpoint (unpublished)
+
+The value/schema DSL proposal was developed against the earlier 1.4-era source,
+but JSONValueDSL and JSONSchemaDSL are absent from the published 1.4.0, 1.5.0 and
+1.6.1 manifests. Their first combined public-product preparation is this 1.7 source.
+The prototype introduced trusted authored values/schema documents with native exact
+semantics and finite iterative finalization; staging/callbacks remain caller work.
 
 ### Historical JSONTransform extraction checkpoints
 
@@ -112,11 +125,6 @@
 
 The protected public version tag exists; its separate GitHub release remains draft.
 These additive APIs are also included in the published 1.5.0 release.
-
-- Add opt-in JSONValueDSL and JSONSchemaDSL products for typed, trusted authored
-  values and Draft 2020-12 declarations. Exact values and schema semantics remain
-  owned by the existing engine. Finalization uses one finite iterative ledger;
-  authored staging and callbacks are explicitly outside its resource accounting.
 
 - Add E2's shallow JSON parsing, checked object construction, decimal-text and
   pre-parsed Pointer entry points; exact-key membership and three-state presence

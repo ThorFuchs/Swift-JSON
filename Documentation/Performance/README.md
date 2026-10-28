@@ -28,5 +28,9 @@ pattern and aggregate-byte quotas; sharing does not bypass admission or work.
 Logical retained bytes differ from process RSS. Darwin ru_maxrss is cumulative;
 allocator end observations are not isolated workload allocations. These results
 make no cross-machine throughput or OS-enforced memory guarantee. Source-attached structural views in unreleased Inspection carry no performance
-claim (G4 HOLD). P2 matrix/graph/store/set/retrieval and JSON text-sequence framing
-remain deferred.
+claim (G4 HOLD). Consolidated 1.7 source includes set/matrix and directed graph
+capabilities in JSONInspection, plus package-only store construction/preparation.
+Their source admission does not close G4 or establish a speed, allocation or RSS
+claim. Public store/follow, wider retrieval/persistence, NAV13 batches and JSON
+text-sequence framing remain separately gated, unadmitted work. See the
+[combined scope and holds](../Qualification/Consolidation2026.md).

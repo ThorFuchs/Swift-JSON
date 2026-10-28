@@ -354,12 +354,22 @@ follows from this contract.
 
 ## 1.7.0 release-candidate authority
 
-This unpublished candidate retains the accepted Transform API (42 authored
-declarations) and Inspection API (95), with all 56 Navigation declarations
-unchanged. Historical provisional headings above remain stable link targets and
-checkpoint descriptions; the [candidate contract](../Qualification/Release1.7.0.md)
-and final compiler graphs determine current scope. API shape acceptance does not
-imply publication, measured allocations or unobserved platform execution.
+The current consolidated 1.7 source has twelve library products plus the CLI and
+thirteen DocC catalogs, including shared non-product JSONDSLCore. Its qualified
+compiler graphs contain 1,500 authored declarations: Transform 42, Inspection 162
+and Navigation 56, with the remaining declarations in the other catalogs.
+The [combined qualification contract](../Qualification/Consolidation2026.md) and
+[source-line matrix](../Qualification/ReleaseLines.md) define this source boundary.
+A final versioned candidate must bind its own inventory, checks and assets.
+
+Historical provisional headings above remain stable link targets. The earlier
+[frozen RC contract](../Qualification/Release1.7.0.md) belongs to `6fe8067`: ten
+libraries plus CLI, 1,214 authored declarations and Inspection 95. It is retained
+history, not the current consolidated inventory or a later-source pass.
+
+Transform's accepted 42 declarations and one compiler/VM remain unchanged.
+API shape acceptance does not imply publication, measured allocations or
+unobserved platform execution.
 
 ## Optional Dual DSL P1.2
 

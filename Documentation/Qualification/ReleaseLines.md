@@ -5,6 +5,7 @@
 | Published 1.6.0 | `f975ac1c5a18af9b422db0994cbc551fd37eee2f` | Eight libraries plus CLI, eight catalogs, 1,077 authored declarations |
 | Published 1.6.1 (latest stable) | `e431f157ececc0cf3d061192420b0e36a9062f83` | Same eight-library public API and runtime as 1.6.0; no Inspection |
 | Consolidated development source | Main, retaining N2 admitted at `2b24f47e7405821240cf8dfc66b840c9a7f8efa5` | Twelve libraries plus CLI; thirteen catalogs including shared JSONDSLCore; compiler-derived API inventory required |
+| Prepared combined 1.7.0 source | Final candidate SHA/tree belongs to its qualification receipt; no tag implied | Same twelve libraries plus CLI, thirteen catalogs and expected 1,500 authored declarations; see current preparation checklist |
 
 Source versions do not establish publication. Consult the
 [official releases](https://github.com/ThorFuchs/Swift-JSON/releases) for published
@@ -36,6 +37,20 @@ within the existing Inspection product; see [the completion contract](../Archite
 Stable 1.6.1 has neither. Consolidated development source stays 1.7.0-dev with thirteen products. G4 controlled
 performance remains HOLD without speed claims; this is distinct from technical
 qualification and does not authorize any release/tag.
+
+## Combined 1.7.0 preparation
+
+The [current preparation checklist](Release1.7Preparation.md) and
+[draft release notes](../ReleaseNotes/1.7.0.md) describe the twelve-library candidate
+being prepared from current main. Its final source is not yet frozen. They are
+separate from the historical ten-library RC contract below; latest stable remains
+1.6.1 until actual publication.
+
+## Forward release plan
+
+See the [1.7–2.0 roadmap](../ReleaseRoadmap.md) for the proposed shared-version
+sequence, current product inventory, direct Navigation ownership and remaining
+source-bound release gates. The proposal creates no release or new API approval.
 
 ## Historical JTX10 unpublished 1.7.0 candidate
 

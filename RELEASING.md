@@ -1,5 +1,9 @@
 # Release process
 
+Use the [release roadmap](Documentation/ReleaseRoadmap.md) for the proposed 1.7–2.0
+sequence. All SwiftPM products in a repository tag share that version; a roadmap
+is not tag, publication or new public API approval.
+
 Keep the [stable/development matrix](Documentation/Qualification/ReleaseLines.md)
 source-bound. Prepare 1.6 maintenance releases from the pre-N2 line, not current
 main. Preserve published tags/assets and map applicable maintenance changes to
@@ -31,13 +35,15 @@ or releases. Published version tags are protected against updates and deletion.
    Keep private records, credentials, input clones and build outputs out of source
    archives and Git history.
 4. Measure changed workloads on an idle supported host unless a specific maintainer
-   exception is recorded. For this 1.7.0 candidate, the maintainer explicitly authorized
-   loaded-host observations and a one-time allocation-instrumentation waiver; the full
-   allocation gate remains unqualified. Later 44-profile and 119-pair observations
-   are partial, loaded-host evidence, not passed population/overhead measurements. See
-   Documentation/Qualification/Release1.7.0.md. A 10% median or retention
-   change still triggers review. Preserve the documented streaming regression disposition;
-   logical retained bytes do not imply an RSS guarantee.
+   exception is recorded for the actual final source. The frozen RC6fe8067's
+   loaded-host observations and one-time Transform allocation-instrumentation
+   waiver remain historical scoped evidence. Later44/150 and119/150 windows are
+   partial, not population/overhead passes. A combined1.7 candidate needs an
+   explicit scope mapping and final-source disposition; do not infer blanket
+   acceptance from the version number. Preserve Navigation G4 HOLD, the unchanged
+   10% review trigger and historical streaming disposition. Logical retention is
+   not RSS/heap allocation. See [current preparation](Documentation/Qualification/Release1.7Preparation.md)
+   and the [historical contract](Documentation/Qualification/Release1.7.0.md).
 5. Update CHANGELOG.md and compatibility notes, then run
    `python3 Scripts/archive_candidate.py --output Artifacts/Swift-JSON-public-candidate.tar.gz`.
    Verify embedded hashes, byte-equal rebuild and a clean extracted build/test with
