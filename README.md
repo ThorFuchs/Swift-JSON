@@ -833,3 +833,10 @@ The [DocC guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md)
 explains separate operation reports, caller work and logical retention. This is
 an additive candidate API; no persistence, network resolver, new platform or
 performance improvement is claimed.
+
+The [cross-product guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflowRecipes.md)
+and [runnable example](Examples/BoundedWorkflows/README.md) show schema validation,
+read-only store interpretation, transformation and checked rebuilds after Patch.
+Its separate capacity mode records owned-work/retention counters and fixture hashes;
+it makes no timing, RSS or default joint-capacity claim. The existing published
+developer kit remains pinned to its own qualified version.

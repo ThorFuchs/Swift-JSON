@@ -2,6 +2,12 @@
 
 ## Unreleased — 1.8.0-dev
 
+- Extend public acceptance across schema validation, store/transform reads and
+  checked Patch rebuilds, with exact numeric/scalar identity and lifecycle cases.
+- Add a frozen capacity/owned-counter matrix and compiled cross-product recipes;
+  distinguish diagnostic refusals from completed cells and logical retention from
+  timing, RSS and allocations. Library APIs/algorithms and default policies unchanged.
+
 - Add ordered typed-path, snapshot-ordinal and store-position value batches using
   one cumulative native ledger per batch, complete source admission and atomic results.
 - Promote the original checked configured-store profile/construction inside

@@ -61,3 +61,20 @@ cases. Keep partial profiling/G4 HOLD and the1.7-only P4 exception historical;
 
 No persistence, public mutable store, online lookup, new query grammar, lower
 platform floor, parallel batch execution or wider retrieval belongs to this wave.
+
+## M2 application acceptance and counter observations
+
+Schema validation, store construction, reads, transformation and Patch remain
+separate public operations with independent reports. A recipe does not attach a
+replacement ledger or claim a pipeline-wide budget. Ordinary schema invalidity,
+operational quota failure and root removal remain distinct. Patches require a
+new source wrapper/store; old positions and source spans do not silently migrate.
+Accepted bytes of an awaited sink cannot be recalled after cancellation.
+
+The authored public examples and Integration behavior cases qualify those
+boundaries without changing any engine API. The capacity matrix in
+Documentation/Qualification/StructuralWorkflows1.8Matrix.json records fixed
+fixtures, exact boundaries and separately reported diagnostic refusals. Its
+counter comparisons are not elapsed-time, allocation or RSS evidence. Existing
+49 core metrics, twelve construction caps, profile defaults, fixture identities,
+performance review trigger and controlled-performance holds are unchanged.

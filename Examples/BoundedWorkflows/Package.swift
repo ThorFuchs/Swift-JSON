@@ -7,6 +7,9 @@ let package = Package(
     dependencies: [.package(name: "Swift-JSON", path: "../..")],
     targets: [.executableTarget(name: "BoundedWorkflows", dependencies: [
         .product(name: "JSON", package: "Swift-JSON"),
+        .product(name: "JSONSchema", package: "Swift-JSON"),
+        .product(name: "JSONPatch", package: "Swift-JSON"),
+        .product(name: "JSONTransform", package: "Swift-JSON"),
         .product(name: "JSONNavigation", package: "Swift-JSON"),
         .product(name: "JSONInspection", package: "Swift-JSON")
     ])], swiftLanguageModes: [.v6]

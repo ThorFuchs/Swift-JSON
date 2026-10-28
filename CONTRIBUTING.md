@@ -2,7 +2,10 @@
 
 This isolated development source is 1.8.0-dev from published 1.7.0.
 Run `python3 Scripts/ci.py --lane structural-workflows` for exact Debug/Release
-behavior, preserved store cases and public compiler/consumer checks. Run
+behavior, preserved store cases and public compiler/consumer checks. M2 adds
+`--lane structural-acceptance` and `--lane structural-acceptance-safety` for exact
+public cross-product cases, deterministic capacity observations and their safety
+checks. These extend the existing gates. Run
 `--lane structural-workflows-safety` for scoped ASan, shared-state TSan and strict
 memory checks; complete native/Linux/docs/WASI gates still apply before release.
 Do not infer a pass when storage or an actual supported runtime is unavailable.

@@ -6,6 +6,12 @@ import JSONInspection
 
 @main struct BoundedWorkflows {
     static func main() throws {
+        let arguments = Array(CommandLine.arguments.dropFirst())
+        if arguments.count == 2, arguments[0] == "--capacity" {
+            try structuralCapacity(output: URL(fileURLWithPath: arguments[1]))
+            return
+        }
+        precondition(arguments.isEmpty, "Use no arguments, or --capacity OUTPUT_DIRECTORY")
         func witness(_ id: String, _ success: Bool) {
             precondition(success, id); print("WORKFLOW_CASE \(id) passed")
         }
@@ -46,5 +52,6 @@ import JSONInspection
             witness("cumulative-report", equal.result == [a,b] && equal.statistics[.workUnits] == measured.statistics[.workUnits] && error.resource?.metric == .workUnits)
         }
         print("BOUNDED_WORKFLOWS passed cases=12 work=\(measured.statistics[.workUnits]) logical_retained=\(measured.statistics[.retainedBytes])")
+        try structuralAcceptance()
     }
 }

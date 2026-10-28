@@ -61,6 +61,7 @@ or numeric matrix. Sampling does not exempt any source from admission.
 ### Bounded structural workflows (1.8 candidate)
 
 - <doc:BoundedWorkflows>
+- <doc:BoundedWorkflowRecipes>
 - ``JSONInspectionBatch``
 - ``JSONInspectionBatchFailure``
 - ``JSONStoreBuilder``

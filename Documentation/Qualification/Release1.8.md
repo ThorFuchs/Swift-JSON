@@ -1,3 +1,67 @@
+# Milestone 2 — cross-product acceptance and capacity observations
+
+M2 is an additive qualification increment from local checkpoint
+`07ed28095dde5e8063570aa6a2436039b5bd43ca`, tree
+`5e0961a13fa4b8746854beca23a424db3075ff96`. The sealed M1 archive/receipts remain
+unchanged. No public library signature, algorithm, root manifest, default profile
+or fixture comparator is changed by this increment. A new guide updates the
+existing catalog and therefore requires regenerated CLI source identity.
+
+The completed local M2 receipts pass all43 Integration functions in Debug/Release
+and ASan, the new sharing TSan function and strict test-target compilation. The
+existing49-cap public test passes every exact expected probe. Six new public
+consumer witnesses/configuration, the original twelve and their ordinary compiler
+refusals pass; all16 counter/capacity cells complete with exact boundary proofs.
+All13 native DocC catalogs compile with warnings as errors, and1,639 authored
+public declarations/parameters are documented. Compared to published1.7.0, only
+Inspection has139 additive declarations from M1; no existing declaration fragment
+or identity changes in the complete package graph. Native pinned qualification
+observes318 syntax cases (287 evaluated successes,31 policy rejections) and2,337
+schema cases (2,300 evaluated successes,37 policy exclusions), with82 authored
+semantics,9 budget cases and4,396 deterministic malformed replays, no failures.
+The full native/safety/docs CI lanes and platform/runtime/performance gates remain
+separate; these local results do not publish or admit1.8.
+
+This completion note is a documentary successor to the raw receipts. Final private
+binding records its one-path delta; the earlier safety receipt also precedes the
+ci.py addition of the49-cap native command. Its three safety commands, product/test/
+fixture bytes and flags are unchanged and rechecked by the current exact harness.
+Original failures and M1 evidence remain intact. This is scoped agent review and
+native qualification, not independent human release approval.
+
+Nine named public-import Integration tests cover schema/store/transform/Patch
+composition, exact bytes/scalar collection names, source-map/owner replacement,
+dangling-link refusal, terminal accounting, accepted sink prefixes after cancellation
+and independent shared-plan health. Native/portable discovery is now
+1,008/992 functions,390 parameter invocations; WASI expects904/353. Integration
+has43 functions and12 sharing cases; combined sharing62/61. These are discovery
+requirements, not claims that all platform lanes have run on this source.
+
+The expanded public SwiftPM example adds six cross-product witnesses per
+configuration, preserving all twelve M1 witnesses and compiler refusals. The
+[capacity matrix](StructuralWorkflows1.8Matrix.json) freezes16 cells and five
+independently hashed fixtures. Batches use a fixed eight-record source and
+1/8/64/512 requests; follow uses a growing chain and explicit finite bounds.
+Exact request, work and retention boundaries are checked. Independent singular
+reads report sums of cumulative counts and maxima of invocation retention, never
+summed process memory. Diagnostic typed refusals are separate incomplete capacity
+observations, not successes. No timing, allocations, RSS or speedup is measured.
+
+Run `Scripts/ci.py --lane structural-acceptance` and
+`--lane structural-acceptance-safety`; full existing native/Linux/safety/docs gates
+remain. Actual M2 outcomes belong in source-bound private receipts under
+Artifacts/Release1.8M2. Compiler/fixture reconciliation failures are retained.
+M2 also executes the existing49-cap public qualification test, preserving its
+exact expected outcomes. The full43-function Integration target is checked in
+Debug/Release/ASan; its original names/assertions remain. Strict test-target
+compilation uses narrowly scoped acknowledgements for three preexisting
+UnsafeCurrentTask callback accesses; those handles never escape or cross tasks.
+No compiler flag or unsafe production annotation is added. The new cancellation
+case instead uses a safe Task handle and checked-continuation rendezvous.
+
+The M1 record below remains historical. Broad QA/performance/publication gates
+remain pending until their actual outcomes are recorded; no1.7 waiver is inherited.
+
 # 1.8 bounded structural workflow qualification
 
 Status: implemented local milestone, broader release qualification PARTIAL, on
