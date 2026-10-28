@@ -1,3 +1,13 @@
+# Current source lines — 28 October 2026
+
+Latest published stable is [1.7.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.0),
+commit `8557badef562cf2f059e964c113d4a7f60ecbe6c`, tree
+`c914b8914c9130a3a07a3ed82fb41dde33c37402`: twelve libraries plus CLI,
+thirteen catalogs, 1,500 authored declarations. The isolated 1.8.0-dev successor
+keeps those products and adds bounded Inspection batches/store operations.
+See [its separate qualification](Release1.8.md). 1.6.1 stays the eight-library
+maintenance line. The dated preparation inventories below remain history.
+
 # Stable and development source lines
 
 | Line | Source identity | Public scope |

@@ -1,3 +1,12 @@
+# 1.8 scoped workflow qualification
+
+This isolated development source is 1.8.0-dev from published 1.7.0.
+Run `python3 Scripts/ci.py --lane structural-workflows` for exact Debug/Release
+behavior, preserved store cases and public compiler/consumer checks. Run
+`--lane structural-workflows-safety` for scoped ASan, shared-state TSan and strict
+memory checks; complete native/Linux/docs/WASI gates still apply before release.
+Do not infer a pass when storage or an actual supported runtime is unavailable.
+
 # Contributing
 
 Choose the source line deliberately: maintenance changes use the 1.6 line;

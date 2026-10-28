@@ -12,7 +12,7 @@
     "JSONCLITests": 88,
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 190,
+    "JSONInspectionTests": 214,
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
@@ -37,7 +37,7 @@
     "JSONCLITests": 1,
     "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
-    "JSONInspectionTests": 10,
+    "JSONInspectionTests": 11,
     "JSONTransformTests": 1,
     "JSONDSLTests": 1
   },
@@ -84,7 +84,7 @@
     "JSONCLITests": 88,
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 190,
+    "JSONInspectionTests": 214,
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
@@ -99,7 +99,7 @@
     "JSONBridgesTests": 10,
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 190,
+    "JSONInspectionTests": 214,
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
@@ -115,7 +115,7 @@
     "JSONCLITests": 1,
     "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
-    "JSONInspectionTests": 10,
+    "JSONInspectionTests": 11,
     "JSONTransformTests": 1,
     "JSONDSLTests": 1
   },
@@ -148,5 +148,31 @@
     "JSONInspectionTests.storeR08DeclarationAndPhysicalPermutationMetamorphisms()",
     "JSONInspectionTests.storeR09CompleteRowsDeepSourcesAndZeroCapacity()",
     "JSONInspectionTests.storeR10NoInferenceOrModelMutationAndExactPayloads()"
+  ],
+  "workflow_function_ids": [
+    "JSONInspectionTests.workflowB01PathsPreserveOrderRepeatsNullAndExactScalars()",
+    "JSONInspectionTests.workflowB02OneCompleteAdmissionAndEmptyBatch()",
+    "JSONInspectionTests.workflowB03RequestCapacityConfigurationAndExactBoundary()",
+    "JSONInspectionTests.workflowB04MissingAndWrongKindRetainTypedPaths()",
+    "JSONInspectionTests.workflowB05UnselectedSuffixAndCumulativeWorkCannotReset()",
+    "JSONInspectionTests.workflowB06SnapshotBatchKeepsOneSourceAndOrdinalMeaning()",
+    "JSONInspectionTests.workflowB07InnerCancellationInvalidatesOriginalScope()",
+    "JSONInspectionTests.workflowB08RetentionBoundaryIsFiniteAndSourceIsUnchanged()",
+    "JSONInspectionTests.workflowS01PublicStorePreservesPhysicalAndDeclaredOrder()",
+    "JSONInspectionTests.workflowS02LookupUsesDecodedScalarIDsAndDistinguishesMissing()",
+    "JSONInspectionTests.workflowS03OwnerTokensCannotRebindAnotherInstance()",
+    "JSONInspectionTests.workflowS04StoreBatchValuesPreserveOrderExactnessAndOneAdmission()",
+    "JSONInspectionTests.workflowS05ReferenceSlotsKeepAbsentNullAndLinkDistinct()",
+    "JSONInspectionTests.workflowS06FollowCompletesCyclesAndPreservesBFSOrder()",
+    "JSONInspectionTests.workflowS07FollowAllFourInclusiveBoundsThrowInsteadOfTruncate()",
+    "JSONInspectionTests.workflowS08FollowAndLookupHaveCumulativeQuotaAndNoSecondAdmission()",
+    "JSONInspectionTests.workflowS09FollowInnerCancellationAndInvalidation()",
+    "JSONInspectionTests.workflowS10SourceReplacementCannotInventSpansOrRebindPositions()",
+    "JSONInspectionTests.workflowS11DisabledReferencesRemainOrdinaryData()",
+    "JSONInspectionTests.workflowSharedImmutablePlansHaveIndependentBatchAndStoreHealth()",
+    "JSONInspectionTests.workflowS12StorePathsHonorInvocationPointerAndDiagnosticLimits()",
+    "JSONInspectionTests.workflowS13FollowSelfCycleAndLongNarrowChain()",
+    "JSONInspectionTests.workflowB09NestedSnapshotRepeatsQuotasAndLateCancellation()",
+    "JSONInspectionTests.workflowS14MetadataAliasesAndScratchHaveExactRetentionDisposition()"
   ]
 }

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased — 1.8.0-dev
+
+- Add ordered typed-path, snapshot-ordinal and store-position value batches using
+  one cumulative native ledger per batch, complete source admission and atomic results.
+- Promote the original checked configured-store profile/construction inside
+  JSONInspection; add exact-ID lookup and finite complete BFS reference following.
+- Preserve exact numbers/scalar identity, unforgeable source-local positions,
+  explicit absent/null/link states and original construction error precedence.
+- Add external SwiftPM examples, ordinary compiler refusals, boundary/lifecycle/
+  concurrency tests and exact scoped CI discovery. Qualification remains source-bound;
+  no 1.8 release or performance/platform pass is implied.
+
+## Publication note — 28 October 2026
+
+Version 1.7.0 was published from 8557badef562cf2f059e964c113d4a7f60ecbe6c.
+The preparation records below retain their original historical wording.
+
 ## 1.7.0 — prepared source; publication separate
 
 - Reconcile admitted set/matrix APIs with the reviewed public directed graph,

@@ -1,17 +1,15 @@
 # Swift-JSON
 
-This is **Swift-JSON 1.7.0 source prepared for release**. Version metadata identifies
-the source; the [official releases](https://github.com/ThorFuchs/Swift-JSON/releases)
-establish publication. At preparation, latest stable remains **1.6.1**. No tag or
-publication is implied by this checkout. The source combines exact Navigation and
-Inspection projections/graphs, JSONTransform and optional JSONValueDSL/JSONSchemaDSL.
-It has twelve library products plus the CLI and thirteen DocC catalogs including
-the shared, non-product JSONDSLCore reference.
-
-See the [combined release checklist](Documentation/Qualification/Release1.7Preparation.md),
-[release notes](Documentation/ReleaseNotes/1.7.0.md) and
-[1.7–2.0 roadmap](Documentation/ReleaseRoadmap.md). Every final candidate claim
-requires source-bound receipts; predecessor green checks alone do not qualify it.
+This is **Swift-JSON 1.8.0-dev**, based on the published
+[1.7.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.0)
+(`8557badef562cf2f059e964c113d4a7f60ecbe6c`). The next additive wave brings
+ordered batch reads and an immutable configured read-only store to JSONInspection.
+It is under qualification; it is not an admitted 1.8 release.
+Twelve libraries plus CLI, thirteen DocC catalogs and empty root dependencies remain.
+See the [1.8 implementation contract](Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md),
+[qualification record](Documentation/Qualification/Release1.8.md) and
+[release roadmap](Documentation/ReleaseRoadmap.md). Historical records below retain
+their original source and publication dates.
 
 See the [release-line matrix](Documentation/Qualification/ReleaseLines.md) for exact
 source scopes and publication boundaries. Version metadata identifies source; the
@@ -34,24 +32,15 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-**1.6.1** is the latest stable maintenance release: eight libraries plus CLI,
-eight DocC catalogs and the unchanged 1.6 API/runtime. The optional verified schema
-examples, structural traversal, structured HTML previews and bounded composition
-were introduced in 1.6.0. Exact JSON and offline schema validation remain the
-semantic authorities.
-The published 1.6.1 CLI reports `1.6.1`; this prepared source reports `1.7.0`.
-Both use a deterministic source-content digest.
-The [published 1.6.1 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1)
-is pinned to `e431f157ececc0cf3d061192420b0e36a9062f83`. Use its matching eight-catalog
-DocC and qualification assets for the stable reference; see the
-[maintenance qualification notes](Documentation/Qualification/Release1.6.1.md).
-Historical N0/N1 plans and later candidates are distinguished in the
-[source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
+**1.7.0** is the latest stable release: twelve libraries plus CLI and thirteen
+DocC catalogs. Inspection, Transform and the authored DSL products are included.
+The 1.6.1 maintenance line retains its eight-library API separately. Published
+1.7.0 reports `1.7.0`; this feature source reports `1.8.0-dev`. Both expose a
+source-content digest distinct from the Git commit. Use exact version pins and
+matching release assets when reproducing a published edition.
 
-This development source includes opt-in Inspection, Transform and authored DSLs:
-twelve libraries plus the CLI, thirteen products in total. Inspection, Transform and DSLs are absent from stable 1.6 releases. Pin a reviewed
-unreleased source commit to use those products; the compatible stable installation
-requirement below does not supply them. Integration into main does not publish 1.7.0.
+The new batch/store APIs require the 1.8 feature source. No package product,
+dependency, platform minimum or existing JSON/JSONSchema authority changes.
 
 The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
 the complete 1.2.1 regression suites and Git-free qualification. See the
@@ -752,7 +741,7 @@ can have restricted descendant traversal; structural rectangular width is not
 numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
 [public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).
 
-## Complete source-attached structural views (unreleased)
+## Complete source-attached structural views (introduced in 1.7)
 
 Opt-in JSONInspection in this candidate combines array observations with a
 complete parent-linked snapshot, selected physical tree views and strict sparse
@@ -767,7 +756,7 @@ Every construction has one cumulative finite ledger. Each later catalogue/cell/
 location/value/span lookup is an explicitly separate full-source-admitted operation.
 Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
-These additions are absent from published 1.6.1 and do not publish 1.7.0.
+These additions were absent from published 1.6.1 and are included in published 1.7.0.
 
 The current development branch also contains package-private structural set and
 exact numeric matrix experiments. They add no public API; see the
@@ -782,7 +771,7 @@ Every later member/cell read independently admits the whole captured source with
 limits and an operation report. These are structural views; no set algebra, matrix
 arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
 [independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
-Batch access remains explicitly deferred to NAV13. Stable 1.6.1 is unchanged.
+The 1.8 candidate adds aggregate value reads; set/matrix algebra remains outside scope. Stable 1.6.1 is unchanged.
 
 NAV11 experiments with a package-only, exact source-backed directed simple graph
 inside JSONInspection. Graph construction and BFS are not public API and are not
@@ -821,3 +810,26 @@ for source-bound gates, the explicit allocation-instrumentation exception and
 platform limits. A path or revision consumer is preparation evidence; exact 1.7.0
 tag consumption is a postauthorization check.
 This product is absent from stable 1.6.1 and must pass qualification on its final versioned source before publication.
+
+## Bounded structural workflows (1.8 candidate)
+
+Use `JSONInspectionBatch.values(at:maximumRequests:)` for ordered typed paths,
+`JSONStructuralSnapshot.values(for:maximumRequests:limits:)` for snapshot ordinals,
+and `JSONConfiguredStore.values(at:maximumRequests:limits:)` for record positions.
+Each complete batch admits the source once and shares one finite ledger, preserves
+request order and repeats, and either returns every result or throws. Missing is
+an error; explicit JSON null remains a value. Empty batches still admit the source.
+
+Build a read-only store with `JSONStoreBuilder` and an explicit `JSONStoreProfile`.
+Collection paths, ID fields and reference fields are configured; exact scalar IDs
+are never normalized. `lookup(collection:id:limits:)` distinguishes a missing ID
+from an unknown collection. `follow(from:bounds:limits:)` returns a complete BFS
+closure, with finite depth/frontier/visited/result caps and no truncated success.
+Positions are local to one immutable store and cannot be forged or rebound.
+
+Run the [public SwiftPM example](Examples/BoundedWorkflows) with
+`swift run --package-path Examples/BoundedWorkflows BoundedWorkflows`.
+The [DocC guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md)
+explains separate operation reports, caller work and logical retention. This is
+an additive candidate API; no persistence, network resolver, new platform or
+performance improvement is claimed.

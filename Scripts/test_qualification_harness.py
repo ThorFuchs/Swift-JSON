@@ -28,6 +28,33 @@ def store_markers():
         'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
 
 class HarnessTests(unittest.TestCase):
+    def test_workflow_discovery_requires_all_exact_identities(self):
+        names = DISCOVERY['workflow_function_ids']
+        self.assertEqual(len(names), 24)
+        events = dict(bundle_counts=[24], module_function_counts={'JSONInspectionTests':24},
+                      function_names=names, parameter_case_invocations=0)
+        command = ['swift','test','--test-product','JSONInspectionTests','--filter','workflow']
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        for broken in [dict(events, function_names=names[:-1]), dict(events, function_names=names+names[:1]),
+                       dict(events, parameter_case_invocations=1), dict(events, bundle_counts=[21])]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+
+    def test_workflow_consumer_rejects_missing_witnesses_or_incidental_diagnostics(self):
+        from qualify_structural_workflows import CASES, PROBES, check_receipt
+        data = dict(status='passed', commands=[dict(name=c+'-'+name, passed=True, compiler_crash=False,
+            exit=1 if name in PROBES else 0, expected=PROBES[name][1] if name in PROBES else None,
+            primary_diagnostics=[PROBES[name][1]] if name in PROBES else [])
+            for c in ['debug','release'] for name in ['consumer','binpath','guide',*PROBES]],
+            consumer_results={c:dict(cases=sorted(CASES),work_units=1,logical_retained_bytes=1) for c in ['debug','release']})
+        self.assertTrue(check_receipt(data))
+        for mode in ['missing-command','missing-case','incidental','crash']:
+            bad=copy.deepcopy(data)
+            if mode == 'missing-command': bad['commands'].pop()
+            elif mode == 'missing-case': bad['consumer_results']['release']['cases'].pop()
+            elif mode == 'incidental': bad['commands'][3]['primary_diagnostics']=['unrelated error']
+            else: bad['commands'][3]['compiler_crash']=True
+            self.assertFalse(check_receipt(bad))
+
     def test_scoped_catalog_check_cannot_weaken_the_full_site_inventory(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary).resolve()
@@ -153,7 +180,7 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 57, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 190, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store']),
+            ('JSONInspectionTests', 214, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
@@ -167,12 +194,12 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 57)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 190)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 214)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 34)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 2)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 10)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 11)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
 
     def test_private_projection_identities_cannot_be_missing_renamed_or_duplicated(self):
@@ -364,8 +391,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=26')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=28')[0])
+        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

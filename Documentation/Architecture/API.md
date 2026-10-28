@@ -1,3 +1,16 @@
+# 1.8 additive API candidate
+
+The latest released source is 1.7.0 (8557bade); this feature source is 1.8.0-dev.
+No product or dependency is added. JSONInspection now includes
+`JSONInspectionBatch`, snapshot ordinal batches, public `JSONStoreBuilder`/
+`JSONConfiguredStore` and typed profile/metadata/error declarations, exact-ID
+lookup, position value batches and finite complete BFS follow.
+See [the exact behavior/ownership boundary](StructuralIntelligence/BoundedWorkflows1.8.md)
+and [qualification](../Qualification/Release1.8.md).
+Navigation public signatures stay unchanged; its new selection capability is
+package-only and uses the original admitted scope. Earlier inventories below
+remain historical; compiler graphs must establish the final additive surface.
+
 # Current API inventory
 
 Unreleased 1.7.0-dev consolidation has twelve library products plus swift-json and
