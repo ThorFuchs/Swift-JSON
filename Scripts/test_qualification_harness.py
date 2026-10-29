@@ -4,6 +4,8 @@
 import copy
 import json
 import pathlib
+import os
+import re
 import subprocess
 from qualify_release_1_1 import checkout_head
 from generate_cli_identity import rendered
@@ -28,6 +30,64 @@ def store_markers():
         'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
 
 class HarnessTests(unittest.TestCase):
+    def workflow_jobs(self, filename):
+        text = (pathlib.Path(__file__).resolve().parents[1]/'.github/workflows'/filename).read_text()
+        # Inspect this repository's authored job blocks, not a general YAML parser.
+        jobs = dict(re.findall(r'^  (\w+):\n(.*?)(?=^  \w+:\n|\Z)', text.split('jobs:\n',1)[1], re.M|re.S))
+        return text, jobs
+
+    def test_required_workflow_contexts_wait_for_complete_execution_matrices(self):
+        for filename, execution, required, name in [
+            ('native.yml','[native, safety, docs, archive, composition]','[native, safety, docs, archive]','Native / ${{ matrix.lane }}'),
+            ('linux.yml','[linux, linux-safety, composition]','[linux, linux-safety]','Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}'),
+        ]:
+            with self.subTest(workflow=filename):
+                _, jobs = self.workflow_jobs(filename)
+                self.assertIn('lane: '+execution, jobs['qualification'])
+                self.assertIn("run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'", jobs['qualification'])
+                self.assertNotIn("if: matrix.lane == 'composition'", jobs['qualification'])
+                self.assertNotIn('--lane composition', jobs['qualification'])
+                gate = jobs['required']
+                self.assertIn('name: '+name+'\n', gate)
+                self.assertIn('needs: qualification\n', gate)
+                self.assertIn('if: ${{ always() }}\n', gate)
+                self.assertIn('lane: '+required, gate)
+                if filename=='linux.yml':
+                    for block in [jobs['qualification'], gate]:
+                        self.assertIn('architecture: [x86_64, arm64]', block)
+
+    def test_workflow_gates_reject_failed_cancelled_skipped_and_missing_results(self):
+        for filename in ['native.yml','linux.yml']:
+            text, jobs = self.workflow_jobs(filename)
+            self.assertNotIn('continue-on-error', text)
+            gate = jobs['required']
+            self.assertIn('QUALIFICATION_RESULT: ${{ needs.qualification.result }}', gate)
+            script = re.findall(r'^        run: (.+)$', gate, re.M)
+            self.assertEqual(script, ['test "$QUALIFICATION_RESULT" = success'])
+            for result in ['success','failure','cancelled','skipped','', 'Success','success failure']:
+                run = subprocess.run(['bash','-c',script[0]],env=dict(os.environ,QUALIFICATION_RESULT=result),capture_output=True)
+                self.assertEqual(run.returncode==0, result=='success', (filename,result))
+            env = dict(os.environ); env.pop('QUALIFICATION_RESULT',None)
+            self.assertNotEqual(subprocess.run(['bash','-c',script[0]],env=env,capture_output=True).returncode,0)
+
+    def test_composition_scheduling_preserves_timeouts_pins_artifacts_and_pages_guard(self):
+        for filename in ['native.yml','linux.yml']:
+            text, jobs = self.workflow_jobs(filename)
+            self.assertIn('timeout-minutes: 60', jobs['qualification'])
+            self.assertIn('fail-fast: false', jobs['qualification'])
+            self.assertIn('persist-credentials: false', jobs['qualification'])
+            self.assertIn('retention-days: 30', jobs['qualification'])
+            self.assertIn('if-no-files-found: error', jobs['qualification'])
+            self.assertIn('actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803', text)
+            self.assertIn('actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f', text)
+            self.assertIn("branches: [main, 'release/1.6']", text)
+        _, native = self.workflow_jobs('native.yml')
+        self.assertIn("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'", native['publish'])
+        self.assertIn('needs: [qualification, required]', native['publish'])
+        _, linux = self.workflow_jobs('linux.yml')
+        self.assertNotIn('publish', linux)
+        self.assertIn('swift@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca', linux['qualification'])
+
     def test_selection_filter_preserves_exact_identity_and_completion_evidence(self):
         ids = [n for n in DISCOVERY['transform_function_ids'] if '.selection' in n]
         self.assertEqual(len(ids), 16)
@@ -465,8 +525,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=32')[0])
-        for stale in ['HARNESS_TESTS passed cases=31', 'HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', 'HARNESS_TESTS passed cases=28', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=35')[0])
+        for stale in ['HARNESS_TESTS passed cases=32', 'HARNESS_TESTS passed cases=31', 'HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', 'HARNESS_TESTS passed cases=28', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

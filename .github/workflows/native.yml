@@ -11,13 +11,13 @@ concurrency:
   cancel-in-progress: true
 jobs:
   qualification:
-    name: Native / ${{ matrix.lane }}
+    name: Native execution / ${{ matrix.lane }}
     runs-on: xcode-27
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        lane: [native, safety, docs, archive]
+        lane: [native, safety, docs, archive, composition]
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
@@ -34,9 +34,6 @@ jobs:
       - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
         env:
           SWIFT_JSON_RELEASE_METADATA: ${{ github.workspace }}/.build/handoff/pages/latest-release.json
-      - name: Public composition and reference imports
-        if: matrix.lane == 'native'
-        run: python3 -B Scripts/ci.py --lane composition
       - name: Preserve native receipts
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -63,10 +60,27 @@ jobs:
         with:
           path: .build/handoff/pages/site
           include-hidden-files: true # Preserve the verified .nojekyll file; only the generated site is uploaded.
+  required:
+    # Preserve protected context names. Every execution lane, including
+    # composition, must succeed; a failed/cancelled/skipped dependency fails here.
+    name: Native / ${{ matrix.lane }}
+    needs: qualification
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [native, safety, docs, archive]
+    steps:
+      - name: Require complete qualification
+        env:
+          QUALIFICATION_RESULT: ${{ needs.qualification.result }}
+        run: test "$QUALIFICATION_RESULT" = success
   publish:
     name: Documentation / publish
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: qualification
+    needs: [qualification, required]
     # Native compilation and all qualification happened in the jobs above.
     # This job only publishes their exact static artifact.
     runs-on: ubuntu-latest

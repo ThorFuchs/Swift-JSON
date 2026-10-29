@@ -533,7 +533,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=32' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=35' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_selection.py']:
         data = json.loads(log.strip().splitlines()[-1])
         passed = passed and data['status'] == 'passed' and len(data['commands']) == 20 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 10 and data['negative_fixture_invocations'] == 14 and data['compiled_guide_fences'] == 1
