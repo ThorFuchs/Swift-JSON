@@ -11,9 +11,8 @@ See the [1.8 implementation contract](Documentation/Architecture/StructuralIntel
 [release roadmap](Documentation/ReleaseRoadmap.md). Historical records below retain
 their original source and publication dates.
 
-See the [release-line matrix](Documentation/Qualification/ReleaseLines.md) for exact
-source scopes and publication boundaries. Version metadata identifies source; the
-[official releases](https://github.com/ThorFuchs/Swift-JSON/releases) establish publication.
+This feature source reports `1.8.0-dev`. The installation below selects released
+1.7.0; the batch/store APIs described at the end require this 1.8 candidate.
 
 **Exact JSON values, offline schema validation, transactional patches, pull streams, HTML exports and bounded queries for modern Swift.**
 
@@ -28,24 +27,28 @@ partially read document would change the meaning of your data.
 
 [Read the documentation →](https://thorfuchs.github.io/Swift-JSON/)
 
+The latest stable release is [**Swift-JSON 1.7.0**](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.0).
+It brings source-attached Inspection snapshots, projections and graphs,
+JSONTransform and the optional JSONValueDSL/JSONSchemaDSL products into one release.
+Choose from twelve library products plus the `swift-json` executable. Thirteen
+DocC catalogs cover the libraries and the shared, non-product JSONDSLCore module.
+
 Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-**1.7.0** is the latest stable release: twelve libraries plus CLI and thirteen
-DocC catalogs. Inspection, Transform and the authored DSL products are included.
-The 1.6.1 maintenance line retains its eight-library API separately. Published
-1.7.0 reports `1.7.0`; this feature source reports `1.8.0-dev`. Both expose a
-source-content digest distinct from the Git commit. Use exact version pins and
-matching release assets when reproducing a published edition.
+Release 1.7.0 is pinned to
+[`8557badef562cf2f059e964c113d4a7f60ecbe6c`](https://github.com/ThorFuchs/Swift-JSON/commit/8557badef562cf2f059e964c113d4a7f60ecbe6c).
+Its assets include the exact source archive, compiled documentation, checksums and
+a [source-bound qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-qualification.json).
+See the [release notes](Documentation/ReleaseNotes/1.7.0.md) and
+[forward roadmap](Documentation/ReleaseRoadmap.md) for scope and planned work.
 
-The new batch/store APIs require the 1.8 feature source. No package product,
-dependency, platform minimum or existing JSON/JSONSchema authority changes.
-
-The 1.5.1 maintenance repairs remain included: best-effort schema diagnostics,
-the complete 1.2.1 regression suites and Git-free qualification. See the
-[1.6 qualification and compatibility notes](Documentation/Qualification/Release1.6.0.md)
-for source-bound evidence, finite-capacity boundaries and known DocC limitations.
+[1.6.1](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1) remains a separate
+maintenance release with eight libraries plus CLI and its own eight-catalog
+documentation. Inspection, Transform and the authored DSLs require 1.7.0 or later.
+Historical qualification records retain their original source and platform scopes;
+see the [maintenance notes](Documentation/Qualification/Release1.6.1.md).
 
 ## Why Swift-JSON?
 
@@ -98,8 +101,8 @@ Choose the products your application needs:
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
 | **JSONNavigation** | Opt-in exact many-node DFS, physical/virtual scopes, finite metadata and explicit coverage, introduced in 1.6.0 |
-| **JSONInspection** | Unreleased source: array evidence, complete source-attached snapshots, selected trees, strict sparse object-row tables and exact set/numeric-matrix views |
-| **JSONTransform** | Candidate library: exact query plans, guarded pull execution and finite cumulative limits; see the [extraction checkpoint](Documentation/Architecture/Release1.7/JSONTransform.md) |
+| **JSONInspection** | Array evidence, source-attached snapshots, selected trees, sparse object-row tables, exact sets/numeric matrices and directed graphs with bounded BFS |
+| **JSONTransform** | Exact compiled query plans, guarded pull execution and finite cumulative limits; see the [public guide](Sources/JSONTransform/Documentation.docc/ScopedTransforms.md) |
 | **JSONValueDSL** | Trusted authored exact objects and arrays; finite checked finalization |
 | **JSONSchemaDSL** | Trusted authored Draft 2020-12 documents using the native compiler/validator |
 | **JSONPatch** | Staged RFC 6902 JSON Patch and RFC 7396 Merge Patch |
@@ -107,7 +110,7 @@ Choose the products your application needs:
 `JSONSchema`, `JSONStreaming`, `JSONPatch`, `JSONHTML` and opt-in `JSONBridges` build on `JSON`. The package-private
 `JSONRegexRuntime` is an implementation detail and has no public product. The root
 SwiftPM dependency graph is empty. Qualification and benchmark tools are separate
-packages. The unreleased JSONInspection product depends only on JSON and
+packages. The opt-in JSONInspection product depends only on JSON and
 JSONNavigation; core never re-exports it.
 
 The optional `JSONSchemaExamples` product depends only on JSON and
@@ -139,7 +142,7 @@ earlier stage receipts retain their original source and unfinished gates.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.6.0")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.7.0")
 ```
 
 Then add products to your target dependencies:
@@ -149,13 +152,14 @@ Then add products to your target dependencies:
 .product(name: "JSONSchema", package: "swift-json")
 ```
 
-Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`
-or `JSONSchemaExamples` in the same way when needed. A local checkout can
-use `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases. See the [eight-library source consumer](Examples/Consumer) for a complete buildable
-manifest. The website tracks `main`; release assets include compiled DocC catalogues
-for the exact released source. JSONInspection requires this unreleased source
-checkout; the 1.6.0 tag does not contain it.
+Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`,
+`JSONSchemaExamples`, `JSONInspection`, `JSONTransform`, `JSONValueDSL` or
+`JSONSchemaDSL` in the same way when needed. A local checkout can use
+`.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
+releases from 1.7.0; use `exact: "1.7.0"` when reproducing this release.
+See the [core consumer](Examples/Consumer) for a complete buildable manifest.
+The website tracks `main`; release assets include compiled DocC catalogs for the
+exact released source.
 
 ## Quick entry points and native bridges (available in the 1.4.0 tag and 1.5.0 release)
 
@@ -190,11 +194,11 @@ text is distinct from its exact binary rational. Read the
 [numeric fidelity guide](Sources/JSONBridges/Documentation.docc/NumericFidelity.md)
 and [before/after crosswalk](Documentation/Ergonomics/README.md).
 
-## Typed authored DSLs (P1.2 development)
+## Typed authored DSLs (available since 1.7.0)
 
 Select the optional `JSONValueDSL` and `JSONSchemaDSL` products explicitly. They add
 syntax over the same exact model and schema engine; neither is imported by core.
-These APIs are development additions on main's feature line, not additions to older tags.
+Both products are available in the 1.7.0 release.
 
 ```swift
 import JSONValueDSL
@@ -565,26 +569,28 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSON](https://thorfuchs.github.io/Swift-JSON/JSON/documentation/json/),
 [JSONSchema](https://thorfuchs.github.io/Swift-JSON/JSONSchema/documentation/jsonschema/),
 [JSONSchemaExamples](https://thorfuchs.github.io/Swift-JSON/JSONSchemaExamples/documentation/jsonschemaexamples/),
-[JSONStreaming](https://thorfuchs.github.io/Swift-JSON/JSONStreaming/documentation/jsonstreaming/) and
+[JSONStreaming](https://thorfuchs.github.io/Swift-JSON/JSONStreaming/documentation/jsonstreaming/),
 [JSONPatch](https://thorfuchs.github.io/Swift-JSON/JSONPatch/documentation/jsonpatch/),
-[JSONHTML](https://thorfuchs.github.io/Swift-JSON/JSONHTML/documentation/jsonhtml/) and
-[JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/) and
-[JSONNavigation](https://thorfuchs.github.io/Swift-JSON/JSONNavigation/documentation/jsonnavigation/).
+[JSONHTML](https://thorfuchs.github.io/Swift-JSON/JSONHTML/documentation/jsonhtml/),
+[JSONBridges](https://thorfuchs.github.io/Swift-JSON/JSONBridges/documentation/jsonbridges/),
+[JSONNavigation](https://thorfuchs.github.io/Swift-JSON/JSONNavigation/documentation/jsonnavigation/),
+[JSONInspection](https://thorfuchs.github.io/Swift-JSON/JSONInspection/documentation/jsoninspection/),
+[JSONTransform](https://thorfuchs.github.io/Swift-JSON/JSONTransform/documentation/jsontransform/),
+[JSONValueDSL](https://thorfuchs.github.io/Swift-JSON/JSONValueDSL/documentation/jsonvaluedsl/) and
+[JSONSchemaDSL](https://thorfuchs.github.io/Swift-JSON/JSONSchemaDSL/documentation/jsonschemadsl/).
 The site tracks `main` and publishes only after all four native CI lanes pass.
-For the exact 1.6.0 interface, use its
-[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.6.0/Sources).
-Matching compiled catalogs accompany the published 1.6.0 GitHub release. Preserved
-draft-preparation receipts retain their historical status and are not new release
-claims. Known
-web-client limitations and direct-link/reload guidance are recorded in the
-[qualification notes](Documentation/Qualification/Release1.6.0.md#documentation).
+For the exact 1.7.0 interface, use its
+[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.7.0/Sources)
+or download the [compiled DocC archive](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-DocC.tar.gz)
+and [documentation manifest](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-DocC.MANIFEST.sha256).
+Historical preparation receipts retain their original scope.
 
-The [documentation index](Documentation/README.md) links the behavior contracts. The eight released DocC catalogs
-provide public API references, focused guides, parameter descriptions and failure
-contracts, compiled from the native Swift public symbol graphs.
-
-This development source has thirteen catalogs: twelve library references and the
-shared JSONDSLCore structure reference. Build the source catalogs on a supported native host:
+The [documentation index](Documentation/README.md) links the behavior contracts.
+Release 1.7.0 includes thirteen catalogs: twelve library references and the
+[shared JSONDSLCore structure reference](https://thorfuchs.github.io/Swift-JSON/JSONDSLCore/documentation/jsondslcore/).
+They provide public API references, focused guides, parameter descriptions and
+failure contracts, compiled from native Swift public symbol graphs.
+Build the source catalogs on a supported native host:
 
 ```sh
 python3 Scripts/ci.py --lane docs
@@ -609,20 +615,28 @@ streaming comparison is approximately **11% slower**, exceeding the unchanged 10
 review trigger, with its accepted disposition and measurement limits documented in
 [performance notes](Documentation/Performance/README.md). Logical retention remains
 separate from process RSS. Scalar scanning and plan-local immutable regex sharing
-are the qualified choices. Projection and JSON text-sequence framing remain deferred.
+are the qualified choices. The separate E11 projection experiment and JSON
+text-sequence framing remain deferred.
 The 1.1 candidate's separate matched stream comparison is **15.76% slower**; its
 [integrated review](Documentation/Architecture/Release1.1/IntegratedPerformance.md)
 retains the accepted disposition. The [additional QA wave](Documentation/Architecture/Release1.1/QA.md)
 records conformance coverage and the Base64 accounting correction.
+
+For 1.7.0, controlled Navigation performance G4 remains **HOLD**, with zero accepted
+controlled timing samples. Transform P4 has an explicit exception for the exact
+release source; neither disposition is a measured pass or applies automatically
+to future source. No new speed, throughput, allocation-efficiency or RSS claim is
+made. See the [release qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-qualification.json).
 
 ## Contributing, support and licensing
 
 For optional agent assistance in an application using this package, see the
 [developer kit](Documentation/AgentDeveloperKit.md) and its
 [0.1.0 preview downloads](https://github.com/ThorFuchs/Swift-JSON/releases/tag/developer-kit-v0.1.0).
-The standalone skill and skills-only plugin target released library 1.6.1 and
-keep unreleased Inspection separate from stable recipes. Plugin installation
-and public directory availability retain the limits described in the kit guide.
+The standalone skill and skills-only plugin remain pinned to library 1.6.1; their
+recipes cover that qualified surface. The 1.7.0 additions are documented separately
+here and in DocC. Plugin installation and public directory availability retain
+the limits described in the kit guide.
 
 Focused improvements, reproducible issues and documentation corrections are welcome.
 Read [CONTRIBUTING](CONTRIBUTING.md) for the native development workflow:
@@ -644,7 +658,8 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Command-line tool (released in 1.5.0)
 
-`swift-json` accompanies the eight libraries in published 1.6.0. It provides strict formatting, validation, Pointer selection, staged
+`swift-json` accompanies the twelve libraries in 1.7.0. It provides strict
+formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
 for command semantics, cumulative budgets and qualification boundaries. The pull
@@ -664,8 +679,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-Published 1.6.0 has eight libraries plus the executable; this development source has twelve
-libraries plus the executable, with no external root
+Release 1.7.0 has twelve libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
@@ -687,7 +701,7 @@ See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [integration contract](Documentation/Architecture/Release1.4/Integration.md) and
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
 The frozen 1.5.0 CLI reports `1.4.0-dev` and revision `unknown`, as disclosed in
-its release notes. Version 1.6.0 reports its source version and a
+its release notes. Version 1.7.0 reports `1.7.0` and a
 deterministic source digest; see the [CLI guide](Documentation/CLI.md).
 Versioned release assets identify the exact qualified platform and source scope.
 
@@ -710,14 +724,12 @@ bounded metadata collection and coverage share one finite cumulative core budget
 Add the JSONNavigation product and import it explicitly. Existing one-node reads
 remain in JSON. Full source admission precedes traversal option validation.
 See the [compiled traversal guide](Sources/JSONNavigation/Documentation.docc/Traversal.md)
-and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation is
-opt-in in the published 1.6.0 release; one-node lookup remains in JSON. This source
-also includes unreleased N2 inspection. N3 snapshots and P1 tree/sparse-table projections are admitted in this candidate;
-other proposals remain separate;
-see the [source authority map](Documentation/Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md).
-They do not expand the released Navigation API or promote public E11 projection.
+and [real external SwiftPM consumer](Tools/NavigationQualification). Navigation has
+been opt-in since 1.6.0. Release 1.7.0 adds array inspection, snapshots and
+structural projections in the separate JSONInspection product while preserving
+the existing Navigation API.
 
-## Inspect array evidence (unreleased source)
+## Inspect array evidence (available since 1.7.0)
 
 Add the opt-in JSONInspection product and import it explicitly. Inspect a complete
 array or a deterministic prefix without changing its exact values. Column counts
@@ -741,9 +753,9 @@ can have restricted descendant traversal; structural rectangular width is not
 numeric matrix or schema admission. See the [compiled evidence guide](Sources/JSONInspection/Documentation.docc/ArrayEvidence.md),
 [public consumer](Tools/InspectionQualification) and [accounting contract](Documentation/Architecture/StructuralIntelligence/Inspection.md).
 
-## Complete source-attached structural views (introduced in 1.7)
+## Complete source-attached structural views (available since 1.7.0)
 
-Opt-in JSONInspection in this candidate combines array observations with a
+Opt-in JSONInspection combines array observations with a
 complete parent-linked snapshot, selected physical tree views and strict sparse
 all-object tables. Use core Pointer/read for one value and Navigation for many-node
 traversal. Inspection keeps exact typed locations, source order and numeric/key
@@ -752,17 +764,14 @@ prefix observations never certify the complete table.
 
 Read the [compiled structural guide](Sources/JSONInspection/Documentation.docc/StructuralProjections.md),
 [public consumer](Tools/ProjectionQualification) and [NAV8 source/API decision](Documentation/Architecture/StructuralIntelligence/NAV8Completion.md).
-Every construction has one cumulative finite ledger. Each later catalogue/cell/
-location/value/span lookup is an explicitly separate full-source-admitted operation.
+Every construction has one cumulative finite ledger. Reported cell, location,
+value and span lookups are explicitly separate full-source-admitted operations;
+fixed metadata reads retain their documented trusted-memory semantics.
 Ordinals are snapshot-local trusted positions, not durable identity. Logical
 retention is not RSS; G4 controlled performance remains HOLD, with no speed claim.
-These additions were absent from published 1.6.1 and are included in published 1.7.0.
+These APIs are available in 1.7.0 and are absent from the 1.6 maintenance line.
 
-The current development branch also contains package-private structural set and
-exact numeric matrix experiments. They add no public API; see the
-[NAV9 qualification contract](Documentation/Architecture/StructuralIntelligence/NAV9/PrototypeQualification.md).
-
-### Exact set and numeric matrix views (development source)
+### Exact set and numeric matrix views
 
 JSONInspection now includes immutable first-occurrence structural sets and completely
 admitted exact numeric matrices. Sets preserve original representatives and scalar/decimal
@@ -771,17 +780,13 @@ Every later member/cell read independently admits the whole captured source with
 limits and an operation report. These are structural views; no set algebra, matrix
 arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
 [independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
-The 1.8 candidate adds aggregate value reads; set/matrix algebra remains outside scope. Stable 1.6.1 is unchanged.
+Batch access is outside the 1.7.0 API. This 1.8 candidate adds aggregate value
+reads; see [bounded structural workflows](#bounded-structural-workflows-18-candidate).
+Set/matrix algebra remains outside this wave.
 
-NAV11 experiments with a package-only, exact source-backed directed simple graph
-inside JSONInspection. Graph construction and BFS are not public API and are not
-part of stable 1.6.1. The [experimental contract](Documentation/Architecture/StructuralIntelligence/NAV11/GraphADR.md)
-records finite capacities, source/error precedence and one-ledger ownership. There
-is no graph product, performance claim or automatic promotion.
+## Source-bound directed graphs (available since 1.7.0)
 
-## Source-bound graph candidate (unreleased)
-
-This development candidate extends JSONInspection with an explicit directed simple
+JSONInspection provides an explicit directed simple
 graph view of two disjoint physical arrays. An immutable `JSONGraphProfile` names
 exact typed paths and direct string ID/endpoint keys. Checked construction rejects
 duplicate scalar-exact IDs, dangling endpoints and repeated directed pairs; self
@@ -795,21 +800,20 @@ visited and result entries. Storage and reducers stay private. Construction can
 require quadratic work, and repeated reads re-admit the source. Logical retained
 bytes are not RSS; controlled G4 performance remains HOLD with no speed claim.
 See the [compiled graph guide](Sources/JSONInspection/Documentation.docc/SourceBoundGraphs.md)
-and [standalone public consumer](Tools/GraphPublicQualification). This candidate
-adds no product and does not establish a published release or merge approval.
+and [standalone public consumer](Tools/GraphPublicQualification). The graph API is
+part of JSONInspection; it has no separate product, mutable graph or serializer.
 
-## Public transformation library candidate
+## Public transformation library (available since 1.7.0)
 
-The JSONTransform 1.7.0 candidate exposes the existing query compiler and pull VM
+JSONTransform exposes the existing query compiler and pull VM
 without CLI imports. The CLI uses the same engine. Plans are immutable and Sendable;
 scoped handles share one cumulative ledger and invalidate on scope exit. The public
 [guide](Sources/JSONTransform/Documentation.docc/ScopedTransforms.md) and
 [standalone consumer](Tools/TransformQualification) document the accepted API.
-See the [1.7.0 candidate qualification contract](Documentation/Qualification/Release1.7.0.md)
-for source-bound gates, the explicit allocation-instrumentation exception and
-platform limits. A path or revision consumer is preparation evidence; exact 1.7.0
-tag consumption is a postauthorization check.
-This product is absent from stable 1.6.1 and must pass qualification on its final versioned source before publication.
+The [published qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-qualification.json)
+records actual release-source and exact-tag consumer checks, platform scopes and
+the explicit performance exception. Transform is available from 1.7.0 and is absent
+from the 1.6 maintenance line.
 
 ## Bounded structural workflows (1.8 candidate)
 
