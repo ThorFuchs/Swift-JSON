@@ -124,6 +124,21 @@ package struct JSONTraversalContext: ~Copyable {
             try scope.document?.sourceMap?.span(at: path, kind: .value, meter: &state.meter)
         }
     }
+    /// Resolve a typed selection on this original admitted scope; no new ledger.
+    /// The value is an ephemeral native alias; returned owned slots need reservation.
+    package mutating func selectedValue(at path: [JSONLocationComponent]) throws -> JSON {
+        try perform(at: path) { state in
+            // A metadata path is not automatically admitted by this invocation.
+            // Use the original scope's checked path constructor before selection.
+            var checked: [JSONLocationComponent] = []
+            for component in path {
+                checked = try scope.append(component, to: checked, state: state).components
+            }
+            try state.meter.work()
+            return try scope.select(checked, state: state)
+        }
+    }
+
     /// Transfer already-admitted input ownership, without exposing its scope.
     package mutating func transferDocumentOwnership() throws -> JSONDocument {
         try perform { _ in try scope.transferDocumentOwnership() }

@@ -31,7 +31,7 @@ PROBES={
  'D069':('func illegal() { _ = JSONStoreProfile(version:.v1,collectionsAt:[],collections:[],references:.disabled,guessID:true) }',"extra argument 'guessID' in call"),
  'store-initializer':('func illegal() { _ = JSONConfiguredStore() }','initializer is inaccessible'),
  'position-forge':('func illegal() { _ = JSONStorePosition() }','initializer is inaccessible'),
- 'external-store':('func illegal(_ x: JSONStoreProfile) {}',"cannot find type 'JSONStoreProfile' in scope"),
+ 'external-scope':('func illegal(_ x: JSONReadScope) {}',"cannot find type 'JSONReadScope' in scope"),
  'bound-member':('import JSONNavigation\nfunc illegal(_ c: inout JSONTraversalContext) { _ = c.member }',"cannot reference 'mutating' method as function value"),
  'member-escape':('import JSONNavigation\nfunc illegal(_ c: inout JSONTraversalContext) -> () throws -> JSON? { { try c.member(.null,key:"x",at:[]) } }',"escaping closure captures 'inout' parameter"),
 }

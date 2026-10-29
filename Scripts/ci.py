@@ -8,6 +8,8 @@ from testing_events import read_events, ROOT_PARAMETER_CASES
 from p2_acceptance import check_p2_cases, check_borrow_receipt, check_private_receipt, check_exact_cases, check_exact_receipt
 from graph_acceptance import check_graph_cases, check_graph_receipt, check_public_graph_receipt
 from store_acceptance import check_store_tests, check_store_consumer
+from qualify_structural_workflows import check_receipt as check_workflow_consumer
+from qualify_structural_acceptance import check_receipt as check_structural_acceptance
 from projection_acceptance import check_projection_cases, check_public_projection_receipt
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
@@ -26,6 +28,10 @@ SHARED_TESTS += '|p2SetSSET18SharedImmutableViewsHaveIndependentLedgers|p2Matrix
 SHARED_TESTS += '|graphG30ConcurrentViewsHaveIndependentHealth|graphGP14ConcurrentQueries'
 SHARED_TESTS += '|dslSharedFinalizationAndPlansAreInvocationOwned'
 SHARED_TESTS += '|storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth'
+SHARED_TESTS += '|selectionSharedImmutablePlanHasIndependentPopulationAndFailureHealth'
+SHARED_TESTS += '|bindingSharedDefinitionAndCompilationHaveIndependentHealth|bindingSharedSelectionSpikeReusesOnePlanIndependently'
+SHARED_TESTS += '|workflowSharedImmutablePlansHaveIndependentBatchAndStoreHealth'
+SHARED_TESTS += '|acceptance18SharedPlansKeepIndependentCrossProductHealth'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
 
 def snapshot():
@@ -34,6 +40,62 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane in ('transform-bindings', 'transform-bindings-safety'):
+        def portable(values):
+            return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in values]
+        if lane.endswith('safety'):
+            return portable([
+                ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'address', '--scratch-path', '.build/bindings-address'],
+                ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'thread', '--scratch-path', '.build/bindings-thread', '--filter', 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth|bindingShared|selectionShared'],
+                ['swift', 'build', '--target', 'JSONTransform', '--jobs', '2', '--scratch-path', '.build/bindings-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ])
+        return portable([
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/generate_cli_identity.py', '--check'],
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+            ['swift', 'test', '--test-product', 'JSONTransformTests', '--jobs', '2'],
+            ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2'],
+            ['python3', '-B', 'Scripts/qualify_transform_bindings.py', '--output', str(output / 'public-consumer')],
+            ['python3', '-B', 'Scripts/qualify_transform_selection.py', '--output', str(output / 'selection-consumer')],
+        ])
+    if lane in ('structural-acceptance', 'structural-acceptance-safety'):
+        if lane.endswith('safety'):
+            result = [
+                ['swift', 'test', '--test-product', 'JSONIntegrationTests', '-c', 'release', '--jobs', '2', '--sanitize', 'address', '--scratch-path', '.build/workflow-address', '--filter', 'JSONIntegrationTests'],
+                ['swift', 'test', '--test-product', 'JSONIntegrationTests', '-c', 'release', '--jobs', '2', '--sanitize', 'thread', '--scratch-path', '.build/workflow-thread', '--filter', 'acceptance18SharedPlansKeepIndependentCrossProductHealth'],
+                ['swift', 'build', '--target', 'JSONIntegrationTests', '--jobs', '2', '--scratch-path', '.build/workflow-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ]
+        else:
+            result = [
+                ['python3', '-B', 'Scripts/public_check.py'],
+                ['python3', '-B', 'Scripts/generate_cli_identity.py', '--check'],
+                ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+                ['swift', 'test', '--test-product', 'JSONIntegrationTests', '--jobs', '2', '--filter', 'JSONIntegrationTests'],
+                ['swift', 'test', '--test-product', 'JSONIntegrationTests', '-c', 'release', '--jobs', '2', '--filter', 'JSONIntegrationTests'],
+                ['python3', '-B', 'Scripts/qualify_structural_acceptance.py', '--output', str(output / 'public-acceptance')],
+                ['swift', 'test', '--package-path', 'Tools/Qualification', '--scratch-path', '.build/workflow-consumer', '--jobs', '2'],
+            ]
+        return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
+    if lane in ('structural-workflows', 'structural-workflows-safety'):
+        if lane.endswith('safety'):
+            result = [
+                ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--jobs', '2', '--sanitize', 'address', '--scratch-path', '.build/workflow-address', '--filter', 'workflow'],
+                ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--jobs', '2', '--sanitize', 'thread', '--scratch-path', '.build/workflow-thread', '--filter', 'workflowSharedImmutablePlansHaveIndependentBatchAndStoreHealth'],
+                ['swift', 'build', '--target', 'JSONInspection', '--jobs', '2', '--scratch-path', '.build/workflow-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ]
+        else:
+            result = [
+                ['python3', '-B', 'Scripts/public_check.py'],
+                ['python3', '-B', 'Scripts/generate_cli_identity.py', '--check'],
+                ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+                ['swift', 'test', '--test-product', 'JSONInspectionTests', '--jobs', '2', '--filter', 'workflow'],
+                ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--jobs', '2', '--filter', 'workflow'],
+                ['swift', 'test', '--test-product', 'JSONInspectionTests', '--jobs', '2', '--filter', 'store'],
+                ['swift', 'test', '--test-product', 'JSONInspectionTests', '-c', 'release', '--jobs', '2', '--filter', 'store'],
+                ['python3', '-B', 'Scripts/qualify_store.py', '--output', str(output / 'store-boundaries')],
+                ['python3', '-B', 'Scripts/qualify_structural_workflows.py', '--output', str(output / 'public-consumer')],
+            ]
+        return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in result]
     if lane == 'store':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -58,9 +120,9 @@ def commands(lane, output):
         ]
     if lane == 'inspection':
         result = [['python3', '-B', 'Scripts/public_check.py'],
-                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store'],
-                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store'],
-                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store'],
+                ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow'],
+                ['swift', 'test', '-c', 'release', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow'],
+                ['swift', 'test', '-c', 'release', '--sanitize', 'address', '--scratch-path', '.build/inspection-address', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow'],
                 ['swift', 'build', '--target', 'JSONInspection', '--scratch-path', '.build/inspection-strict',
                  '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
                 ['python3', '-B', 'Scripts/qualify_navigation_reducer.py', '--output', str(output / 'owned-codegen')],
@@ -69,6 +131,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_public_graph.py', '--output', str(output / 'public-graph-consumer')],
             ['python3', '-B', 'Scripts/qualify_store_preparation.py', '--output', str(output / 'prepared-codegen')],
             ['python3', '-B', 'Scripts/qualify_store.py', '--output', str(output / 'private-store-consumer')],
+            ['python3', '-B', 'Scripts/qualify_structural_workflows.py', '--output', str(output / 'public-workflow-consumer')],
+            ['python3', '-B', 'Scripts/qualify_structural_acceptance.py', '--output', str(output / 'structural-acceptance')],
                 ['python3', '-B', 'Scripts/qualify_projections.py', '--output', str(output / 'projection-codegen')],
                 ['python3', '-B', 'Scripts/verify_p2_fixtures.py'],
                 ['python3', '-B', 'Scripts/qualify_p2_borrowing.py', '--output', str(output / 'p2-borrowing')],
@@ -201,6 +265,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/test_transform_ownership.py'],
             ['python3', '-B', 'Scripts/qualify_transform_ownership.py', '--output', str(output / 'transform-ownership')],
             ['python3', '-B', 'Scripts/qualify_transform.py', '--output', str(output / 'transform-consumer')],
+            ['python3', '-B', 'Scripts/qualify_transform_bindings.py', '--output', str(output / 'transform-binding-consumer')],
+            ['python3', '-B', 'Scripts/qualify_transform_selection.py', '--output', str(output / 'transform-selection-consumer')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
@@ -229,6 +295,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_public_graph.py', '--output', str(output / 'public-graph-consumer')],
             ['python3', '-B', 'Scripts/qualify_store_preparation.py', '--output', str(output / 'prepared-codegen')],
             ['python3', '-B', 'Scripts/qualify_store.py', '--output', str(output / 'private-store-consumer')],
+            ['python3', '-B', 'Scripts/qualify_structural_workflows.py', '--output', str(output / 'public-workflow-consumer')],
+            ['python3', '-B', 'Scripts/qualify_structural_acceptance.py', '--output', str(output / 'structural-acceptance')],
             ['swift', 'test', '--package-path', 'Tools/MobileQualification'],
             ['swift', 'run', '-c', 'release', '--package-path', 'Tools/MobileQualification', 'MobileQualification'],
             ['swift', 'test', '--package-path', 'Tools/MCPReadiness'],
@@ -279,6 +347,8 @@ def check_result(command, code, log, events=None):
     if events is not None: counts = events['bundle_counts']
     selected_filter = command[command.index('--filter') + 1] if '--filter' in command else None
     store_test = selected_filter in ('store', 'storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth')
+    workflow_test = selected_filter in ('workflow', 'workflowSharedImmutablePlansHaveIndependentBatchAndStoreHealth')
+    acceptance_test = selected_filter in ('acceptance18', 'acceptance18SharedPlansKeepIndependentCrossProductHealth')
     prepared_test = selected_filter in ('navigationPreparedD0', 'navigationPreparedD0IndependentConcurrentHealth')
     if command[:2] == ['swift', 'test']:
         expected = [DISCOVERY['composition_external_functions']] if 'Tools/CompositionQualification' in command else [12] if 'composition|composed|caughtOperationalFailureCannotComplete' in command else [79] if 'JSONSchemaTests' in command else [4 if 'thread' in command else 98] if 'JSONSchemaExamplesTests' in command else [88] if 'cli|sharedFilterPlan' in command else sorted(DISCOVERY['export_functions'].values()) if 'export|Export|apple' in command else [14] if 'Tools/WasmAudit' in command else sorted(DISCOVERY['qa_functions'].values()) if 'qa' in command else [7] if R0_TESTS in command else [3] if 'Tools/MCPReadiness' in command or 'Tools/MobileQualification' in command else [1] if 'Tools/Qualification' in command else sorted(SHARED_COUNTS.values()) if 'thread' in command else sorted(ROOT_COUNTS.values())
@@ -287,11 +357,21 @@ def check_result(command, code, log, events=None):
         if 'JSONSchemaTests' in command and events is not None:
             parameters = {name: ROOT_PARAMETER_CASES[name] for name in ['successfulAlternativesCannotSwallowRegexExhaustion(keyword:)', 'URIIdentityUsesSyntaxNormalizationWithoutUnicodeFolding(input:expected:)']}
             passed = passed and events['module_function_counts'] == {'JSONSchemaTests': 79} and events['parameterized_functions'] == parameters and events['parameter_case_invocations'] == 12
+        if 'JSONTransformTests' in command:
+            ids = set(DISCOVERY['transform_function_ids'])
+            if 'thread' in command:
+                ids = {n for n in ids if 'bindingShared' in n or 'selectionShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n}
+            elif selected_filter == 'selection':
+                ids = {n for n in ids if '.selection' in n}
+            elif selected_filter == 'binding':
+                ids = {n for n in ids if '.binding' in n}
+            expected = [len(ids)]
+            passed = passed and events is not None and events['module_function_counts'] == {'JSONTransformTests': len(ids)} and set(events['function_names']) == ids and len(events['function_names']) == len(ids) and events['parameter_case_invocations'] == 0
         if 'navigation' in command:
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONNavigationTests': expected[0]} and events['parameter_case_invocations'] == 0
-        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store']):
+        if any(f in command for f in ['inspection', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow']):
             expected = [DISCOVERY['root_functions']['JSONInspectionTests']]
             if events is not None:
                 passed = passed and events['module_function_counts'] == {'JSONInspectionTests': expected[0]} and events['parameter_case_invocations'] == 65 and events['parameterized_functions'] == {'storeD1NativeVector(id:)': 65} and check_projection_cases(events) and check_p2_cases(events) and check_exact_cases(events) and check_graph_cases(events) and check_store_tests(events, log)
@@ -306,12 +386,28 @@ def check_result(command, code, log, events=None):
             shared_store = any(x.startswith('storeR06') for x in command)
             expected = [1 if shared_store else 12]
             passed = passed and events is not None and check_store_tests(events, log, shared=shared_store, scoped=True)
+        if workflow_test:
+            expected_ids = set(DISCOVERY['workflow_function_ids'])
+            if selected_filter != 'workflow':
+                expected_ids = {x for x in expected_ids if 'SharedImmutablePlans' in x}
+            expected = [len(expected_ids)]
+            passed = passed and events is not None and events['module_function_counts'] == {'JSONInspectionTests': len(expected_ids)} and set(events['function_names']) == expected_ids and len(events['function_names']) == len(expected_ids) and events['parameter_case_invocations'] == 0
+        if selected_filter == 'JSONIntegrationTests':
+            expected_ids = set(DISCOVERY['integration_function_ids'])
+            expected = [len(expected_ids)]
+            passed = passed and events is not None and events['module_function_counts'] == {'JSONIntegrationTests': len(expected_ids)} and set(events['function_names']) == expected_ids and len(events['function_names']) == len(expected_ids) and events['parameter_case_invocations'] == 0
+        if acceptance_test:
+            expected_ids = set(DISCOVERY['structural_acceptance_function_ids'])
+            if selected_filter != 'acceptance18':
+                expected_ids = {x for x in expected_ids if 'SharedPlans' in x}
+            expected = [len(expected_ids)]
+            passed = passed and events is not None and events['module_function_counts'] == {'JSONIntegrationTests': len(expected_ids)} and set(events['function_names']) == expected_ids and len(events['function_names']) == len(expected_ids) and events['parameter_case_invocations'] == 0
         passed = passed and sorted(counts) == expected
         if 'Tools/CompositionQualification' in command and events is not None:
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
-        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and not prepared_test and not store_test and events is not None:
+        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and 'JSONTransformTests' not in command and not prepared_test and not store_test and not workflow_test and not acceptance_test and events is not None:
             passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_p2_cases(events, shared=True) and check_exact_cases(events, shared=True) and check_graph_cases(events, shared=True) and events['parameter_case_invocations'] == 0 and check_store_tests(events, log, shared=True)
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
@@ -349,7 +445,7 @@ def check_result(command, code, log, events=None):
         passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests', 'JSONTransform', 'JSONTransformTests', 'JSONDSLCore', 'JSONValueDSL', 'JSONSchemaDSL', 'JSONDSLTests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
         passed = passed and targets['JSONNavigation']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigationTests']['dependencies'] == [{'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
-        passed = passed and targets['JSONTransform']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONFilterRuntime', None]}] and targets['JSONTransformTests']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONTransform', None]}]
+        passed = passed and targets['JSONTransform']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONFilterRuntime', None]}] and targets['JSONTransformTests']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONTransform', None]}, {'byName': ['JSONFilterRuntime', None]}]
         passed = passed and targets['JSONInspection']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONNavigation', None]}] and targets['JSONInspectionTests']['dependencies'] == [{'byName': ['JSONInspection', None]}, {'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
         for name, dependencies in [('JSONDSLCore', ['JSON']), ('JSONValueDSL', ['JSON', 'JSONDSLCore']), ('JSONSchemaDSL', ['JSON', 'JSONSchema', 'JSONDSLCore']), ('JSONDSLTests', ['JSON', 'JSONSchema', 'JSONDSLCore', 'JSONValueDSL', 'JSONSchemaDSL'])]:
             passed = passed and targets[name]['dependencies'] == [{'byName': [item, None]} for item in dependencies]
@@ -388,6 +484,12 @@ def check_result(command, code, log, events=None):
     if command[:3] in (['python3', '-B', 'Scripts/qualify_graph_context.py'], ['python3', '-B', 'Scripts/qualify_graph.py']):
         data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
         passed = passed and check_graph_receipt(data, context='qualify_graph_context.py' in command[2])
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_structural_acceptance.py']:
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_structural_acceptance(data)
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_structural_workflows.py']:
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_workflow_consumer(data)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_store.py']:
         data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
         passed = passed and check_store_consumer(data)
@@ -431,12 +533,18 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=26' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=35' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_selection.py']:
+        data = json.loads(log.strip().splitlines()[-1])
+        passed = passed and data['status'] == 'passed' and len(data['commands']) == 20 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 10 and data['negative_fixture_invocations'] == 14 and data['compiled_guide_fences'] == 1
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_bindings.py']:
+        data = json.loads(log.strip().splitlines()[-1])
+        passed = passed and data['status'] == 'passed' and len(data['commands']) == 8 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 6 and data['negative_fixture_invocations'] == 4 and data['compiled_guide_fences'] == 1
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['transform-bindings', 'transform-bindings-safety', 'structural-acceptance', 'structural-acceptance-safety', 'structural-workflows', 'structural-workflows-safety', 'store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     parser.add_argument('--skip-host-measurements', action='store_true', help='For WASI runtime qualification only: record optional host timings as NOT RUN.')
     args = parser.parse_args()
@@ -448,7 +556,7 @@ def main():
     repository = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
     is_checkout = repository.returncode == 0 and pathlib.Path(repository.stdout.strip()).resolve() == ROOT.resolve()
     commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True) if is_checkout else None
-    environment = collect_linux() if args.lane.startswith('linux') or (args.lane in ('composition', 'inspection') and sys.platform == 'linux') else collect()
+    environment = collect_linux() if args.lane.startswith('linux') or (args.lane in ('transform-bindings', 'transform-bindings-safety', 'composition', 'inspection', 'structural-workflows', 'structural-workflows-safety', 'structural-acceptance', 'structural-acceptance-safety') and sys.platform == 'linux') else collect()
     receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit is not None and commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')

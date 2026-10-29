@@ -19,6 +19,27 @@ keeps the existing main-only condition; maintenance pushes must not replace the
 development website. A skipped Pages publication on a maintenance branch is
 expected. Required product qualification must still execute and pass.
 
+Composition has a separate execution matrix lane on macOS and on each Linux
+architecture. The native, safety, docs, archive and composition commands retain
+their existing 60-minute execution limits; no command or fixture is omitted.
+The existing `Native / ...` and `Linux / ...` check names are final gates over
+their complete workflow execution matrix. They run even after a dependency fails
+and accept only its `success` result. Failure, cancellation, a skipped execution
+or a missing result cannot produce a successful required context. Consequently,
+one failed execution makes all of that workflow's final gates fail. Inspect the
+`Native execution / ...` or `Linux execution / ...` job and its receipts for the
+specific cause. Pages also waits for the final native gates, with its main-only
+condition unchanged. No repository protection setting is changed by scheduling.
+
+This separation follows the 1.8 PR74 execution at `48dca4d`: the normal native and
+both Linux lanes passed, but the native and x86 Linux jobs reached their one-hour
+job limits during the appended composition step. Native's nine-command composition
+receipt had completed just before cancellation; x86 had completed only five of
+nine commands. Preserve those cancelled checks and partial receipts. They are not
+retroactively green, and the successor must qualify its actual source. Moving
+the unchanged composition commands to a separate job does not waive them or
+extend a timeout. It does not qualify held runtime/performance/allocation gates.
+
 If an expected automatic run is absent, inspect the branch/event/commit and
 workflow filters. Existing manual dispatch may qualify the exact source while
 investigation proceeds, but it does not prove that automatic triggering works.

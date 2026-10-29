@@ -28,7 +28,9 @@ private actor Output {
         calls += 1
         if calls == rejectAt { throw AppError.sink }
         bytes.append(contentsOf: chunk.bytes)
-        if calls == cancelAt { withUnsafeCurrentTask { $0?.cancel() } }
+        // Test-only current-task handle stays inside its standard-library callback.
+        // Only this invocation is cancelled; no unsafe handle escapes or is shared.
+        if calls == cancelAt { unsafe withUnsafeCurrentTask { unsafe $0?.cancel() } }
     }
     func snapshot() -> ([UInt8], Int) { (bytes, calls) }
 }

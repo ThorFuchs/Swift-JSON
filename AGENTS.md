@@ -1,9 +1,9 @@
 # Contributor instructions
 
-Prepared release source is 1.7.0; publication is a separate owner action. Its
-parent development line is 1.7.0-dev and stable 1.6.1 remains separate. This is
-not a maintenance release or the frozen 6fe8067 RC. Preserve all source-bound
-qualification history; source integration never publishes a version.
+Development source is 1.8.0-dev, based on published 1.7.0 at
+8557badef562cf2f059e964c113d4a7f60ecbe6c. Stable 1.6.1 remains a separate
+maintenance line. Preserve every source-bound qualification record. No 1.8
+merge/tag/publication follows from implementation or passing tests.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
 macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
@@ -50,13 +50,24 @@ Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
 NAV10 set/matrix and NAV11 directed-simple-graph APIs are development capabilities
 inside JSONInspection; no graph product, mutation or serializer is introduced.
-Private NAV12 store construction/preparation remains package-only and shares one
-original invocation ledger; no public store/follow API or persistence is exposed.
-Wider retrieval/persistence, NAV13 batches and JSON text-sequence framing remain
-separate, unadmitted work.
+The 1.8 candidate promotes the checked immutable configured store inside
+JSONInspection and adds ordered path/snapshot/store value batches, exact-ID lookup
+and bounded complete BFS follow. Preserve the original construction phases and
+one invocation-owned ledger per operation. Positions remain unforgeable and
+source-instance-local. No persistence or mutable store is exposed. See
+Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md.
+Wider retrieval/persistence and JSON text-sequence framing remain separate work.
 
 JSONTransform uses one private compiler/VM and the CLI's accounted adapter.
 Preserve its accepted 42 authored declarations and exact semantics. The original
 1.7.0 P4 waiver and later partial measurements are historical scoped evidence;
 no allocation, speed, RSS or controlled-performance pass follows from consolidation.
 See Documentation/Qualification/Consolidation2026.md for combined gates and holds.
+
+The commissioned 1.8 Transform binding train adds a source-definition codec and
+compile reports while preserving those original declarations. Sprint 1
+retains its historical test-only selection experiment. Sprint 2 adds public
+guarded selection scopes, owner-bound positions and EOF completion reports;
+preserve ordinary Transform semantics and require one cumulative invocation ledger.
+See Documentation/Architecture/Release1.8/TransformBindings.md. No Content code,
+lock, message, merge or publication is authorized by implementing this sprint.

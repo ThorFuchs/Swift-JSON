@@ -4,6 +4,8 @@
 import copy
 import json
 import pathlib
+import os
+import re
 import subprocess
 from qualify_release_1_1 import checkout_head
 from generate_cli_identity import rendered
@@ -28,6 +30,165 @@ def store_markers():
         'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
 
 class HarnessTests(unittest.TestCase):
+    def workflow_jobs(self, filename):
+        text = (pathlib.Path(__file__).resolve().parents[1]/'.github/workflows'/filename).read_text()
+        # Inspect this repository's authored job blocks, not a general YAML parser.
+        jobs = dict(re.findall(r'^  (\w+):\n(.*?)(?=^  \w+:\n|\Z)', text.split('jobs:\n',1)[1], re.M|re.S))
+        return text, jobs
+
+    def test_required_workflow_contexts_wait_for_complete_execution_matrices(self):
+        for filename, execution, required, name in [
+            ('native.yml','[native, safety, docs, archive, composition]','[native, safety, docs, archive]','Native / ${{ matrix.lane }}'),
+            ('linux.yml','[linux, linux-safety, composition]','[linux, linux-safety]','Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}'),
+        ]:
+            with self.subTest(workflow=filename):
+                _, jobs = self.workflow_jobs(filename)
+                self.assertIn('lane: '+execution, jobs['qualification'])
+                self.assertIn("run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'", jobs['qualification'])
+                self.assertNotIn("if: matrix.lane == 'composition'", jobs['qualification'])
+                self.assertNotIn('--lane composition', jobs['qualification'])
+                gate = jobs['required']
+                self.assertIn('name: '+name+'\n', gate)
+                self.assertIn('needs: qualification\n', gate)
+                self.assertIn('if: ${{ always() }}\n', gate)
+                self.assertIn('lane: '+required, gate)
+                if filename=='linux.yml':
+                    for block in [jobs['qualification'], gate]:
+                        self.assertIn('architecture: [x86_64, arm64]', block)
+
+    def test_workflow_gates_reject_failed_cancelled_skipped_and_missing_results(self):
+        for filename in ['native.yml','linux.yml']:
+            text, jobs = self.workflow_jobs(filename)
+            self.assertNotIn('continue-on-error', text)
+            gate = jobs['required']
+            self.assertIn('QUALIFICATION_RESULT: ${{ needs.qualification.result }}', gate)
+            script = re.findall(r'^        run: (.+)$', gate, re.M)
+            self.assertEqual(script, ['test "$QUALIFICATION_RESULT" = success'])
+            for result in ['success','failure','cancelled','skipped','', 'Success','success failure']:
+                run = subprocess.run(['bash','-c',script[0]],env=dict(os.environ,QUALIFICATION_RESULT=result),capture_output=True)
+                self.assertEqual(run.returncode==0, result=='success', (filename,result))
+            env = dict(os.environ); env.pop('QUALIFICATION_RESULT',None)
+            self.assertNotEqual(subprocess.run(['bash','-c',script[0]],env=env,capture_output=True).returncode,0)
+
+    def test_composition_scheduling_preserves_timeouts_pins_artifacts_and_pages_guard(self):
+        for filename in ['native.yml','linux.yml']:
+            text, jobs = self.workflow_jobs(filename)
+            self.assertIn('timeout-minutes: 60', jobs['qualification'])
+            self.assertIn('fail-fast: false', jobs['qualification'])
+            self.assertIn('persist-credentials: false', jobs['qualification'])
+            self.assertIn('retention-days: 30', jobs['qualification'])
+            self.assertIn('if-no-files-found: error', jobs['qualification'])
+            self.assertIn('actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803', text)
+            self.assertIn('actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f', text)
+            self.assertIn("branches: [main, 'release/1.6']", text)
+        _, native = self.workflow_jobs('native.yml')
+        self.assertIn("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'", native['publish'])
+        self.assertIn('needs: [qualification, required]', native['publish'])
+        _, linux = self.workflow_jobs('linux.yml')
+        self.assertNotIn('publish', linux)
+        self.assertIn('swift@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca', linux['qualification'])
+
+    def test_selection_filter_preserves_exact_identity_and_completion_evidence(self):
+        ids = [n for n in DISCOVERY['transform_function_ids'] if '.selection' in n]
+        self.assertEqual(len(ids), 16)
+        command = ['swift','test','--test-product','JSONTransformTests','--filter','selection']
+        events = dict(bundle_counts=[16],module_function_counts={'JSONTransformTests':16},function_names=ids,parameter_case_invocations=0)
+        self.assertTrue(check_result(command,0,'',events)[0])
+        self.assertFalse(check_result(command,0,'',dict(events,function_names=ids[:-1]))[0])
+        consumer = ['python3','-B','Scripts/qualify_transform_selection.py']
+        receipt = dict(status='passed',commands=[dict(passed=True)]*20,witnesses_per_configuration=10,negative_fixture_invocations=14,compiled_guide_fences=1)
+        self.assertTrue(check_result(consumer,0,json.dumps(receipt))[0])
+        for broken in [dict(receipt,commands=receipt['commands'][:-1]),dict(receipt,negative_fixture_invocations=0),dict(receipt,compiled_guide_fences=0)]:
+            self.assertFalse(check_result(consumer,0,json.dumps(broken))[0])
+
+    def test_transform_binding_discovery_rejects_incomplete_duplicate_and_foreign_events(self):
+        ids = DISCOVERY['transform_function_ids']
+        command = ['swift', 'test', '--test-product', 'JSONTransformTests']
+        events = dict(bundle_counts=[57], module_function_counts={'JSONTransformTests':57},
+                      function_names=ids, parameter_case_invocations=0)
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        for broken in [dict(events,function_names=ids[:-1]),dict(events,function_names=ids+ids[:1]),
+                       dict(events,module_function_counts={'JSONTests':57}),dict(events,parameter_case_invocations=1)]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+        shared = [n for n in ids if 'bindingShared' in n or 'selectionShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n]
+        thread = command + ['--sanitize', 'thread']
+        self.assertTrue(check_result(thread, 0, '', dict(events,bundle_counts=[4],module_function_counts={'JSONTransformTests':4},function_names=shared))[0])
+
+    def test_acceptance18_discovery_preserves_exact_public_pipeline_identities(self):
+        names = DISCOVERY['structural_acceptance_function_ids']
+        self.assertEqual(len(names), 9)
+        self.assertEqual(len(DISCOVERY['integration_function_ids']), 43)
+        events = dict(bundle_counts=[9], module_function_counts={'JSONIntegrationTests':9},
+                      function_names=names, parameter_case_invocations=0)
+        command = ['swift','test','--test-product','JSONIntegrationTests','--filter','acceptance18']
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        full = dict(events, bundle_counts=[43], module_function_counts={'JSONIntegrationTests':43}, function_names=DISCOVERY['integration_function_ids'])
+        full_command = ['swift','test','--test-product','JSONIntegrationTests','--filter','JSONIntegrationTests']
+        self.assertTrue(check_result(full_command, 0, '', full)[0])
+        self.assertFalse(check_result(full_command, 0, '', dict(full,function_names=full['function_names'][:-1]))[0])
+        for broken in [dict(events, function_names=names[:-1]), dict(events, function_names=names+names[:1]),
+                       dict(events, module_function_counts={'JSONInspectionTests':9}), dict(events, parameter_case_invocations=1)]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+
+    def test_capacity18_does_not_convert_refusals_or_incomplete_boundaries_to_passes(self):
+        from qualify_structural_acceptance import MATRIX, validate_capacity, validate_fixtures
+        cells = []
+        for identifier in MATRIX['cells']:
+            operation, count = identifier.rsplit('-',1); count=int(count)
+            cells.append(dict(id=identifier, operation=operation, requests=count,
+                fixture='chain-%d.json' % count if operation=='follow-chain' else 'fixed-eight.json',
+                outcome='completed', report=dict(work=1,nodes=1,retained=32,peak=32),
+                independentSingles=None if operation=='follow-chain' else dict(workSum=count,nodesSum=count,maximumInvocationRetained=32,maximumInvocationPeak=32),
+                requestBoundary=True,workBoundary=True,retentionBoundary=True))
+        data=dict(schemaVersion=1,profile='balanced',cells=cells)
+        self.assertTrue(validate_capacity(data))
+        refused=copy.deepcopy(data);refused['cells'][-1]=dict(refused['cells'][-1],outcome='operational_error',report=None,
+            requestBoundary=None,workBoundary=None,retentionBoundary=None,errorMetric='workUnits',errorLimit=1,errorAttempted=2,errorStage='construction')
+        self.assertTrue(validate_capacity(refused))
+        for mode in ['missing','duplicate','fake-boundary','bad-single-count','required-refusal','fake-metric','refusal-as-success','missing-report']:
+            bad=copy.deepcopy(refused)
+            if mode=='missing':bad['cells'].pop()
+            elif mode=='duplicate':bad['cells'][-1]=bad['cells'][0]
+            elif mode=='fake-boundary':bad['cells'][0]['workBoundary']=False
+            elif mode=='bad-single-count':bad['cells'][0]['independentSingles']['nodesSum']=2
+            elif mode=='required-refusal':bad['cells'][3]=dict(bad['cells'][-1],id='follow-chain-1',requests=1,fixture='chain-1.json')
+            elif mode=='fake-metric':bad['cells'][-1]['errorMetric']='unrelated'
+            elif mode=='refusal-as-success':bad['cells'][-1]['outcome']='completed'
+            else:bad['cells'][0]['report']=None
+            self.assertFalse(validate_capacity(bad))
+        with tempfile.TemporaryDirectory() as temporary:
+            directory=pathlib.Path(temporary)
+            with self.assertRaisesRegex(ValueError,'inventory'):validate_fixtures(directory)
+            for fixture in MATRIX['fixtures']:(directory/fixture['name']).write_bytes(b'corrupt')
+            with self.assertRaisesRegex(ValueError,'bytes'):validate_fixtures(directory)
+
+    def test_workflow_discovery_requires_all_exact_identities(self):
+        names = DISCOVERY['workflow_function_ids']
+        self.assertEqual(len(names), 24)
+        events = dict(bundle_counts=[24], module_function_counts={'JSONInspectionTests':24},
+                      function_names=names, parameter_case_invocations=0)
+        command = ['swift','test','--test-product','JSONInspectionTests','--filter','workflow']
+        self.assertTrue(check_result(command, 0, '', events)[0])
+        for broken in [dict(events, function_names=names[:-1]), dict(events, function_names=names+names[:1]),
+                       dict(events, parameter_case_invocations=1), dict(events, bundle_counts=[21])]:
+            self.assertFalse(check_result(command, 0, '', broken)[0])
+
+    def test_workflow_consumer_rejects_missing_witnesses_or_incidental_diagnostics(self):
+        from qualify_structural_workflows import CASES, PROBES, check_receipt
+        data = dict(status='passed', commands=[dict(name=c+'-'+name, passed=True, compiler_crash=False,
+            exit=1 if name in PROBES else 0, expected=PROBES[name][1] if name in PROBES else None,
+            primary_diagnostics=[PROBES[name][1]] if name in PROBES else [])
+            for c in ['debug','release'] for name in ['consumer','binpath','guide',*PROBES]],
+            consumer_results={c:dict(cases=sorted(CASES),work_units=1,logical_retained_bytes=1) for c in ['debug','release']})
+        self.assertTrue(check_receipt(data))
+        for mode in ['missing-command','missing-case','incidental','crash']:
+            bad=copy.deepcopy(data)
+            if mode == 'missing-command': bad['commands'].pop()
+            elif mode == 'missing-case': bad['consumer_results']['release']['cases'].pop()
+            elif mode == 'incidental': bad['commands'][3]['primary_diagnostics']=['unrelated error']
+            else: bad['commands'][3]['compiler_crash']=True
+            self.assertFalse(check_receipt(bad))
+
     def test_scoped_catalog_check_cannot_weaken_the_full_site_inventory(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary).resolve()
@@ -153,7 +314,7 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 57, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 190, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store']),
+            ('JSONInspectionTests', 214, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
@@ -167,13 +328,13 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 57)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 190)
-            self.assertEqual(policy[key]['JSONIntegrationTests'], 34)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 214)
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 43)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 2)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 4)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 10)
-            self.assertEqual(policy[key]['JSONIntegrationTests'], 11)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 11)
+            self.assertEqual(policy[key]['JSONIntegrationTests'], 12)
 
     def test_private_projection_identities_cannot_be_missing_renamed_or_duplicated(self):
         names = sorted(PROJECTION_FUNCTIONS)
@@ -364,8 +525,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=26')[0])
-        for stale in ['HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=35')[0])
+        for stale in ['HARNESS_TESTS passed cases=32', 'HARNESS_TESTS passed cases=31', 'HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', 'HARNESS_TESTS passed cases=28', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'
