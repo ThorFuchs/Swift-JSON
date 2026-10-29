@@ -81,6 +81,32 @@ The manifest and receipt preserve file-level and archive-level digests.
 
 ## Publish and preview the website
 
+Each Native CI documentation build reads GitHub's
+[latest published release endpoint](https://docs.github.com/en/rest/releases/releases#get-the-latest-release)
+once, using its existing read-only repository token. Drafts and prereleases are
+rejected. The exact response is retained as
+`.build/handoff/pages/latest-release.json`; its SHA-256, release ID, tag and
+publication time are recorded in the Pages receipt and public `build-info.json`.
+The landing page derives its stable version, tagged source link and any available
+compiled DocC download from that snapshot. A failed request or invalid configured
+snapshot fails the CI build instead of reusing a stale release label. This lookup
+adds no network behavior to the libraries or the rendered website.
+
+The references continue to track the checked-out source, independently of the
+latest stable release. The source version comes from the existing CLI release
+version declaration; the landing heading has no manually maintained version.
+Release metadata refreshes whenever the documentation lane runs. For a local
+build with the same observed release input, fetch or reuse a retained snapshot:
+
+```sh
+python3 -B Scripts/documentation_release.py --output .build/handoff/pages/latest-release.json
+SWIFT_JSON_RELEASE_METADATA=.build/handoff/pages/latest-release.json python3 -B Scripts/ci.py --lane docs
+```
+
+An unconfigured local preview remains offline and uses a version-neutral latest
+release link. An explicitly configured missing or malformed snapshot is an error.
+No release tag or frozen documentation archive is changed by this metadata step.
+
 The docs lane uses native `docc process-archive transform-for-static-hosting` to
 prepare each qualified archive under `/Swift-JSON/<product>`. A shared landing
 page links all twelve product references and guides. The supporting DSL reference

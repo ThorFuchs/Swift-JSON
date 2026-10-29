@@ -14,14 +14,12 @@ import sys
 import urllib.parse
 
 from documentation_catalog import PRODUCTS, CATALOGS
+from documentation_release import REPOSITORY, load_metadata
 from preflight import collect
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-REPOSITORY = 'https://github.com/ThorFuchs/Swift-JSON'
 BASE_PATH = '/Swift-JSON'
 SITE_URL = 'https://thorfuchs.github.io' + BASE_PATH + '/'
-SOURCE_VERSION = '1.8.0-dev'
-STABLE_VERSION = '1.7.0'
 GUIDES = {'JSON': ('Exact values and native coding', 'exactvaluesandcoding'),
           'JSONSchema': ('Offline schema validation', 'offlinevalidation'),
           'JSONSchemaExamples': ('Verified exact candidates', 'verifiedcandidates'),
@@ -43,7 +41,7 @@ DESCRIPTIONS = {
     'JSONHTML': 'Exact standalone HTML with offline disclosure/search and native-byte copy/download.',
     'JSONBridges': 'Opt-in trusted integer construction and policy-explicit Double and Foundation Decimal projection.',
     'JSONNavigation': 'Exact typed DFS with physical and virtual scopes, explicit coverage and one cumulative budget.',
-    'JSONInspection': 'Array evidence, complete source-attached snapshots, tree views and strict sparse tables with finite reports.',
+    'JSONInspection': 'Array evidence, source-attached snapshots, tree and sparse-table views, exact sets and matrices, and directed graphs with finite reports.',
     'JSONTransform': 'Exact query plans and guarded pull executions with cumulative finite limits.',
     'JSONValueDSL': 'Trusted authored exact objects and arrays with finite finalization.',
     'JSONSchemaDSL': 'Trusted authored schema declarations using native compilation and evaluation.'}
@@ -72,7 +70,25 @@ def source_commit():
     return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
 
 
-def landing(commit):
+def source_version():
+    """Read the source line's existing version authority, never the latest release."""
+    source = (ROOT / 'Sources/JSONCLIEngine/CLIReleaseVersion.swift').read_text()
+    versions = re.findall(r'^\s*package static let value = "([^"]+)"\s*$', source, re.MULTILINE)
+    if len(versions) != 1:
+        raise ValueError('Missing or ambiguous CLI source version')
+    return versions[0]
+
+
+def observed_release():
+    path = os.environ.get('SWIFT_JSON_RELEASE_METADATA')
+    if path:
+        return load_metadata(path)
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        raise ValueError('CI documentation requires an observed latest-release snapshot')
+    return None
+
+
+def landing(commit, release=None):
     cards = []
     for product in PRODUCTS:
         route = BASE_PATH + '/' + product + '/documentation/' + product.lower() + '/'
@@ -84,6 +100,15 @@ def landing(commit):
 <a href="{guide_route}">{title}</a></article>''')
     source = (f'<a href="{REPOSITORY}/commit/{commit}"><code>{commit[:12]}</code></a>'
               if commit else 'Local preview')
+    if release:
+        stable = (f'Latest stable: <a href="{html.escape(release["release_url"], quote=True)}">'
+                  f'Swift-JSON {html.escape(release["version"])}</a>. For a frozen reference, use its ')
+        if release['documentation_url']:
+            stable += f'<a href="{html.escape(release["documentation_url"], quote=True)}">compiled DocC catalogs</a> or '
+        stable += f'<a href="{html.escape(release["source_url"], quote=True)}">tagged source documentation</a>.'
+    else:
+        stable = (f'<a href="{REPOSITORY}/releases/latest">Latest stable release and versioned documentation</a>. '
+                  'This local preview has no observed release metadata.')
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Swift-JSON Documentation</title>
@@ -111,11 +136,11 @@ footer {{ border-top: 1px solid var(--border); padding: 24px 0 36px; color: var(
 <a class="skip" href="#content">Skip to documentation</a>
 <header><nav class="container" aria-label="Main navigation"><a class="brand" href="{BASE_PATH}/">Swift-JSON</a>
 <div class="nav-links"><a href="{REPOSITORY}#installation">Get started</a><a href="{REPOSITORY}">GitHub</a><a href="{REPOSITORY}/issues">Support</a></div></nav></header>
-<main id="content" class="container"><div class="eyebrow">Unreleased {SOURCE_VERSION} documentation</div>
+<main id="content" class="container"><div class="eyebrow">Swift-JSON documentation</div>
 <h1>Exact JSON. Clear contracts.</h1>
 <p class="intro">Keep decimal values exact, Unicode scalar keys distinct and resource use explicit. Explore {len(PRODUCTS)} Swift libraries that carry those semantics from input bytes to validated, transformed and encoded output.</p>
 <p class="baseline">Swift 6.4+ · Swift language mode 6 · macOS/SDK 27+ · No package dependencies</p>
-<p class="baseline">Development main includes JSONInspection, JSONTransform and the optional authored DSLs; this source is unreleased 1.8.0-dev with bounded batch/store work. Stable <a href="{REPOSITORY}/releases/tag/{STABLE_VERSION}">{STABLE_VERSION}</a> has twelve library catalogs plus the shared JSONDSLCore reference; use its matching compiled DocC assets or <a href="{REPOSITORY}/tree/{STABLE_VERSION}/Sources">tagged source documentation</a>.</p>
+<p class="baseline">{stable}</p>
 <section class="grid" aria-label="Product references">{''.join(cards)}</section>
 <section class="details"><h2>Start with the contract</h2>
 <p>Read the <a href="{REPOSITORY}#readme">package overview and executable examples</a>, then choose a reference above. The <a href="{REPOSITORY}/blob/main/Documentation/README.md">behavior contracts</a> explain exact numbers, scalar identity, offline schema evaluation, cumulative budgets and stream completion.</p>
@@ -231,6 +256,8 @@ def main():
     try:
         if receipt['environment']['status'] != 'passed':
             raise ValueError('Supported native toolchain unavailable')
+        release = observed_release()
+        receipt['latest_release'] = release
         catalogs = ROOT / '.build/handoff/docc'
         # Verify the exact compiler outputs already packaged by the DocC lane.
         manifest = catalogs / 'compiled-catalogs.MANIFEST.sha256'
@@ -281,7 +308,7 @@ def main():
             (site / product / 'index.html').write_text(f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="refresh" content="0; url={route}"><link rel="canonical" href="https://thorfuchs.github.io{route}"><title>{product} · Swift-JSON</title><p><a href="{route}">Open the {product} reference</a>.</p></html>')
         commit = source_commit()
         receipt['source_commit'] = commit
-        (site / 'index.html').write_text(landing(commit))
+        (site / 'index.html').write_text(landing(commit, release))
         (site / '.nojekyll').touch()
         (site / '404.html').write_text(f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Page not found · Swift-JSON</title><h1>Page not found</h1><p><a href="{BASE_PATH}/">Open Swift-JSON documentation</a> or <a href="{REPOSITORY}">browse the source</a>.</p></html>')
         (site / 'build-info.json').write_text(json.dumps({
@@ -290,8 +317,10 @@ def main():
             'swift': receipt['environment']['swift'], 'sdk': receipt['environment']['sdk'],
             'macos': receipt['environment']['macos'], 'swift_language_mode': '6',
             'products': list(PRODUCTS), 'catalogs': list(CATALOGS), 'channel': 'development',
-            'source_version': SOURCE_VERSION, 'latest_stable_observed': STABLE_VERSION,
-            'stable_release': REPOSITORY + '/releases/tag/' + STABLE_VERSION}, indent=2) + '\n')
+            'source_version': source_version(),
+            'latest_stable_observed': release['tag'] if release else None,
+            'stable_release': release['release_url'] if release else None,
+            'latest_release': release}, indent=2) + '\n')
         routes = sorted(p.relative_to(site).parent.as_posix() + '/' for p in site.rglob('index.html'))
         urls = [SITE_URL if route == './' else SITE_URL + urllib.parse.quote(route, safe='/') for route in routes]
         (site / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('<url><loc>' + html.escape(url) + '</loc></url>\n' for url in urls) + '</urlset>\n')
