@@ -1,3 +1,13 @@
+# Execution update — 28 October 2026
+
+1.7.0 is published at `8557badef562cf2f059e964c113d4a7f60ecbe6c`.
+The maintainer has now commissioned the 1.8 bounded structural wave, including
+the public read-only store, on isolated `codex/1.8-batches-and-store`.
+[The implementation contract](Architecture/StructuralIntelligence/BoundedWorkflows1.8.md)
+freezes this wave; [qualification](Qualification/Release1.8.md) records actual results.
+The proposal and historical inventories below remain source-bound. Persistence,
+platform-floor reduction and new query grammars are not included.
+
 # Release roadmap: 1.7 through 2.0
 
 Maintainer working proposal, audited 27 October 2026. The next step is a release

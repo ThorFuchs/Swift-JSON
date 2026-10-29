@@ -1,3 +1,10 @@
+# Current authority — 1.8 candidate
+
+Published 1.7.0 has twelve libraries plus CLI and thirteen catalogs. This isolated
+1.8.0-dev branch adds bounded batches and a public immutable store inside
+JSONInspection. See [current qualification](Qualification/Release1.8.md).
+The dated predecessor inventories below are historical, not 1.8 pass evidence.
+
 # Current documentation authority
 
 Unreleased 1.7.0-dev consolidation has twelve libraries plus CLI and thirteen DocC

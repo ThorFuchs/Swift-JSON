@@ -1,5 +1,19 @@
 # Swift-JSON
 
+This is **Swift-JSON 1.8.0-dev**, based on the published
+[1.7.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.0)
+(`8557badef562cf2f059e964c113d4a7f60ecbe6c`). The next additive wave brings
+ordered batch reads and an immutable configured read-only store to JSONInspection.
+It is under qualification; it is not an admitted 1.8 release.
+Twelve libraries plus CLI, thirteen DocC catalogs and empty root dependencies remain.
+See the [1.8 implementation contract](Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md),
+[qualification record](Documentation/Qualification/Release1.8.md) and
+[release roadmap](Documentation/ReleaseRoadmap.md). Historical records below retain
+their original source and publication dates.
+
+This feature source reports `1.8.0-dev`. The installation below selects released
+1.7.0; the batch/store APIs described at the end require this 1.8 candidate.
+
 **Exact JSON values, offline schema validation, transactional patches, pull streams, HTML exports and bounded queries for modern Swift.**
 
 Swift-JSON gives applications one consistent JSON model from input bytes to validated,
@@ -766,8 +780,9 @@ Every later member/cell read independently admits the whole captured source with
 limits and an operation report. These are structural views; no set algebra, matrix
 arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
 [independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
-Batch access is outside the 1.7.0 API. See the [roadmap](Documentation/ReleaseRoadmap.md)
-for future workflow proposals.
+Batch access is outside the 1.7.0 API. This 1.8 candidate adds aggregate value
+reads; see [bounded structural workflows](#bounded-structural-workflows-18-candidate).
+Set/matrix algebra remains outside this wave.
 
 ## Source-bound directed graphs (available since 1.7.0)
 
@@ -799,3 +814,33 @@ The [published qualification receipt](https://github.com/ThorFuchs/Swift-JSON/re
 records actual release-source and exact-tag consumer checks, platform scopes and
 the explicit performance exception. Transform is available from 1.7.0 and is absent
 from the 1.6 maintenance line.
+
+## Bounded structural workflows (1.8 candidate)
+
+Use `JSONInspectionBatch.values(at:maximumRequests:)` for ordered typed paths,
+`JSONStructuralSnapshot.values(for:maximumRequests:limits:)` for snapshot ordinals,
+and `JSONConfiguredStore.values(at:maximumRequests:limits:)` for record positions.
+Each complete batch admits the source once and shares one finite ledger, preserves
+request order and repeats, and either returns every result or throws. Missing is
+an error; explicit JSON null remains a value. Empty batches still admit the source.
+
+Build a read-only store with `JSONStoreBuilder` and an explicit `JSONStoreProfile`.
+Collection paths, ID fields and reference fields are configured; exact scalar IDs
+are never normalized. `lookup(collection:id:limits:)` distinguishes a missing ID
+from an unknown collection. `follow(from:bounds:limits:)` returns a complete BFS
+closure, with finite depth/frontier/visited/result caps and no truncated success.
+Positions are local to one immutable store and cannot be forged or rebound.
+
+Run the [public SwiftPM example](Examples/BoundedWorkflows) with
+`swift run --package-path Examples/BoundedWorkflows BoundedWorkflows`.
+The [DocC guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md)
+explains separate operation reports, caller work and logical retention. This is
+an additive candidate API; no persistence, network resolver, new platform or
+performance improvement is claimed.
+
+The [cross-product guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflowRecipes.md)
+and [runnable example](Examples/BoundedWorkflows/README.md) show schema validation,
+read-only store interpretation, transformation and checked rebuilds after Patch.
+Its separate capacity mode records owned-work/retention counters and fixture hashes;
+it makes no timing, RSS or default joint-capacity claim. The existing published
+developer kit remains pinned to its own qualified version.

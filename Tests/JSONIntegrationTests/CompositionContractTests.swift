@@ -249,7 +249,9 @@ private func composedImport(limits: JSONLimits = .balanced, extra: UInt64 = 0) t
             _ = try JSON.withComposition(limits: limits) { scope in
                 try scope.withMeter { meter in
                     meter.checkpointObserver = { work in
-                        if work >= (stage == 5 ? 4200 : 32) { withUnsafeCurrentTask { $0?.cancel() } }
+                        // Test-only current-task handle stays inside its standard-library callback.
+                        // Only this invocation is cancelled; no unsafe handle escapes or is shared.
+                        if work >= (stage == 5 ? 4200 : 32) { unsafe withUnsafeCurrentTask { unsafe $0?.cancel() } }
                     }
                 }
                 do {
