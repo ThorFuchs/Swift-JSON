@@ -13,7 +13,7 @@
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 214,
-    "JSONTransformTests": 23,
+    "JSONTransformTests": 41,
     "JSONDSLTests": 47
   },
   "parameterized_invocations": 390,
@@ -38,7 +38,7 @@
     "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 11,
-    "JSONTransformTests": 1,
+    "JSONTransformTests": 3,
     "JSONDSLTests": 1
   },
   "coverage_unmapped": {
@@ -85,7 +85,7 @@
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 214,
-    "JSONTransformTests": 23,
+    "JSONTransformTests": 41,
     "JSONDSLTests": 47
   },
   "wasi_root_functions": {
@@ -100,7 +100,7 @@
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 214,
-    "JSONTransformTests": 23,
+    "JSONTransformTests": 41,
     "JSONDSLTests": 47
   },
   "wasi_parameterized_invocations": 353,
@@ -116,7 +116,7 @@
     "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 11,
-    "JSONTransformTests": 1,
+    "JSONTransformTests": 3,
     "JSONDSLTests": 1
   },
   "export_functions": {
@@ -230,5 +230,48 @@
     "JSONIntegrationTests.qaE2ESharedPlanRecoversAfterIndependentFailures()",
     "JSONIntegrationTests.qaE2EUnknownEnvelopeVersionIsCorruption()",
     "JSONIntegrationTests.qaE2EVersionOneEnvelopePreservesExactInnerState()"
+  ],
+  "transform_function_ids": [
+    "JSONTransformTests.bindingD01CanonicalGoldenBytesAndReload()",
+    "JSONTransformTests.bindingD02CanonicalEscapingAndExactScalarSource()",
+    "JSONTransformTests.bindingD03StrictSemanticDecodeCanonicalizesPresentation()",
+    "JSONTransformTests.bindingD04ClosedFieldsVersionsAndKindsArePrecise()",
+    "JSONTransformTests.bindingD05NativeGrammarAndDuplicateFieldsStayAuthoritative()",
+    "JSONTransformTests.bindingD06NamesRejectBeforeSetConversion()",
+    "JSONTransformTests.bindingD07SpecificCapsAreInclusiveAndFinite()",
+    "JSONTransformTests.bindingD08WireAndOwnedWorkRetentionHaveExactBoundaries()",
+    "JSONTransformTests.bindingD09CompileReportsPreserveExistingPlanBehaviorAndBudget()",
+    "JSONTransformTests.bindingD10CodecDoesNotInventQueryValidationOrDecimalAuthority()",
+    "JSONTransformTests.bindingD11CancellationOccursInsideOwnedCodecWork()",
+    "JSONTransformTests.bindingP01ExplicitIndicesPreserveDuplicatesOrderAndTies()",
+    "JSONTransformTests.bindingP02InvalidOutputAndAbandonedPrefixNeverCertify()",
+    "JSONTransformTests.bindingP03PopulationLeaseSurvivesCloseAndForeignOwnerRefuses()",
+    "JSONTransformTests.bindingP04ResourceAndProviderFailuresStayTerminal()",
+    "JSONTransformTests.bindingP05ProjectionEvaluationAndCancellationShareOneLedger()",
+    "JSONTransformTests.bindingSharedDefinitionAndCompilationHaveIndependentHealth()",
+    "JSONTransformTests.bindingSharedSelectionSpikeReusesOnePlanIndependently()",
+    "JSONTransformTests.jtxBindingNamesUseTheCompilerIdentifierGrammar()",
+    "JSONTransformTests.jtxBindingsAndProviderAreExplicitAndLazy()",
+    "JSONTransformTests.jtxCancellationLatchesAndStopsProviderCalls()",
+    "JSONTransformTests.jtxCompiledLiteralsCannotBypassTighterExecutionValueLimits()",
+    "JSONTransformTests.jtxConfiguredCompilerGrowthHasInclusiveBoundaries()",
+    "JSONTransformTests.jtxCopiedHandlesShareOneCumulativeLedger()",
+    "JSONTransformTests.jtxCumulativeProviderAndResultCapsCannotResetPerPull()",
+    "JSONTransformTests.jtxEscapedHandleInvalidatesAndReleasesProvider()",
+    "JSONTransformTests.jtxExactNumbersAndScalarKeysKeepCoreAuthority()",
+    "JSONTransformTests.jtxOutputAdmissionWorkAndTemporaryFramesStayOnTheOneLedger()",
+    "JSONTransformTests.jtxPlanIsSendableAndExecutionsHaveIndependentHealth()",
+    "JSONTransformTests.jtxProviderCanObserveSnapshotAndCancelAfterOwnedProgress()",
+    "JSONTransformTests.jtxProviderFailureIsOperationalAndNeverCaughtByLanguageTry()",
+    "JSONTransformTests.jtxPublicEngineMatchesNativeExactDialectMatrix()",
+    "JSONTransformTests.jtxReentrantProviderFailureLatchesWithoutAccessConflict()",
+    "JSONTransformTests.jtxReportsUseCoreDomainAndCallerErrorRetainsIdentity()",
+    "JSONTransformTests.jtxResourceErrorBypassesCatchAndLatchesAfterHostCatch()",
+    "JSONTransformTests.jtxRuntimeCapsRejectBeforePublishingAndRemainTyped()",
+    "JSONTransformTests.jtxSelectedAliasKeepsSourceReservationUntilLastHandleDies()",
+    "JSONTransformTests.jtxTaskCancellationIsObservedAfterProviderOwnedProgress()",
+    "JSONTransformTests.jtxTerminalAliasesRefundBeforeThrowingTheSameFailure()",
+    "JSONTransformTests.jtxTypedCompileLocationAndLanguageFailureStayDistinct()",
+    "JSONTransformTests.jtxZeroNullAndManyAreDistinctOrderedPullResults()"
   ]
 }

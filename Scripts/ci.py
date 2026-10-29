@@ -28,6 +28,7 @@ SHARED_TESTS += '|p2SetSSET18SharedImmutableViewsHaveIndependentLedgers|p2Matrix
 SHARED_TESTS += '|graphG30ConcurrentViewsHaveIndependentHealth|graphGP14ConcurrentQueries'
 SHARED_TESTS += '|dslSharedFinalizationAndPlansAreInvocationOwned'
 SHARED_TESTS += '|storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth'
+SHARED_TESTS += '|bindingSharedDefinitionAndCompilationHaveIndependentHealth|bindingSharedSelectionSpikeReusesOnePlanIndependently'
 SHARED_TESTS += '|workflowSharedImmutablePlansHaveIndependentBatchAndStoreHealth'
 SHARED_TESTS += '|acceptance18SharedPlansKeepIndependentCrossProductHealth'
 R0_TESTS = 'readerProbe|indexProbes|duplicateRecognitionPrecedesValueAndClosingSyntax'
@@ -38,6 +39,23 @@ def snapshot():
 def commands(lane, output):
     # The qualification executable resolves output paths from its repository root.
     output = output.relative_to(ROOT)
+    if lane in ('transform-bindings', 'transform-bindings-safety'):
+        def portable(values):
+            return [c + ['--disable-xctest'] if sys.platform == 'linux' and c[:2] == ['swift', 'test'] else c for c in values]
+        if lane.endswith('safety'):
+            return portable([
+                ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'address', '--scratch-path', '.build/bindings-address'],
+                ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'thread', '--scratch-path', '.build/bindings-thread', '--filter', 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth|bindingShared'],
+                ['swift', 'build', '--target', 'JSONTransform', '--jobs', '2', '--scratch-path', '.build/bindings-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
+            ])
+        return portable([
+            ['python3', '-B', 'Scripts/public_check.py'],
+            ['python3', '-B', 'Scripts/generate_cli_identity.py', '--check'],
+            ['python3', '-B', 'Scripts/test_qualification_harness.py'],
+            ['swift', 'test', '--test-product', 'JSONTransformTests', '--jobs', '2'],
+            ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2'],
+            ['python3', '-B', 'Scripts/qualify_transform_bindings.py', '--output', str(output / 'public-consumer')],
+        ])
     if lane in ('structural-acceptance', 'structural-acceptance-safety'):
         if lane.endswith('safety'):
             result = [
@@ -245,6 +263,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/test_transform_ownership.py'],
             ['python3', '-B', 'Scripts/qualify_transform_ownership.py', '--output', str(output / 'transform-ownership')],
             ['python3', '-B', 'Scripts/qualify_transform.py', '--output', str(output / 'transform-consumer')],
+            ['python3', '-B', 'Scripts/qualify_transform_bindings.py', '--output', str(output / 'transform-binding-consumer')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
@@ -335,6 +354,14 @@ def check_result(command, code, log, events=None):
         if 'JSONSchemaTests' in command and events is not None:
             parameters = {name: ROOT_PARAMETER_CASES[name] for name in ['successfulAlternativesCannotSwallowRegexExhaustion(keyword:)', 'URIIdentityUsesSyntaxNormalizationWithoutUnicodeFolding(input:expected:)']}
             passed = passed and events['module_function_counts'] == {'JSONSchemaTests': 79} and events['parameterized_functions'] == parameters and events['parameter_case_invocations'] == 12
+        if 'JSONTransformTests' in command:
+            ids = set(DISCOVERY['transform_function_ids'])
+            if 'thread' in command:
+                ids = {n for n in ids if 'bindingShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n}
+            elif selected_filter == 'binding':
+                ids = {n for n in ids if '.binding' in n}
+            expected = [len(ids)]
+            passed = passed and events is not None and events['module_function_counts'] == {'JSONTransformTests': len(ids)} and set(events['function_names']) == ids and len(events['function_names']) == len(ids) and events['parameter_case_invocations'] == 0
         if 'navigation' in command:
             expected = [DISCOVERY['root_functions']['JSONNavigationTests']]
             if events is not None:
@@ -375,7 +402,7 @@ def check_result(command, code, log, events=None):
             passed = passed and events['module_function_counts'] == {'CompositionScaleTests': DISCOVERY['composition_external_functions']} and events['parameter_case_invocations'] == 0
         if 'qa' in command and events is not None:
             passed = passed and events['module_function_counts'] == DISCOVERY['qa_functions'] and check_restored(events)
-        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and not prepared_test and not store_test and not workflow_test and not acceptance_test and events is not None:
+        if 'thread' in command and 'JSONSchemaExamplesTests' not in command and 'JSONTransformTests' not in command and not prepared_test and not store_test and not workflow_test and not acceptance_test and events is not None:
             passed = passed and events['module_function_counts'] == SHARED_COUNTS and check_projection_cases(events, shared=True) and check_p2_cases(events, shared=True) and check_exact_cases(events, shared=True) and check_graph_cases(events, shared=True) and events['parameter_case_invocations'] == 0 and check_store_tests(events, log, shared=True)
         if '--filter' not in command and '--test-product' not in command and not any(x.startswith('Tools/') for x in command):
             if events is not None:
@@ -413,7 +440,7 @@ def check_result(command, code, log, events=None):
         passed = passed and set(targets) == {'JSON', 'JSONNavigation', 'JSONNavigationTests', 'JSONInspection', 'JSONInspectionTests', 'JSONIntegrationTests', 'JSONBridges', 'JSONBridgesTests', 'JSONSchema', 'JSONSchemaExamples', 'JSONSchemaExamplesTests', 'JSONStreaming', 'JSONPatch', 'JSONHTML', 'JSONRegexRuntime', 'JSONTests', 'JSONSchemaTests', 'JSONStreamingTests', 'JSONPatchTests', 'JSONHTMLTests', 'JSONRegexRuntimeTests', 'JSONFilterRuntime', 'JSONCLIEngine', 'JSONCLI', 'JSONCLITests', 'JSONTransform', 'JSONTransformTests', 'JSONDSLCore', 'JSONValueDSL', 'JSONSchemaDSL', 'JSONDSLTests'} and targets['JSONHTML']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONBridges']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONFilterRuntime']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONCLI']['type'] == 'executable'
         passed = passed and targets['JSONNavigation']['dependencies'] == [{'byName': ['JSON', None]}] and targets['JSONNavigationTests']['dependencies'] == [{'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
         passed = passed and targets['JSONSchemaExamples']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONSchema', None]}] and targets['JSON']['dependencies'] == [] and targets['JSONSchema']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONRegexRuntime', None]}]
-        passed = passed and targets['JSONTransform']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONFilterRuntime', None]}] and targets['JSONTransformTests']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONTransform', None]}]
+        passed = passed and targets['JSONTransform']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONFilterRuntime', None]}] and targets['JSONTransformTests']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONTransform', None]}, {'byName': ['JSONFilterRuntime', None]}]
         passed = passed and targets['JSONInspection']['dependencies'] == [{'byName': ['JSON', None]}, {'byName': ['JSONNavigation', None]}] and targets['JSONInspectionTests']['dependencies'] == [{'byName': ['JSONInspection', None]}, {'byName': ['JSONNavigation', None]}, {'byName': ['JSON', None]}]
         for name, dependencies in [('JSONDSLCore', ['JSON']), ('JSONValueDSL', ['JSON', 'JSONDSLCore']), ('JSONSchemaDSL', ['JSON', 'JSONSchema', 'JSONDSLCore']), ('JSONDSLTests', ['JSON', 'JSONSchema', 'JSONDSLCore', 'JSONValueDSL', 'JSONSchemaDSL'])]:
             passed = passed and targets[name]['dependencies'] == [{'byName': [item, None]} for item in dependencies]
@@ -501,12 +528,15 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=30' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=31' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_bindings.py']:
+        data = json.loads(log.strip().splitlines()[-1])
+        passed = passed and data['status'] == 'passed' and len(data['commands']) == 8 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 6 and data['negative_fixture_invocations'] == 4 and data['compiled_guide_fences'] == 1
     return passed, counts
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['structural-acceptance', 'structural-acceptance-safety', 'structural-workflows', 'structural-workflows-safety', 'store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['transform-bindings', 'transform-bindings-safety', 'structural-acceptance', 'structural-acceptance-safety', 'structural-workflows', 'structural-workflows-safety', 'store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
     parser.add_argument('--output')
     parser.add_argument('--skip-host-measurements', action='store_true', help='For WASI runtime qualification only: record optional host timings as NOT RUN.')
     args = parser.parse_args()
@@ -518,7 +548,7 @@ def main():
     repository = subprocess.run(['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, capture_output=True, text=True)
     is_checkout = repository.returncode == 0 and pathlib.Path(repository.stdout.strip()).resolve() == ROOT.resolve()
     commit = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True) if is_checkout else None
-    environment = collect_linux() if args.lane.startswith('linux') or (args.lane in ('composition', 'inspection', 'structural-workflows', 'structural-workflows-safety', 'structural-acceptance', 'structural-acceptance-safety') and sys.platform == 'linux') else collect()
+    environment = collect_linux() if args.lane.startswith('linux') or (args.lane in ('transform-bindings', 'transform-bindings-safety', 'composition', 'inspection', 'structural-workflows', 'structural-workflows-safety', 'structural-acceptance', 'structural-acceptance-safety') and sys.platform == 'linux') else collect()
     receipt = {'schema_version': 1, 'lane': args.lane, 'status': 'blocked', 'environment': environment, 'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'git_commit': commit.stdout.strip() if commit is not None and commit.returncode == 0 else None, 'github_run_id': os.environ.get('GITHUB_RUN_ID'), 'source_inputs': inputs, 'source_manifest_sha256': hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest(), 'commands': []}
     def save():
         (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')

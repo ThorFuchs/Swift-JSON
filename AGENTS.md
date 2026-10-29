@@ -63,3 +63,9 @@ Preserve its accepted 42 authored declarations and exact semantics. The original
 1.7.0 P4 waiver and later partial measurements are historical scoped evidence;
 no allocation, speed, RSS or controlled-performance pass follows from consolidation.
 See Documentation/Qualification/Consolidation2026.md for combined gates and holds.
+
+The commissioned 1.8 Transform binding train adds a source-definition codec and
+compile reports while preserving those original declarations. Indexed selection
+is a test-only private-kernel ownership experiment in Sprint 1, not public API.
+See Documentation/Architecture/Release1.8/TransformBindings.md. No Content code,
+lock, message, merge or publication is authorized by implementing this sprint.

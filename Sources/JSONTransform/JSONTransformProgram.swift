@@ -20,6 +20,30 @@ public struct JSONTransformProgram: Sendable {
                                limits: JSONTransformLimits = .init()) throws -> Self {
         do {
             var context = try TransformRuntimeContext(limits: limits.runtime)
+            return try compileValidated(source, variables: variables, context: &context)
+        } catch { throw JSONTransformFailure.classify(error) }
+    }
+
+    /// Compiles with the same compiler and returns actual successful native work.
+    /// Compilation is independent of later execution. Statistics are data, not a
+    /// selection-completion witness or a charge for caller-owned work.
+    /// - Parameters:
+    ///   - source: Exact query source in the existing dialect.
+    ///   - variables: Declared ASCII names without dollar prefixes.
+    ///   - limits: Finite compilation policy shared by validation and compilation.
+    /// - Returns: The immutable program and this compilation's native statistics.
+    /// - Throws: The same typed compilation, configuration and operational failures as compile.
+    public static func compileWithReport(_ source: String, variables: Set<String> = [],
+                                         limits: JSONTransformLimits = .init()) throws -> JSONOperationReport<Self> {
+        do {
+            var context = try TransformRuntimeContext(limits: limits.runtime)
+            let result = try compileValidated(source, variables: variables, context: &context)
+            return .init(result: result, statistics: context.meter.statistics())
+        } catch { throw JSONTransformFailure.classify(error) }
+    }
+
+    static func compileValidated(_ source: String, variables: Set<String>,
+                                 context: inout TransformRuntimeContext) throws -> Self {
             for name in variables {
                 try context.charge(.bindings)
                 try JSONAdmission.text(name, key: true, meter: &context.meter, owned: true)
@@ -36,7 +60,6 @@ public struct JSONTransformProgram: Sendable {
             }
             let program = try FilterCompiler.compile(source, variables: variables, context: &context)
             return .init(program: program, planReservation: context.meter.used(.retainedBytes), variables: variables)
-        } catch { throw JSONTransformFailure.classify(error) }
     }
 
     /// Runs a synchronous, invocation-owned guarded pull scope.
