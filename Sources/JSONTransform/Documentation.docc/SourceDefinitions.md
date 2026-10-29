@@ -37,5 +37,5 @@ new numeric or query engine is introduced.
 
 Use ``JSONTransformProgram/compileWithReport(_:variables:limits:)`` when compiling
 ordinary source with successful native work statistics. These reports are data;
-they are not unforgeable selection-completion witnesses. The indexed selection
-experiment remains test-only in this sprint, with no public selection API.
+they are not unforgeable selection-completion witnesses. The separate <doc:IndexedSelection> guide defines the finite public selection
+convention, owner-bound positions and EOF witnesses.

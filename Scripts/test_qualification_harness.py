@@ -28,18 +28,31 @@ def store_markers():
         'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
 
 class HarnessTests(unittest.TestCase):
+    def test_selection_filter_preserves_exact_identity_and_completion_evidence(self):
+        ids = [n for n in DISCOVERY['transform_function_ids'] if '.selection' in n]
+        self.assertEqual(len(ids), 16)
+        command = ['swift','test','--test-product','JSONTransformTests','--filter','selection']
+        events = dict(bundle_counts=[16],module_function_counts={'JSONTransformTests':16},function_names=ids,parameter_case_invocations=0)
+        self.assertTrue(check_result(command,0,'',events)[0])
+        self.assertFalse(check_result(command,0,'',dict(events,function_names=ids[:-1]))[0])
+        consumer = ['python3','-B','Scripts/qualify_transform_selection.py']
+        receipt = dict(status='passed',commands=[dict(passed=True)]*20,witnesses_per_configuration=10,negative_fixture_invocations=14,compiled_guide_fences=1)
+        self.assertTrue(check_result(consumer,0,json.dumps(receipt))[0])
+        for broken in [dict(receipt,commands=receipt['commands'][:-1]),dict(receipt,negative_fixture_invocations=0),dict(receipt,compiled_guide_fences=0)]:
+            self.assertFalse(check_result(consumer,0,json.dumps(broken))[0])
+
     def test_transform_binding_discovery_rejects_incomplete_duplicate_and_foreign_events(self):
         ids = DISCOVERY['transform_function_ids']
         command = ['swift', 'test', '--test-product', 'JSONTransformTests']
-        events = dict(bundle_counts=[41], module_function_counts={'JSONTransformTests':41},
+        events = dict(bundle_counts=[57], module_function_counts={'JSONTransformTests':57},
                       function_names=ids, parameter_case_invocations=0)
         self.assertTrue(check_result(command, 0, '', events)[0])
         for broken in [dict(events,function_names=ids[:-1]),dict(events,function_names=ids+ids[:1]),
-                       dict(events,module_function_counts={'JSONTests':41}),dict(events,parameter_case_invocations=1)]:
+                       dict(events,module_function_counts={'JSONTests':57}),dict(events,parameter_case_invocations=1)]:
             self.assertFalse(check_result(command, 0, '', broken)[0])
-        shared = [n for n in ids if 'bindingShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n]
+        shared = [n for n in ids if 'bindingShared' in n or 'selectionShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n]
         thread = command + ['--sanitize', 'thread']
-        self.assertTrue(check_result(thread, 0, '', dict(events,bundle_counts=[3],module_function_counts={'JSONTransformTests':3},function_names=shared))[0])
+        self.assertTrue(check_result(thread, 0, '', dict(events,bundle_counts=[4],module_function_counts={'JSONTransformTests':4},function_names=shared))[0])
 
     def test_acceptance18_discovery_preserves_exact_public_pipeline_identities(self):
         names = DISCOVERY['structural_acceptance_function_ids']
@@ -452,8 +465,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=31')[0])
-        for stale in ['HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', 'HARNESS_TESTS passed cases=28', '']:
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=32')[0])
+        for stale in ['HARNESS_TESTS passed cases=31', 'HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', 'HARNESS_TESTS passed cases=28', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
         marker = 'SCHEMA_EXAMPLES_CORPUS passed mode=owned scopes=128 values=6 exact=1'

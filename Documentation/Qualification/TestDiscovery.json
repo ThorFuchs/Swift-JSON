@@ -13,7 +13,7 @@
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 214,
-    "JSONTransformTests": 41,
+    "JSONTransformTests": 57,
     "JSONDSLTests": 47
   },
   "parameterized_invocations": 390,
@@ -38,7 +38,7 @@
     "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 11,
-    "JSONTransformTests": 3,
+    "JSONTransformTests": 4,
     "JSONDSLTests": 1
   },
   "coverage_unmapped": {
@@ -85,7 +85,7 @@
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 214,
-    "JSONTransformTests": 41,
+    "JSONTransformTests": 57,
     "JSONDSLTests": 47
   },
   "wasi_root_functions": {
@@ -100,7 +100,7 @@
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
     "JSONInspectionTests": 214,
-    "JSONTransformTests": 41,
+    "JSONTransformTests": 57,
     "JSONDSLTests": 47
   },
   "wasi_parameterized_invocations": 353,
@@ -116,7 +116,7 @@
     "JSONNavigationTests": 2,
     "JSONSchemaExamplesTests": 4,
     "JSONInspectionTests": 11,
-    "JSONTransformTests": 3,
+    "JSONTransformTests": 4,
     "JSONDSLTests": 1
   },
   "export_functions": {
@@ -272,6 +272,22 @@
     "JSONTransformTests.jtxTaskCancellationIsObservedAfterProviderOwnedProgress()",
     "JSONTransformTests.jtxTerminalAliasesRefundBeforeThrowingTheSameFailure()",
     "JSONTransformTests.jtxTypedCompileLocationAndLanguageFailureStayDistinct()",
-    "JSONTransformTests.jtxZeroNullAndManyAreDistinctOrderedPullResults()"
+    "JSONTransformTests.jtxZeroNullAndManyAreDistinctOrderedPullResults()",
+    "JSONTransformTests.selectionS01ExplicitOrdinalsPreserveDuplicateValuesOrderRepeatsAndTies()",
+    "JSONTransformTests.selectionS02EmptyEOFNullAndIncompletePrefixAreDistinct()",
+    "JSONTransformTests.selectionS03EveryInvalidOutputIsExactAndTerminalOutsideQueryCatch()",
+    "JSONTransformTests.selectionS04CompletionRejectsForeignInvocationsAndPositionsRetainPopulation()",
+    "JSONTransformTests.selectionS05FinalAliasAndCompletionReleaseSettleToZeroWithoutDataPulls()",
+    "JSONTransformTests.selectionS06BindingsAreExplicitReservedAndScalarChecked()",
+    "JSONTransformTests.selectionS07PopulationPolicyIsInclusiveFiniteAndCannotSkipCompleteAdmission()",
+    "JSONTransformTests.selectionS08ProjectionEvaluationAndCompletionShareExactCumulativeWorkAndRetention()",
+    "JSONTransformTests.selectionS09QuotaAndCancellationRefundTerminalAliasesAndPreserveFirstCause()",
+    "JSONTransformTests.selectionS10ProviderEOFNullErrorAndNoFurtherPullsRemainDistinct()",
+    "JSONTransformTests.selectionS11ReentryAndProviderCancellationUseSafeEntrySnapshots()",
+    "JSONTransformTests.selectionS12CallerErrorAndEscapedClosuresReleaseProviderWithoutCompletion()",
+    "JSONTransformTests.selectionS13InnerProjectionTaskCancellationReleasesUnpublishedPreparation()",
+    "JSONTransformTests.selectionS14FailedPreparationAndCompletionAllocationsRefundExactBoundaries()",
+    "JSONTransformTests.selectionS15LanguageCatchesRemainOrdinaryAndUncaughtFailuresStayTerminal()",
+    "JSONTransformTests.selectionSharedImmutablePlanHasIndependentPopulationAndFailureHealth()"
   ]
 }

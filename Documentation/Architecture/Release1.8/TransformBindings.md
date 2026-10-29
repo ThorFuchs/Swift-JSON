@@ -1,10 +1,58 @@
-# Transform bindings — commissioned 1.8 candidate, Sprint 1
+# Transform bindings — commissioned 1.8 candidate
 
 The maintainer commissioned the source-definition codec, indexed selection and
 compile reporting on 29 October 2026. Base is b8ddeb26042005a06360f50fcf20b1f840e66d1c.
 This additive train preserves the existing 42 authored Transform declarations,
 ordinary execution/CLI semantics, thirteen products and empty root dependencies.
 Implementation and a successful spike are not release or downstream admission.
+
+
+## Sprint 2 current selection contract
+
+The maintainer commissioned the public selection increment on 29 October 2026.
+Its exact base is Sprint 1 commit 70df9ba8d47322abf0d4aec1439256d7a5e97e94.
+Historical Sprint 1 scope/evidence below remain source-bound. This increment
+ships the selection facade in JSONTransform without a new product/dependency or
+changes to the private compiler/VM, ordinary execution or CLI adapters.
+
+Selection convention V1 is explicit: input [0,...,N-1], reserved declared `$values`
+containing the admitted population, and exactly the other declared bindings from
+the caller. Overriding values or missing/foreign/invalid binding names fails.
+The finite population default is 65,536; zero is valid. Native and Transform
+limits remain additional ceilings, including live collection slots. Projection
+slots/text/metadata and numeric construction are admitted before owned growth.
+Population admission occurs once, including unused tails, on the same context as
+projection, VM work, native index validation, output leases and completion.
+
+Optional input/inputs callbacks use existing query semantics and explicit caller
+code. They cannot expand the declared population. Nil is provider EOF, null is a
+value. Provider admission/calls triggered by evaluation consume the same finite
+input/work/retention policy; arbitrary callback instructions and prior caller
+allocations remain caller work. A separate health cell supplies prepaid entry
+snapshots and prevents context borrowing during reentry. Provider/reentry/cancel
+failures latch before accepting another value or another callback.
+
+Public positions retain one shared population owner and a per-output slot lease.
+The population owner includes unforgeable invocation identity. Completion exists
+only after explicit evaluator EOF and successful cleanup; its identity/report
+lease does not retain the population. Completion.ordinal(of:) rejects foreign
+positions through constant metadata inspection, without reopening a completed
+operation. Raw ordinals/caller mappings are not stable IDs or read grants.
+
+Boundary invalidity bypasses query catches. Uncaught language, resource, provider,
+cancellation and lifecycle failures latch. Caught errors, abandoned prefixes and
+late failures cannot certify. A first operational failure wins over a later caller
+error; otherwise caller errors retain identity. Escaped scopes/closures cannot
+resume after close. report() drains deferred refunds after success/error/cancel;
+work never refunds. Completion.statistics is a close-time snapshot; current
+terminal accounting is observed through the guarded scope. Scope/position/
+completion handles are deliberately non-Sendable; plans remain checked Sendable.
+
+Completion, report, scope and position constructors are inaccessible to public
+callers. The generic JSONOperationReport initializer cannot construct a selection
+witness. No provenance propagation, second interpreter, VM serialization, online
+resolution, Content code/lock or unbounded streaming/sort promise is introduced.
+See the [public guide](../../../Sources/JSONTransform/Documentation.docc/IndexedSelection.md) for usage.
 
 ## Definition V1
 
@@ -44,7 +92,7 @@ the existing compiler/context and returns actual native work. The additive
 compileWithReport path preserves old compile behavior; the definition adapter
 also charges its owned variable Set construction. No public meter is exposed.
 
-## Indexed selection contract for Sprint 2
+## Historical Sprint 1 selection plan
 
 The proposed convention is an invocation-owned ordered array [0,...,N-1] as input
 and a reserved explicit values binding containing the complete population. The

@@ -2,6 +2,14 @@
 
 ## Unreleased — 1.8.0-dev
 
+- Add exact versioned Transform source definitions, a bounded native codec and
+  successful compilation reports through the existing compiler.
+- Add finite indexed selection scopes over explicit populations, owner-bound
+  positions and private-constructor EOF/accounting witnesses. Admission, projection,
+  VM evaluation, provider/output handling and completion share one ledger.
+  Preserve order/repeats, first failures and terminal lease accounting; ordinary
+  Transform/CLI semantics and all thirteen products remain unchanged.
+
 - Extend public acceptance across schema validation, store/transform reads and
   checked Patch rebuilds, with exact numeric/scalar identity and lifecycle cases.
 - Add a frozen capacity/owned-counter matrix and compiled cross-product recipes;

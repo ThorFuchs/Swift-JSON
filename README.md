@@ -4,6 +4,8 @@ This is **Swift-JSON 1.8.0-dev**, based on the published
 [1.7.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.0)
 (`8557badef562cf2f059e964c113d4a7f60ecbe6c`). The next additive wave brings
 ordered batch reads and an immutable configured read-only store to JSONInspection.
+The optional JSONTransform candidate also adds exact source-definition codecs,
+compile reports and [finite indexed selection](Sources/JSONTransform/Documentation.docc/IndexedSelection.md).
 It is under qualification; it is not an admitted 1.8 release.
 Twelve libraries plus CLI, thirteen DocC catalogs and empty root dependencies remain.
 See the [1.8 implementation contract](Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md),

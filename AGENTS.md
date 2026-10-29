@@ -65,7 +65,9 @@ no allocation, speed, RSS or controlled-performance pass follows from consolidat
 See Documentation/Qualification/Consolidation2026.md for combined gates and holds.
 
 The commissioned 1.8 Transform binding train adds a source-definition codec and
-compile reports while preserving those original declarations. Indexed selection
-is a test-only private-kernel ownership experiment in Sprint 1, not public API.
+compile reports while preserving those original declarations. Sprint 1
+retains its historical test-only selection experiment. Sprint 2 adds public
+guarded selection scopes, owner-bound positions and EOF completion reports;
+preserve ordinary Transform semantics and require one cumulative invocation ledger.
 See Documentation/Architecture/Release1.8/TransformBindings.md. No Content code,
 lock, message, merge or publication is authorized by implementing this sprint.

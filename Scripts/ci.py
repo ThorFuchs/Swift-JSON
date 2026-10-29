@@ -28,6 +28,7 @@ SHARED_TESTS += '|p2SetSSET18SharedImmutableViewsHaveIndependentLedgers|p2Matrix
 SHARED_TESTS += '|graphG30ConcurrentViewsHaveIndependentHealth|graphGP14ConcurrentQueries'
 SHARED_TESTS += '|dslSharedFinalizationAndPlansAreInvocationOwned'
 SHARED_TESTS += '|storeR06TerminalQuotasNeverPublishAndImmutableConcurrentHealth'
+SHARED_TESTS += '|selectionSharedImmutablePlanHasIndependentPopulationAndFailureHealth'
 SHARED_TESTS += '|bindingSharedDefinitionAndCompilationHaveIndependentHealth|bindingSharedSelectionSpikeReusesOnePlanIndependently'
 SHARED_TESTS += '|workflowSharedImmutablePlansHaveIndependentBatchAndStoreHealth'
 SHARED_TESTS += '|acceptance18SharedPlansKeepIndependentCrossProductHealth'
@@ -45,7 +46,7 @@ def commands(lane, output):
         if lane.endswith('safety'):
             return portable([
                 ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'address', '--scratch-path', '.build/bindings-address'],
-                ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'thread', '--scratch-path', '.build/bindings-thread', '--filter', 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth|bindingShared'],
+                ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2', '--sanitize', 'thread', '--scratch-path', '.build/bindings-thread', '--filter', 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth|bindingShared|selectionShared'],
                 ['swift', 'build', '--target', 'JSONTransform', '--jobs', '2', '--scratch-path', '.build/bindings-strict', '-Xswiftc', '-strict-memory-safety', '-Xswiftc', '-warnings-as-errors'],
             ])
         return portable([
@@ -55,6 +56,7 @@ def commands(lane, output):
             ['swift', 'test', '--test-product', 'JSONTransformTests', '--jobs', '2'],
             ['swift', 'test', '--test-product', 'JSONTransformTests', '-c', 'release', '--jobs', '2'],
             ['python3', '-B', 'Scripts/qualify_transform_bindings.py', '--output', str(output / 'public-consumer')],
+            ['python3', '-B', 'Scripts/qualify_transform_selection.py', '--output', str(output / 'selection-consumer')],
         ])
     if lane in ('structural-acceptance', 'structural-acceptance-safety'):
         if lane.endswith('safety'):
@@ -264,6 +266,7 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_transform_ownership.py', '--output', str(output / 'transform-ownership')],
             ['python3', '-B', 'Scripts/qualify_transform.py', '--output', str(output / 'transform-consumer')],
             ['python3', '-B', 'Scripts/qualify_transform_bindings.py', '--output', str(output / 'transform-binding-consumer')],
+            ['python3', '-B', 'Scripts/qualify_transform_selection.py', '--output', str(output / 'transform-selection-consumer')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'ownership', '--output', str(output / 'ownership.json')],
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'reader', '--output', str(output / 'reader.json')],
             ['swift', 'run', '-c', 'release', '--package-path', 'Examples/Consumer', 'Consumer'],
@@ -357,7 +360,9 @@ def check_result(command, code, log, events=None):
         if 'JSONTransformTests' in command:
             ids = set(DISCOVERY['transform_function_ids'])
             if 'thread' in command:
-                ids = {n for n in ids if 'bindingShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n}
+                ids = {n for n in ids if 'bindingShared' in n or 'selectionShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n}
+            elif selected_filter == 'selection':
+                ids = {n for n in ids if '.selection' in n}
             elif selected_filter == 'binding':
                 ids = {n for n in ids if '.binding' in n}
             expected = [len(ids)]
@@ -528,7 +533,10 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=31' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=32' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_selection.py']:
+        data = json.loads(log.strip().splitlines()[-1])
+        passed = passed and data['status'] == 'passed' and len(data['commands']) == 20 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 10 and data['negative_fixture_invocations'] == 14 and data['compiled_guide_fences'] == 1
     if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_bindings.py']:
         data = json.loads(log.strip().splitlines()[-1])
         passed = passed and data['status'] == 'passed' and len(data['commands']) == 8 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 6 and data['negative_fixture_invocations'] == 4 and data['compiled_guide_fences'] == 1
