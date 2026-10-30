@@ -1,6 +1,6 @@
 # Contributor instructions
 
-Prepared release source is 1.7.0; publication is a separate owner action. Its
+Prepared patch release source is 1.7.1; publication is a separate owner action. Its
 parent development line is 1.7.0-dev and stable 1.6.1 remains separate. This is
 not a maintenance release or the frozen 6fe8067 RC. Preserve all source-bound
 qualification history; source integration never publishes a version.
