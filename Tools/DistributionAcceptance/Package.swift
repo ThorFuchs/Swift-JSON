@@ -8,5 +8,8 @@ let package = Package(
         .product(name: "JSON", package: "Swift-JSON"),
         .product(name: "JSONSchema", package: "Swift-JSON"),
         .product(name: "JSONStreaming", package: "Swift-JSON"),
-        .product(name: "JSONPatch", package: "Swift-JSON")])],
+        .product(name: "JSONPatch", package: "Swift-JSON")]),
+        .testTarget(name: "SchemaResourceHostTests", dependencies: [
+            .product(name: "JSON", package: "Swift-JSON"),
+            .product(name: "JSONSchema", package: "Swift-JSON")])],
     swiftLanguageModes: [.v6])

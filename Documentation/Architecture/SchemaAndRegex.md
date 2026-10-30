@@ -17,6 +17,17 @@ owned quotas. Compilation is a separate public operation.
 
 JSONSchemaRegistry is an immutable bounded snapshot of explicitly supplied resource documents. Updating it produces a new snapshot. There is no automatic URLSession resolver or mutable global registry. A caller fetches resources through its own authorized application I/O before constructing the snapshot. Each compile consumes the selected snapshot within the compiler's own cumulative limits.
 
+Packaged Draft 2020-12 resources retain their exact byte-size and SHA-256 checks.
+On Apple platforms, a native SwiftPM test runner may be `Bundle.main` while the
+schema code belongs to a nested `.xctest` bundle. After the existing app,
+framework and executable locations, lookup checks the parent of that code-owner
+`.xctest` for its sibling resource bundle. This is one fixed layout, not an
+ancestor search or URL resolver. Lookup uses the same compilation meter; a
+selected missing/corrupt payload throws an operational error without trying a
+different payload. `Scripts/qualify_distribution.py` runs a public Swift Testing
+consumer under the native backend in Debug and Release with resource overrides
+removed, then preserves the standalone intact/missing/corrupt distribution cases.
+
 Use JSONSchemaCompiler(options:).compile(document, registry:) throws -> CompiledJSONSchema and JSONSchemaValidator(options:).validate(instance, against:) throws -> JSONValidationResult. Compiled plans are checked Sendable and immutable; validators store configuration only. Plan IDs, resource IDs, keyword IDs and reference targets use bounded private indices. Avoid exposing upstream Schema, Context, OrderedDictionary or Regex types in signatures.
 
 Compilation validates dialect declaration, required vocabularies, meta-schema constraints, identifiers, anchors and resolvable resources. Support Draft 2020-12 as the only standard dialect. Custom meta-schema declarations using supported vocabularies can be resolved from the snapshot; unsupported required vocabularies fail. Unknown annotations follow dialect rules. Keep format annotation distinct from assertion; do not turn content metadata into unconditional decoding of instance text.
