@@ -48,12 +48,22 @@ extension JSONSchemaRegistry {
         #endif
         if let directory = Bundle.main.resourceURL { candidates.append(directory) }
         #if canImport(ObjectiveC)
-        if let directory = Bundle(for: JSONSchemaBundleAnchor.self).resourceURL { candidates.append(directory) }
+        let codeBundle = Bundle(for: JSONSchemaBundleAnchor.self)
+        if let directory = codeBundle.resourceURL { candidates.append(directory) }
         #endif
         candidates.append(Bundle.main.bundleURL)
         if let command = CommandLine.arguments.first {
             candidates.append(URL(fileURLWithPath: command).deletingLastPathComponent())
         }
+        #if canImport(ObjectiveC)
+        // Native SwiftPM uses a helper as Bundle.main. The code-owner .xctest
+        // bundle has sibling resources. Search that fixed layout last; existing
+        // locations and corruption pins remain authoritative.
+        let ownerBundle = codeBundle.bundleURL
+        if ownerBundle.pathExtension == "xctest" {
+            candidates.append(ownerBundle.deletingLastPathComponent())
+        }
+        #endif
         let root = try builtinResourceRoot(in: candidates, meter: &meter)
         #endif
         for (path, identifier, size, expectedHash) in files {
