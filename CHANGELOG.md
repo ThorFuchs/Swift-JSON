@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.7.1 — prepared source; publication separate
+
+- Fix packaged Draft 2020-12 resource discovery when SwiftPM's native test host
+  loads JSONSchema from an XCTest bundle. Search beside that bundle after the
+  existing locations; preserve integrity checks, finite cumulative compilation
+  budgets, cancellation and selected-resource failure behavior.
+- Add a real public native SwiftPM test-host regression in Debug and Release,
+  retaining the standalone intact, missing and corrupt resource probes.
+- Report CLI source version `1.7.1` with a regenerated deterministic source
+  identity. No public API, product, dependency or deployment change is introduced.
+- See the [patch release notes](Documentation/ReleaseNotes/1.7.1.md) for scope and
+  the source-bound qualification asset attached to the draft release for outcomes.
+
 ## 1.7.0 — prepared source; publication separate
 
 - Reconcile admitted set/matrix APIs with the reviewed public directed graph,
