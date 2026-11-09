@@ -4,7 +4,7 @@
     "JSONTests": 190,
     "JSONSchemaTests": 79,
     "JSONRegexRuntimeTests": 16,
-    "JSONStreamingTests": 30,
+    "JSONStreamingTests": 36,
     "JSONPatchTests": 16,
     "JSONIntegrationTests": 34,
     "JSONHTMLTests": 97,
@@ -16,7 +16,7 @@
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
-  "parameterized_invocations": 390,
+  "parameterized_invocations": 408,
   "composition_external_functions": 5,
   "qa_functions": {
     "JSONTests": 82,
@@ -76,7 +76,7 @@
     "JSONTests": 190,
     "JSONSchemaTests": 79,
     "JSONRegexRuntimeTests": 16,
-    "JSONStreamingTests": 30,
+    "JSONStreamingTests": 36,
     "JSONPatchTests": 16,
     "JSONIntegrationTests": 34,
     "JSONHTMLTests": 81,
@@ -92,7 +92,7 @@
     "JSONTests": 190,
     "JSONSchemaTests": 79,
     "JSONRegexRuntimeTests": 16,
-    "JSONStreamingTests": 30,
+    "JSONStreamingTests": 36,
     "JSONPatchTests": 16,
     "JSONIntegrationTests": 34,
     "JSONHTMLTests": 81,
@@ -103,7 +103,7 @@
     "JSONTransformTests": 23,
     "JSONDSLTests": 47
   },
-  "wasi_parameterized_invocations": 353,
+  "wasi_parameterized_invocations": 371,
   "portable_shared_state_functions": {
     "JSONTests": 4,
     "JSONSchemaTests": 3,

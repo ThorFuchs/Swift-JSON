@@ -10,6 +10,7 @@ Choose framing, consume through its certified boundary and await output acceptan
 | JSONValueSequence | Complete values | Configured single-document or whitespace boundary |
 | NDJSONValueSequence | Complete physical records | LF/CRLF or valid final record at EOF |
 | JSONTopLevelArraySequence | Provisional indexed elements, then completion | Outer closing array, trailing whitespace and EOF |
+| JSONLocatedTopLevelArraySequence | Provisional indexed elements with source spans, then completion | Outer closing array, trailing whitespace and EOF |
 
 Each reader uses owned ``JSONByteChunk`` values from a caller AsyncSequence.
 An iterator owns its mutable state and must be advanced serially. No detached
@@ -31,6 +32,33 @@ Consumers requiring atomic whole-document acceptance must stage provisional
 results until completion. Consumers choosing incremental acceptance own their
 persistence rules. A single-document JSONValueSequence instead waits until EOF
 before yielding its whole materialized root.
+
+## Locate root-array elements
+
+``JSONLocatedTopLevelArraySequence`` shares the root-array grammar, pull driver,
+quotas, errors and completion boundary with ``JSONTopLevelArraySequence``. Each
+``JSONLocatedTopLevelArrayEvent/element(index:value:sourceSpan:)`` also carries
+the element's zero-based half-open UTF-8 byte span in the complete stream,
+including any leading document whitespace before the array. Whitespace and
+separators between elements are excluded; a container's span covers its whole
+subtree. Offsets count encoded bytes, not characters or decoded scalars, and do
+not depend on how the source splits chunks.
+
+The reader owns no copy of the original bytes. A consumer that needs a record's
+raw slice retains an immutable source separately and applies the span to it.
+Like the element itself, a span stays provisional until
+``JSONLocatedTopLevelArrayEvent/documentCompleted(_:)``.
+
+```swift
+for try await event in JSONLocatedTopLevelArraySequence(chunks) {
+    switch event {
+    case .element(let index, let value, let span):
+        stage(index, value, bytes[Int(span.start)..<Int(span.end)])
+    case .documentCompleted:
+        commitStagedRecords()
+    }
+}
+```
 
 Core quotas apply per root-array element; maxDepth includes the outer container.
 Iterator-lifetime input, work, records and totalScannedNodes remain cumulative.
@@ -54,4 +82,5 @@ checks on return from caller I/O do not preempt arbitrary work inside that callb
 - ``JSONValueSequence``
 - ``NDJSONValueSequence``
 - ``JSONTopLevelArraySequence``
+- ``JSONLocatedTopLevelArraySequence``
 - ``JSONAsyncWriter``

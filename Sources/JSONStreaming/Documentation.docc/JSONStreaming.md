@@ -27,6 +27,12 @@ iterator-lifetime input/work/record/node counters remain cumulative. Record
 state is retired at boundaries; the scalar implementation retains no reusable
 scratch pool and holds only the currently admitted chunk and active element.
 
+``JSONLocatedTopLevelArraySequence`` drives the same reader and additionally
+reports each element's `JSONSourceSpan`: zero-based half-open UTF-8 byte
+offsets in the complete stream, excluding surrounding whitespace and separators.
+It retains no original bytes; callers that need raw slices keep their own
+immutable source and treat spans as provisional until document completion.
+
 ``JSONAsyncWriter`` awaits full acceptance of each bounded chunk before the
 next handoff. Cancellation/error stops further pulls/writes; bytes already
 accepted by a sink cannot be recalled. Application code that requires atomic
@@ -51,6 +57,8 @@ publication must stage bytes in its own sink.
 - ``NDJSONOptions``
 - ``JSONTopLevelArraySequence``
 - ``JSONTopLevelArrayEvent``
+- ``JSONLocatedTopLevelArraySequence``
+- ``JSONLocatedTopLevelArrayEvent``
 
 ### Awaited output
 - ``JSONAsyncWriter``
