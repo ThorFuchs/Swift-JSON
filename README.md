@@ -13,8 +13,9 @@ partially read document would change the meaning of your data.
 
 [Read the documentation →](https://thorfuchs.github.io/Swift-JSON/)
 
-The latest stable release is [**Swift-JSON 1.7.1**](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.1).
-This patch fixes JSONSchema resource discovery in SwiftPM's native test host.
+The latest stable release is [**Swift-JSON 1.8.0**](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.8.0).
+This minor release adds located root-array streaming: `JSONLocatedTopLevelArraySequence`
+reports each element's original UTF-8 byte span alongside its value.
 The 1.7.0 release brought source-attached Inspection snapshots, projections and
 graphs, JSONTransform and the optional JSONValueDSL/JSONSchemaDSL products together.
 Choose from twelve library products plus the `swift-json` executable. Thirteen
@@ -24,11 +25,11 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-Release 1.7.1 is pinned to
-[`983b538b15f30e73fb221f7b671a5049c03bf978`](https://github.com/ThorFuchs/Swift-JSON/commit/983b538b15f30e73fb221f7b671a5049c03bf978).
+Release 1.8.0 is pinned to
+[`66718f11514d8c555f6a6b0ecc738e5029405a55`](https://github.com/ThorFuchs/Swift-JSON/commit/66718f11514d8c555f6a6b0ecc738e5029405a55).
 Its assets include the exact source archive, compiled documentation, checksums and
-a [source-bound prepublication qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.1/Swift-JSON-1.7.1-qualification.json).
-See the [release notes](Documentation/ReleaseNotes/1.7.1.md) and
+a [source-bound prepublication qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-qualification.json).
+See the [release notes](Documentation/ReleaseNotes/1.8.0.md) and
 [forward roadmap](Documentation/ReleaseRoadmap.md) for scope and planned work.
 
 [1.6.1](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1) remains a separate
@@ -129,7 +130,7 @@ earlier stage receipts retain their original source and unfinished gates.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.7.1")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.8.0")
 ```
 
 Then add products to your target dependencies:
@@ -143,7 +144,7 @@ Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`,
 `JSONSchemaExamples`, `JSONInspection`, `JSONTransform`, `JSONValueDSL` or
 `JSONSchemaDSL` in the same way when needed. A local checkout can use
 `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases from 1.7.1; use `exact: "1.7.1"` when reproducing this release.
+releases from 1.8.0; use `exact: "1.8.0"` when reproducing this release.
 See the [core consumer](Examples/Consumer) for a complete buildable manifest.
 The website tracks `main`; release assets include compiled DocC catalogs for the
 exact released source.
@@ -464,6 +465,11 @@ producer queue. Root-array elements and syntax events remain provisional until
 completion. A document completes only after its closing syntax, trailing whitespace
 and EOF. `JSONValueSequence` waits for its framing boundary before yielding a value;
 `NDJSONValueSequence` rejects blank/malformed physical records and never skips them.
+Since 1.8.0, `JSONLocatedTopLevelArraySequence` drives the same root-array reader and
+also yields each element's `JSONSourceSpan`: zero-based half-open UTF-8 byte offsets
+in the complete stream, excluding whitespace and separators. It retains no original
+bytes; keep an immutable source to slice raw records, and treat spans as provisional
+until completion.
 
 `JSONAsyncWriter` awaits acceptance of every bounded chunk. Error or cancellation
 stops later pulls/writes; previously accepted bytes remain accepted. Stage them in a
@@ -566,14 +572,14 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONValueDSL](https://thorfuchs.github.io/Swift-JSON/JSONValueDSL/documentation/jsonvaluedsl/) and
 [JSONSchemaDSL](https://thorfuchs.github.io/Swift-JSON/JSONSchemaDSL/documentation/jsonschemadsl/).
 The site tracks `main` and publishes only after all four native CI lanes pass.
-For the exact 1.7.1 interface, use its
-[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.7.1/Sources)
-or download the [compiled DocC archive](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.1/Swift-JSON-1.7.1-DocC.tar.gz)
-and [documentation manifest](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.1/Swift-JSON-1.7.1-DocC.MANIFEST.sha256).
+For the exact 1.8.0 interface, use its
+[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.8.0/Sources)
+or download the [compiled DocC archive](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-DocC.tar.gz)
+and [documentation manifest](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-DocC.MANIFEST.sha256).
 Historical preparation receipts retain their original scope.
 
 The [documentation index](Documentation/README.md) links the behavior contracts.
-Release 1.7.1 includes thirteen catalogs: twelve library references and the
+Release 1.8.0 includes thirteen catalogs: twelve library references and the
 [shared JSONDSLCore structure reference](https://thorfuchs.github.io/Swift-JSON/JSONDSLCore/documentation/jsondslcore/).
 They provide public API references, focused guides, parameter descriptions and
 failure contracts, compiled from native Swift public symbol graphs.
@@ -609,11 +615,12 @@ The 1.1 candidate's separate matched stream comparison is **15.76% slower**; its
 retains the accepted disposition. The [additional QA wave](Documentation/Architecture/Release1.1/QA.md)
 records conformance coverage and the Base64 accounting correction.
 
-For 1.7.1, controlled Navigation performance G4 remains **HOLD**, with zero accepted
+For 1.8.0, controlled Navigation performance G4 remains **HOLD**, with zero accepted
 controlled timing samples. The original 1.7.0 Transform P4 exception and incomplete
 historical sampling remain recorded for unchanged workloads; neither is a new
 measured pass. No new speed, throughput, allocation-efficiency or RSS claim is made.
-See the [1.7.1 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.1/Swift-JSON-1.7.1-qualification.json)
+See the [1.8.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-qualification.json),
+[1.7.1 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.1/Swift-JSON-1.7.1-qualification.json)
 and [1.7.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-qualification.json).
 
 ## Contributing, support and licensing
@@ -646,7 +653,7 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Command-line tool (released in 1.5.0)
 
-`swift-json` accompanies the twelve libraries in 1.7.1. It provides strict
+`swift-json` accompanies the twelve libraries in 1.8.0. It provides strict
 formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
@@ -667,7 +674,7 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-Release 1.7.1 has twelve libraries plus the executable, with no external root
+Release 1.8.0 has twelve libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
 `swift run swift-json help`. Native qualification requires macOS/SDK27+.
@@ -689,7 +696,7 @@ See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [integration contract](Documentation/Architecture/Release1.4/Integration.md) and
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
 The frozen 1.5.0 CLI reports `1.4.0-dev` and revision `unknown`, as disclosed in
-its release notes. Version 1.7.1 reports `1.7.1` and a
+its release notes. Version 1.8.0 reports `1.8.0` and a
 deterministic source digest; see the [CLI guide](Documentation/CLI.md).
 Versioned release assets identify the exact qualified platform and source scope.
 
