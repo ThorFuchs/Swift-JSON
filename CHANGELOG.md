@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — 1.8.0-dev
+
+- Add `JSONLocatedTopLevelArraySequence` and `JSONLocatedTopLevelArrayEvent` to
+  JSONStreaming. Each root-array element also reports its `JSONSourceSpan`:
+  zero-based half-open UTF-8 byte offsets in the complete stream, excluding
+  whitespace and separators, independent of chunk boundaries. Spans stay
+  provisional until `documentCompleted`; no original bytes are retained.
+- Both root-array facades share one strict grammar and pull driver, so quotas,
+  errors, statistics and completion are identical. `JSONTopLevelArraySequence`
+  behavior and all existing products, dependencies and platforms are unchanged.
+
 ## 1.7.1 — prepared source; publication separate
 
 - Fix packaged Draft 2020-12 resource discovery when SwiftPM's native test host

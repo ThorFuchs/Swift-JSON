@@ -28,7 +28,7 @@ Large-stream tests use a generator that allocates one admitted chunk at a time a
 
 ## Root-array streaming
 
-JSONTopLevelArraySequence returns an explicit array stream event: element(index, value) and documentCompleted(summary). It consumes one root array through the shared strict token machine and materializes only the current element. It has no selector language.
+JSONTopLevelArraySequence returns an explicit array stream event: element(index, value) and documentCompleted(summary). It consumes one root array through the shared strict token machine and materializes only the current element. It has no selector language. JSONLocatedTopLevelArraySequence uses the same driver and yields element(index, value, sourceSpan) with zero-based half-open UTF-8 byte offsets in the complete stream; it retains no original bytes, and spans are provisional until documentCompleted.
 
 This serves large export files and datasets whose records are array elements rather than separate NDJSON lines. Each yielded value is a complete valid JSON subtree; the enclosing document is not certified until the closing bracket, trailing whitespace and EOF have all been checked. A malformed tail throws after any earlier yields. Early termination or cancellation never produces documentCompleted.
 

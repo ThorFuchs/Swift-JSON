@@ -19,7 +19,7 @@ ROOT_PARAMETER_CASES = {
     'strictArrayIndexGrammar(text:)': 5, 'malformedUTF8(bytes:)': 4,
     'invalidPointerEscapes(text:)': 4, 'invalidCancellationConfiguration(quantum:)': 3,
     'strictMalformedInput(text:)': 10, 'negativeZeroHasOneIdentity(text:)': 3,
-    'everyByteSplitUsesIdenticalGrammar(text:)': 4, 'malformedRootArrayNeverCompletes(text:)': 6,
+    'everyByteSplitUsesIdenticalGrammar(text:)': 4, 'malformedRootArrayNeverCompletes(text:)': 6, 'locatedAndValueOnlyFacadesAgreeOnEveryOutcome(text:)': 18,
     'streamEverySplitAgreesWithNativeParser(text:)': 3,
     'successfulAlternativesCannotSwallowRegexExhaustion(keyword:)': 3,
     'URIIdentityUsesSyntaxNormalizationWithoutUnicodeFolding(input:expected:)': 9,
