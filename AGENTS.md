@@ -1,8 +1,8 @@
 # Contributor instructions
 
-Prepared patch release source is 1.7.1; publication is a separate owner action. Its
-parent development line is 1.7.0-dev and stable 1.6.1 remains separate. This is
-not a maintenance release or the frozen 6fe8067 RC. Preserve all source-bound
+Prepared minor release source is 1.8.0; publication is a separate owner action. It
+adds located root-array streaming to the published 1.7.1 line; stable 1.6.1 remains
+separate. This is not a maintenance release or the frozen 6fe8067 RC. Preserve all source-bound
 qualification history; source integration never publishes a version.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and

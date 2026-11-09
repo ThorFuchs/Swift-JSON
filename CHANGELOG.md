@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 1.8.0-dev
+## 1.8.0 — prepared source; publication separate
 
 - Add `JSONLocatedTopLevelArraySequence` and `JSONLocatedTopLevelArrayEvent` to
   JSONStreaming. Each root-array element also reports its `JSONSourceSpan`:
@@ -10,6 +10,10 @@
 - Both root-array facades share one strict grammar and pull driver, so quotas,
   errors, statistics and completion are identical. `JSONTopLevelArraySequence`
   behavior and all existing products, dependencies and platforms are unchanged.
+- Report CLI source version `1.8.0` with a regenerated deterministic source
+  identity. The proposed bounded structural workflows move to 1.9.0 in the
+  [roadmap](Documentation/ReleaseRoadmap.md). See the
+  [minor release notes](Documentation/ReleaseNotes/1.8.0.md).
 
 ## 1.7.1 — prepared source; publication separate
 
