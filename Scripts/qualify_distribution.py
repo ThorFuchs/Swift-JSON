@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 """Public consumer plus installed-resource failures; touch only owned build output."""
-import argparse, hashlib, json, pathlib, subprocess, time
+import argparse, hashlib, json, os, pathlib, re, subprocess, time
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 def main():
     p = argparse.ArgumentParser(); p.add_argument('--output', required=True); a = p.parse_args()
     output = ROOT / a.output; output.mkdir(parents=True, exist_ok=True)
     receipt = dict(status='failed', commands=[], resource_probes=3)
+    environment = os.environ.copy()
+    for key in ('PACKAGE_RESOURCE_BUNDLE_PATH', 'PACKAGE_RESOURCE_BUNDLE_URL'):
+        environment.pop(key, None)
     def save(): (output/'distribution.json').write_text(json.dumps(receipt,indent=2)+'\n')
     save()
     def run(name, command, expected=None):
         start = time.monotonic(); log = output / (name+'.log')
         with log.open('w') as stream:
-            result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
+            result = subprocess.run(command, cwd=ROOT, env=environment, stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
         text = log.read_text()
         receipt['commands'].append(dict(command=command, exit_code=result.returncode, seconds=time.monotonic()-start,
             log=log.name, sha256=hashlib.sha256(log.read_bytes()).hexdigest()))
@@ -21,6 +24,17 @@ def main():
         assert result.returncode == 0 and (expected is None or expected in text), name
         return text.strip()
     package = 'Tools/DistributionAcceptance'
+    # The native backend loads tests from a nested .xctest image under a helper.
+    # A standalone executable does not exercise its sibling-bundle discovery.
+    for configuration in ('debug', 'release'):
+        text = run('native-test-host-' + configuration,
+            ['swift', 'test', '-c', configuration, '--build-system', 'native',
+             '--package-path', package, '--scratch-path', str(output / 'native-test-host')],
+            'DISTRIBUTION native_test_host nine_offline_resources exact_verdicts')
+        assert re.findall(r'Test run with (\d+) tests? in[^\n]*passed', text) == ['1'], 'Native host discovery changed'
+    receipt['native_test_host'] = dict(configurations=['debug', 'release'], functions=1,
+        backend='native', resource_overrides_used=False)
+    save()
     run('build', ['swift','build','-c','release','--package-path',package])
     directory = pathlib.Path(run('bin-path', ['swift','build','-c','release','--package-path',package,'--show-bin-path']))
     executable = directory / 'DistributionAcceptance'

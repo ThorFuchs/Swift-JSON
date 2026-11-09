@@ -1,8 +1,8 @@
 # Contributor instructions
 
-Development source is 1.8.0-dev, based on published 1.7.0 at
-8557badef562cf2f059e964c113d4a7f60ecbe6c. Stable 1.6.1 remains a separate
-maintenance line. Preserve every source-bound qualification record. No 1.8
+Development source is 1.9.0-dev, based on published 1.8.0 at
+66718f11514d8c555f6a6b0ecc738e5029405a55. Stable 1.6.1 remains a separate
+maintenance line. Preserve every source-bound qualification record. No 1.9
 merge/tag/publication follows from implementation or passing tests.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 1.8.0-dev
+## Unreleased — 1.9.0-dev
 
 - Add exact versioned Transform source definitions, a bounded native codec and
   successful compilation reports through the existing compiler.
@@ -24,7 +24,35 @@
   explicit absent/null/link states and original construction error precedence.
 - Add external SwiftPM examples, ordinary compiler refusals, boundary/lifecycle/
   concurrency tests and exact scoped CI discovery. Qualification remains source-bound;
-  no 1.8 release or performance/platform pass is implied.
+  no 1.9 release or performance/platform pass is implied.
+
+## 1.8.0 — prepared source; publication separate
+
+- Add `JSONLocatedTopLevelArraySequence` and `JSONLocatedTopLevelArrayEvent` to
+  JSONStreaming. Each root-array element also reports its `JSONSourceSpan`:
+  zero-based half-open UTF-8 byte offsets in the complete stream, excluding
+  whitespace and separators, independent of chunk boundaries. Spans stay
+  provisional until `documentCompleted`; no original bytes are retained.
+- Both root-array facades share one strict grammar and pull driver, so quotas,
+  errors, statistics and completion are identical. `JSONTopLevelArraySequence`
+  behavior and all existing products, dependencies and platforms are unchanged.
+- Report CLI source version `1.8.0` with a regenerated deterministic source
+  identity. The proposed bounded structural workflows move to 1.9.0 in the
+  [roadmap](Documentation/ReleaseRoadmap.md). See the
+  [minor release notes](Documentation/ReleaseNotes/1.8.0.md).
+
+## 1.7.1 — prepared source; publication separate
+
+- Fix packaged Draft 2020-12 resource discovery when SwiftPM's native test host
+  loads JSONSchema from an XCTest bundle. Search beside that bundle after the
+  existing locations; preserve integrity checks, finite cumulative compilation
+  budgets, cancellation and selected-resource failure behavior.
+- Add a real public native SwiftPM test-host regression in Debug and Release,
+  retaining the standalone intact, missing and corrupt resource probes.
+- Report CLI source version `1.7.1` with a regenerated deterministic source
+  identity. No public API, product, dependency or deployment change is introduced.
+- See the [patch release notes](Documentation/ReleaseNotes/1.7.1.md) for scope and
+  the source-bound qualification asset attached to the draft release for outcomes.
 
 ## Publication note — 28 October 2026
 

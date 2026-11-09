@@ -1,9 +1,9 @@
-# Current source lines — 28 October 2026
+# Current source lines — 9 November 2026
 
-Latest published stable is [1.7.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.7.0),
-commit `8557badef562cf2f059e964c113d4a7f60ecbe6c`, tree
-`c914b8914c9130a3a07a3ed82fb41dde33c37402`: twelve libraries plus CLI,
-thirteen catalogs, 1,500 authored declarations. The isolated 1.8.0-dev successor
+Latest published stable is [1.8.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.8.0),
+commit `66718f11514d8c555f6a6b0ecc738e5029405a55`, tree
+`8422e5eccc9c16d4b9de091be0aac8b61eaaeb0a`: twelve libraries plus CLI,
+thirteen catalogs. The isolated 1.9.0-dev successor
 keeps those products and adds bounded Inspection batches/store operations.
 See [its separate qualification](Release1.8.md). 1.6.1 stays the eight-library
 maintenance line. The dated preparation inventories below remain history.

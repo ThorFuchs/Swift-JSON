@@ -1,6 +1,6 @@
-# 1.8 additive API candidate
+# 1.9 additive API candidate
 
-The latest released source is 1.7.0 (8557bade); this feature source is 1.8.0-dev.
+The latest released source is 1.8.0 (66718f11); this feature source is 1.9.0-dev.
 No product or dependency is added. JSONInspection now includes
 `JSONInspectionBatch`, snapshot ordinal batches, public `JSONStoreBuilder`/
 `JSONConfiguredStore` and typed profile/metadata/error declarations, exact-ID
@@ -49,7 +49,7 @@ and executed by public consumers.
 | JSONBridges | BinaryInteger.jsonNumber, FixedWidthInteger/Double/Decimal.init(jsonNumber:), Double.jsonNumberFromRoundTripText | Optional one-delegate numeric conversions; explicit fidelity, no new authority |
 | JSONSchema | JSONSchemaDocument, JSONSchemaRegistry, JSONSchemaCompiler, CompiledJSONSchema, JSONSchemaValidator | Offline immutable plan, invocation-owned evaluation and private native regex |
 | JSONSchemaExamples | JSONSchemaExampleGenerator, JSONSchemaExampleResult | Conservative deterministic witnesses certified by the existing native validator; separate finite preparation and cumulative generation |
-| JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
+| JSONStreaming | JSONEventSequence, JSONValueSequence, NDJSONValueSequence, JSONTopLevelArraySequence, JSONLocatedTopLevelArraySequence, JSONAsyncWriter | Exclusive pull state, shared codec, strict framing and awaited handoffs |
 | JSONPatch | JSONPatch, JSONPatchOperation, JSONPatchResult, JSONMergePatch | Transaction staging, exact comparison and iterative editing |
 | swift-json | format, validate, pointer, patch, query, stream, schema, render | Bounded process/file adapters; the public Transform facade and CLI use the same private query compiler/VM |
 | JSONHTML | JSONHTMLRenderer, JSONHTMLRenderingOptions, JSONHTMLLimits, JSONHTMLRenderReport, JSONHTMLAnnotation, JSONExportDocument, JSONExportOptions, JSONExportReport | Structured forms/cards and bounded native previews, exact HTML, native Apple transfer, immutable prepared JSON/text/Markdown/static HTML/opt-in styled RTF and cumulative budgets |

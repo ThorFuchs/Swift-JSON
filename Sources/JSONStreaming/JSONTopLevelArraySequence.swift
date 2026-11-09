@@ -40,13 +40,23 @@ public struct JSONTopLevelArraySequence<Source: AsyncSequence>: AsyncSequence wh
     }
 }
 extension JSONTopLevelArraySequence: Sendable where Source: Sendable {}
-private final class JSONArrayStreamDriver<Upstream: AsyncIteratorProtocol> where Upstream.Element == JSONByteChunk {
+final class JSONArrayStreamDriver<Upstream: AsyncIteratorProtocol> where Upstream.Element == JSONByteChunk {
     let input: JSONStreamInput<Upstream>
     var machine = JSONTokenMachine(topLevelArrayStreaming: true)
     var assembler = JSONValueAssembler()
     var began = false, closed = false, terminal = false, resetOnNext = false
+    private var elementStart: UInt64?
     init(upstream: Upstream, limits: JSONLimits) throws { input = try JSONStreamInput(upstream: upstream, limits: limits) }
     func next() async throws -> JSONTopLevelArrayEvent? {
+        guard let event = try await nextLocated() else { return nil }
+        switch event {
+        case .element(let index, let value, _): return .element(index: index, value: value)
+        case .documentCompleted(let summary): return .documentCompleted(summary)
+        }
+    }
+    // Both facades share this one grammar and pull driver. Spans are absolute
+    // token offsets from the machine, never counts of delivered chunks or text.
+    func nextLocated() async throws -> JSONLocatedTopLevelArrayEvent? {
         guard !terminal else { return nil }
         do {
             try input.meter.checkpoint(); try input.meter.require(.pendingValues, 1)
@@ -72,12 +82,14 @@ private final class JSONArrayStreamDriver<Upstream: AsyncIteratorProtocol> where
                     guard case .endArray = event.kind else { throw JSONFailure(.syntax, code: .invalidSyntax) }
                     closed = true; continue
                 }
+                if elementStart == nil { elementStart = event.start }
                 if let value = try assembler.consume(event, meter: &input.meter) {
                     let index = input.meter.used(.totalRecords)
                     try input.meter.charge(.totalRecords); assembler = JSONValueAssembler(); resetOnNext = true
-                    return .element(index: index, value: value)
+                    let span = JSONSourceSpan(start: elementStart!, end: event.end); elementStart = nil
+                    return .element(index: index, value: value, sourceSpan: span)
                 }
             }
-        } catch { terminal = true; input.failed = true; assembler = JSONValueAssembler(); throw error }
+        } catch { terminal = true; input.failed = true; assembler = JSONValueAssembler(); elementStart = nil; throw error }
     }
 }
