@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — 1.9.0-dev
+
+- Composition accounting: apply `inputBytes` per document while keeping reported
+  input cumulative, and charge completion's own report (424 logical bytes, 50
+  work units) on the original ledger. Add the checked
+  `reserveExternalLogicalBytes(_:count:overhead:)` overload; the two-argument form
+  is unchanged. Salvaged from the historical composition branch (PR #63) without
+  its performance toolkit.
+
 ## 1.8.0 — prepared source; publication separate
 
 - Add `JSONLocatedTopLevelArraySequence` and `JSONLocatedTopLevelArrayEvent` to
