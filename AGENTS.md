@@ -50,9 +50,10 @@ Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
 NAV10 set/matrix and NAV11 directed-simple-graph APIs are development capabilities
 inside JSONInspection; no graph product, mutation or serializer is introduced.
-The 1.8 candidate promotes the checked immutable configured store inside
+The 1.9 candidate promotes the checked immutable configured store inside
 JSONInspection and adds ordered path/snapshot/store value batches, exact-ID lookup
-and bounded complete BFS follow. Preserve the original construction phases and
+and bounded complete BFS follow. The maintainer admitted this public read-only
+store/follow API on 2026-11-10; merge and release remain separate decisions. Preserve the original construction phases and
 one invocation-owned ledger per operation. Positions remain unforgeable and
 source-instance-local. No persistence or mutable store is exposed. See
 Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md.

@@ -154,6 +154,11 @@ external private-read-scope refusal; the other original seven negatives and all
 65 original vectors remain. Store/position forging is still forbidden. This is
 an intentional additive promotion; it adds no product or runtime dependency.
 
+Maintainer admission: on 2026-11-10 the maintainer approved making this read-only
+configured store/follow surface public API, superseding the earlier package-only
+policy. This admits the API shape for the 1.9 line; it is not merge or release
+approval, and the remaining source-bound gates still apply.
+
 Fixed metadata access and supplied callbacks are trusted caller work. Each later
 query is independent of construction and other queries. Logical retained bytes
 are conservative owned reservations, not process memory. No persistence, mutable

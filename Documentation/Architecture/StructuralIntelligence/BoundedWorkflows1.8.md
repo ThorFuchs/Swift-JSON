@@ -4,6 +4,8 @@ Implementation contract for the maintainer-authorized 1.8 feature branch from
 published1.7.0 (8557bade). This is an additive implementation, not merge or release
 approval. Original NAV12 construction fixtures, failures and qualification retain
 their source-bound historical meaning; public promotion adds its own evidence.
+The maintainer admitted the public read-only store/follow API on 2026-11-10; the
+candidate now targets 1.9.0 after the published 1.8.0 located-streaming release.
 
 ## Batch reads
 
