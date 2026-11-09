@@ -206,6 +206,35 @@ package struct JSONWorkMeter: ~Copyable {
         guard bytes <= used(.annotationBytes) else { throw JSONFailure(.configuration, code: .invalidLimits) }
         counters[JSONResourceMetric.annotationBytes.index] -= bytes
     }
+    /// Input is a per-document capacity. Retire its charged count into the same
+    /// cumulative report; never reset work, retention, accepted history or health.
+    package mutating func beginCompositionDocument() throws {
+        try checkpoint()
+        try retire(.inputBytes)
+    }
+    /// Composition-only completion owns a separate 49-slot report through handoff.
+    /// Existing report entry points retain their original accounting semantics.
+    package mutating func compositionStatistics() throws -> JSONOperationStatistics {
+        // Version 1 composition receipt: 32 logical header bytes + 49 UInt64 slots.
+        try retain(424)
+        var report: [UInt64] = []
+        report.reserveCapacity(JSONResourceMetric.allCases.count)
+        for metric in JSONResourceMetric.allCases {
+            try work()
+            let (total, overflow) = counters[metric.index].addingReportingOverflow(retired[metric.index])
+            guard !overflow else { throw violation(metric, nil, overflow: true) }
+            report.append(total)
+        }
+        // The aggregate-work slot may precede the last copied slot. Charge and
+        // publish the final count only after every copied counter is accounted.
+        try work()
+        let (work, overflow) = counters[JSONResourceMetric.workUnits.index]
+            .addingReportingOverflow(retired[JSONResourceMetric.workUnits.index])
+        guard !overflow else { throw violation(.workUnits, nil, overflow: true) }
+        report[JSONResourceMetric.workUnits.index] = work
+        try checkpoint()
+        return .init(domain: domain, counters: report, peak: peak)
+    }
     package func statistics() -> JSONOperationStatistics {
         var report = counters
         for metric in JSONResourceMetric.allCases { report[metric.index] += retired[metric.index] }

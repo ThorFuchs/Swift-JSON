@@ -160,6 +160,16 @@ JSONOperationReport initializer permits pairing statistics with another result;
 its type alone does not establish provenance or adapter completeness. See the
 [composition guide](../../Sources/JSON/Documentation.docc/Composition.md).
 
+Input capacity is per document: `parseDocument` checkpoints and retires the
+preceding input count into the same cumulative report before the next document.
+Work, retention, accepted-capacity history and first-failure identity never
+restart. Completion admits an additional 424 logical bytes (32 header bytes plus
+49 eight-byte counter slots) and 50 work units (49 counter copies and one final
+work update) while every result reservation remains live. Overflow, quota failure
+and cancellation prevent a completed report even when caught by the adapter.
+`reserveExternalLogicalBytes(_:count:overhead:)` checks multiplication, then
+addition, before growth; the original two-argument form is unchanged.
+
 ## Optional authored DSL boundary (P1.2)
 
 JSONValueDSL and JSONSchemaDSL explicitly accept trusted authored staging. Their

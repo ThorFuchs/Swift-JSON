@@ -67,6 +67,13 @@ reject missing tests and misclassified resource failures. The reconciled 597 nat
 Linux root functions, 325 parameter invocations, restored identities and 49 public
 metric probes retain their existing contracts.
 
+Completion additionally owns a 424-byte counter report and charges 50 work units.
+Threshold assertions include that independent buffer; source input capacity is per
+document while reported bytes accumulate across all documents. Two root functions
+(`jcompOwnedCancellationOccursInsideNativeWork`,
+`jcompOriginalHealthAndIdentitySurvivePackageSubstitution`) carry the owned
+cancellation and substitution proofs from the historical composition branch (PR #63).
+
 The tests replay exact and one-below work/retention thresholds, compare both
 strategies on identical input, preserve exact values and scalar keys, and catch
 late missing-target/cancellation failures before attempting normal completion.
