@@ -379,4 +379,30 @@ extension JSONTransformProgram {
             scope.closePreservingFailure(); throw cause
         }
     }
+
+    /// Runs indexed-selection convention V1 to EOF and returns the selected ordinals.
+    ///
+    /// This is the common case of ``withSelection(population:bindings:limits:source:_:)``:
+    /// it pulls every position until nil, keeps each one (and its accounting lease)
+    /// alive until completion, then returns their ordinals in emitted order, including
+    /// repeats. Completion statistics are therefore identical to collecting the
+    /// positions yourself. Use `withSelection` when you need to stop early or act on
+    /// each position as it arrives.
+    /// - Parameters:
+    ///   - population: Explicit original order, including duplicate-valued members.
+    ///   - bindings: Additional declared bindings; values is reserved and cannot be supplied here.
+    ///   - limits: One finite ledger for admission, projection, evaluation and outputs.
+    ///   - source: Optional explicit input/inputs provider; nil means no extra inputs.
+    /// - Returns: Selected zero-based population indices and the EOF/accounting witness.
+    /// - Throws: Selection refusals, typed operational failures or cancellation.
+    public func selectIndices(in population: [JSON], bindings: [String: JSON] = [:],
+                              limits: JSONTransformSelectionLimits = .init(),
+                              source: (() throws -> JSON?)? = nil) throws -> JSONTransformSelectionReport<[UInt64]> {
+        let report = try withSelection(population: population, bindings: bindings, limits: limits, source: source) { scope in
+            var positions: [JSONTransformSelectionPosition] = []
+            while let position = try scope.next() { positions.append(position) }
+            return positions
+        }
+        return .init(result: report.result.map(\.ordinal), completion: report.completion)
+    }
 }
