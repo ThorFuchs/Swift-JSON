@@ -26,7 +26,7 @@ private func storeSimpleProfile(name: JSONKey = "users", id: JSONKey = "uuid",
                                 fields: [JSONStoreReferenceField] = []) -> JSONStoreProfile {
     .init(version: .v1, collectionsAt: path, collections: [
         .init(name: name, recordsAt: [.key(name)], idKey: id, referenceFields: fields)],
-        references: fields.isEmpty ? .disabled : .strict(marker: .v1, validateTargets: true))
+        references: fields.isEmpty ? .disabled : .strict(marker: .v1))
 }
 private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSONDocument {
     var rows: [JSON] = []
@@ -82,7 +82,7 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
 @Test func storeR02PreparationPrecedesOneFullSourceAdmission() throws {
     var noNodes = JSONLimits.balanced; noNodes[.nodes] = 0
     let duplicate = try storeRefusal { _ = try storeBuild("D046", limits: noNodes) }
-    #expect(duplicate.phase == 1 && duplicate.code == .duplicateCollectionDeclaration)
+    #expect(duplicate.phase.rawValue == 1 && duplicate.code == .duplicateCollectionDeclaration)
     let sourceError = try storeCoreRefusal { _ = try storeBuild(limits: noNodes) }
     #expect(sourceError.resource?.metric == .nodes)
     let fixture = try storeCase("D002"), document = try storeInput(fixture)
@@ -119,9 +119,9 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
         _ = try storeBuild(id,caps:caps)
         caps[keyPath:key] = needed - 1
         let failure = try storeRefusal { _ = try storeBuild(id,caps:caps) }
-        #expect(failure.code == .capacityExceeded && failure.capacity == name)
+        #expect(failure.code == .capacityExceeded && failure.capacity?.rawValue == name)
         caps[keyPath:key] = 0
-        #expect(try storeRefusal { _ = try storeBuild(id,caps:caps) }.capacity == name)
+        #expect(try storeRefusal { _ = try storeBuild(id,caps:caps) }.capacity?.rawValue == name)
         caps[keyPath:key] = -1
         #expect(try storeCoreRefusal { _ = try storeBuild(id,caps:caps) }.code == .invalidLimits)
         caps[keyPath:key] = Int.max
@@ -138,7 +138,7 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     var aliasCaps = JSONStoreCaps(); aliasCaps.aliasBytes = 7
     _ = try storeBuild("D038",caps:aliasCaps)
     aliasCaps.aliasBytes = 6
-    #expect(try storeRefusal { _ = try storeBuild("D038",caps:aliasCaps) }.capacity == "aliasBytes")
+    #expect(try storeRefusal { _ = try storeBuild("D038",caps:aliasCaps) }.capacity?.rawValue == "aliasBytes")
     #expect(strict.result.identityAliasBytes == 1) // staged marker text was released
     for operation in [0,1] {
         #expect(try storeRefusal {
@@ -146,17 +146,17 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
             else { _ = try JSONStoreAccounting.product(UInt64.max,2) }
         }.code == .counterOverflow)
     }
-    #expect(try JSONStoreAccounting.checkedCount(UInt64(Int.max), phase: 4) == Int.max)
-    #expect(try storeRefusal { _ = try JSONStoreAccounting.checkedCount(UInt64.max, phase: 4) }.code == .counterOverflow)
+    #expect(try JSONStoreAccounting.checkedCount(UInt64(Int.max), phase: .collections) == Int.max)
+    #expect(try storeRefusal { _ = try JSONStoreAccounting.checkedCount(UInt64.max, phase: .collections) }.code == .counterOverflow)
     var capped = JSONStoreCaps(); capped.referenceSlots = 0
-    #expect(try storeRefusal { _ = try storeBuild("D024",caps:capped) }.capacity == "referenceSlots")
+    #expect(try storeRefusal { _ = try storeBuild("D024",caps:capped) }.capacity?.rawValue == "referenceSlots")
     capped.referenceSlots = 1
     #expect(try storeRefusal { _ = try storeBuild("D024",caps:capped) }.code == .referenceDanglingID)
     let short = try JSONParser().parseDocument(Data(#"{"collections":{"x":[{"id":"éx"}]}}"#.utf8))
     capped = .init(); capped.identityBytes = 3
     _ = try JSONStoreBuilder(document: short,profile:storeSimpleProfile(name:"x",id:"id"),caps:capped).build()
     capped.identityBytes = 2
-    #expect(try storeRefusal { _ = try JSONStoreBuilder(document:short,profile:storeSimpleProfile(name:"x",id:"id"),caps:capped).build() }.capacity == "identityBytes")
+    #expect(try storeRefusal { _ = try JSONStoreBuilder(document:short,profile:storeSimpleProfile(name:"x",id:"id"),caps:capped).build() }.capacity?.rawValue == "identityBytes")
     print("STORE_RUNTIME R03 passed")
 }
 
@@ -169,7 +169,7 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     if case .null = states.references[1].state {} else { Issue.record("Null state lost") }
     if case .link = states.references[2].state {} else { Issue.record("Link state lost") }
     var caps = JSONStoreCaps(); caps.referenceSlots = 2
-    #expect(try storeRefusal { _ = try storeBuild("D063",caps:caps) }.capacity == "referenceSlots")
+    #expect(try storeRefusal { _ = try storeBuild("D063",caps:caps) }.capacity?.rawValue == "referenceSlots")
     caps.referenceSlots = 3; _ = try storeBuild("D063",caps:caps)
     for size in [0,1,16,1024] {
         let document = try storeRows(size)
@@ -320,7 +320,8 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     #expect(try first.record(collection:0,row:0).id == second.record(collection:0,row:1).id)
     #expect(try first.record(collection:0,row:0).path != second.record(collection:0,row:1).path)
     let exact = try storeBuild("D065").result
-    #expect(try JSONComparison.equals(.string(exact.record(collection:0,row:0).id),.string(exact.record(collection:0,row:1).id)) == false)
+    #expect(try JSONComparison.equals(.string(storeStringID(exact.record(collection:0,row:0).id)),.string(storeStringID(exact.record(collection:0,row:1).id))) == false)
+    #expect(try exact.record(collection:0,row:0).id != exact.record(collection:0,row:1).id)
     let linkedProfile = storeSimpleProfile(fields:[.init(key:"friend",presence:.required,nullable:false)])
     let permutations = [
         #"{"collections":{"users":[{"uuid":"u","ordinary":17,"friend":{"collection":"users","id":"u"}}]}}"#,
@@ -356,7 +357,7 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     let empty = try JSONStoreBuilder(document:storeRows(0),profile:storeSimpleProfile(),caps:zero).build()
     #expect(empty.result.recordCount == 0)
     _ = try storeRefusal { _ = try JSONStoreBuilder(document:storeRows(1),profile:storeSimpleProfile(),caps:zero).build() }
-    #expect(try storeRefusal { _ = try storeBuild("D055") }.phase == 6)
+    #expect(try storeRefusal { _ = try storeBuild("D055") }.phase.rawValue == 6)
     let valid = JSON.object(try JSONObject(members:[.init("uuid",value:.string("first"))]))
     for bad in [JSON.object(try JSONObject(members:[])),
                 .object(try JSONObject(members:[.init("uuid",value:.null)])),
@@ -364,7 +365,7 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
         let document = JSONDocument(root:.object(try JSONObject(members:[.init("collections",value:.object(
             try JSONObject(members:[.init("users",value:.array([valid,bad]))])))])))
         let error = try storeRefusal { _ = try JSONStoreBuilder(document:document,profile:storeSimpleProfile()).build() }
-        #expect(error.phase == 5 && error.path == [.key("collections"),.key("users"),.index(1),.key("uuid")])
+        #expect(error.phase.rawValue == 5 && error.path == [.key("collections"),.key("users"),.index(1),.key("uuid")])
     }
     print("STORE_RUNTIME R09 passed")
 }
@@ -379,4 +380,10 @@ private func storeRows(_ count: Int, nullReference: Bool = false) throws -> JSON
     #expect(raw.numberValue?.originalLexeme == "1e0")
     #expect(try JSONPointer(parsing:"/collections/users/0/n").resolve(in:result.document.root).numberValue?.integer(as:UInt64.self) == 9_007_199_254_740_993)
     print("STORE_RUNTIME R10 passed")
+}
+
+/// The pinned NAV12 vectors use string IDs only; extract the exact text for core comparisons.
+func storeStringID(_ id: JSONStoreRecordID) -> String {
+    guard case .string(let text) = id else { Issue.record("Expected a string ID, got \(id)"); return "" }
+    return text
 }

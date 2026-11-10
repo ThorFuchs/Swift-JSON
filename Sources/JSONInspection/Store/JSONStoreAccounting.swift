@@ -8,24 +8,24 @@ internal struct JSONStoreAccounting {
     var overlay: UInt64 = 0
     var profileText: UInt64 = 0
     var aliases: UInt64 = 0
-    var phase = 1
+    var phase: JSONStoreFailurePhase = .profile
     static func sum(_ lhs: UInt64, _ rhs: UInt64) throws -> UInt64 {
         let (next, overflow) = lhs.addingReportingOverflow(rhs)
-        guard !overflow else { throw JSONStoreFailure(.counterOverflow, phase: 0, domain: .operation) }
+        guard !overflow else { throw JSONStoreFailure(.counterOverflow, phase: .metadata, domain: .operation) }
         return next
     }
     static func product(_ lhs: UInt64, _ rhs: UInt64) throws -> UInt64 {
         let (next, overflow) = lhs.multipliedReportingOverflow(by: rhs)
-        guard !overflow else { throw JSONStoreFailure(.counterOverflow, phase: 0, domain: .operation) }
+        guard !overflow else { throw JSONStoreFailure(.counterOverflow, phase: .metadata, domain: .operation) }
         return next
     }
-    static func checkedCount(_ value: UInt64, phase: Int) throws -> Int {
+    static func checkedCount(_ value: UInt64, phase: JSONStoreFailurePhase) throws -> Int {
         guard let result = Int(exactly: value) else {
             throw JSONStoreFailure(.counterOverflow, phase: phase, domain: .operation)
         }
         return result
     }
-    static func check(_ count: Int, _ limit: Int, name: String, phase: Int,
+    static func check(_ count: Int, _ limit: Int, name: JSONStoreCapacity, phase: JSONStoreFailurePhase,
                       path: [JSONLocationComponent] = []) throws {
         guard count <= limit else {
             throw JSONStoreFailure(.capacityExceeded, phase: phase, domain: .operation,
@@ -36,7 +36,7 @@ internal struct JSONStoreAccounting {
         let next = try Self.sum(overlay, bytes)
         guard next <= UInt64(caps.overlayBytes) else {
             throw JSONStoreFailure(.capacityExceeded, phase: phase, domain: .operation,
-                                   capacity: "overlayBytes", limit: caps.overlayBytes)
+                                   capacity: .overlayBytes, limit: caps.overlayBytes)
         }
         overlay = next
     }
@@ -54,8 +54,8 @@ internal struct JSONStoreAccounting {
             let next = try Self.sum(profileText, 1)
             guard next <= UInt64(caps.profileTextBytes),
                   !identity || size <= UInt64(caps.identityBytes) else {
-                throw JSONStoreFailure(.capacityExceeded, phase: 1, domain: .operation,
-                    capacity: identity && size > UInt64(caps.identityBytes) ? "identityBytes" : "profileTextBytes",
+                throw JSONStoreFailure(.capacityExceeded, phase: .profile, domain: .operation,
+                    capacity: identity && size > UInt64(caps.identityBytes) ? .identityBytes : .profileTextBytes,
                     limit: identity && size > UInt64(caps.identityBytes) ? caps.identityBytes : caps.profileTextBytes)
             }
             profileText = next
@@ -63,7 +63,7 @@ internal struct JSONStoreAccounting {
         // Native admission owns the text reservation. Track, do not reserve twice.
         try track(size); try context.admitText(text, key: key)
     }
-    mutating func alias(_ text: String, phase: Int, path: [JSONLocationComponent],
+    mutating func alias(_ text: String, phase: JSONStoreFailurePhase, path: [JSONLocationComponent],
                         context: inout JSONTraversalContext) throws -> UInt64 {
         try reserve(32, context: &context)
         var size: UInt64 = 0
@@ -72,7 +72,7 @@ internal struct JSONStoreAccounting {
             let next = try Self.sum(aliases, 1)
             guard size <= UInt64(caps.identityBytes), next <= UInt64(caps.aliasBytes) else {
                 throw JSONStoreFailure(.capacityExceeded, phase: phase, domain: .operation, path: path,
-                    capacity: size > UInt64(caps.identityBytes) ? "identityBytes" : "aliasBytes",
+                    capacity: size > UInt64(caps.identityBytes) ? .identityBytes : .aliasBytes,
                     limit: size > UInt64(caps.identityBytes) ? caps.identityBytes : caps.aliasBytes)
             }
             aliases = next; try reserve(1, context: &context)
@@ -92,7 +92,7 @@ internal struct JSONStoreAccounting {
         let count = try Self.sum(UInt64(prefix.count), 1)
         guard count <= UInt64(caps.pathComponents) else {
             throw JSONStoreFailure(.capacityExceeded, phase: phase, domain: .operation,
-                                   capacity: "pathComponents", limit: caps.pathComponents)
+                                   capacity: .pathComponents, limit: caps.pathComponents)
         }
         var bytes = try Self.product(count, JSONLogicalWeights.indexSlot)
         for part in prefix {

@@ -7,7 +7,10 @@ Read ordered exact values, or follow explicitly declared links in an immutable s
 Use ``JSONInspectionBatch`` for typed path requests, or
 ``JSONStructuralSnapshot/values(for:maximumRequests:limits:)`` when you already
 have snapshot-local ordinals. Repeated requests remain repeated outputs. Missing
-selections throw; explicit JSON null is a value. Empty batches still admit the
+selections throw; explicit JSON null is a value. When missing paths are expected,
+``JSONInspectionBatch/optionalValues(at:maximumRequests:)`` returns `nil` for an
+absent member or an index past the end and still throws for every other problem,
+such as stepping into the wrong kind of container. Empty batches still admit the
 whole captured source, including its source map. Each batch has one cumulative
 native admission/work/retention ledger, rather than one independent read per item.
 
@@ -21,8 +24,7 @@ are finite accounting policy, not a process RSS or caller-instruction guarantee.
 ``JSONStoreBuilder`` promotes a source to ``JSONConfiguredStore`` only after the
 existing complete eight-phase checked construction. Names, ID fields, paths and
 reference fields are explicit. There is no id/_id inference, Unicode normalization,
-database, file loader or network resolution. This API is a candidate for 1.8;
-released 1.7 does not contain it.
+database, file loader or network resolution. These APIs are available since 1.9.0.
 
 ```swift
 import Foundation
@@ -34,7 +36,7 @@ func boundedStoreExample() throws -> [JSON] {
     let profile = JSONStoreProfile(version: .v1, collectionsAt: [], collections: [
         .init(name: "users", recordsAt: [.key("users")], idKey: "id", referenceFields: [
             .init(key: "friend", presence: .required, nullable: true)])
-    ], references: .strict(marker: .v1, validateTargets: true))
+    ], references: .strict(marker: .v1))
     let store = try JSONStoreBuilder(document: document, profile: profile).build().result
     guard let first = try store.lookup(collection: "users", id: "a").result else { return [] }
     let closure = try store.follow(from: first)
@@ -47,8 +49,29 @@ func boundedStoreExample() throws -> [JSON] {
 
 The runnable [public consumer](https://github.com/ThorFuchs/Swift-JSON/tree/main/Examples/BoundedWorkflows)
 exercises exact scalar IDs, missing versus null, repeated selections, cycles,
-owner refusals and cumulative reports. Use this feature branch for the 1.8 API;
-a compatible dependency on 1.7 cannot supply it.
+owner refusals and cumulative reports. Depend on 1.9.0 or later for these APIs.
+
+## Choose an ID kind
+
+Each collection declares its ``JSONStoreIDKind``. The default, ``JSONStoreIDKind/string``,
+compares IDs by exact decoded Unicode scalars, so `"é"` and `"e\u{301}"` stay distinct.
+``JSONStoreIDKind/integer`` accepts JSON numbers with no fractional part and compares
+them by exact mathematical value: `7`, `7.0` and `7e0` are the same ID, so the second
+of them is refused as a duplicate. Values beyond Double precision, such as
+`9007199254740993`, stay exact, and a large exponent never expands into stored digits.
+
+IDs never convert between kinds. A string `"7"` in an integer-ID collection is a
+``JSONStoreFailureCode/recordIDWrongKind`` refusal, and a marker whose `id` is `"7"`
+does not reach the integer record `7`; it is ``JSONStoreFailureCode/referenceDanglingID``.
+Look up a record with a typed ``JSONStoreRecordID``; string and integer literals both work:
+
+```swift
+let order = try store.lookup(collection: "orders", id: 42).result
+let user = try store.lookup(collection: "users", id: "a").result
+```
+
+Use ``JSONConfiguredStore/collectionIndex(named:)`` to turn an exact collection name
+into the physical position used by ``JSONConfiguredStore/record(collection:row:)``.
 
 ## Understand ownership and errors
 
@@ -57,7 +80,9 @@ or reused against another build, even if that build has byte-identical input.
 Fixed collection/record/reference metadata access is ordinary trusted caller work;
 scanning lookup and value/follow operations have explicit reports and finite quotas.
 A missing ID in a known collection returns nil. An unknown collection throws
-``JSONStoreFailure`` with ``JSONStoreFailureCode/unknownCollection``. Declared
+``JSONStoreFailure`` with ``JSONStoreFailureCode/unknownCollection``. Every refusal
+names its ``JSONStoreFailurePhase``, and a capacity refusal names the exact
+``JSONStoreCapacity`` it exceeded; failures are `Equatable`. Declared
 reference slots distinguish absent, null and validated links. Marker-shaped values
 outside declared fields remain ordinary JSON.
 

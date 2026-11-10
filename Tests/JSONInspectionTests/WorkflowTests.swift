@@ -24,7 +24,7 @@ private func wfStoreFixture() throws -> JSONConfiguredStore {
         .init(name: "items", recordsAt: [.key("items")], idKey: "id", referenceFields: [.init(key: "owner", presence: .required, nullable: false)]),
         .init(name: "users", recordsAt: [.key("users")], idKey: "id", referenceFields: [
             .init(key: "friend", presence: .required, nullable: false), .init(key: "optional", presence: .optional, nullable: true)])],
-        references: .strict(marker: .v1, validateTargets: true))
+        references: .strict(marker: .v1))
     return try JSONStoreBuilder(document: document, profile: profile).build().result
 }
 private func wfStar() throws -> JSONConfiguredStore {
@@ -32,7 +32,7 @@ private func wfStar() throws -> JSONConfiguredStore {
     return try JSONStoreBuilder(document: document, profile: .init(version: .v1, collectionsAt: [], collections: [
         .init(name: "u", recordsAt: [.key("u")], idKey: "id", referenceFields: [
             .init(key: "left", presence: .optional, nullable: true), .init(key: "right", presence: .optional, nullable: true)])],
-        references: .strict(marker: .v1, validateTargets: true))).build().result
+        references: .strict(marker: .v1))).build().result
 }
 
 @Test func workflowB01PathsPreserveOrderRepeatsNullAndExactScalars() throws {
@@ -135,7 +135,7 @@ private func wfStar() throws -> JSONConfiguredStore {
     #expect(composed.row == 0 && decomposed.row == 1 && composed != decomposed)
     #expect(try store.lookup(collection: "users", id: "absent").result == nil)
     let error = try wfStore { _ = try store.lookup(collection: "unknown", id: "é") }
-    #expect(error.code == .unknownCollection && error.domain == .operation && error.phase == 9)
+    #expect(error.code == .unknownCollection && error.domain == .operation && error.phase.rawValue == 9)
 }
 @Test func workflowS03OwnerTokensCannotRebindAnotherInstance() throws {
     let store = try wfStoreFixture(), other = try JSONStoreBuilder(document: store.document, profile: store.profile).build().result
@@ -178,7 +178,7 @@ private func wfStar() throws -> JSONConfiguredStore {
         #expect(try store.follow(from: start, bounds: bounds).result.count == 3)
         bounds[keyPath: key] = needed - 1
         let failure = try wfStore { _ = try store.follow(from: start, bounds: bounds) }
-        #expect(failure.code == .capacityExceeded && failure.capacity == name && failure.limit == needed - 1)
+        #expect(failure.code == .capacityExceeded && failure.capacity?.rawValue == name && failure.limit == needed - 1)
         for invalid in [-1, Int.max] {
             bounds[keyPath: key] = invalid
             #expect(try wfCore { _ = try store.follow(from: start, bounds: bounds) }.code == .invalidLimits)
@@ -257,7 +257,7 @@ private func wfStar() throws -> JSONConfiguredStore {
 @Test func workflowS13FollowSelfCycleAndLongNarrowChain() throws {
     let profile = JSONStoreProfile(version: .v1, collectionsAt: [], collections: [
         .init(name: "u", recordsAt: [.key("u")], idKey: "id", referenceFields: [.init(key: "next", presence: .required, nullable: false)])],
-        references: .strict(marker: .v1, validateTargets: true))
+        references: .strict(marker: .v1))
     func store(_ text: String) throws -> JSONConfiguredStore { try JSONStoreBuilder(document: wfDocument(text), profile: profile).build().result }
     let single = try store(#"{"u":[{"id":"0","next":{"collection":"u","id":"0"}}]}"#)
     let start = try single.record(collection: 0, row: 0).position
@@ -269,7 +269,7 @@ private func wfStar() throws -> JSONConfiguredStore {
     #expect(try chain.follow(from: first, bounds: bounds).result.map(\.row) == [0,1,2,3])
     bounds.maximumDepth = 2
     let failure = try wfStore { _ = try chain.follow(from: first, bounds: bounds) }
-    #expect(failure.code == .capacityExceeded && failure.capacity == "maximumDepth" && failure.limit == 2)
+    #expect(failure.code == .capacityExceeded && failure.capacity?.rawValue == "maximumDepth" && failure.limit == 2)
 }
 
 @Test func workflowB09NestedSnapshotRepeatsQuotasAndLateCancellation() async throws {

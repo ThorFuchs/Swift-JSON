@@ -2,8 +2,8 @@
 
 Choose core Pointer/read APIs for one value, Navigation for many-node traversal,
 and Inspection for observed evidence or complete structural metadata. These
-projections are opt-in through `JSONInspection` on unreleased 1.7.0-dev main;
-published 1.6.1 does not contain them. They are not schema validation, a new JSON
+projections are opt-in through `JSONInspection` and available since 1.7.0;
+the 1.6.1 maintenance line does not contain them. They are not schema validation, a new JSON
 model or a query language.
 
 ## Select a physical tree

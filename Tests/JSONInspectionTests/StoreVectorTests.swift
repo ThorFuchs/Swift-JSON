@@ -46,8 +46,10 @@ func storeProfile(_ value: JSON) throws -> JSONStoreProfile {
     let mode = try storeText(storeMember(refs,"mode"))
     #expect(mode == "disabled" || mode == "strict")
     if mode == "strict" { #expect(try storeText(storeMember(refs,"marker")) == JSONStoreMarkerVersion.v1.rawValue) }
-    let references: JSONStoreReferences = mode == "disabled" ? .disabled
-        : .strict(marker: .v1, validateTargets: try storeBool(storeMember(refs,"validateTargets")))
+    // The pinned wire profile keeps its original validateTargets member. Every vector
+    // sets it to true; the typed API has no way to disable target validation.
+    if mode == "strict" { #expect(try storeBool(storeMember(refs,"validateTargets"))) }
+    let references: JSONStoreReferences = mode == "disabled" ? .disabled : .strict(marker: .v1)
     return JSONStoreProfile(version: .v1, collectionsAt: try storePath(storeMember(value,"collectionsAt")),
                             collections: collections, references: references)
 }
@@ -118,8 +120,8 @@ func storeD1NativeVector(id: String) throws {
             for row in 0..<(try store.recordCount(in: ci)) {
                 let record = try store.record(collection: ci, row: row)
                 let pointer = try JSONPointer(tokens: storeTokens(record.idPath))
-                #expect(try pointer.resolve(in: document.root) == .string(record.id))
-                #expect(try storeTypedValue(record.idPath,in:document) == .string(record.id))
+                #expect(try pointer.resolve(in: document.root) == .string(storeStringID(record.id)))
+                #expect(try storeTypedValue(record.idPath,in:document) == .string(storeStringID(record.id)))
                 #expect(try JSONPointer(tokens:storeTokens(record.path)).resolve(in:document.root) == storeTypedValue(record.path,in:document))
                 for reference in store.references[record.referenceRange] {
                     let key = try #require(reference.path.last)
@@ -153,7 +155,7 @@ func storeD1NativeVector(id: String) throws {
         print("STORE_VECTOR \(id) passed driver=native-build phase=8 kind=success work=\(report.statistics[.workUnits]) nodes=\(report.statistics[.nodes]) retained=\(report.statistics[.retainedBytes])")
     } catch let error as JSONStoreFailure {
         #expect(error.code.rawValue == kind)
-        #expect(error.phase == (try storeInt(storeMember(expected,"phase"))))
+        #expect(error.phase.rawValue == (try storeInt(storeMember(expected,"phase"))))
         #expect(error.domain.rawValue == (try storeText(storeMember(expected,"domain"))))
         #expect(error.path == (try storePath(storeMember(expected,"at"))))
         if let first = expected.objectValue?["firstAt"] { #expect(error.firstPath == (try storePath(first))) }
