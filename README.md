@@ -1,22 +1,5 @@
 # Swift-JSON
 
-This is **Swift-JSON 1.9.0-dev**, based on the published
-[1.8.0 release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.8.0)
-(`66718f11514d8c555f6a6b0ecc738e5029405a55`). The next additive wave brings
-ordered batch reads and an immutable configured read-only store to JSONInspection.
-The optional JSONTransform candidate also adds exact source-definition codecs,
-compile reports and [finite indexed selection](Sources/JSONTransform/Documentation.docc/IndexedSelection.md).
-It is under qualification; it is not an admitted 1.9 release.
-Twelve libraries plus CLI, thirteen DocC catalogs and empty root dependencies remain.
-See the [1.8 implementation contract](Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md),
-[1.8 qualification record](Documentation/Qualification/Release1.8.md),
-[1.9 candidate record](Documentation/Qualification/Release1.9.md) and
-[release roadmap](Documentation/ReleaseRoadmap.md). Historical records below retain
-their original source and publication dates.
-
-This feature source reports `1.9.0-dev`. The installation below selects a released
-version; the batch/store APIs described at the end require this 1.9 candidate.
-
 **Exact JSON values, offline schema validation, transactional patches, pull streams, HTML exports and bounded queries for modern Swift.**
 
 Swift-JSON gives applications one consistent JSON model from input bytes to validated,
@@ -30,9 +13,13 @@ partially read document would change the meaning of your data.
 
 [Read the documentation →](https://thorfuchs.github.io/Swift-JSON/)
 
-The latest stable release is [**Swift-JSON 1.8.0**](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.8.0).
-This minor release adds located root-array streaming: `JSONLocatedTopLevelArraySequence`
-reports each element's original UTF-8 byte span alongside its value.
+The latest stable release is [**Swift-JSON 1.9.0**](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.9.0).
+This minor release adds [bounded structural workflows](#bounded-structural-workflows-available-since-190)
+to JSONInspection: ordered batch reads and an immutable configured read-only store
+with exact-ID lookup and bounded reference following. JSONTransform adds
+[indexed selection](Sources/JSONTransform/Documentation.docc/IndexedSelection.md),
+and the Apple deployment minimums are now macOS 15 and iOS 18.
+Release 1.8.0 added located root-array streaming with per-element UTF-8 byte spans.
 The 1.7.0 release brought source-attached Inspection snapshots, projections and
 graphs, JSONTransform and the optional JSONValueDSL/JSONSchemaDSL products together.
 Choose from twelve library products plus the `swift-json` executable. Thirteen
@@ -42,11 +29,12 @@ Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Swift-JSON follows
 semantic versioning. Use a released version and retain `Package.resolved` for
 reproducible builds; `main` tracks ongoing development.
 
-Release 1.8.0 is pinned to
-[`66718f11514d8c555f6a6b0ecc738e5029405a55`](https://github.com/ThorFuchs/Swift-JSON/commit/66718f11514d8c555f6a6b0ecc738e5029405a55).
+Release 1.9.0 is pinned to
+[`f2a0d12da7028edfbcb0cb307f19a921a3a12d03`](https://github.com/ThorFuchs/Swift-JSON/commit/f2a0d12da7028edfbcb0cb307f19a921a3a12d03).
 Its assets include the exact source archive, compiled documentation, checksums and
-a [source-bound prepublication qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-qualification.json).
-See the [release notes](Documentation/ReleaseNotes/1.8.0.md) and
+a [source-bound prepublication qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.9.0/Swift-JSON-1.9.0-qualification.json).
+See the [release notes](Documentation/ReleaseNotes/1.9.0.md), the
+[1.9 qualification record](Documentation/Qualification/Release1.9.md) and
 [forward roadmap](Documentation/ReleaseRoadmap.md) for scope and planned work.
 
 [1.6.1](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1) remains a separate
@@ -131,7 +119,7 @@ and the [compiled public guide consumer](Examples/SchemaExamplesConsumer/README.
 The inherited Linux increment adds portable schema integrity for its qualified products
 without runtime dependencies. Its initial qualification scope is Swift 6.4+,
 64-bit Ubuntu 24.04/glibc; see the [Linux contract](Documentation/Architecture/Linux.md)
-for execution gates and limits. Apple platform requirements remain unchanged.
+for execution gates and limits.
 
 The separately qualified WASI core scope targets full-language Swift 6.4
 `wasm32-unknown-wasip1`, with finite defaults and exact persistence. Its
@@ -148,7 +136,7 @@ earlier stage receipts retain their original source and unfinished gates.
 Add the package to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.8.0")
+.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", from: "1.9.0")
 ```
 
 Then add products to your target dependencies:
@@ -162,7 +150,7 @@ Add `JSONStreaming`, `JSONPatch`, `JSONHTML`, `JSONBridges`, `JSONNavigation`,
 `JSONSchemaExamples`, `JSONInspection`, `JSONTransform`, `JSONValueDSL` or
 `JSONSchemaDSL` in the same way when needed. A local checkout can use
 `.package(path: "../Swift-JSON")`. The requirement above accepts compatible 1.x
-releases from 1.8.0; use `exact: "1.8.0"` when reproducing this release.
+releases from 1.9.0; use `exact: "1.9.0"` when reproducing this release.
 See the [core consumer](Examples/Consumer) for a complete buildable manifest.
 The website tracks `main`; release assets include compiled DocC catalogs for the
 exact released source.
@@ -590,14 +578,14 @@ Browse the [public documentation site](https://thorfuchs.github.io/Swift-JSON/):
 [JSONValueDSL](https://thorfuchs.github.io/Swift-JSON/JSONValueDSL/documentation/jsonvaluedsl/) and
 [JSONSchemaDSL](https://thorfuchs.github.io/Swift-JSON/JSONSchemaDSL/documentation/jsonschemadsl/).
 The site tracks `main` and publishes only after all four native CI lanes pass.
-For the exact 1.8.0 interface, use its
-[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.8.0/Sources)
-or download the [compiled DocC archive](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-DocC.tar.gz)
-and [documentation manifest](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-DocC.MANIFEST.sha256).
+For the exact 1.9.0 interface, use its
+[tagged source documentation](https://github.com/ThorFuchs/Swift-JSON/tree/1.9.0/Sources)
+or download the [compiled DocC archive](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.9.0/Swift-JSON-1.9.0-DocC.tar.gz)
+and [documentation manifest](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.9.0/Swift-JSON-1.9.0-DocC.MANIFEST.sha256).
 Historical preparation receipts retain their original scope.
 
 The [documentation index](Documentation/README.md) links the behavior contracts.
-Release 1.8.0 includes thirteen catalogs: twelve library references and the
+Release 1.9.0 includes thirteen catalogs: twelve library references and the
 [shared JSONDSLCore structure reference](https://thorfuchs.github.io/Swift-JSON/JSONDSLCore/documentation/jsondslcore/).
 They provide public API references, focused guides, parameter descriptions and
 failure contracts, compiled from native Swift public symbol graphs.
@@ -633,11 +621,13 @@ The 1.1 candidate's separate matched stream comparison is **15.76% slower**; its
 retains the accepted disposition. The [additional QA wave](Documentation/Architecture/Release1.1/QA.md)
 records conformance coverage and the Base64 accounting correction.
 
-For 1.8.0, controlled Navigation performance G4 remains **HOLD**, with zero accepted
-controlled timing samples. The original 1.7.0 Transform P4 exception and incomplete
-historical sampling remain recorded for unchanged workloads; neither is a new
-measured pass. No new speed, throughput, allocation-efficiency or RSS claim is made.
-See the [1.8.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-qualification.json),
+For 1.9.0, the maintainer recorded an explicit exception for the controlled-performance
+gate; it is not a pass. Controlled Navigation performance G4 remains **HOLD**, with zero
+accepted controlled timing samples. The original 1.7.0 Transform P4 exception and
+incomplete historical sampling remain recorded for unchanged workloads; neither is a
+new measured pass. No new speed, throughput, allocation-efficiency or RSS claim is made.
+See the [1.9.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.9.0/Swift-JSON-1.9.0-qualification.json),
+[1.8.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.8.0/Swift-JSON-1.8.0-qualification.json),
 [1.7.1 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.1/Swift-JSON-1.7.1-qualification.json)
 and [1.7.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releases/download/1.7.0/Swift-JSON-1.7.0-qualification.json).
 
@@ -671,7 +661,7 @@ inputs retain their applicable [notices](NOTICE), [third-party notices](THIRD_PA
 
 ## Command-line tool (released in 1.5.0)
 
-`swift-json` accompanies the twelve libraries in 1.8.0. It provides strict
+`swift-json` accompanies the twelve libraries in 1.9.0. It provides strict
 formatting, validation, Pointer selection, staged
 Patch and qualified HTML/text/Markdown rendering. See the [CLI plan](Documentation/Architecture/Release1.4/Plan.md)
 and [foundation contract](Documentation/Architecture/Release1.4/Foundation.md)
@@ -692,10 +682,10 @@ swift build -c release --product swift-json
 
 ### Run exact pull queries
 
-Release 1.8.0 has twelve libraries plus the executable, with no external root
+Release 1.9.0 has twelve libraries plus the executable, with no external root
 dependencies. Build the selected source version
 with Swift6.4+ (`swift build -c release --product swift-json`), or use
-`swift run swift-json help`. Native qualification requires macOS/SDK27+.
+`swift run swift-json help`. Native qualification requires a macOS/SDK 27+ host.
 
 ```sh
 swift run swift-json query --compact '.items[] | select(.active) | .name' input.json
@@ -714,7 +704,7 @@ See the [CLI reference](Documentation/Architecture/Release1.4/CLIReference.md),
 [integration contract](Documentation/Architecture/Release1.4/Integration.md) and
 [acceptance ledger](Documentation/Architecture/Release1.4/Acceptance.json).
 The frozen 1.5.0 CLI reports `1.4.0-dev` and revision `unknown`, as disclosed in
-its release notes. Version 1.8.0 reports `1.8.0` and a
+its release notes. Version 1.9.0 reports `1.9.0` and a
 deterministic source digest; see the [CLI guide](Documentation/CLI.md).
 Versioned release assets identify the exact qualified platform and source scope.
 
@@ -852,8 +842,7 @@ Run the [public SwiftPM example](Examples/BoundedWorkflows) with
 `swift run --package-path Examples/BoundedWorkflows BoundedWorkflows`.
 The [DocC guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md)
 explains separate operation reports, caller work and logical retention. The API
-is additive; no persistence, network resolver, new platform or performance
-improvement is claimed. JSONTransform's `selectIndices(in:)` returns the selected
+is additive; no persistence, network resolver or performance improvement is claimed. JSONTransform's `selectIndices(in:)` returns the selected
 population indices in one call; see [indexed selection](Sources/JSONTransform/Documentation.docc/IndexedSelection.md).
 
 The [cross-product guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflowRecipes.md)
