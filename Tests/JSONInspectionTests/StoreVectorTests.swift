@@ -162,7 +162,7 @@ func storeD1NativeVector(id: String) throws {
         if let cause = expected.objectValue?["coreCause"] {
             #expect(error.coreCause?.code.rawValue == (try storeText(cause)))
         }
-        print("STORE_VECTOR \(id) passed driver=native-build phase=\(error.phase) kind=\(error.code.rawValue)")
+        print("STORE_VECTOR \(id) passed driver=native-build phase=\(error.phase.rawValue) kind=\(error.code.rawValue)")
     }
 }
 

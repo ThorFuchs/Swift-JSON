@@ -59,7 +59,7 @@ public struct JSONInspectionBatch: Sendable {
     /// Reads every requested value in caller order, returning nil where the path is missing.
     ///
     /// Missing means an absent object member or an array index past the end. Explicit
-    /// JSON null is a value, `.some(.null)`, never nil. Because ``JSON`` itself accepts
+    /// JSON null is a value, `.some(.null)`, never nil. Because `JSON` itself accepts
     /// the `nil` literal as JSON null, test for missing with `if let`, `switch` or
     /// `== .none` rather than relying on a bare `nil` in a JSON-typed context. Every other problem still throws,
     /// exactly as in ``values(at:maximumRequests:)``: stepping into the wrong kind of
