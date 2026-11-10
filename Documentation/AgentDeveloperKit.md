@@ -46,7 +46,7 @@ The skill does not import Inspection for a stable consumer, silently upgrade a
 dependency or claim that unfamiliar revisions were qualified by testing 1.6.1.
 
 Compilation requires a local executor, Swift tools/compiler 6.4+ and language
-mode 6. Native Apple qualification uses macOS/SDK 27+; iOS/iPadOS minimum is 27.
+mode 6. Native Apple qualification uses macOS/SDK 27+; deployment minimums are macOS 15 and iOS/iPadOS 18.
 Linux/WASI retain their separately documented qualified scopes. An informational
 host can use the guidance without being able to run Swift. Successful discovery
 does not prove installation, useful execution or every host/platform combination.

@@ -16,7 +16,7 @@ private func acceptance18Profile() -> JSONStoreProfile {
     .init(version: .v1, collectionsAt: [], collections: [
         .init(name: "u", recordsAt: [.key("u")], idKey: "id", referenceFields: [
             .init(key: "next", presence: .required, nullable: true)])
-    ], references: .strict(marker: .v1, validateTargets: true))
+    ], references: .strict(marker: .v1))
 }
 private func acceptance18Plan() throws -> CompiledJSONSchema {
     try JSONSchemaCompiler().compile(JSONSchemaDocument(JSONParser().parse(
@@ -80,7 +80,7 @@ private enum Acceptance18Error: Error { case expectedFailure, removed }
     guard case .document(let root) = try patch.applying(to: source.root) else { throw Acceptance18Error.removed }
     do { _ = try acceptance18Store(source.replacingRoot(root)); Issue.record("Published a dangling reference") }
     catch let error as JSONStoreFailure {
-        #expect(error.code == .referenceDanglingID && error.phase == 7)
+        #expect(error.code == .referenceDanglingID && error.phase.rawValue == 7)
         #expect(error.path == [.key("u"),.index(0),.key("next"),.key("id")])
         #expect(error.sourceSpan == nil)
     }
@@ -92,7 +92,7 @@ private enum Acceptance18Error: Error { case expectedFailure, removed }
     let source = try JSONParser().parseDocument(Data(#"{"é":[{"id":"a","v":1,"go":{"collection":"e\u0301","id":"a"}}],"e\u0301":[{"id":"a","v":2,"go":{"collection":"é","id":"a"}}]}"#.utf8))
     let profile = JSONStoreProfile(version: .v1, collectionsAt: [], collections: ["e\u{301}", "é"].map { name in
         .init(name: JSONKey(name), recordsAt: [.key(JSONKey(name))], idKey: "id", referenceFields: [.init(key: "go", presence: .required, nullable: false)])
-    }, references: .strict(marker: .v1, validateTargets: true))
+    }, references: .strict(marker: .v1))
     let store = try JSONStoreBuilder(document: source, profile: profile).build().result
     let a = try #require(store.lookup(collection: "é", id: "a").result)
     let b = try #require(store.lookup(collection: JSONKey("e\u{301}"), id: "a").result)

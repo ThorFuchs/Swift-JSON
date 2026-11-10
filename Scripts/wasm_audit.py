@@ -4,7 +4,7 @@
 import argparse, hashlib, json, os, pathlib, re, shutil, subprocess, time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SDK = 'swift-6.4.0-RELEASE_wasm'
+SDK = 'swift-6.4.2-RELEASE_wasm'
 CASE_COUNTS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3}
 
 def main():
@@ -34,7 +34,7 @@ def main():
     try:
         swift = shutil.which('swift'); wasmkit = shutil.which('wasmkit'); node = shutil.which('node')
         if not all([swift, wasmkit, node]): raise ValueError('swift, wasmkit and node are required on PATH')
-        run('compiler', [swift, '--version'], lambda c, t: c == 0 and 'swift-6.4-RELEASE' in t)
+        run('compiler', [swift, '--version'], lambda c, t: c == 0 and 'swift-6.4.2-RELEASE' in t)
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version'], lambda c, t: c == 0 and bool(t.strip()))
         run('node-version', [node, '--version'], lambda c, t: c == 0 and bool(t.strip()))

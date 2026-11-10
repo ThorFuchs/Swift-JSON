@@ -26,12 +26,39 @@
   concurrency tests and exact scoped CI discovery. Qualification remains source-bound;
   no 1.9 release or performance/platform pass is implied.
 
+- Refine the new store API before release. `JSONStoreFailure` reports a typed
+  `JSONStoreFailurePhase` and `JSONStoreCapacity` (raw values keep the original
+  phase numbers and capacity names) and is `Equatable`.
+  `JSONStoreReferences.strict(marker:)` drops the `validateTargets` flag that only
+  accepted `true`; targets are always validated. Add
+  `JSONConfiguredStore.collectionIndex(named:)`.
+- Add integer record IDs. Each collection declares a `JSONStoreIDKind`; `.string`
+  stays the default. Integer IDs compare by exact mathematical value (`7`, `7.0`
+  and `7e0` are one ID), stay exact beyond Double precision and never expand large
+  exponents. IDs never convert between kinds. `JSONStoreRecordMetadata.id` is now a
+  typed `JSONStoreRecordID`, and `lookup(collection:id:)` accepts one; the
+  `String` overload remains. String-ID accounting and all 69 pinned NAV12 vectors
+  are unchanged.
+- Add `JSONInspectionBatch.optionalValues(at:maximumRequests:)`: nil for an absent
+  member or an index past the end, the same errors as `values(at:)` otherwise.
+- Add `JSONTransformProgram.selectIndices(in:bindings:limits:source:)`, returning
+  the selected ordinals with completion statistics identical to the manual loop.
+- Move the WASI lane pin to Swift 6.4.2 (`swift-6.4.2-RELEASE_wasm`).
+
 - Composition accounting: apply `inputBytes` per document while keeping reported
   input cumulative, and charge completion's own report (424 logical bytes, 50
   work units) on the original ledger. Add the checked
   `reserveExternalLogicalBytes(_:count:overhead:)` overload; the two-argument form
   is unchanged. Salvaged from the historical composition branch (PR #63) without
   its performance toolkit.
+
+- Lower the Apple deployment minimums from macOS/iOS 27 to macOS 15 and iOS 18.
+  Development still uses Swift 6.4 with the macOS 27 SDK. Linux and WASI are unchanged.
+- JSONHTML: the WebKit `WebPage` PDF backend is available on macOS/iOS 26 and later;
+  earlier systems report the existing `JSONPDFFailure.backendUnavailable`, as on
+  platforms without WebKit. The Markdown transfer type uses the system-declared
+  `net.daringfireball.markdown` identifier before macOS/iOS 27.
+- The platform change alone changes no public API, behavior or dependency on macOS/iOS 27.
 
 ## 1.8.0 — prepared source; publication separate
 

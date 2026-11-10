@@ -19,7 +19,7 @@ func structuralAcceptance() throws {
     precondition(validation.isValid)
     let profile = JSONStoreProfile(version: .v1, collectionsAt: [], collections: [
         .init(name: "u", recordsAt: [.key("u")], idKey: "id", referenceFields: [.init(key: "next", presence: .required, nullable: true)])
-    ], references: .strict(marker: .v1, validateTargets: true))
+    ], references: .strict(marker: .v1))
     let store = try JSONStoreBuilder(document: source, profile: profile).build().result
     guard let first = try store.lookup(collection: "u", id: "é").result else { preconditionFailure() }
     let values = try store.values(at: store.follow(from: first).result)

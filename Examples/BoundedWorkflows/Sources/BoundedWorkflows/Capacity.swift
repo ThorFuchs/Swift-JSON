@@ -34,7 +34,7 @@ private func capacitySum(_ lhs: UInt64, _ rhs: UInt64) throws -> UInt64 {
 private func capacityProfile() -> JSONStoreProfile {
     .init(version: .v1, collectionsAt: [], collections: [
         .init(name: "records", recordsAt: [.key("records")], idKey: "id", referenceFields: [.init(key: "next", presence: .required, nullable: true)])
-    ], references: .strict(marker: .v1, validateTargets: true))
+    ], references: .strict(marker: .v1))
 }
 private func capacityFixture(_ count: Int) throws -> Data {
     var records: [JSON] = []
@@ -145,7 +145,7 @@ func structuralCapacity(output: URL) throws {
         try capacityBoundaries(report) { try chain.follow(from: start, bounds: bounds, limits: $0) }
         bounds.maximumResults = count - 1
         do { _ = try chain.follow(from: start, bounds: bounds); throw CapacityInvariant.boundary }
-        catch let error as JSONStoreFailure { guard error.code == .capacityExceeded && error.capacity == "maximumResults" else { throw error } }
+        catch let error as JSONStoreFailure { guard error.code == .capacityExceeded && error.capacity == .maximumResults else { throw error } }
         cells.append(.init(id: "follow-chain-" + String(count), operation: "follow-chain", requests: count, fixture: name, outcome: "completed",
             report: .init(report.statistics), independentSingles: nil, requestBoundary: true, workBoundary: true, retentionBoundary: true,
             errorMetric: nil, errorLimit: nil, errorAttempted: nil, errorStage: nil))

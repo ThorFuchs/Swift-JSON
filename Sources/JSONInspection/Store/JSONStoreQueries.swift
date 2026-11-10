@@ -34,6 +34,21 @@ extension JSONConfiguredStore {
     /// - Throws: Unknown collection, native configuration/resource failure or cancellation.
     public func lookup(collection: JSONKey, id: String, limits: JSONLimits = .balanced)
         throws -> JSONOperationReport<JSONStorePosition?> {
+        try lookup(collection: collection, id: .string(id), limits: limits)
+    }
+
+    /// Looks up an exact typed ID in one independent admitted operation.
+    /// An ID whose kind differs from the collection's ``JSONStoreIDKind``, or a
+    /// fractional integer ID, matches no record and returns nil. An unknown
+    /// collection is a distinct typed refusal. No index speed is promised.
+    /// - Parameters:
+    ///   - collection: Exact decoded-scalar configured collection name.
+    ///   - id: Exact typed record identifier, such as `"a"` or `42`.
+    ///   - limits: Finite cumulative native quotas for this lookup.
+    /// - Returns: Owner-bound position or nil, plus cumulative statistics.
+    /// - Throws: Unknown collection, native configuration/resource failure or cancellation.
+    public func lookup(collection: JSONKey, id: JSONStoreRecordID, limits: JSONLimits = .balanced)
+        throws -> JSONOperationReport<JSONStorePosition?> {
         let report = try query(.lookup(collection, id), limits: limits)
         guard case .position(let result) = report.result else { throw JSONFailure(.configuration, code: .invalidOperation) }
         return .init(result: result, statistics: report.statistics)
@@ -112,7 +127,7 @@ extension JSONConfiguredStore {
 }
 
 private enum StoreReadOperation {
-    case lookup(JSONKey, String)
+    case lookup(JSONKey, JSONStoreRecordID)
     case values([JSONStorePosition])
     case follow(JSONStorePosition, JSONStoreFollowLimits)
 }
@@ -135,8 +150,9 @@ private struct StoreReadReducer: JSONReadPreparation, JSONTraversalOwnedReducer 
         try context.retain(inputAliases)
         switch operation {
         case .lookup(let collection, let id):
-            try context.admitText(collection.string, key: true); try context.admitText(id)
-            for text in [collection.string, id] {
+            let idText = id.comparisonText
+            try context.admitText(collection.string, key: true); try context.admitText(idText)
+            for text in [collection.string, idText] {
                 for _ in text.utf8 { try context.work(); inputAliases = try JSONStoreAccounting.sum(inputAliases, 1) }
             }
         case .values(let positions):
@@ -170,19 +186,23 @@ private struct StoreReadReducer: JSONReadPreparation, JSONTraversalOwnedReducer 
         try context.checkpoint(); try context.release(inputAliases)
         return result
     }
-    private func lookup(_ name: JSONKey, id: String, context: inout JSONTraversalContext) throws -> JSONStorePosition? {
+    private func lookup(_ name: JSONKey, id: JSONStoreRecordID, context: inout JSONTraversalContext) throws -> JSONStorePosition? {
         try context.retain(32)
+        let idText = id.comparisonText
         for collection in 0..<store.collectionCount {
             try context.work()
             if try context.equalKeys(store.collectionName(at: collection), name) {
+                // Another kind, or a fractional integer, can never be a record's ID.
+                guard try store.idKind(of: collection) == id.kind else { return nil }
+                if case .integer(let number) = id, !number.isInteger { return nil }
                 for row in 0..<(try store.recordCount(in: collection)) {
                     try context.work(); let record = try store.record(collection: collection, row: row)
-                    if try context.equalStrings(record.id, id) { return record.position }
+                    if try context.equalStrings(record.idText, idText) { return record.position }
                 }
                 return nil
             }
         }
-        throw JSONStoreFailure(.unknownCollection, phase: 9, domain: .operation)
+        throw JSONStoreFailure(.unknownCollection, phase: .query, domain: .operation)
     }
     private func flatIndex(_ position: JSONStorePosition, context: inout JSONTraversalContext) throws -> Int {
         try context.work(); _ = try store.record(at: position)
@@ -190,7 +210,7 @@ private struct StoreReadReducer: JSONReadPreparation, JSONTraversalOwnedReducer 
         for collection in 0..<position.collection {
             try context.work(); offset = try JSONStoreAccounting.sum(offset, UInt64(store.recordCount(in: collection)))
         }
-        return try JSONStoreAccounting.checkedCount(JSONStoreAccounting.sum(offset, UInt64(position.row)), phase: 9)
+        return try JSONStoreAccounting.checkedCount(JSONStoreAccounting.sum(offset, UInt64(position.row)), phase: .query)
     }
     private func follow(_ start: JSONStorePosition, bounds: JSONStoreFollowLimits,
                         context: inout JSONTraversalContext) throws -> [JSONStorePosition] {
@@ -198,15 +218,15 @@ private struct StoreReadReducer: JSONReadPreparation, JSONTraversalOwnedReducer 
         try context.retain(32)
         for _ in 0..<store.recordCount { try context.work(); try context.retain(1); visited.append(false) }
         var head = 0, edges = 0
-        func refuse(_ name: String, _ limit: Int) -> JSONStoreFailure {
-            .init(.capacityExceeded, phase: 9, domain: .operation, capacity: name, limit: limit)
+        func refuse(_ name: JSONStoreCapacity, _ limit: Int) -> JSONStoreFailure {
+            .init(.capacityExceeded, phase: .query, domain: .operation, capacity: name, limit: limit)
         }
         func enqueue(_ position: JSONStorePosition, depth: Int, context: inout JSONTraversalContext) throws {
             try context.work()
-            guard depth <= bounds.maximumDepth else { throw refuse("maximumDepth", bounds.maximumDepth) }
-            guard result.count - head < bounds.maximumFrontier else { throw refuse("maximumFrontier", bounds.maximumFrontier) }
-            guard result.count < bounds.maximumVisited else { throw refuse("maximumVisited", bounds.maximumVisited) }
-            guard result.count < bounds.maximumResults else { throw refuse("maximumResults", bounds.maximumResults) }
+            guard depth <= bounds.maximumDepth else { throw refuse(.maximumDepth, bounds.maximumDepth) }
+            guard result.count - head < bounds.maximumFrontier else { throw refuse(.maximumFrontier, bounds.maximumFrontier) }
+            guard result.count < bounds.maximumVisited else { throw refuse(.maximumVisited, bounds.maximumVisited) }
+            guard result.count < bounds.maximumResults else { throw refuse(.maximumResults, bounds.maximumResults) }
             let index = try flatIndex(position, context: &context)
             try context.retain(40); visited[index] = true; result.append(position); depths.append(depth)
         }
@@ -219,7 +239,7 @@ private struct StoreReadReducer: JSONReadPreparation, JSONTraversalOwnedReducer 
                 if case .link(let target) = store.references[slot].state {
                     let index = try flatIndex(target, context: &context)
                     if !visited[index] {
-                        guard depth < bounds.maximumDepth else { throw refuse("maximumDepth", bounds.maximumDepth) }
+                        guard depth < bounds.maximumDepth else { throw refuse(.maximumDepth, bounds.maximumDepth) }
                         try enqueue(target, depth: depth + 1, context: &context)
                     }
                 }

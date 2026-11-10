@@ -58,7 +58,7 @@ or numeric matrix. Sampling does not exempt any source from admission.
 - ``JSONGraphProjection``
 - ``JSONGraphFailure``
 
-### Bounded structural workflows (1.8 candidate)
+### Bounded structural workflows
 
 - <doc:BoundedWorkflows>
 - <doc:BoundedWorkflowRecipes>
@@ -67,7 +67,11 @@ or numeric matrix. Sampling does not exempt any source from admission.
 - ``JSONStoreBuilder``
 - ``JSONConfiguredStore``
 - ``JSONStoreProfile``
+- ``JSONStoreIDKind``
+- ``JSONStoreRecordID``
 - ``JSONStoreCaps``
 - ``JSONStoreFollowLimits``
 - ``JSONStorePosition``
 - ``JSONStoreFailure``
+- ``JSONStoreFailurePhase``
+- ``JSONStoreCapacity``

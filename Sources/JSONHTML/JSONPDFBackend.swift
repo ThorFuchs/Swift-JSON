@@ -34,6 +34,7 @@
         }
     }
 
+    @available(macOS 26.0, iOS 26.0, *)
     private struct JSONPDFOfflineNavigation: WebPage.NavigationDeciding {
         @MainActor mutating func decidePolicy(
             for action: WebPage.NavigationAction,
@@ -44,6 +45,7 @@
         }
     }
 
+    @available(macOS 26.0, iOS 26.0, *)
     @MainActor package final class JSONPDFWebPage: JSONPDFPageBackend {
         private var page: WebPage?
         package init() {

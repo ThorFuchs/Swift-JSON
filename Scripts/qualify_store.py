@@ -11,7 +11,7 @@ import JSONInspection
  static func main() throws {
   let doc=try JSONParser().parseDocument(Data(#"{"collections":{"users":[{"uuid":"é","friend":null},{"uuid":"e\u0301","friend":{"collection":"users","id":"é"}}]}}"#.utf8))
   let profile=JSONStoreProfile(version:.v1,collectionsAt:[.key("collections")],collections:[
-   .init(name:"users",recordsAt:[.key("users")],idKey:"uuid",referenceFields:[.init(key:"friend",presence:.required,nullable:true)])],references:.strict(marker:.v1,validateTargets:true))
+   .init(name:"users",recordsAt:[.key("users")],idKey:"uuid",referenceFields:[.init(key:"friend",presence:.required,nullable:true)])],references:.strict(marker:.v1))
   let report=try JSONStoreBuilder(document:doc,profile:profile).build(),store=report.result
   precondition(store.recordCount==2 && store.references.count==2)
   if case .null=store.references[0].state {} else { preconditionFailure() }

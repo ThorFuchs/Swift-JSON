@@ -5,6 +5,13 @@ import Foundation
 import JSON
 import UniformTypeIdentifiers
 
+/// `UTType.markdown` is new in macOS/iOS 27; earlier systems resolve the same
+/// system-declared identifier. Unknown identifiers fall back to UTF-8 text.
+private let jsonMarkdownContentType: UTType = {
+    if #available(macOS 27.0, iOS 27.0, *) { return .markdown }
+    return UTType("net.daringfireball.markdown") ?? .utf8PlainText
+}()
+
 extension JSON: Transferable {
     /// Fixed finite JSON, static HTML, UTF-8 text and Markdown representations.
     ///
@@ -23,7 +30,7 @@ extension JSON: Transferable {
         DataRepresentation(exportedContentType: .utf8PlainText) { value in
             try JSONExportDocument.prepare(value, options: .init(formats: [.plainText])).data(for: .plainText)
         }.suggestedFileName("JSON.txt")
-        DataRepresentation(exportedContentType: .markdown) { value in
+        DataRepresentation(exportedContentType: jsonMarkdownContentType) { value in
             try JSONExportDocument.prepare(value, options: .init(formats: [.markdown])).data(for: .markdown)
         }.suggestedFileName("JSON.md")
     }
@@ -49,7 +56,7 @@ extension JSONExportDocument: Transferable {
         DataRepresentation(exportedContentType: .utf8PlainText) { try $0.transferData(for: .plainText) }
             .exportingCondition { $0.advertisedFormats.contains(.plainText) }
             .suggestedFileName { $0.transferFilename(for: .plainText) }
-        DataRepresentation(exportedContentType: .markdown) { try $0.transferData(for: .markdown) }
+        DataRepresentation(exportedContentType: jsonMarkdownContentType) { try $0.transferData(for: .markdown) }
             .exportingCondition { $0.advertisedFormats.contains(.markdown) }
             .suggestedFileName { $0.transferFilename(for: .markdown) }
         DataRepresentation(exportedContentType: .pdf) { try $0.transferData(for: .pdf) }

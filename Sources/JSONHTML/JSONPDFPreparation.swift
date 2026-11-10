@@ -29,6 +29,14 @@ extension JSONExportDocument {
         -> JSONPDFPreparationReport
     {
         #if canImport(WebKit) && canImport(CoreGraphics)
+            // The WebKit page backend needs WebPage (macOS/iOS 26). Earlier systems
+            // report the same typed unavailability as platforms without WebKit.
+            guard #available(macOS 26.0, iOS 26.0, *) else {
+                try Task.checkCancellation()
+                try options.validate()
+                _ = try pdfInput()
+                throw JSONPDFFailure.backendUnavailable
+            }
             return try await preparingPDFWithReport(
                 options: options, factory: { JSONPDFWebPage() }, observer: nil)
         #else

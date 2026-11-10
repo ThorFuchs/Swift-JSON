@@ -3,13 +3,23 @@ import JSON
 
 /// Closed version of the typed configured-store construction contract.
 public enum JSONStoreProfileVersion: String, Sendable {
-    /// Exact collection arrays, explicit string identifiers and declared reference slots.
+    /// Exact collection arrays, explicit typed identifiers and declared reference slots.
     case v1 = "nav12.store-profile/1"
 }
 /// Closed reference-marker interpretation, independent of JSON Schema $ref.
 public enum JSONStoreMarkerVersion: String, Sendable {
-    /// An object containing exactly the string members collection and id.
+    /// An object containing exactly a string collection member and an id member
+    /// whose kind matches the target collection's ``JSONStoreIDKind``.
     case v1 = "collection-id/1"
+}
+/// The JSON kind a collection's ID member must have; nothing is converted or inferred.
+public enum JSONStoreIDKind: String, Sendable {
+    /// A JSON string, compared by exact decoded Unicode scalars.
+    case string
+    /// A JSON number with no fractional part, compared by exact mathematical value.
+    /// Equivalent spellings such as `7`, `7.0` and `7e0` are the same ID; fractions,
+    /// strings such as `"7"` and other kinds are refused. No Double conversion occurs.
+    case integer
 }
 /// Requiredness of one explicitly declared reference field.
 public enum JSONStoreFieldPresence: String, Sendable {
@@ -23,10 +33,9 @@ public enum JSONStoreReferences: Sendable {
     /// Interpret no fields as references.
     case disabled
     /// Validate exact markers and their existing targets before publishing a store.
-    /// - Parameters:
-    ///   - marker: Closed version of the two-member marker grammar.
-    ///   - validateTargets: Must be true; false is a typed profile refusal.
-    case strict(marker: JSONStoreMarkerVersion, validateTargets: Bool)
+    /// Target validation is always on; an unvalidated store cannot be built.
+    /// - Parameter marker: Closed version of the two-member marker grammar.
+    case strict(marker: JSONStoreMarkerVersion)
 }
 /// One configured direct reference field; no name or null policy is inferred.
 public struct JSONStoreReferenceField: Sendable {
@@ -45,26 +54,29 @@ public struct JSONStoreReferenceField: Sendable {
         self.key = key; self.presence = presence; self.nullable = nullable
     }
 }
-/// A named direct array collection with an explicit exact string-ID field.
+/// A named direct array collection with an explicit exact, typed ID field.
 public struct JSONStoreCollectionProfile: Sendable {
     /// Exact collection name; canonical Unicode equivalence does not merge it.
     public let name: JSONKey
     /// Must be exactly one key component matching name inside collectionsAt.
     public let recordsAt: [JSONLocationComponent]
-    /// Exact direct record member holding its string ID; no id/_id fallback.
+    /// Exact direct record member holding its ID; no id/_id fallback.
     public let idKey: JSONKey
+    /// Required JSON kind of every ID in this collection.
+    public let idKind: JSONStoreIDKind
     /// Declared reference slots, interpreted in this order.
     public let referenceFields: [JSONStoreReferenceField]
     /// Captures an explicit collection declaration without scanning source data.
     /// - Parameters:
     ///   - name: Exact direct collection name.
     ///   - recordsAt: One direct key equal to name; checked during preparation.
-    ///   - idKey: Required exact string identifier member.
+    ///   - idKey: Required exact identifier member.
+    ///   - idKind: Required ID kind; string by default.
     ///   - referenceFields: Ordered explicit reference declarations, or [].
     public init(name: JSONKey, recordsAt: [JSONLocationComponent], idKey: JSONKey,
-                referenceFields: [JSONStoreReferenceField]) {
+                idKind: JSONStoreIDKind = .string, referenceFields: [JSONStoreReferenceField]) {
         self.name = name; self.recordsAt = recordsAt; self.idKey = idKey
-        self.referenceFields = referenceFields
+        self.idKind = idKind; self.referenceFields = referenceFields
     }
 }
 /// Closed native configuration, checked before source admission on the same ledger.
@@ -143,8 +155,6 @@ public enum JSONStoreFailureCode: String, Sendable {
     case idReferenceFieldCollision
     /// Reference declarations conflict with disabled references.
     case disabledReferencesConflict
-    /// Strict mode attempted to disable target validation.
-    case invalidReferenceMode
     /// The selected collections value is not an object.
     case collectionsNotObject
     /// A source collection has no explicit declaration.
@@ -159,7 +169,8 @@ public enum JSONStoreFailureCode: String, Sendable {
     case recordIDMissing
     /// The required ID is explicit null.
     case recordIDNull
-    /// The ID is present with a non-string kind.
+    /// The ID is present with a kind other than the collection's ``JSONStoreIDKind``,
+    /// including a fractional number for an integer-ID collection.
     case recordIDWrongKind
     /// The second exact duplicate ID retains its first ID path.
     case duplicateRecordID
@@ -171,13 +182,15 @@ public enum JSONStoreFailureCode: String, Sendable {
     case referenceMarkerWrongKind
     /// An exact collection/id marker member is missing.
     case referenceMarkerMissing
-    /// A marker member has a non-string kind.
+    /// The marker collection is not a string, or its id is neither a string nor an
+    /// integral number.
     case referenceMarkerMemberWrongKind
     /// A marker has an undeclared extra member.
     case referenceMarkerExtra
     /// A marker names an unknown exact collection.
     case referenceUnknownCollection
-    /// A marker names a missing ID in an existing collection.
+    /// A marker names a missing ID in an existing collection. IDs of a different
+    /// kind never match, so `"7"` does not reach the integer ID `7`.
     case referenceDanglingID
     /// The collections selection is missing; coreCause retains the original error.
     case selectionMissing
@@ -201,12 +214,70 @@ public enum JSONStoreFailureDomain: String, Sendable {
     /// Invalid local position, query policy or checked capacity.
     case operation
 }
+/// Where a store refusal happened: a construction phase, metadata access or a query.
+public enum JSONStoreFailurePhase: Int, Sendable {
+    /// Fixed metadata access on a built store, which opens no ledger.
+    case metadata = 0
+    /// Typed profile validation and preparation, before source admission.
+    case profile = 1
+    /// Owner allocation after the profile was admitted.
+    case ownership = 2
+    /// Selection of the configured collections object.
+    case selection = 3
+    /// Collection headers: declared, present and array-shaped collections.
+    case collections = 4
+    /// Record shapes, typed IDs and duplicate detection.
+    case identifiers = 5
+    /// Declared reference slots and marker grammar.
+    case references = 6
+    /// Marker target resolution.
+    case targets = 7
+    /// Final checks and publication of the immutable store.
+    case publication = 8
+    /// An owned lookup, value read or follow on a built store.
+    case query = 9
+}
+/// A named finite policy that a ``JSONStoreFailureCode/capacityExceeded`` refusal hit.
+public enum JSONStoreCapacity: String, Sendable {
+    /// ``JSONStoreCaps/collections``.
+    case collections
+    /// ``JSONStoreCaps/recordsPerCollection``.
+    case recordsPerCollection
+    /// ``JSONStoreCaps/records``.
+    case records
+    /// ``JSONStoreCaps/referenceFieldsPerCollection``.
+    case referenceFieldsPerCollection
+    /// ``JSONStoreCaps/referenceFields``.
+    case referenceFields
+    /// ``JSONStoreCaps/referenceSlots``.
+    case referenceSlots
+    /// ``JSONStoreCaps/links``.
+    case links
+    /// ``JSONStoreCaps/identityBytes``.
+    case identityBytes
+    /// ``JSONStoreCaps/profileTextBytes``.
+    case profileTextBytes
+    /// ``JSONStoreCaps/aliasBytes``.
+    case aliasBytes
+    /// ``JSONStoreCaps/pathComponents``.
+    case pathComponents
+    /// ``JSONStoreCaps/overlayBytes``.
+    case overlayBytes
+    /// ``JSONStoreFollowLimits/maximumDepth``.
+    case maximumDepth
+    /// ``JSONStoreFollowLimits/maximumFrontier``.
+    case maximumFrontier
+    /// ``JSONStoreFollowLimits/maximumVisited``.
+    case maximumVisited
+    /// ``JSONStoreFollowLimits/maximumResults``.
+    case maximumResults
+}
 /// Precise checked refusal; no partial store or null substitute is published.
-public struct JSONStoreFailure: Error, Sendable {
+public struct JSONStoreFailure: Error, Sendable, Equatable {
     /// Stable refusal identity.
     public let code: JSONStoreFailureCode
-    /// Construction phases1...8; ordinary metadata0 and owned queries9.
-    public let phase: Int
+    /// Construction phase, metadata access or owned query that refused.
+    public let phase: JSONStoreFailurePhase
     /// Profile, source or operation authority.
     public let domain: JSONStoreFailureDomain
     /// Exact source/request path, empty when no location applies.
@@ -218,13 +289,13 @@ public struct JSONStoreFailure: Error, Sendable {
     /// Original core selection failure without loss of its resource/location metadata.
     public let coreCause: JSONFailure?
     /// Named construction/follow capacity for a capacity refusal.
-    public let capacity: String?
+    public let capacity: JSONStoreCapacity?
     /// Inclusive configured capacity, distinct from physical memory.
     public let limit: Int?
-    internal init(_ code: JSONStoreFailureCode, phase: Int, domain: JSONStoreFailureDomain,
+    internal init(_ code: JSONStoreFailureCode, phase: JSONStoreFailurePhase, domain: JSONStoreFailureDomain,
                   path: [JSONLocationComponent] = [], firstPath: [JSONLocationComponent]? = nil,
                   sourceSpan: JSONSourceSpan? = nil, coreCause: JSONFailure? = nil,
-                  capacity: String? = nil, limit: Int? = nil) {
+                  capacity: JSONStoreCapacity? = nil, limit: Int? = nil) {
         self.code = code; self.phase = phase; self.domain = domain; self.path = path
         self.firstPath = firstPath; self.sourceSpan = sourceSpan; self.coreCause = coreCause
         self.capacity = capacity; self.limit = limit

@@ -7,8 +7,11 @@ consumer and local CI lane provide reproducible evidence for the next decision.
 ## Executed target and tools
 
 The official full-language Swift 6.4.0 SDK targets `wasm32-unknown-wasip1`.
-The SDK archive is pinned to SHA-256
-`f07b7be3c586d92d7a07051fc6d303b87ebea67eadc40640ba59d5a8b79aa86d`.
+This audit ran with the SDK archive pinned to SHA-256
+`f07b7be3c586d92d7a07051fc6d303b87ebea67eadc40640ba59d5a8b79aa86d`. The live pin
+in `Scripts/wasm_audit.py` is now Swift 6.4.2 (`swift-6.4.2-RELEASE_wasm`, SHA-256
+`83baca83553f8c443cda7b84800912e6e709c3acd2e7ebf277794ca5836c0da5`); a fresh audit
+under that pin produces its own receipts.
 The [Swift SDK guide](https://www.swift.org/documentation/articles/wasm-getting-started.html)
 requires a matching Swift.org host toolchain. The audit uses that toolchain
 explicitly and does not change the Apple toolchain selection.

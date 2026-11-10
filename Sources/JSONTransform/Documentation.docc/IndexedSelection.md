@@ -32,6 +32,17 @@ negative values, overflow, other JSON kinds and out-of-range outputs fail withou
 Double conversion. Order and repeats are preserved. Sort tie rules belong in
 the query. The engine supplies no arbitrary transformed-value provenance.
 
+## Select indices in one call
+
+When you want every selected index, ``JSONTransformProgram/selectIndices(in:bindings:limits:source:)``
+runs the selection to EOF and returns the ordinals in emitted order, including
+repeats. It keeps each position alive until completion, so its completion statistics
+are identical to collecting the positions yourself. With the plan above,
+`try plan.selectIndices(in: [row, row]).result` is `[0, 1]`.
+
+Use ``JSONTransformProgram/withSelection(population:bindings:limits:source:_:)``
+when you need to stop early or act on each position as it arrives.
+
 ## Completion and ownership
 
 Pull nil explicitly. Returning after a prefix, even an empty prefix, throws

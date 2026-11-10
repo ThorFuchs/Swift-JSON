@@ -27,7 +27,7 @@ import JSONInspection
         witness("snapshot-root", try snapshot.values(for: [0,0]).result == [document.root, document.root])
         let profile = JSONStoreProfile(version: .v1, collectionsAt: [.key("collections")], collections: [
             .init(name: "u", recordsAt: [.key("u")], idKey: "id", referenceFields: [
-                .init(key: "next", presence: .required, nullable: false)])], references: .strict(marker: .v1, validateTargets: true))
+                .init(key: "next", presence: .required, nullable: false)])], references: .strict(marker: .v1))
         let built = try JSONStoreBuilder(document: document, profile: profile).build(), store = built.result
         witness("checked-construction", store.recordCount == 2 && store.references.count == 2 && built.statistics[.nodes] > 0)
         guard let a = try store.lookup(collection: "u", id: "é").result,
@@ -42,7 +42,7 @@ import JSONInspection
         catch let error as JSONStoreFailure { witness("owner-refusal", error.code == .invalidPosition) }
         var bounds = JSONStoreFollowLimits(); bounds.maximumResults = 1
         do { _ = try store.follow(from: a, bounds: bounds); preconditionFailure() }
-        catch let error as JSONStoreFailure { witness("complete-or-error", error.code == .capacityExceeded && error.capacity == "maximumResults") }
+        catch let error as JSONStoreFailure { witness("complete-or-error", error.code == .capacityExceeded && error.capacity == .maximumResults) }
         let measured = try store.follow(from: a)
         var limits = JSONLimits.balanced; limits[.workUnits] = measured.statistics[.workUnits]
         let equal = try store.follow(from: a, limits: limits)

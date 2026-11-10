@@ -29,12 +29,68 @@ public enum JSONStoreReferenceState: Sendable {
     /// - Parameter position: Exact owner-bound target position.
     case link(JSONStorePosition)
 }
+/// An exact record identifier: a string or an integral number, never converted
+/// between kinds. Strings compare by exact decoded Unicode scalars, so canonically
+/// equivalent spellings stay distinct. Integers compare by exact mathematical value.
+public enum JSONStoreRecordID: Sendable, Hashable, ExpressibleByStringLiteral, ExpressibleByIntegerLiteral {
+    /// A string ID, compared scalar by scalar.
+    case string(String)
+    /// An integer ID. A fractional value is never the ID of any record.
+    case integer(JSONNumber)
+    /// Creates a string ID from a literal.
+    /// - Parameter value: The exact string spelling.
+    public init(stringLiteral value: String) { self = .string(value) }
+    /// Creates an integer ID from a literal.
+    /// - Parameter value: The exact integer value.
+    public init(integerLiteral value: Int64) { self = .integer(JSONNumber(integer: value)) }
+    /// The kind of this ID.
+    public var kind: JSONStoreIDKind {
+        switch self { case .string: .string; case .integer: .integer }
+    }
+    /// Compares kind and exact value; no Unicode normalization or kind conversion.
+    /// - Parameters:
+    ///   - lhs: First ID.
+    ///   - rhs: Second ID.
+    /// - Returns: True only for the same kind and the same exact value.
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case (.string(let a), .string(let b)): a.unicodeScalars.elementsEqual(b.unicodeScalars)
+        case (.integer(let a), .integer(let b)): a == b
+        default: false
+        }
+    }
+    /// Hashes kind and exact value, consistent with equality.
+    /// - Parameter hasher: The caller's randomized hasher.
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case .string(let text):
+            hasher.combine(0); for scalar in text.unicodeScalars { hasher.combine(scalar.value) }
+        case .integer(let number): hasher.combine(1); hasher.combine(number)
+        }
+    }
+    /// Comparison text inside one ID kind: the string itself, or a compact canonical
+    /// integer key built from normalized digits and exponent (never expanded zeros).
+    internal var comparisonText: String {
+        switch self {
+        case .string(let text): return text
+        case .integer(let number): return Self.integerKey(number)
+        }
+    }
+    internal static func integerKey(_ number: JSONNumber) -> String {
+        guard !number.isZero else { return "0e0" }
+        let parts = number.components
+        var text = parts.negative ? "-" : ""
+        text.unicodeScalars.append(contentsOf: parts.digits.map { Unicode.Scalar($0 + 48) })
+        return text + "e" + String(parts.exponent)
+    }
+}
 /// Immutable source metadata; value resolution is a separately metered operation.
 public struct JSONStoreRecordMetadata: Sendable {
     /// Exact instance-bound physical position.
     public let position: JSONStorePosition
-    /// Original decoded-scalar string ID.
-    public let id: String
+    /// Original exact ID, typed by its collection's ``JSONStoreIDKind``.
+    public let id: JSONStoreRecordID
+    internal let idText: String
     /// Absolute physical path of the record.
     public let path: [JSONLocationComponent]
     /// Absolute path of its configured ID member.
@@ -82,7 +138,7 @@ public struct JSONConfiguredStore: Sendable {
     /// - Throws: Invalid local collection position.
     public func recordCount(in collection: Int) throws -> Int {
         guard collection >= 0, collection < collections.count else {
-            throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
+            throw JSONStoreFailure(.invalidPosition, phase: .metadata, domain: .operation)
         }
         return collections[collection].count
     }
@@ -92,9 +148,22 @@ public struct JSONConfiguredStore: Sendable {
     /// - Throws: Invalid collection position.
     public func collectionName(at collection: Int) throws -> JSONKey {
         guard collection >= 0, collection < collections.count else {
-            throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
+            throw JSONStoreFailure(.invalidPosition, phase: .metadata, domain: .operation)
         }
         return profile.collections[collections[collection].profile].name
+    }
+    internal func idKind(of collection: Int) throws -> JSONStoreIDKind {
+        guard collection >= 0, collection < collections.count else {
+            throw JSONStoreFailure(.invalidPosition, phase: .metadata, domain: .operation)
+        }
+        return profile.collections[collections[collection].profile].idKind
+    }
+    /// Finds a physical collection's position by its exact configured name, without
+    /// scanning JSON or opening a ledger. Names compare by exact UTF-8 bytes.
+    /// - Parameter name: Exact configured collection name.
+    /// - Returns: The zero-based physical collection position, or nil if no such collection exists.
+    public func collectionIndex(named name: JSONKey) -> Int? {
+        collections.indices.first { profile.collections[collections[$0].profile].name == name }
     }
 
     fileprivate init(document: JSONDocument, profile: JSONStoreProfile, owner: JSONStoreOwner,
@@ -115,7 +184,7 @@ public struct JSONConfiguredStore: Sendable {
     public func record(collection: Int, row: Int) throws -> JSONStoreRecordMetadata {
         guard collection >= 0, collection < collections.count, row >= 0,
               row < collections[collection].count else {
-            throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
+            throw JSONStoreFailure(.invalidPosition, phase: .metadata, domain: .operation)
         }
         return records[collections[collection].start + row]
     }
@@ -125,7 +194,7 @@ public struct JSONConfiguredStore: Sendable {
     /// - Throws: Foreign-owner or out-of-bounds position; never a null substitute.
     public func record(at position: JSONStorePosition) throws -> JSONStoreRecordMetadata {
         guard position.owner === owner else {
-            throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
+            throw JSONStoreFailure(.invalidPosition, phase: .metadata, domain: .operation)
         }
         return try record(collection: position.collection, row: position.row)
     }
@@ -174,7 +243,7 @@ public struct JSONStoreBuilder: Sendable {
         } catch let error as JSONAccessFailure {
             // Selection happens before the reducer: preserve the real core cause/path/location.
             throw JSONStoreFailure(error.cause.category == .missingValue ? .selectionMissing : .selectionWrongKind,
-                phase: 3, domain: .source, path: error.path, coreCause: error.cause)
+                phase: .selection, domain: .source, path: error.path, coreCause: error.cause)
         }
     }
 }
@@ -182,7 +251,8 @@ public struct JSONStoreBuilder: Sendable {
 private struct StorePendingReference {
     let metadata: Int
     let collection: String
-    let id: String
+    let idText: String
+    let idKind: JSONStoreIDKind
     let aliasBytes: UInt64
 }
 private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
@@ -206,7 +276,7 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
         owner = JSONStoreOwner() // fixed reservation was admitted before allocation
         phaseObserver?(2)
     }
-    mutating func refuse(_ code: JSONStoreFailureCode, phase: Int, at path: [JSONLocationComponent],
+    mutating func refuse(_ code: JSONStoreFailureCode, phase: JSONStoreFailurePhase, at path: [JSONLocationComponent],
                          missing: Bool = false, first: [JSONLocationComponent]? = nil,
                          context: inout JSONTraversalContext) throws -> Never {
         var anchor = path
@@ -231,7 +301,7 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
         observed = true
         phaseObserver?(3)
         guard case .object(let object) = value else {
-            try refuse(.collectionsNotObject, phase: 3, at: hit.absoluteLocation, context: &context)
+            try refuse(.collectionsNotObject, phase: .selection, at: hit.absoluteLocation, context: &context)
         }
         try headers(object, root: hit.absoluteLocation, context: &context)
         try identifiers(object, context: &context)
@@ -241,14 +311,14 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
     }
     mutating func headers(_ object: JSONObject, root: [JSONLocationComponent],
                           context: inout JSONTraversalContext) throws {
-        accounting.phase = 4
+        accounting.phase = .collections
         phaseObserver?(4)
         try accounting.reserve(try JSONStoreAccounting.product(UInt64(profile.collections.count) + 1, 8), context: &context)
         var seen = Array(repeating: false, count: profile.collections.count)
         var total = 0
         for index in 0..<object.count {
             try context.work()
-            try JSONStoreAccounting.check(index + 1, accounting.caps.collections, name: "collections", phase: 4)
+            try JSONStoreAccounting.check(index + 1, accounting.caps.collections, name: .collections, phase: .collections)
             let member = object[index]
             let location = try path(.key(member.key), after: root, context: &context)
             var declaration: Int?
@@ -258,13 +328,13 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
                     declaration = i; break
                 }
             }
-            guard let declaration else { try refuse(.unconfiguredCollection, phase: 4, at: location, context: &context) }
-            guard case .array(let array) = member.value else { try refuse(.collectionNotArray, phase: 4, at: location, context: &context) }
+            guard let declaration else { try refuse(.unconfiguredCollection, phase: .collections, at: location, context: &context) }
+            guard case .array(let array) = member.value else { try refuse(.collectionNotArray, phase: .collections, at: location, context: &context) }
             try JSONStoreAccounting.check(array.count, accounting.caps.recordsPerCollection,
-                                          name: "recordsPerCollection", phase: 4, path: location)
+                                          name: .recordsPerCollection, phase: .collections, path: location)
             let sum = try JSONStoreAccounting.sum(UInt64(total), UInt64(array.count))
-            let next = try JSONStoreAccounting.checkedCount(sum, phase: 4)
-            try JSONStoreAccounting.check(next, accounting.caps.records, name: "records", phase: 4, path: location)
+            let next = try JSONStoreAccounting.checkedCount(sum, phase: .collections)
+            try JSONStoreAccounting.check(next, accounting.caps.records, name: .records, phase: .collections, path: location)
             collections.append(.init(profile: declaration, path: location, start: total, count: array.count))
             seen[declaration] = true; total = next
         }
@@ -272,13 +342,13 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
             try context.work()
             if !seen[index] {
                 let location = try path(.key(profile.collections[index].name), after: root, context: &context)
-                try refuse(.missingConfiguredCollection, phase: 4, at: location, missing: true, context: &context)
+                try refuse(.missingConfiguredCollection, phase: .collections, at: location, missing: true, context: &context)
             }
         }
         try accounting.reserve(try JSONStoreAccounting.product(UInt64(total) + 1, 8), context: &context)
     }
     mutating func identifiers(_ object: JSONObject, context: inout JSONTraversalContext) throws {
-        accounting.phase = 5
+        accounting.phase = .identifiers
         phaseObserver?(5)
         guard let owner else { throw JSONFailure(.configuration, code: .invalidOperation) }
         for ci in collections.indices {
@@ -288,29 +358,36 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
             for row in array.indices {
                 try context.work()
                 let rowPath = try path(.index(row), after: collection.path, context: &context)
-                guard case .object = array[row] else { try refuse(.recordWrongKind, phase: 5, at: rowPath, context: &context) }
+                guard case .object = array[row] else { try refuse(.recordWrongKind, phase: .identifiers, at: rowPath, context: &context) }
                 let idPath = try path(.key(declaration.idKey), after: rowPath, context: &context)
                 guard let value = try context.member(array[row], key: declaration.idKey, at: rowPath) else {
-                    try refuse(.recordIDMissing, phase: 5, at: idPath, missing: true, context: &context)
+                    try refuse(.recordIDMissing, phase: .identifiers, at: idPath, missing: true, context: &context)
                 }
-                if case .null = value { try refuse(.recordIDNull, phase: 5, at: idPath, context: &context) }
-                guard case .string(let id) = value else { try refuse(.recordIDWrongKind, phase: 5, at: idPath, context: &context) }
-                _ = try accounting.alias(id, phase: 5, path: idPath, context: &context)
+                if case .null = value { try refuse(.recordIDNull, phase: .identifiers, at: idPath, context: &context) }
+                let id: JSONStoreRecordID
+                switch (declaration.idKind, value) {
+                case (.string, .string(let text)): id = .string(text)
+                case (.integer, .number(let number)) where number.isInteger: id = .integer(number)
+                default: try refuse(.recordIDWrongKind, phase: .identifiers, at: idPath, context: &context)
+                }
+                let idText = id.comparisonText
+                _ = try accounting.alias(idText, phase: .identifiers, path: idPath, context: &context)
                 for prior in collection.start..<records.count {
                     try context.work()
-                    if try context.equalStrings(records[prior].id, id) {
-                        try refuse(.duplicateRecordID, phase: 5, at: idPath,
+                    if try context.equalStrings(records[prior].idText, idText) {
+                        try refuse(.duplicateRecordID, phase: .identifiers, at: idPath,
                                    first: records[prior].idPath, context: &context)
                     }
                 }
                 try accounting.reserve(64, context: &context)
                 let position = JSONStorePosition(owner: owner, collection: ci, row: row)
-                records.append(.init(position: position, id: id, path: rowPath, idPath: idPath, referenceRange: 0..<0))
+                records.append(.init(position: position, id: id, idText: idText, path: rowPath,
+                                     idPath: idPath, referenceRange: 0..<0))
             }
         }
     }
     mutating func markers(_ object: JSONObject, context: inout JSONTraversalContext) throws {
-        accounting.phase = 6
+        accounting.phase = .references
         phaseObserver?(6)
         for ci in collections.indices {
             try context.work()
@@ -322,14 +399,14 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
                 for fi in declaration.referenceFields.indices {
                     try context.work()
                     try JSONStoreAccounting.check(references.count + 1, accounting.caps.referenceSlots,
-                        name: "referenceSlots", phase: 6, path: record.path)
+                        name: .referenceSlots, phase: .references, path: record.path)
                     let field = declaration.referenceFields[fi]
                     let location = try path(.key(field.key), after: record.path, context: &context)
                     let marker = try context.member(array[row], key: field.key, at: record.path)
                     let state: JSONStoreReferenceState
                     if let marker {
                         if case .null = marker {
-                            guard field.nullable else { try refuse(.referenceNull, phase: 6, at: location, context: &context) }
+                            guard field.nullable else { try refuse(.referenceNull, phase: .references, at: location, context: &context) }
                             state = .null
                         } else {
                             try stageMarker(marker, location: location, context: &context)
@@ -337,57 +414,62 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
                             state = .absent
                         }
                     } else {
-                        guard field.presence == .optional else { try refuse(.referenceMissing, phase: 6, at: location, missing: true, context: &context) }
+                        guard field.presence == .optional else { try refuse(.referenceMissing, phase: .references, at: location, missing: true, context: &context) }
                         state = .absent
                     }
                     try accounting.reserve(64, context: &context)
                     references.append(.init(field: fi, path: location, state: state))
                 }
-                records[ri] = .init(position: record.position, id: record.id, path: record.path,
-                                    idPath: record.idPath, referenceRange: start..<references.count)
+                records[ri] = .init(position: record.position, id: record.id, idText: record.idText,
+                                    path: record.path, idPath: record.idPath, referenceRange: start..<references.count)
             }
         }
     }
     mutating func stageMarker(_ value: JSON, location: [JSONLocationComponent],
                               context: inout JSONTraversalContext) throws {
-        guard case .object(let object) = value else { try refuse(.referenceMarkerWrongKind, phase: 6, at: location, context: &context) }
+        guard case .object(let object) = value else { try refuse(.referenceMarkerWrongKind, phase: .references, at: location, context: &context) }
         let collectionKey: JSONKey = "collection", idKey: JSONKey = "id"
         let collectionValue = try context.member(value, key: collectionKey, at: location)
         let idValue = try context.member(value, key: idKey, at: location)
         guard let collectionValue else {
             let missing = try path(.key(collectionKey), after: location, context: &context)
-            try refuse(.referenceMarkerMissing, phase: 6, at: missing, missing: true, context: &context)
+            try refuse(.referenceMarkerMissing, phase: .references, at: missing, missing: true, context: &context)
         }
         guard let idValue else {
             let missing = try path(.key(idKey), after: location, context: &context)
-            try refuse(.referenceMarkerMissing, phase: 6, at: missing, missing: true, context: &context)
+            try refuse(.referenceMarkerMissing, phase: .references, at: missing, missing: true, context: &context)
         }
         guard case .string(let collection) = collectionValue else {
             let failure = try path(.key(collectionKey), after: location, context: &context)
-            try refuse(.referenceMarkerMemberWrongKind, phase: 6, at: failure, context: &context)
+            try refuse(.referenceMarkerMemberWrongKind, phase: .references, at: failure, context: &context)
         }
-        guard case .string(let id) = idValue else {
+        let id: JSONStoreRecordID
+        switch idValue {
+        case .string(let text): id = .string(text)
+        case .number(let number) where number.isInteger: id = .integer(number)
+        default:
             let failure = try path(.key(idKey), after: location, context: &context)
-            try refuse(.referenceMarkerMemberWrongKind, phase: 6, at: failure, context: &context)
+            try refuse(.referenceMarkerMemberWrongKind, phase: .references, at: failure, context: &context)
         }
+        let idText = id.comparisonText
         for member in object {
             try context.work()
             if try !context.equalStrings(member.key.string, collectionKey.string),
                try !context.equalStrings(member.key.string, idKey.string) {
                 let failure = try path(.key(member.key), after: location, context: &context)
-                try refuse(.referenceMarkerExtra, phase: 6, at: failure, context: &context)
+                try refuse(.referenceMarkerExtra, phase: .references, at: failure, context: &context)
             }
         }
-        try JSONStoreAccounting.check(pending.count + 1, accounting.caps.links, name: "links", phase: 6, path: location)
-        let a = try accounting.alias(collection, phase: 6, path: location, context: &context)
-        let b = try accounting.alias(id, phase: 6, path: location, context: &context)
+        try JSONStoreAccounting.check(pending.count + 1, accounting.caps.links, name: .links, phase: .references, path: location)
+        let a = try accounting.alias(collection, phase: .references, path: location, context: &context)
+        let b = try accounting.alias(idText, phase: .references, path: location, context: &context)
         try accounting.reserve(32, context: &context)
-        pending.append(.init(metadata: references.count, collection: collection, id: id,
-                             aliasBytes: try JSONStoreAccounting.sum(a,b)))
+        pending.append(.init(metadata: references.count, collection: collection, idText: idText,
+                             idKind: id.kind, aliasBytes: try JSONStoreAccounting.sum(a,b)))
         stagedLinks += 1 // the finite link cap was checked before staging
     }
     mutating func targets(context: inout JSONTraversalContext) throws {
-        accounting.phase = 7
+        accounting.phase = .targets
         phaseObserver?(7)
         for index in pending.indices {
             try context.work()
@@ -401,18 +483,21 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
             }
             guard let ci = targetCollection else {
                 let failure = try path(.key("collection"), after: metadata.path, context: &context)
-                try refuse(.referenceUnknownCollection, phase: 7, at: failure, context: &context)
+                try refuse(.referenceUnknownCollection, phase: .targets, at: failure, context: &context)
             }
             let collection = collections[ci]
             var target: JSONStorePosition?
-            for row in 0..<collection.count {
-                try context.work()
-                let record = records[collection.start + row]
-                if try context.equalStrings(record.id, pending.id) { target = record.position; break }
+            // IDs of another kind never match: "7" does not reach the integer ID 7.
+            if profile.collections[collection.profile].idKind == pending.idKind {
+                for row in 0..<collection.count {
+                    try context.work()
+                    let record = records[collection.start + row]
+                    if try context.equalStrings(record.idText, pending.idText) { target = record.position; break }
+                }
             }
             guard let target else {
                 let failure = try path(.key("id"), after: metadata.path, context: &context)
-                try refuse(.referenceDanglingID, phase: 7, at: failure, context: &context)
+                try refuse(.referenceDanglingID, phase: .targets, at: failure, context: &context)
             }
             references[pending.metadata] = .init(field: metadata.field, path: metadata.path, state: .link(target))
             resolvedLinks += 1
@@ -426,7 +511,7 @@ private struct StoreReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
     }
     mutating func finish(_ summary: JSONTraversalSummary,
                          context: inout JSONTraversalContext) throws -> JSONConfiguredStore {
-        accounting.phase = 8
+        accounting.phase = .publication
         phaseObserver?(8)
         try context.work()
         guard let owner, observed, pending.isEmpty, stagedLinks == resolvedLinks,

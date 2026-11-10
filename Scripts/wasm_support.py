@@ -5,7 +5,7 @@ import argparse, hashlib, json, os, pathlib, re, shutil, signal, subprocess, tim
 from archive_candidate import files
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-SDK = 'swift-6.4.0-RELEASE_wasm'
+SDK = 'swift-6.4.2-RELEASE_wasm'
 from test_discovery import DISCOVERY
 COUNTS = DISCOVERY['wasi_root_functions']
 GROUPS = {'core': 6, 'resources': 1, 'schema': 2, 'streaming': 3, 'html': 6}
@@ -56,7 +56,7 @@ def main():
     try:
         swift, wasmkit, node = [shutil.which(x) for x in ['swift', 'wasmkit', 'node']]
         if not all([swift, wasmkit, node]): raise ValueError('Matching swift, wasmkit and node required on PATH')
-        run('compiler', [swift, '--version'], lambda c, t: c == 0 and 'swift-6.4-RELEASE' in t)
+        run('compiler', [swift, '--version'], lambda c, t: c == 0 and 'swift-6.4.2-RELEASE' in t)
         run('sdk', [swift, 'sdk', 'list'], lambda c, t: c == 0 and SDK in t.splitlines())
         run('wasmkit-version', [wasmkit, '--version']); run('node-version', [node, '--version'])
         manifest_text = run('root-manifest', [swift, 'package', 'dump-package'])

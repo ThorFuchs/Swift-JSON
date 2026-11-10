@@ -55,6 +55,99 @@ public struct JSONInspectionBatch: Sendable {
         return try traversal.inspectPreparedOwned(scope: .virtual(roots: paths, overlap: .orderedOccurrences),
             options: .init(depthLimit: 0), reducer: &reducer)
     }
+
+    /// Reads every requested value in caller order, returning nil where the path is missing.
+    ///
+    /// Missing means an absent object member or an array index past the end. Explicit
+    /// JSON null is a value, `.some(.null)`, never nil. Because `JSON` itself accepts
+    /// the `nil` literal as JSON null, test for missing with `if let`, `switch` or
+    /// `== .none` rather than relying on a bare `nil` in a JSON-typed context. Every other problem still throws,
+    /// exactly as in ``values(at:maximumRequests:)``: stepping into the wrong kind of
+    /// container, a negative index, more path components than the pointer-token limit,
+    /// resource exhaustion and cancellation. One complete source admission and one
+    /// cumulative ledger cover the whole batch, and no partial array is published.
+    /// - Parameters:
+    ///   - paths: Absolute typed selections; an empty path selects the root.
+    ///   - maximumRequests: Inclusive request cap, default 1024; zero admits only [].
+    /// - Returns: One optional value per request, in order, and one cumulative report.
+    /// - Throws: Batch capacity, wrong-kind/negative-index, resource/configuration errors or cancellation.
+    public func optionalValues(at paths: [[JSONLocationComponent]], maximumRequests: Int = 1_024)
+        throws -> JSONOperationReport<[JSON?]> {
+        try checkInspectionBatch(paths.count, maximum: maximumRequests)
+        try limits.validate()
+        for path in paths where UInt64(path.count) > limits[.pointerTokens] {
+            throw JSONFailure(.resource, code: .limitExceeded, resource: .init(domain: .core,
+                metric: .pointerTokens, limit: limits[.pointerTokens], attemptedUsage: UInt64(path.count), overflow: false))
+        }
+        var reducer = OptionalPathBatchReducer(paths: paths, outputObserver: outputObserver)
+        var traversal = JSONTraversal(document: document, limits: limits)
+        traversal.checkpointObserver = checkpointObserver
+        traversal.lifetimeObserver = lifetimeObserver
+        return try traversal.inspectPreparedOwned(options: .init(depthLimit: 0), reducer: &reducer)
+    }
+}
+
+private struct OptionalPathBatchReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
+    let paths: [[JSONLocationComponent]]
+    let outputObserver: (@Sendable (Int) -> Void)?
+    private var root: JSON?
+    private var requestBytes: UInt64 = 0
+    init(paths: [[JSONLocationComponent]], outputObserver: (@Sendable (Int) -> Void)?) {
+        self.paths = paths; self.outputObserver = outputObserver
+    }
+    mutating func prepare(context: inout JSONReadPreparationContext) throws {
+        try context.retain(32)
+        // Each caller path component is an owned request slot; keys are admitted as text.
+        for path in paths {
+            for component in path {
+                try context.work(); try context.retain(JSONLogicalWeights.indexSlot)
+                requestBytes = try JSONStoreAccounting.sum(requestBytes, JSONLogicalWeights.indexSlot)
+                if case .key(let key) = component { try context.admitText(key.string, key: true) }
+            }
+        }
+    }
+    mutating func observe(_ hit: JSONTraversalHit, value: JSON,
+                          context: inout JSONTraversalContext) throws -> JSONTraversalAction {
+        try context.work()
+        guard root == nil, hit.relativeDepth == 0 else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        root = value
+        return .skipDescendants
+    }
+    mutating func finish(_ summary: JSONTraversalSummary, context: inout JSONTraversalContext) throws -> [JSON?] {
+        guard let root else { throw JSONFailure(.configuration, code: .invalidOperation) }
+        var result: [JSON?] = []
+        for path in paths {
+            try context.work()
+            // JSON is ExpressibleByNilLiteral (JSON null): spell missing as Optional.none.
+            var current: JSON? = .some(root)
+            for (hop, component) in path.enumerated() {
+                guard let value = current else { break }
+                try context.work()
+                // Errors name the attempted path up to and including the failing hop,
+                // exactly like values(at:).
+                let attempted = Array(path.prefix(hop + 1))
+                switch component {
+                case .key(let key):
+                    // Absent members are nil; a non-object container throws through the ledger.
+                    current = try context.member(value, key: key, at: attempted)
+                case .index(let index):
+                    guard case .array(let array) = value else {
+                        let failure = JSONAccessFailure(cause: JSONFailure(.typeMismatch, code: .wrongKind), path: attempted)
+                        try context.recordFailure(failure); throw failure
+                    }
+                    guard index >= 0 else {
+                        let failure = JSONAccessFailure(cause: JSONFailure(.configuration, code: .invalidIndex), path: attempted)
+                        try context.recordFailure(failure); throw failure
+                    }
+                    current = index < array.count ? .some(array[index]) : .none
+                }
+            }
+            try context.retain(32); result.append(current); outputObserver?(result.count)
+        }
+        try context.checkpoint(); try context.release(requestBytes)
+        self.root = nil
+        return result
+    }
 }
 
 private struct PathBatchReducer: JSONReadPreparation, JSONTraversalOwnedReducer {
