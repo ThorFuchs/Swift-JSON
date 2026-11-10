@@ -8,7 +8,7 @@ receipts at commit 5ca1079 retain the original blocked observations.
 Use the matching official Swift 6.4.0 compiler and full-language SDK:
 
 ```sh
-swift build --package-path Tools/WasmAudit --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path .build/wasm-audit-consumer
+swift build --package-path Tools/WasmAudit --swift-sdk swift-6.4.2-RELEASE_wasm --scratch-path .build/wasm-audit-consumer
 ```
 
 The command and its SwiftPM resource bundle reside under

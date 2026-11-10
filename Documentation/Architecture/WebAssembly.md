@@ -17,8 +17,9 @@ Apple deployment minimums remain macOS/iOS 27. WASI has no SwiftPM platform entr
 
 The initial pinned execution hosts are WasmKit 0.3.1 and Node 26.5.0/V8 on an
 ARM64 Mac. Match the Swift.org compiler and SDK exactly. The SDK pin is
-`swift-6.4.0-RELEASE_wasm`, archive SHA-256
-`f07b7be3c586d92d7a07051fc6d303b87ebea67eadc40640ba59d5a8b79aa86d`.
+`swift-6.4.2-RELEASE_wasm` with the Swift.org 6.4.2 toolchain, archive SHA-256
+`83baca83553f8c443cda7b84800912e6e709c3acd2e7ebf277794ca5836c0da5`
+(moved from 6.4.0 for 1.9.0; receipts produced with 6.4.0 stay bound to that pin).
 The [official setup guide](https://www.swift.org/documentation/articles/wasm-getting-started.html)
 explains matching toolchains; newer SDKs need fresh receipts. Run the local lane
 with that compiler and WasmKit on PATH:
