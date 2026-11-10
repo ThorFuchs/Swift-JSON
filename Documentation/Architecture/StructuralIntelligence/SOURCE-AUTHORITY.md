@@ -1,3 +1,12 @@
+# 1.8 source authority — 28 October 2026
+
+The 1.8 candidate starts at published 1.7.0 commit
+`8557badef562cf2f059e964c113d4a7f60ecbe6c`, tree
+`c914b8914c9130a3a07a3ed82fb41dde33c37402`. The maintainer commissioned
+bounded batches and the immutable public store; see [the contract](BoundedWorkflows1.8.md).
+Earlier private-only/pending status remains truthful for the dated sources below.
+Qualification and merge/release acceptance of this successor remain separate.
+
 # Structural source authority
 
 ## Consolidated development edition — 25 October 2026

@@ -13,7 +13,9 @@ private actor ImportSource {
     func next() throws -> JSONByteChunk? {
         pulls += 1
         if pulls == failAt { throw ImportError.source }
-        if pulls == cancelAt { withUnsafeCurrentTask { $0?.cancel() } }
+        // Test-only current-task handle stays inside its standard-library callback.
+        // Only this invocation is cancelled; no unsafe handle escapes or is shared.
+        if pulls == cancelAt { unsafe withUnsafeCurrentTask { unsafe $0?.cancel() } }
         return pulls <= texts.count ? .init(Array(texts[pulls - 1].utf8)) : nil
     }
     func count() -> Int { pulls }

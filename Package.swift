@@ -43,7 +43,7 @@ let package = Package(
         .target(name: "JSONHTML", dependencies: ["JSON"], exclude: ["Assets"]),
         .target(name: "JSONFilterRuntime", dependencies: ["JSON"]),
         .target(name: "JSONTransform", dependencies: ["JSON", "JSONFilterRuntime"]),
-        .testTarget(name: "JSONTransformTests", dependencies: ["JSON", "JSONTransform"]),
+        .testTarget(name: "JSONTransformTests", dependencies: ["JSON", "JSONTransform", "JSONFilterRuntime"]),
         .target(name: "JSONCLIEngine", dependencies: ["JSON", "JSONSchema", "JSONStreaming", "JSONPatch", "JSONHTML", "JSONFilterRuntime", "JSONTransform"]),
         .executableTarget(name: "JSONCLI", dependencies: ["JSONCLIEngine"]),
         .testTarget(name: "JSONCLITests", dependencies: ["JSONCLIEngine", "JSONFilterRuntime", "JSON", "JSONPatch", "JSONSchema", "JSONHTML"]),

@@ -1,3 +1,13 @@
+# Execution update — 28 October 2026
+
+1.7.0 is published at `8557badef562cf2f059e964c113d4a7f60ecbe6c`.
+The maintainer has now commissioned the 1.8 bounded structural wave, including
+the public read-only store, on isolated `codex/1.8-batches-and-store`.
+[The implementation contract](Architecture/StructuralIntelligence/BoundedWorkflows1.8.md)
+freezes this wave; [qualification](Qualification/Release1.8.md) records actual results.
+The proposal and historical inventories below remain source-bound. Persistence,
+platform-floor reduction and new query grammars are not included.
+
 # Release roadmap: 1.7 through 2.0
 
 Maintainer working proposal, audited 27 October 2026. The next step is a release
@@ -50,7 +60,7 @@ there is no public store/follow API or store product. Root dependencies stay emp
 | --- | --- | --- |
 | **1.7.0 — integrated foundations** | Release the complete current public consolidation together: Navigation/Inspection snapshots, projections and graph, Transform and both DSL products, alongside all stable products. Keep store implementation private. | Freeze current-main successor; qualify exact source, public consumers/API/DocC, archives/assets and supported platforms; resolve the new candidate's performance dispositions explicitly. |
 | **1.8.0 — located root-array streaming** | Add JSONLocatedTopLevelArraySequence: root-array elements with zero-based half-open UTF-8 source spans over the existing shared grammar/driver, for consumers that stage original record bytes. | Additive public-consumer tests, facade parity on errors/limits/statistics, DocC and complete supported-platform CI on the exact source. |
-| **1.9.0 — bounded structural workflows** | Add independently reviewed, additive Inspection conveniences: aggregate batch reads and, if separately admitted and qualified, the minimal immutable public configured-store/follow interface. Improve Navigation/Inspection guides and error/resource ergonomics. | One-ledger aggregate proof, finite request/result/frontier profiles, ordinary compiler refusals, adversarial failure/cancellation and complete supported-platform evidence. Store can remain private if its gate is not complete. |
+| **1.9.0 — bounded structural workflows** | Add independently reviewed, additive Inspection conveniences: aggregate batch reads and the minimal immutable public configured-store/follow interface (public API admitted by the maintainer on 2026-11-10). Improve Navigation/Inspection guides and error/resource ergonomics. | One-ledger aggregate proof, finite request/result/frontier profiles, ordinary compiler refusals, adversarial failure/cancellation and complete supported-platform evidence. Admission of the store API does not waive these gates. |
 | **1.10.0 — durable workflows and operational maturity** | Candidate wave for versioned exact snapshot/store persistence and source-bound restoration, after a dedicated design admission. Complete capacity/scaling characterization and consumer migration guidance. | Freeze the logical envelope, corruption/version/source-identity semantics, bounded decode/rebuild and disk teardown/reopen tests. No persistence or source-span claim from a bare JSON dump. |
 | **2.0.0 — supported family and compatibility contract** | Ship all accepted products/capabilities under one coherent, documented compatibility, resource and platform contract. Complete end-to-end applications, migration tooling and the release qualification matrix. | Scope freeze, complete public API review and cross-product qualification, explicit treatment of every remaining hold, reproducible clean candidate and a separate owner tag/publication instruction. |
 

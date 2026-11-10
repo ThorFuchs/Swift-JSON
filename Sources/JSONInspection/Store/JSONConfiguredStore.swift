@@ -3,27 +3,53 @@ import JSON
 import JSONNavigation
 
 private final class JSONStoreOwner: Sendable {}
-package struct JSONStorePosition: Sendable {
+/// Unforgeable position bound to one immutable store instance, not a persistent ID.
+public struct JSONStorePosition: Sendable, Equatable {
     fileprivate let owner: JSONStoreOwner
-    package let collection: Int
-    package let row: Int
+    /// Zero-based physical source collection position.
+    public let collection: Int
+    /// Zero-based physical row in that collection.
+    public let row: Int
+    /// Compares exact owner identity and fixed local ordinals; no JSON scan.
+    /// - Parameters:
+    ///   - lhs: First owner-bound position.
+    ///   - rhs: Second owner-bound position.
+    /// - Returns: True only for the same source instance and physical record.
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.owner === rhs.owner && lhs.collection == rhs.collection && lhs.row == rhs.row
+    }
 }
-package enum JSONStoreReferenceState: Sendable {
+/// A declared reference slot; missing and explicit null remain distinct.
+public enum JSONStoreReferenceState: Sendable {
+    /// Optional field absent from the original record.
     case absent
+    /// Explicit JSON null accepted by the field policy.
     case null
+    /// A validated existing target in this same store.
+    /// - Parameter position: Exact owner-bound target position.
     case link(JSONStorePosition)
 }
-package struct JSONStoreRecordMetadata: Sendable {
-    package let position: JSONStorePosition
-    package let id: String
-    package let path: [JSONLocationComponent]
-    package let idPath: [JSONLocationComponent]
-    package let referenceRange: Range<Int>
+/// Immutable source metadata; value resolution is a separately metered operation.
+public struct JSONStoreRecordMetadata: Sendable {
+    /// Exact instance-bound physical position.
+    public let position: JSONStorePosition
+    /// Original decoded-scalar string ID.
+    public let id: String
+    /// Absolute physical path of the record.
+    public let path: [JSONLocationComponent]
+    /// Absolute path of its configured ID member.
+    public let idPath: [JSONLocationComponent]
+    /// Half-open range into the containing store references array.
+    public let referenceRange: Range<Int>
 }
-package struct JSONStoreReferenceMetadata: Sendable {
-    package let field: Int
-    package let path: [JSONLocationComponent]
-    package let state: JSONStoreReferenceState
+/// Immutable configured-slot metadata in physical record and declaration order.
+public struct JSONStoreReferenceMetadata: Sendable {
+    /// Zero-based field declaration in the record collection profile.
+    public let field: Int
+    /// Exact absolute field path, including absent fields.
+    public let path: [JSONLocationComponent]
+    /// Absent, explicit null or a validated same-store link.
+    public let state: JSONStoreReferenceState
 }
 internal struct StoreCollectionMetadata: Sendable {
     let profile: Int
@@ -31,25 +57,46 @@ internal struct StoreCollectionMetadata: Sendable {
     let start: Int
     let count: Int
 }
-/// Package-private immutable complete view. No independent resolver or follow API.
-package struct JSONConfiguredStore: Sendable {
-    package let document: JSONDocument
-    package let profile: JSONStoreProfile
+/// Immutable completely admitted source, records and explicitly validated references.
+/// Construct through JSONStoreBuilder. No mutable store, I/O or persistent identity.
+public struct JSONConfiguredStore: Sendable {
+    /// Original complete canonical source, optionally with coherent source mapping.
+    public let document: JSONDocument
+    /// Immutable explicit collection/reference interpretation.
+    public let profile: JSONStoreProfile
     private let owner: JSONStoreOwner
     private let collections: [StoreCollectionMetadata]
     private let records: [JSONStoreRecordMetadata]
-    package let references: [JSONStoreReferenceMetadata]
+    /// All immutable configured slots, in physical record and field order.
+    public let references: [JSONStoreReferenceMetadata]
     package let overlayLogicalBytes: UInt64
     package let identityAliasBytes: UInt64
     package let profileTextBytes: UInt64
-    package var collectionCount: Int { collections.count }
-    package var recordCount: Int { records.count }
-    package func recordCount(in collection: Int) throws -> Int {
+    /// Number of complete physical collections.
+    public var collectionCount: Int { collections.count }
+    /// Total complete physical records.
+    public var recordCount: Int { records.count }
+    /// Fixed metadata access without a new owned operation.
+    /// - Parameter collection: Zero-based physical collection position.
+    /// - Returns: Complete record count in that collection.
+    /// - Throws: Invalid local collection position.
+    public func recordCount(in collection: Int) throws -> Int {
         guard collection >= 0, collection < collections.count else {
             throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
         }
         return collections[collection].count
     }
+    /// Reads a physical collection's exact name without scanning or opening a ledger.
+    /// - Parameter collection: Zero-based physical source collection position.
+    /// - Returns: Exact configured source name.
+    /// - Throws: Invalid collection position.
+    public func collectionName(at collection: Int) throws -> JSONKey {
+        guard collection >= 0, collection < collections.count else {
+            throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
+        }
+        return profile.collections[collections[collection].profile].name
+    }
+
     fileprivate init(document: JSONDocument, profile: JSONStoreProfile, owner: JSONStoreOwner,
                       collections: [StoreCollectionMetadata], records: [JSONStoreRecordMetadata],
                       references: [JSONStoreReferenceMetadata], overlay: UInt64, aliases: UInt64,
@@ -60,14 +107,23 @@ package struct JSONConfiguredStore: Sendable {
         profileTextBytes = profileText
     }
     /// Checked fixed metadata access; positions are bound to this exact owner instance.
-    package func record(collection: Int, row: Int) throws -> JSONStoreRecordMetadata {
+    /// - Parameters:
+    ///   - collection: Physical collection position.
+    ///   - row: Physical row position.
+    /// - Returns: Immutable metadata from this exact store.
+    /// - Throws: Invalid local position.
+    public func record(collection: Int, row: Int) throws -> JSONStoreRecordMetadata {
         guard collection >= 0, collection < collections.count, row >= 0,
               row < collections[collection].count else {
             throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
         }
         return records[collections[collection].start + row]
     }
-    package func record(at position: JSONStorePosition) throws -> JSONStoreRecordMetadata {
+    /// Reads fixed metadata with exact owner validation, without scanning JSON.
+    /// - Parameter position: Unforgeable position from this exact store instance.
+    /// - Returns: Original immutable record metadata.
+    /// - Throws: Foreign-owner or out-of-bounds position; never a null substitute.
+    public func record(at position: JSONStorePosition) throws -> JSONStoreRecordMetadata {
         guard position.owner === owner else {
             throw JSONStoreFailure(.invalidPosition, phase: 0, domain: .operation)
         }
@@ -75,20 +131,35 @@ package struct JSONConfiguredStore: Sendable {
     }
 }
 
-package struct JSONStoreBuilder: Sendable {
-    package let document: JSONDocument
-    package let profile: JSONStoreProfile
-    package let limits: JSONLimits
-    package let caps: JSONStoreCaps
+/// Builds a complete immutable configured store using the original native ledger.
+/// Profile preparation, admission, all construction phases and publication share it.
+public struct JSONStoreBuilder: Sendable {
+    /// Original canonical source; admitted once during build.
+    public let document: JSONDocument
+    /// Closed typed configuration checked before source admission.
+    public let profile: JSONStoreProfile
+    /// Native cumulative operation quotas.
+    public let limits: JSONLimits
+    /// Additional inclusive store construction policies.
+    public let caps: JSONStoreCaps
     package var checkpointObserver: (@Sendable (UInt64) -> Void)?
     package var lifetimeObserver: (@Sendable (Bool, Bool) -> Void)?
     /// Qualification-only phase rendezvous; arbitrary observer work is not library work.
     package var phaseObserver: (@Sendable (Int) -> Void)?
-    package init(document: JSONDocument, profile: JSONStoreProfile,
+    /// Captures trusted immutable inputs; validation occurs inside build.
+    /// - Parameters:
+    ///   - document: Complete canonical source, optionally with mapping.
+    ///   - profile: Explicit exact collection/ID/reference declarations.
+    ///   - limits: Finite cumulative native quotas.
+    ///   - caps: Additional finite store policies, not physical capacity promises.
+    public init(document: JSONDocument, profile: JSONStoreProfile,
                  limits: JSONLimits = .balanced, caps: JSONStoreCaps = .init()) {
         self.document = document; self.profile = profile; self.limits = limits; self.caps = caps
     }
-    package func build() throws -> JSONOperationReport<JSONConfiguredStore> {
+    /// Completes all construction phases atomically or throws, with no partial store.
+    /// - Returns: Immutable admitted store and the one original operation report.
+    /// - Throws: Profile/source/capacity/core resource errors or cancellation.
+    public func build() throws -> JSONOperationReport<JSONConfiguredStore> {
         try Task.checkCancellation()
         try limits.validate()
         try caps.validate()

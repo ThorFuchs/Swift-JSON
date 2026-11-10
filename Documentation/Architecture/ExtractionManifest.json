@@ -355,6 +355,17 @@
       "attribution": "Apache-2.0 prototype SPDX retained; original integration cases extend actual-engine qualification.",
       "validation": "Scripts/ci.py --lane dsl; native and safety exact discovery",
       "evidence": "Actual-engine Debug/Release/ASan receipts and real public consumer"
+    },
+    {
+      "component": "1.8 bounded structural workflows",
+      "source": "Original Swift-JSON implementation over the existing native prepared traversal and NAV12 checked store construction",
+      "paths": [
+        "Sources/JSONInspection/JSONInspectionBatch.swift",
+        "Sources/JSONInspection/Store/JSONStoreQueries.swift",
+        "Examples/BoundedWorkflows"
+      ],
+      "validation": "Exact Debug/Release behavior, preserved 65 store vectors, public SwiftPM consumer, codegen negatives and safety/docs/platform gates; see Documentation/Qualification/Release1.8.md for actual status",
+      "dependencies": "No new dependencies or numeric/key/schema authority; Apache-2.0 original contributions"
     }
   ],
   "original_implementation_notes": [

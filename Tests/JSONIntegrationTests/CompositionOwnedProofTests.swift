@@ -18,7 +18,9 @@ import JSONSchema
                     meter.checkpointObserver = { work in
                         if work >= threshold {
                             seen.withLock { if $0 == nil { $0 = work } }
-                            withUnsafeCurrentTask { $0?.cancel() }
+                            // Test-only current-task handle stays inside its standard-library callback.
+                            // Only this invocation is cancelled; no unsafe handle escapes or is shared.
+                            unsafe withUnsafeCurrentTask { unsafe $0?.cancel() }
                         }
                     }
                 }

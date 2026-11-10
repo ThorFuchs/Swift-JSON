@@ -11,13 +11,13 @@ concurrency:
   cancel-in-progress: true
 jobs:
   qualification:
-    name: Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}
+    name: Linux execution / ${{ matrix.architecture }} / ${{ matrix.lane }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        lane: [linux, linux-safety]
+        lane: [linux, linux-safety, composition]
         architecture: [x86_64, arm64]
         include:
           - architecture: x86_64
@@ -47,9 +47,6 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
-      - name: Public composition and reference imports
-        if: matrix.lane == 'linux'
-        run: python3 -B Scripts/ci.py --lane composition
       - name: Preserve Linux receipts
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -60,3 +57,21 @@ jobs:
           path: |
             .build/ci/
             !.build/ci/**/reproduction/extracted/**
+  required:
+    # Both architectures and all three lanes must succeed. Preserve the four
+    # existing context names without converting an incomplete matrix to green.
+    name: Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}
+    needs: qualification
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        lane: [linux, linux-safety]
+        architecture: [x86_64, arm64]
+    steps:
+      - name: Require complete qualification
+        env:
+          QUALIFICATION_RESULT: ${{ needs.qualification.result }}
+        run: test "$QUALIFICATION_RESULT" = success

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "profile": "balanced",
+  "sizes": [
+    1,
+    8,
+    64,
+    512
+  ],
+  "batch_source_records": 8,
+  "batch_operations": [
+    "path-batch",
+    "snapshot-batch",
+    "store-values"
+  ],
+  "cells": [
+    "path-batch-1",
+    "snapshot-batch-1",
+    "store-values-1",
+    "follow-chain-1",
+    "path-batch-8",
+    "snapshot-batch-8",
+    "store-values-8",
+    "follow-chain-8",
+    "path-batch-64",
+    "snapshot-batch-64",
+    "store-values-64",
+    "follow-chain-64",
+    "path-batch-512",
+    "snapshot-batch-512",
+    "store-values-512",
+    "follow-chain-512"
+  ],
+  "required_complete": [
+    "path-batch-1",
+    "snapshot-batch-1",
+    "store-values-1",
+    "path-batch-8",
+    "snapshot-batch-8",
+    "store-values-8",
+    "path-batch-64",
+    "snapshot-batch-64",
+    "store-values-64",
+    "path-batch-512",
+    "snapshot-batch-512",
+    "store-values-512",
+    "follow-chain-1",
+    "follow-chain-8"
+  ],
+  "diagnostic_capacity": [
+    "follow-chain-64",
+    "follow-chain-512"
+  ],
+  "follow_bounds": "depth=n-1; pending frontier=1; visited/results=n; unchanged balanced native and store defaults",
+  "fixtures": [
+    {
+      "name": "fixed-eight.json",
+      "records": 8,
+      "bytes": 608,
+      "sha256": "f8372702217632eaa0903d11407534f44dd9f59e1c5916b3b2395258500912b7"
+    },
+    {
+      "name": "chain-1.json",
+      "records": 1,
+      "bytes": 62,
+      "sha256": "8fe8b3ce7bc73d5213c7152637bb3f5a0cc64e3bef04afde0b8f521cab0eaf8c"
+    },
+    {
+      "name": "chain-8.json",
+      "records": 8,
+      "bytes": 608,
+      "sha256": "f8372702217632eaa0903d11407534f44dd9f59e1c5916b3b2395258500912b7"
+    },
+    {
+      "name": "chain-64.json",
+      "records": 64,
+      "bytes": 5084,
+      "sha256": "b6c2c1f666a54393b191df5e903b4d3d33a926b7326b2a05717a5de95bcad7f2"
+    },
+    {
+      "name": "chain-512.json",
+      "records": 512,
+      "bytes": 41748,
+      "sha256": "37472330ac6dff6c5fa6142a0c69e867b548e54098d178a47731df150695d2c9"
+    }
+  ],
+  "policy": "A diagnostic typed resource refusal is an observed incomplete capacity cell, never an evaluated success or a default/joint-capacity claim. No timings, RSS or allocations are measured. Native limits/defaults and >10% performance review trigger are unchanged."
+}
