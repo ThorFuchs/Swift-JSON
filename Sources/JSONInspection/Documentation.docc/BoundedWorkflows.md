@@ -63,12 +63,9 @@ of them is refused as a duplicate. Values beyond Double precision, such as
 IDs never convert between kinds. A string `"7"` in an integer-ID collection is a
 ``JSONStoreFailureCode/recordIDWrongKind`` refusal, and a marker whose `id` is `"7"`
 does not reach the integer record `7`; it is ``JSONStoreFailureCode/referenceDanglingID``.
-Look up a record with a typed ``JSONStoreRecordID``; string and integer literals both work:
-
-```swift
-let order = try store.lookup(collection: "orders", id: 42).result
-let user = try store.lookup(collection: "users", id: "a").result
-```
+Look up a record with a typed ``JSONStoreRecordID``; string and integer literals both
+work, as in `store.lookup(collection: "orders", id: 42)` and
+`store.lookup(collection: "users", id: "a")`.
 
 Use ``JSONConfiguredStore/collectionIndex(named:)`` to turn an exact collection name
 into the physical position used by ``JSONConfiguredStore/record(collection:row:)``.
