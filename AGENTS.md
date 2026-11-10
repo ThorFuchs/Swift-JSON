@@ -5,8 +5,8 @@ adds located root-array streaming to the published 1.7.1 line; stable 1.6.1 rema
 separate. This is not a maintenance release or the frozen 6fe8067 RC. Preserve all source-bound
 qualification history; source integration never publishes a version.
 
-Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
-macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
+Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and a
+macOS/SDK 27+ development host; deployment minimums are macOS 15 and iOS 18. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
 - Keep thirteen public products in this source: JSON, JSONSchema, JSONSchemaExamples,

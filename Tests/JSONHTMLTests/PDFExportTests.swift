@@ -146,7 +146,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     }
 }
 
-@Test @MainActor func applePDFCancellationAtEveryStageDoesNotInstallOutput() async throws {
+@available(macOS 26.0, iOS 26.0, *) @Test @MainActor func applePDFCancellationAtEveryStageDoesNotInstallOutput() async throws {
     pdfBootstrap()
     let item = try pdfFixture(80)
     for stage in [JSONPDFStage.input, .loading, .layout, .extraction, .capture, .composition, .installation] {
@@ -217,7 +217,7 @@ private func syntaxPDFInput(_ value: JSON, options: JSONExportOptions = .init())
     #expect(!item.availableFormats.contains(.pdf))
 }
 
-@Test @MainActor func applePDFTransferOffersOnlyPreparedSelectedBytes() async throws {
+@available(macOS 26.0, iOS 26.0, *) @Test @MainActor func applePDFTransferOffersOnlyPreparedSelectedBytes() async throws {
     pdfBootstrap()
     let item = try syntaxPDFInput(.null)
     let report = try await item.preparingPDFWithReport()
