@@ -9,7 +9,8 @@ compile reports and [finite indexed selection](Sources/JSONTransform/Documentati
 It is under qualification; it is not an admitted 1.9 release.
 Twelve libraries plus CLI, thirteen DocC catalogs and empty root dependencies remain.
 See the [1.8 implementation contract](Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md),
-[qualification record](Documentation/Qualification/Release1.8.md) and
+[1.8 qualification record](Documentation/Qualification/Release1.8.md),
+[1.9 candidate record](Documentation/Qualification/Release1.9.md) and
 [release roadmap](Documentation/ReleaseRoadmap.md). Historical records below retain
 their original source and publication dates.
 
