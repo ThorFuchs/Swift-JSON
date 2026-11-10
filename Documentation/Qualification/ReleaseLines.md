@@ -3,9 +3,10 @@
 Latest published stable is [1.8.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.8.0),
 commit `66718f11514d8c555f6a6b0ecc738e5029405a55`, tree
 `8422e5eccc9c16d4b9de091be0aac8b61eaaeb0a`: twelve libraries plus CLI,
-thirteen catalogs. The isolated 1.9.0-dev successor
-keeps those products and adds bounded Inspection batches/store operations.
-See [its separate qualification](Release1.8.md). 1.6.1 stays the eight-library
+thirteen catalogs. The prepared 1.9.0 successor
+keeps those products, adds bounded Inspection batches/store operations and lowers
+the Apple deployment minimums to macOS 15 and iOS 18. See
+[its qualification record](Release1.9.md). 1.6.1 stays the eight-library
 maintenance line. The dated preparation inventories below remain history.
 
 # Stable and development source lines

@@ -1,7 +1,8 @@
 # 1.9.0 candidate qualification
 
-Status: candidate source on `main` after 1.8.0 (`66718f1`). Not published. A tag
-and release still need an explicit maintainer instruction.
+Status: prepared 1.9.0 source on `main` after 1.8.0 (`66718f1`). The maintainer
+gave explicit tag and publication approval on 2026-11-10. PR #83 (1.8.1) was closed
+without release; the platform floor ships in 1.9.0 only.
 
 ## Scope
 

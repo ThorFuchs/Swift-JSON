@@ -1,6 +1,6 @@
 # 1.9 additive API candidate
 
-The latest released source is 1.8.0 (66718f11); this feature source is 1.9.0-dev.
+The latest released source is 1.8.0 (66718f11); this prepared source is 1.9.0.
 No product or dependency is added. JSONInspection now includes
 `JSONInspectionBatch`, snapshot ordinal batches, public `JSONStoreBuilder`/
 `JSONConfiguredStore` and typed profile/metadata/error declarations, exact-ID
