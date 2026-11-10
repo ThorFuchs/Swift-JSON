@@ -38,9 +38,16 @@ and Linux. The change was first prepared as the 1.8.1 candidate PR #83 on
   `net.daringfireball.markdown` identifier.
 - Linux and WASI are unchanged.
 
-Evidence is compile-time: every product and test builds against the macOS 15
-floor with the macOS 27 SDK. No test has run on an actual macOS 15–26 or iOS 18
-system, and this record claims no such runtime pass.
+Evidence is compile-time only, on `49d1c93` with Swift 6.4.2:
+
+- `swift build --build-tests` against the macOS 15 floor with the macOS 27.2 SDK
+  built every product and test target (exit 0).
+- `swift build --target <library> --triple arm64-apple-ios18.0` with the iOS 27.2
+  SDK built all twelve library targets (exit 0 each).
+
+No test has run on an actual macOS 15–26 or iOS 18 system or simulator, and this
+record claims no such runtime pass. CI checks the manifest minimums but does not
+build for iOS.
 
 ## Performance gate: maintainer exception
 
