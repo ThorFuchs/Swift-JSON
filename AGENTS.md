@@ -5,8 +5,8 @@ Development source is 1.9.0-dev, based on published 1.8.0 at
 maintenance line. Preserve every source-bound qualification record. No 1.9
 merge/tag/publication follows from implementation or passing tests.
 
-Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and
-macOS/SDK 27+. Read README.md, CONTRIBUTING.md and the relevant contracts in
+Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and a
+macOS/SDK 27+ development host; deployment minimums are macOS 15 and iOS 18. Read README.md, CONTRIBUTING.md and the relevant contracts in
 Documentation/Architecture before changing behavior.
 
 - Keep thirteen public products in this source: JSON, JSONSchema, JSONSchemaExamples,

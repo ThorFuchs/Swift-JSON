@@ -89,7 +89,8 @@ familiar route from Swift models to the exact value model.
 | --- | --- |
 | Swift tools and compiler | 6.4 or later |
 | Swift language mode | 6 |
-| Platform and SDK | macOS 27, iOS 27 or iPadOS 27 and later |
+| Deployment target | macOS 15, iOS 18 or iPadOS 18 and later; Linux; WASI |
+| Development SDK | macOS/SDK 27 (Xcode 27) for Swift 6.4 |
 | Runtime dependencies | None outside the package and platform SDK |
 | License | Apache-2.0 original code, with retained upstream notices |
 

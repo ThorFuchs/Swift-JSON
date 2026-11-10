@@ -176,6 +176,7 @@ import UniformTypeIdentifiers
 }
 
 #if canImport(CoreTransferable) && canImport(UniformTypeIdentifiers)
+@available(macOS 27.0, iOS 27.0, *)
 @Test func appleTransferTypesAndSelectedBytesMatchAvailableArtifacts() async throws {
     #expect(JSON.exportedContentTypes() == [.json, .html, .utf8PlainText, .markdown])
     #expect(JSON.importedContentTypes() == [.json])
@@ -202,6 +203,7 @@ import UniformTypeIdentifiers
     catch { #expect(!String(describing: error).isEmpty) }
 }
 
+@available(macOS 27.0, iOS 27.0, *)
 @Test @MainActor func exportItemProviderSelectionKeepsFilenameAndTypesCoherent() throws {
     let item = try JSONExportDocument.prepare(.null, options: .init(
         formats: [.json, .html, .rtf, .plainText, .markdown], filenameStem: "Selected"))
@@ -220,6 +222,7 @@ import UniformTypeIdentifiers
     #expect(provider.suggestedName == "Selected.html")
 }
 
+@available(macOS 15.2, iOS 18.2, *)
 @Test func appleNativeJSONImportIsStrictAndPreservesExactBytes() async throws {
     let input = Data(#"{"é":9007199254740993,"é":-0.00e+2}"#.utf8)
     let value = try await JSON(importing: input, contentType: .json)

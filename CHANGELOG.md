@@ -52,6 +52,14 @@
   is unchanged. Salvaged from the historical composition branch (PR #63) without
   its performance toolkit.
 
+- Lower the Apple deployment minimums from macOS/iOS 27 to macOS 15 and iOS 18.
+  Development still uses Swift 6.4 with the macOS 27 SDK. Linux and WASI are unchanged.
+- JSONHTML: the WebKit `WebPage` PDF backend is available on macOS/iOS 26 and later;
+  earlier systems report the existing `JSONPDFFailure.backendUnavailable`, as on
+  platforms without WebKit. The Markdown transfer type uses the system-declared
+  `net.daringfireball.markdown` identifier before macOS/iOS 27.
+- The platform change alone changes no public API, behavior or dependency on macOS/iOS 27.
+
 ## 1.8.0 — prepared source; publication separate
 
 - Add `JSONLocatedTopLevelArraySequence` and `JSONLocatedTopLevelArrayEvent` to
