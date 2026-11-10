@@ -90,9 +90,9 @@ class HarnessTests(unittest.TestCase):
 
     def test_selection_filter_preserves_exact_identity_and_completion_evidence(self):
         ids = [n for n in DISCOVERY['transform_function_ids'] if '.selection' in n]
-        self.assertEqual(len(ids), 16)
+        self.assertEqual(len(ids), 18)
         command = ['swift','test','--test-product','JSONTransformTests','--filter','selection']
-        events = dict(bundle_counts=[16],module_function_counts={'JSONTransformTests':16},function_names=ids,parameter_case_invocations=0)
+        events = dict(bundle_counts=[18],module_function_counts={'JSONTransformTests':18},function_names=ids,parameter_case_invocations=0)
         self.assertTrue(check_result(command,0,'',events)[0])
         self.assertFalse(check_result(command,0,'',dict(events,function_names=ids[:-1]))[0])
         consumer = ['python3','-B','Scripts/qualify_transform_selection.py']
@@ -104,11 +104,11 @@ class HarnessTests(unittest.TestCase):
     def test_transform_binding_discovery_rejects_incomplete_duplicate_and_foreign_events(self):
         ids = DISCOVERY['transform_function_ids']
         command = ['swift', 'test', '--test-product', 'JSONTransformTests']
-        events = dict(bundle_counts=[57], module_function_counts={'JSONTransformTests':57},
+        events = dict(bundle_counts=[59], module_function_counts={'JSONTransformTests':59},
                       function_names=ids, parameter_case_invocations=0)
         self.assertTrue(check_result(command, 0, '', events)[0])
         for broken in [dict(events,function_names=ids[:-1]),dict(events,function_names=ids+ids[:1]),
-                       dict(events,module_function_counts={'JSONTests':57}),dict(events,parameter_case_invocations=1)]:
+                       dict(events,module_function_counts={'JSONTests':59}),dict(events,parameter_case_invocations=1)]:
             self.assertFalse(check_result(command, 0, '', broken)[0])
         shared = [n for n in ids if 'bindingShared' in n or 'selectionShared' in n or 'jtxPlanIsSendableAndExecutionsHaveIndependentHealth' in n]
         thread = command + ['--sanitize', 'thread']
@@ -164,8 +164,8 @@ class HarnessTests(unittest.TestCase):
 
     def test_workflow_discovery_requires_all_exact_identities(self):
         names = DISCOVERY['workflow_function_ids']
-        self.assertEqual(len(names), 24)
-        events = dict(bundle_counts=[24], module_function_counts={'JSONInspectionTests':24},
+        self.assertEqual(len(names), 32)
+        events = dict(bundle_counts=[32], module_function_counts={'JSONInspectionTests':32},
                       function_names=names, parameter_case_invocations=0)
         command = ['swift','test','--test-product','JSONInspectionTests','--filter','workflow']
         self.assertTrue(check_result(command, 0, '', events)[0])
@@ -314,7 +314,7 @@ class HarnessTests(unittest.TestCase):
         # Combined-source checks must retain both independently owned optional products.
         for module, count, command in [
             ('JSONNavigationTests', 57, ['swift', 'test', '--filter', 'navigation']),
-            ('JSONInspectionTests', 214, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow']),
+            ('JSONInspectionTests', 222, ['swift', 'test', '--filter', 'inspection|snapshot|projectionP|p2|exactProjectionPUB|graphG|store|workflow']),
             ('JSONSchemaExamplesTests', 98, ['swift', 'test', '--test-product', 'JSONSchemaExamplesTests']),
         ]:
             events = dict(bundle_counts=[count], module_function_counts={module: count},
@@ -328,7 +328,7 @@ class HarnessTests(unittest.TestCase):
         for key in ('root_functions', 'portable_root_functions', 'wasi_root_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 57)
             self.assertEqual(policy[key]['JSONSchemaExamplesTests'], 98)
-            self.assertEqual(policy[key]['JSONInspectionTests'], 214)
+            self.assertEqual(policy[key]['JSONInspectionTests'], 222)
             self.assertEqual(policy[key]['JSONIntegrationTests'], 45)
         for key in ('shared_state_functions', 'portable_shared_state_functions'):
             self.assertEqual(policy[key]['JSONNavigationTests'], 2)

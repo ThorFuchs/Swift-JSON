@@ -791,8 +791,8 @@ Every later member/cell read independently admits the whole captured source with
 limits and an operation report. These are structural views; no set algebra, matrix
 arithmetic or performance claim is included. See the [compiled public guide](Sources/JSONInspection/Documentation.docc/ExactProjections.md),
 [independent consumer](Tools/ExactProjectionQualification) and [public boundary](Documentation/Architecture/StructuralIntelligence/NAV10/PublicAPI.md).
-Batch access is outside the 1.7.0 API. This 1.8 candidate adds aggregate value
-reads; see [bounded structural workflows](#bounded-structural-workflows-18-candidate).
+Batch access is outside the 1.7.0 API. Release 1.9.0 adds aggregate value
+reads; see [bounded structural workflows](#bounded-structural-workflows-available-since-190).
 Set/matrix algebra remains outside this wave.
 
 ## Source-bound directed graphs (available since 1.7.0)
@@ -826,7 +826,7 @@ records actual release-source and exact-tag consumer checks, platform scopes and
 the explicit performance exception. Transform is available from 1.7.0 and is absent
 from the 1.6 maintenance line.
 
-## Bounded structural workflows (1.8 candidate)
+## Bounded structural workflows (available since 1.9.0)
 
 Use `JSONInspectionBatch.values(at:maximumRequests:)` for ordered typed paths,
 `JSONStructuralSnapshot.values(for:maximumRequests:limits:)` for snapshot ordinals,
@@ -834,20 +834,25 @@ and `JSONConfiguredStore.values(at:maximumRequests:limits:)` for record position
 Each complete batch admits the source once and shares one finite ledger, preserves
 request order and repeats, and either returns every result or throws. Missing is
 an error; explicit JSON null remains a value. Empty batches still admit the source.
+`JSONInspectionBatch.optionalValues(at:maximumRequests:)` instead returns nil for an
+absent member or an index past the end, and still throws for every other problem.
 
 Build a read-only store with `JSONStoreBuilder` and an explicit `JSONStoreProfile`.
-Collection paths, ID fields and reference fields are configured; exact scalar IDs
-are never normalized. `lookup(collection:id:limits:)` distinguishes a missing ID
-from an unknown collection. `follow(from:bounds:limits:)` returns a complete BFS
+Collection paths, ID fields and reference fields are configured. Each collection
+declares string IDs (exact scalars, never normalized) or integer IDs (exact
+mathematical value, so `7` and `7.0` are the same ID); kinds never convert.
+`lookup(collection:id:limits:)` takes `"a"` or `42` and distinguishes a missing ID
+from an unknown collection. Refusals carry a typed phase and capacity. `follow(from:bounds:limits:)` returns a complete BFS
 closure, with finite depth/frontier/visited/result caps and no truncated success.
 Positions are local to one immutable store and cannot be forged or rebound.
 
 Run the [public SwiftPM example](Examples/BoundedWorkflows) with
 `swift run --package-path Examples/BoundedWorkflows BoundedWorkflows`.
 The [DocC guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md)
-explains separate operation reports, caller work and logical retention. This is
-an additive candidate API; no persistence, network resolver, new platform or
-performance improvement is claimed.
+explains separate operation reports, caller work and logical retention. The API
+is additive; no persistence, network resolver, new platform or performance
+improvement is claimed. JSONTransform's `selectIndices(in:)` returns the selected
+population indices in one call; see [indexed selection](Sources/JSONTransform/Documentation.docc/IndexedSelection.md).
 
 The [cross-product guide](Sources/JSONInspection/Documentation.docc/BoundedWorkflowRecipes.md)
 and [runnable example](Examples/BoundedWorkflows/README.md) show schema validation,

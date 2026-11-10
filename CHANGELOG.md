@@ -26,6 +26,25 @@
   concurrency tests and exact scoped CI discovery. Qualification remains source-bound;
   no 1.9 release or performance/platform pass is implied.
 
+- Refine the new store API before release. `JSONStoreFailure` reports a typed
+  `JSONStoreFailurePhase` and `JSONStoreCapacity` (raw values keep the original
+  phase numbers and capacity names) and is `Equatable`.
+  `JSONStoreReferences.strict(marker:)` drops the `validateTargets` flag that only
+  accepted `true`; targets are always validated. Add
+  `JSONConfiguredStore.collectionIndex(named:)`.
+- Add integer record IDs. Each collection declares a `JSONStoreIDKind`; `.string`
+  stays the default. Integer IDs compare by exact mathematical value (`7`, `7.0`
+  and `7e0` are one ID), stay exact beyond Double precision and never expand large
+  exponents. IDs never convert between kinds. `JSONStoreRecordMetadata.id` is now a
+  typed `JSONStoreRecordID`, and `lookup(collection:id:)` accepts one; the
+  `String` overload remains. String-ID accounting and all 69 pinned NAV12 vectors
+  are unchanged.
+- Add `JSONInspectionBatch.optionalValues(at:maximumRequests:)`: nil for an absent
+  member or an index past the end, the same errors as `values(at:)` otherwise.
+- Add `JSONTransformProgram.selectIndices(in:bindings:limits:source:)`, returning
+  the selected ordinals with completion statistics identical to the manual loop.
+- Move the WASI lane pin to Swift 6.4.2 (`swift-6.4.2-RELEASE_wasm`).
+
 - Composition accounting: apply `inputBytes` per document while keeping reported
   input cumulative, and charge completion's own report (424 logical bytes, 50
   work units) on the original ledger. Add the checked

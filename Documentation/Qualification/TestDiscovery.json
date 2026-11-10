@@ -12,8 +12,8 @@
     "JSONCLITests": 88,
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 214,
-    "JSONTransformTests": 57,
+    "JSONInspectionTests": 222,
+    "JSONTransformTests": 59,
     "JSONDSLTests": 47
   },
   "parameterized_invocations": 408,
@@ -84,8 +84,8 @@
     "JSONCLITests": 88,
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 214,
-    "JSONTransformTests": 57,
+    "JSONInspectionTests": 222,
+    "JSONTransformTests": 59,
     "JSONDSLTests": 47
   },
   "wasi_root_functions": {
@@ -99,8 +99,8 @@
     "JSONBridgesTests": 10,
     "JSONNavigationTests": 57,
     "JSONSchemaExamplesTests": 98,
-    "JSONInspectionTests": 214,
-    "JSONTransformTests": 57,
+    "JSONInspectionTests": 222,
+    "JSONTransformTests": 59,
     "JSONDSLTests": 47
   },
   "wasi_parameterized_invocations": 371,
@@ -173,7 +173,15 @@
     "JSONInspectionTests.workflowS12StorePathsHonorInvocationPointerAndDiagnosticLimits()",
     "JSONInspectionTests.workflowS13FollowSelfCycleAndLongNarrowChain()",
     "JSONInspectionTests.workflowB09NestedSnapshotRepeatsQuotasAndLateCancellation()",
-    "JSONInspectionTests.workflowS14MetadataAliasesAndScratchHaveExactRetentionDisposition()"
+    "JSONInspectionTests.workflowS14MetadataAliasesAndScratchHaveExactRetentionDisposition()",
+    "JSONInspectionTests.workflowR01IntegerIDsMatchByExactMathematicalValueAcrossSpellings()",
+    "JSONInspectionTests.workflowR02IntegerIDCollectionsRefuseOtherKindsFractionsAndEquivalentDuplicates()",
+    "JSONInspectionTests.workflowR03MarkersLinkByTypedIDAndNeverConvertBetweenKinds()",
+    "JSONInspectionTests.workflowR04RecordIDsCompareScalarsExactlyAndHashConsistently()",
+    "JSONInspectionTests.workflowR05StoreFailuresAreTypedAndEquatable()",
+    "JSONInspectionTests.workflowR06CollectionIndexResolvesExactNamesWithoutNormalization()",
+    "JSONInspectionTests.workflowR07OptionalBatchReadsReturnNilOnlyForMissingPaths()",
+    "JSONInspectionTests.workflowR08OptionalBatchReadsKeepRequestAndPointerLimits()"
   ],
   "structural_acceptance_function_ids": [
     "JSONIntegrationTests.acceptance18A01SchemaStoreTransformKeepsExactGoldenBytes()",
@@ -273,6 +281,8 @@
     "JSONTransformTests.jtxTerminalAliasesRefundBeforeThrowingTheSameFailure()",
     "JSONTransformTests.jtxTypedCompileLocationAndLanguageFailureStayDistinct()",
     "JSONTransformTests.jtxZeroNullAndManyAreDistinctOrderedPullResults()",
+    "JSONTransformTests.selectionIndicesKeepRefusalsAndBindings()",
+    "JSONTransformTests.selectionIndicesMatchTheManualSelectionLoopExactly()",
     "JSONTransformTests.selectionS01ExplicitOrdinalsPreserveDuplicateValuesOrderRepeatsAndTies()",
     "JSONTransformTests.selectionS02EmptyEOFNullAndIncompletePrefixAreDistinct()",
     "JSONTransformTests.selectionS03EveryInvalidOutputIsExactAndTerminalOutsideQueryCatch()",
