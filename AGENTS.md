@@ -1,9 +1,9 @@
 # Contributor instructions
 
-Development source is 1.9.0-dev, based on published 1.8.0 at
-66718f11514d8c555f6a6b0ecc738e5029405a55. Stable 1.6.1 remains a separate
-maintenance line. Preserve every source-bound qualification record. No 1.9
-merge/tag/publication follows from implementation or passing tests.
+Prepared minor release source is 1.9.0; publication is a separate owner action. It
+builds on published 1.8.0 at 66718f11514d8c555f6a6b0ecc738e5029405a55. Stable
+1.6.1 remains a separate maintenance line. Preserve every source-bound
+qualification record. No tag/publication follows from passing tests alone.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and a
 macOS/SDK 27+ development host; deployment minimums are macOS 15 and iOS 18. Read README.md, CONTRIBUTING.md and the relevant contracts in

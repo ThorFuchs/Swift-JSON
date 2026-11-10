@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased — 1.9.0-dev
+## 1.9.0 — prepared source; publication separate
+
+- Report CLI source version `1.9.0` with a regenerated deterministic source
+  identity. See the [minor release notes](Documentation/ReleaseNotes/1.9.0.md)
+  and the [1.9 qualification record](Documentation/Qualification/Release1.9.md).
 
 - Add exact versioned Transform source definitions, a bounded native codec and
   successful compilation reports through the existing compiler.
