@@ -1,8 +1,9 @@
-# Current authority — 1.9 candidate
+# Current authority — 1.9.0
 
-Published 1.8.0 has twelve libraries plus CLI and thirteen catalogs. Prepared 1.9.0
-adds bounded batches and a public immutable store inside JSONInspection. See [1.8 qualification](Qualification/Release1.8.md) and the
-[1.9 candidate record](Qualification/Release1.9.md).
+Published 1.9.0 has twelve libraries plus CLI and thirteen catalogs. It adds bounded
+batches and a public immutable store inside JSONInspection to 1.8.0. See the
+[1.9 qualification record](Qualification/Release1.9.md) and
+[1.8 qualification](Qualification/Release1.8.md).
 The dated predecessor inventories below are historical, not 1.9 pass evidence.
 
 # Current documentation authority

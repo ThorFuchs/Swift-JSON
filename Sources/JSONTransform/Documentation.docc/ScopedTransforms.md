@@ -19,7 +19,7 @@ let report = try plan.withExecution(input: root) { execution in
 The plan uses the same exact decimal and decoded-scalar rules as JSON and the CLI.
 Nonterminating division is a language error; no approximate arithmetic is added.
 The standalone public consumer at `Tools/TransformQualification` is available
-in this unreleased source line; it is absent from stable 1.6.1.
+in releases since 1.7.0; it is absent from the 1.6.1 maintenance line.
 
 ## Shared language reference
 

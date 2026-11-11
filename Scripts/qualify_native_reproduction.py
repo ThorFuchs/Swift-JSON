@@ -5,6 +5,8 @@ import argparse
 import hashlib
 import json
 import pathlib
+import os
+import signal
 import shutil
 import subprocess
 import sys
@@ -14,6 +16,22 @@ import time
 from archive_candidate import archive, files, verify
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+NATIVE_TIMEOUT_SECONDS = 5000
+
+
+def run_native(command, cwd, stream, timeout):
+    """Stop the native process group on timeout before cleaning its extraction."""
+    process = subprocess.Popen(command, cwd=cwd, stdout=stream,
+                               stderr=subprocess.STDOUT, start_new_session=True)
+    try:
+        return process.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait()
+        raise
 
 
 def main():
@@ -56,16 +74,28 @@ def main():
             command = [sys.executable, '-B', 'Scripts/ci.py', '--lane', 'native']
             log = output / 'native.log'
             start = time.monotonic()
+            timed_out = False
             with log.open('w') as stream:
-                result = subprocess.run(command, cwd=extracted, stdout=stream,
-                                        stderr=subprocess.STDOUT, timeout=3300)
-            receipt['commands'].append(dict(command=command, exit_code=result.returncode,
-                seconds=time.monotonic() - start, log=log.name, log_sha256=sha(log)))
+                try:
+                    code = run_native(command, extracted, stream, timeout=NATIVE_TIMEOUT_SECONDS)
+                except subprocess.TimeoutExpired:
+                    code = None
+                    timed_out = True
+            receipt['commands'].append(dict(command=command, exit_code=code,
+                timed_out=timed_out, seconds=time.monotonic() - start,
+                log=log.name, log_sha256=sha(log)))
+            if timed_out:
+                # Preserve the primary failure even if copying partial evidence
+                # or removing the temporary extraction subsequently fails.
+                receipt.update(status='failed', error=f'Git-free native lane exceeded the {NATIVE_TIMEOUT_SECONDS}-second limit')
+                save()
             child = extracted / '.build/ci/native'
             if child.is_dir():
                 shutil.copytree(child, output / 'native', dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns('ModuleCache', '*.dylib', '*.o', '*.swiftmodule'))
-            if result.returncode:
+            if timed_out:
+                raise ValueError(receipt['error'])
+            if code:
                 raise ValueError('Git-free native lane failed')
             native = json.loads((output / 'native/receipt.json').read_text())
             if native['status'] != 'passed' or native['git_commit'] is not None or not native['source_inputs_unchanged']:
@@ -84,7 +114,10 @@ def main():
             receipt['native_receipt_sha256'] = sha(output / 'native/receipt.json')
         receipt['status'] = 'passed'
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
-        receipt.update(status='failed', error=str(error))
+        if 'error' in receipt and receipt['error'] != str(error):
+            receipt['followup_error'] = str(error)
+        else:
+            receipt.update(status='failed', error=str(error))
     save()
     print(json.dumps(receipt, indent=2))
     return 0 if receipt['status'] == 'passed' else 1

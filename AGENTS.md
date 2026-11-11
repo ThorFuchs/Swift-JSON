@@ -1,9 +1,9 @@
 # Contributor instructions
 
-Prepared minor release source is 1.9.0; publication is a separate owner action. It
-builds on published 1.8.0 at 66718f11514d8c555f6a6b0ecc738e5029405a55. Stable
-1.6.1 remains a separate maintenance line. Preserve every source-bound
-qualification record. No tag/publication follows from passing tests alone.
+Latest published release is 1.9.0 at f2a0d12da7028edfbcb0cb307f19a921a3a12d03;
+main continues from it. Stable 1.6.1 remains a separate maintenance line. Preserve
+every source-bound qualification record. No tag/publication follows from passing
+tests alone.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and a
 macOS/SDK 27+ development host; deployment minimums are macOS 15 and iOS 18. Read README.md, CONTRIBUTING.md and the relevant contracts in
@@ -20,7 +20,7 @@ Documentation/Architecture before changing behavior.
   JSONHTML and opt-in JSONBridges depend on JSON only; core never re-exports the bridges.
   The approved CLI and E2 additions preserve historical product contracts.
   JSONNavigation is a released opt-in product depending on JSON only; future merge/release remain human-gated.
-  Published 1.6.1 has eight libraries plus CLI; this unreleased source includes
+  Published 1.6.1 has eight libraries plus CLI; releases since 1.7.0 include
   JSONInspection plus the optional Transform and DSL products. Its API is separate from released Navigation.
   Future merge and release decisions remain human-gated.
   JSONInspection depends on JSON and JSONNavigation only; core re-exports neither.
@@ -50,10 +50,10 @@ Scalar scanning and immutable plan-local regex sharing are selected private
 optimizations. Source-attached N3 snapshots and P1 tree/sparse-table projections live in JSONInspection.
 NAV10 set/matrix and NAV11 directed-simple-graph APIs are development capabilities
 inside JSONInspection; no graph product, mutation or serializer is introduced.
-The 1.9 candidate promotes the checked immutable configured store inside
-JSONInspection and adds ordered path/snapshot/store value batches, exact-ID lookup
+Release 1.9.0 published the checked immutable configured store inside
+JSONInspection with ordered path/snapshot/store value batches, exact-ID lookup
 and bounded complete BFS follow. The maintainer admitted this public read-only
-store/follow API on 2026-11-10; merge and release remain separate decisions. Preserve the original construction phases and
+store/follow API on 2026-11-10; later API changes stay additive and human-gated. Preserve the original construction phases and
 one invocation-owned ledger per operation. Positions remain unforgeable and
 source-instance-local. No persistence or mutable store is exposed. See
 Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md.
