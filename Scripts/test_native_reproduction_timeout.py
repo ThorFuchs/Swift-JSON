@@ -24,15 +24,18 @@ class NativeReproductionTimeoutTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = pathlib.Path(directory)
             marker = root / 'late-write'
-            child = 'import pathlib,sys,time; time.sleep(1); pathlib.Path(sys.argv[1]).write_text("late")'
+            ready = root / 'child-ready'
+            child = ('import pathlib,sys,time; pathlib.Path(sys.argv[1]).write_text("ready"); '
+                     'time.sleep(2.5); pathlib.Path(sys.argv[2]).write_text("late")')
             parent = ('import subprocess,sys,time; '
-                      'subprocess.Popen([sys.executable,"-c",sys.argv[1],sys.argv[2]]); '
+                      'subprocess.Popen([sys.executable,"-c",sys.argv[1],sys.argv[2],sys.argv[3]]); '
                       'time.sleep(10)')
             with (root / 'log').open('w') as stream:
                 with self.assertRaises(subprocess.TimeoutExpired):
-                    run_native([sys.executable, '-c', parent, child, str(marker)],
-                               root, stream, 0.3)
-            time.sleep(1.1)
+                    run_native([sys.executable, '-c', parent, child, str(ready), str(marker)],
+                               root, stream, 1)
+            self.assertTrue(ready.exists(), 'child must start before the timeout')
+            time.sleep(2.6)
             self.assertFalse(marker.exists())
 
 
