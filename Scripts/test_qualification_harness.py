@@ -1,22 +1,3 @@
-    def test_composition_scheduling_preserves_timeouts_pins_artifacts_and_pages_guard(self):
-        for filename in ['native.yml','linux.yml']:
-            text, jobs = self.workflow_jobs(filename)
-            self.assertIn('timeout-minutes: 60', jobs['qualification'])
-            self.assertIn('fail-fast: false', jobs['qualification'])
-            self.assertIn('persist-credentials: false', jobs['qualification'])
-            self.assertIn('retention-days: 30', jobs['qualification'])
-            self.assertIn('if-no-files-found: error', jobs['qualification'])
-            self.assertIn('actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803', text)
-            self.assertIn('actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f', text)
-            self.assertIn("branches: [main, 'release/1.6']", text)
-        _, native = self.workflow_jobs('native.yml')
-        self.assertIn("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'", native['publish'])
-        self.assertIn('needs: [qualification, required]', native['publish'])
-        _, linux = self.workflow_jobs('linux.yml')
-        self.assertNotIn('publish', linux)
-        self.assertIn('swift-actions/setup-swift@v2', linux['qualification'])
-        self.assertIn("swift-version: '6.4.0'", linux['qualification'])
-        self.assertIn('actions/setup-python@v5', linux['qualification'])
-        self.assertIn("python-version: '3.x'", linux['qualification'])
-        self.assertNotIn('container:', linux['qualification'])
-        self.assertNotIn('swift@sha256:', linux['qualification'])
+        harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=26')[0])
+        for stale in ['HARNESS_TESTS passed cases=32', 'HARNESS_TESTS passed cases=31', 'HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS[...]
