@@ -620,8 +620,6 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(rendered(self.root), first)
         catalog = self.root / 'Sources/JSONCLIEngine/Documentation.docc'; catalog.mkdir()
         (catalog / 'Guide.md').write_text('# Documentation-only change\n')
-        self.assertNotEqual(rendered(self.root), first)
-        (catalog / 'Guide.md').unlink()
         self.assertEqual(rendered(self.root), first)
         owned.write_text('let version = "1.5.2"\n')
         self.assertNotEqual(rendered(self.root), first)

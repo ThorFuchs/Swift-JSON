@@ -7,6 +7,8 @@
   the iOS simulator, and builds and runs `Tools/PlatformFloorConsumer`, an
   external consumer declaring the same minimums. Runtime tests on macOS 15-26 or
   iOS 18 systems remain outside CI.
+- The CLI source identity no longer covers DocC catalogs (`*.docc`), so
+  documentation-only edits no longer require regenerating it.
 - Repository housekeeping: superseded remote branches removed; branches without a
   PR were first preserved as `archive/<branch>` tags.
 
