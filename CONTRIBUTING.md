@@ -1,6 +1,6 @@
 # 1.9 scoped workflow qualification
 
-This prepared 1.9.0 source builds on published 1.8.0.
+Published 1.9.0 introduced these workflows; main continues from it.
 Run `python3 Scripts/ci.py --lane structural-workflows` for exact Debug/Release
 behavior, preserved store cases and public compiler/consumer checks. M2 adds
 `--lane structural-acceptance` and `--lane structural-acceptance-safety` for exact

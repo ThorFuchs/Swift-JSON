@@ -1,8 +1,18 @@
-# 1.9.0 candidate qualification
+# 1.9.0 qualification
 
-Status: prepared 1.9.0 source on `main` after 1.8.0 (`66718f1`). The maintainer
-gave explicit tag and publication approval on 2026-11-10. PR #83 (1.8.1) was closed
-without release; the platform floor ships in 1.9.0 only.
+Status: **published** on 2026-11-10 as
+[Swift-JSON 1.9.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.9.0) with
+the explicit approval of the maintainer. The annotated tag `1.9.0` (object `172c361`)
+points to `f2a0d12da7028edfbcb0cb307f19a921a3a12d03`, tree
+`6b5438751352e0e424b133e79d40d32d6f8c8dd7`, the merge of PR #85. PR #83 (1.8.1) was
+closed without release; the platform floor ships in 1.9.0 only.
+
+The release assets are the Git-free reproducible source archive (`5376b8a2…`, 1,553
+entries), the 13-catalog DocC archive built by CI at the release commit, its member
+manifest, `Swift-JSON-1.9.0-qualification.json` and `SHA256SUMS`. All Native and Linux
+lanes passed on the release commit, DocC covers 1,743 of 1,743 authored public
+declarations, and a separate SwiftPM consumer resolved `exact: "1.9.0"` and passed in
+Debug and Release. The qualification asset records runs, hashes and what was not run.
 
 ## Scope
 
