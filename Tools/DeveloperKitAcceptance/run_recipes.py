@@ -3,7 +3,7 @@
 """Copy canonical recipes to a NEW outside-checkout directory and run SwiftPM.
 
 Writes: source copy, isolated cache/config/security/scratch, logs, receipt.json.
-Resolves public HTTPS exact 1.6.1. No installation or personal settings edits.
+Resolves public HTTPS exact 1.9.0 (the kit's pinned library version). No installation or personal settings edits.
 Use the supported Swift toolchain in PATH/DEVELOPER_DIR before invoking.
 """
 import argparse
@@ -18,7 +18,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "Scripts"))
-from validate_developer_kit import PRODUCTS, STABLE, TREE, files, require, sha, validate_plugin
+from validate_developer_kit import LIBRARY_VERSION, PRODUCTS, RECIPES, STABLE, TREE, files, require, sha, validate_plugin
 
 
 def main():
@@ -69,7 +69,7 @@ def main():
         resolved = json.loads((output / "Consumer/Package.resolved").read_text())
         pins = resolved["pins"]
         require(len(pins) == 1 and pins[0]["location"] == "https://github.com/ThorFuchs/Swift-JSON.git"
-                and pins[0]["state"] == {"revision": STABLE, "version": "1.6.1"}, "resolved pin mismatch")
+                and pins[0]["state"] == {"revision": STABLE, "version": LIBRARY_VERSION}, "resolved pin mismatch")
         checkout = next((output / "Scratch/checkouts").iterdir())
         identity = run("checkout-identity", ["git", "log", "-1", "--format=%H %T"], cwd=checkout).decode().strip()
         require(identity == STABLE + " " + TREE, "checkout identity mismatch")
@@ -87,7 +87,8 @@ def main():
         for configuration in ["debug", "release"]:
             text = run(configuration, ["swift", "run", *flags, "-c", configuration, "Consumer"]).decode()
             checks = [line for line in text.splitlines() if line.startswith("KIT_CHECK ")]
-            require(len(checks) >= 40 and len(set(checks)) == len(checks) and "KIT_RECIPES passed recipes=8 libraries=8" in text,
+            summary = "KIT_RECIPES passed recipes=%d libraries=%d" % (len(RECIPES), len(PRODUCTS))
+            require(len(checks) >= 70 and len(set(checks)) == len(checks) and summary in text,
                     "recipe completion/cardinality mismatch")
             if expected is not None:
                 require(checks == expected, "Debug/Release witness mismatch")

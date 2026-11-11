@@ -1,0 +1,10 @@
+{
+  "name": "swift-json",
+  "version": "0.2.0",
+  "description": "Version-aware consumer assistance for ThorFuchs/Swift-JSON, validated against library 1.9.0.",
+  "author": {"name": "Thorsten Fuchs", "url": "https://github.com/ThorFuchs"},
+  "homepage": "https://github.com/ThorFuchs/Swift-JSON/blob/main/Documentation/AgentDeveloperKit.md",
+  "repository": "https://github.com/ThorFuchs/Swift-JSON",
+  "license": "Apache-2.0",
+  "keywords": ["swift-json", "swift", "exact-json", "offline-schema"]
+}

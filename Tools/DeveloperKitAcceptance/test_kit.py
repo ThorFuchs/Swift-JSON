@@ -12,7 +12,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "Scripts"))
-from validate_developer_kit import files, read_archive, safe_name, validate_plugin
+from validate_developer_kit import files, read_archive, safe_name, validate_marketplace, validate_plugin, verify_sources
 from package_developer_kit import archive
 from archive_candidate import files as source_files, archive as source_archive, verify as verify_source_archive
 
@@ -33,7 +33,7 @@ class KitTests(unittest.TestCase):
 
     def test_canonical_manifest_and_links(self):
         result = validate_plugin(self.plugin)
-        self.assertEqual(result["recipes"], 8)
+        self.assertEqual(result["recipes"], 14)
         self.assertEqual(result["skill_files"], 10)
 
     def test_service_component_is_rejected(self):
@@ -47,9 +47,64 @@ class KitTests(unittest.TestCase):
             validate_plugin(self.plugin)
 
     def test_kit_version_drift_is_rejected(self):
-        self.manifest(lambda x: x.update(version="0.2.0"))
+        self.manifest(lambda x: x.update(version="0.3.0"))
         with self.assertRaisesRegex(ValueError, "identity"):
             validate_plugin(self.plugin)
+
+    def claude_manifest(self, transform):
+        path = self.plugin / ".claude-plugin/plugin.json"
+        data = json.loads(path.read_text())
+        transform(data)
+        path.write_text(json.dumps(data))
+
+    def test_claude_manifest_version_drift_is_rejected(self):
+        self.claude_manifest(lambda x: x.update(version="0.1.0"))
+        with self.assertRaisesRegex(ValueError, "Claude Code plugin identity"):
+            validate_plugin(self.plugin)
+
+    def test_claude_manifest_component_is_rejected(self):
+        self.claude_manifest(lambda x: x.update(hooks="./hooks/hooks.json"))
+        with self.assertRaisesRegex(ValueError, "component"):
+            validate_plugin(self.plugin)
+
+    def test_missing_claude_manifest_is_rejected(self):
+        (self.plugin / ".claude-plugin/plugin.json").unlink()
+        with self.assertRaisesRegex(ValueError, "unexpected/missing"):
+            validate_plugin(self.plugin)
+
+    def test_host_manifest_keyword_disagreement_is_rejected(self):
+        self.claude_manifest(lambda x: x.update(keywords=["other"]))
+        with self.assertRaisesRegex(ValueError, "disagree"):
+            validate_plugin(self.plugin)
+
+    def test_marketplace_entry_drift_is_rejected(self):
+        repo = self.folder / "repo"
+        (repo / ".claude-plugin").mkdir(parents=True)
+        data = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
+        (repo / ".claude-plugin/marketplace.json").write_text(json.dumps(data))
+        self.assertEqual(validate_marketplace(repo)["install"], "swift-json@swift-json")
+        for change in [lambda d: d["plugins"][0].update(version="0.1.0"),
+                       lambda d: d["plugins"][0].update(source="./elsewhere"),
+                       lambda d: d["plugins"][0].update(skills="./skills"),
+                       lambda d: d["plugins"].append(dict(d["plugins"][0], name="extra"))]:
+            changed = json.loads(json.dumps(data))
+            change(changed)
+            (repo / ".claude-plugin/marketplace.json").write_text(json.dumps(changed))
+            with self.subTest(change=changed), self.assertRaises(ValueError):
+                validate_marketplace(repo)
+
+    def test_recipe_source_hash_must_match_pinned_commit(self):
+        path = self.plugin / "skills/swift-json/references/compatibility.json"
+        data = json.loads(path.read_text())
+        data["recipes"][0]["sources"][0]["sha256"] = "0" * 64
+        path.write_text(json.dumps(data, indent=2) + "\n")
+        result = None
+        try:
+            result = verify_sources(self.plugin, ROOT)
+        except ValueError as error:
+            self.assertIn("pinned commit", str(error))
+        else:
+            self.assertTrue(result.startswith("not_run"), result)
 
     def test_changed_recipe_cannot_keep_old_hash(self):
         path = self.plugin / "skills/swift-json/assets/consumer/Sources/Consumer/Consumer.swift"
@@ -135,7 +190,7 @@ class SourceDistributionTests(unittest.TestCase):
 
     def test_source_inventory_includes_exact_canonical_plugin(self):
         self.assertEqual(self.selected(), self.expected())
-        self.assertEqual(len(self.selected()), 12)
+        self.assertEqual(len(self.selected()), 13)
 
     def test_source_inventory_excludes_other_plugins_and_generated_files(self):
         for name in ["plugins/private-local/fixture.txt",
@@ -153,7 +208,7 @@ class SourceDistributionTests(unittest.TestCase):
         source_archive(a, selected, self.root)
         source_archive(b, selected, self.root)
         self.assertEqual(a.read_bytes(), b.read_bytes())
-        self.assertEqual(verify_source_archive(a), 13)
+        self.assertEqual(verify_source_archive(a), 14)
         with tarfile.open(a, "r:gz") as source:
             payload = {m.name.removeprefix("Swift-JSON/"): source.extractfile(m).read()
                        for m in source.getmembers() if m.name != "Swift-JSON/MANIFEST.sha256"}

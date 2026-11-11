@@ -1,0 +1,18 @@
+{
+  "name": "swift-json",
+  "owner": {
+    "name": "Thorsten Fuchs"
+  },
+  "metadata": {
+    "description": "The Swift-JSON agent developer kit: one instruction-only skill for consumers of ThorFuchs/Swift-JSON."
+  },
+  "plugins": [
+    {
+      "name": "swift-json",
+      "source": "./plugins/swift-json",
+      "description": "Version-aware consumer assistance for ThorFuchs/Swift-JSON, validated against library 1.9.0.",
+      "version": "0.2.0",
+      "category": "development"
+    }
+  ]
+}

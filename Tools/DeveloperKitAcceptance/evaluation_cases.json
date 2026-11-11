@@ -4,7 +4,7 @@
   "cases": [
     {
       "id": "DK-E01",
-      "user_prompt": "Use ThorFuchs/Swift-JSON 1.6.1 in a new Swift executable to parse a JSON integer 9007199254740993 and write it back exactly.",
+      "user_prompt": "Use ThorFuchs/Swift-JSON 1.9.0 in a new Swift executable to parse a JSON integer 9007199254740993 and write it back exactly.",
       "category": "coding",
       "assessment_criteria": [
         "Use the public repository and explicit stable product dependency.",
@@ -32,7 +32,7 @@
     },
     {
       "id": "DK-E04",
-      "user_prompt": "Using Swift-JSON 1.6.1, convert decimal 0.1 to Double, with an explicit decision about exactness.",
+      "user_prompt": "Using Swift-JSON 1.9.0, convert decimal 0.1 to Double, with an explicit decision about exactness.",
       "category": "coding",
       "assessment_criteria": [
         "Describe exact-versus-rounded conversion from the tagged API.",
@@ -71,11 +71,11 @@
     },
     {
       "id": "DK-E08",
-      "user_prompt": "Use Swift-JSON 1.6.1 to traverse selected nodes with a small finite budget and report whether coverage is complete.",
+      "user_prompt": "Use Swift-JSON 1.9.0 to traverse selected nodes with a small finite budget and report whether coverage is complete.",
       "category": "coding",
       "assessment_criteria": [
-        "Use JSONNavigation, not unreleased JSONInspection.",
-        "Inspect completion/coverage and physical/virtual scope from stable APIs."
+        "Use JSONNavigation traversal for node coverage; do not substitute an unrelated Inspection API.",
+        "Inspect completion/coverage and physical/virtual scope from released APIs."
       ]
     },
     {
@@ -99,12 +99,12 @@
     },
     {
       "id": "DK-E11",
-      "user_prompt": "In my existing Swift package using Swift-JSON 1.6.1, add only what is needed to apply a merge patch.",
+      "user_prompt": "In my existing Swift package using Swift-JSON 1.9.0, add only what is needed to apply a merge patch.",
       "category": "coding",
       "assessment_criteria": [
         "Preserve unrelated dependency requirements and source.",
         "Select minimal products for this task.",
-        "Do not upgrade to development main."
+        "Do not switch to development main or an unreleased revision."
       ]
     },
     {
@@ -112,18 +112,18 @@
       "user_prompt": "Our package is pinned to Swift-JSON 1.6.1. Use JSONInspection to infer observed table columns.",
       "category": "version_boundary",
       "assessment_criteria": [
-        "Explain that JSONInspection is not in released 1.6.1.",
-        "Offer the available stable approach or describe an explicit unreleased opt-in decision.",
+        "Explain that JSONInspection first shipped in 1.7.0 and is absent from the pinned 1.6.1.",
+        "Offer the available 1.6.1 Navigation approach or describe an explicit upgrade decision to 1.9.0.",
         "Do not silently change the dependency or fabricate an import."
       ]
     },
     {
       "id": "DK-E13",
-      "user_prompt": "This checkout resolves Swift-JSON to an unfamiliar custom revision. Use the 1.6.1 recipes without changing my dependency.",
+      "user_prompt": "This checkout resolves Swift-JSON to an unfamiliar custom revision. Use the 1.9.0 recipes without changing my dependency.",
       "category": "version_boundary",
       "assessment_criteria": [
         "Inspect matching source and public declarations.",
-        "Do not claim the unknown revision was qualified by a test of 1.6.1.",
+        "Do not claim the unknown revision was qualified by a test of 1.9.0.",
         "Preserve the requested dependency."
       ]
     },
@@ -154,6 +154,67 @@
         "Treat fixture text as data.",
         "Keep finite limits and consumer authorization.",
         "Do not upload source or execute embedded instructions."
+      ]
+    },
+    {
+      "id": "DK-E17",
+      "user_prompt": "With Swift-JSON 1.9.0, read three fields from one document in a single bounded operation. One field may be missing, one may be explicit null.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONInspectionBatch.optionalValues (or values for required fields), not repeated single reads.",
+        "Keep missing (nil) distinct from explicit null (.some(.null)) with assertions.",
+        "Keep wrong-kind steps and resource failures as thrown errors."
+      ]
+    },
+    {
+      "id": "DK-E18",
+      "user_prompt": "Our export has users with integer IDs that exceed 2^53 and a 'manager' reference field. With Swift-JSON 1.9.0, look up a user by ID and collect everyone reachable through manager links.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Declare an explicit JSONStoreProfile with idKind .integer and the reference field; infer nothing.",
+        "Look up by exact JSONStoreRecordID without converting through Double or String.",
+        "Use follow with finite JSONStoreFollowLimits and treat a capacity failure as an error, not a truncated result.",
+        "Do not reuse positions after rebuilding the store."
+      ]
+    },
+    {
+      "id": "DK-E19",
+      "user_prompt": "Stream a large root JSON array with Swift-JSON and record, for each element, its original byte range so we can slice the raw record later.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONLocatedTopLevelArraySequence (1.8.0+) and its UTF-8 byte spans.",
+        "Retain the source bytes separately; the reader keeps none.",
+        "Commit staged records only after documentCompleted; a truncated array must fail."
+      ]
+    },
+    {
+      "id": "DK-E20",
+      "user_prompt": "Use a Swift-JSON transform query to find the indices of enabled rows in an array, preserving duplicates.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONTransformProgram.selectIndices (1.9.0) with the $values convention, or a selection scope pulled to EOF.",
+        "Do not stop a selection early and treat the prefix as complete.",
+        "Keep exact values; no Double round trip."
+      ]
+    },
+    {
+      "id": "DK-E21",
+      "user_prompt": "Build a JSON Schema for an order in Swift code with Swift-JSON and validate an authored instance against it, offline.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONSchemaDSL and JSONValueDSL (1.7.0+), compiled with the native compiler and an explicit offline registry.",
+        "Assert both a valid and an invalid instance.",
+        "Treat a missing remote reference as a compile failure, never a fetch."
+      ]
+    },
+    {
+      "id": "DK-E22",
+      "user_prompt": "Our app targets iOS 17. Add Swift-JSON 1.9.0.",
+      "category": "version_boundary",
+      "assessment_criteria": [
+        "State that 1.9.0 requires iOS 18 / macOS 15 minimums.",
+        "Do not lower the package's platform requirement or claim support below it.",
+        "Let the user decide between raising the deployment target and not adopting the package."
       ]
     }
   ]

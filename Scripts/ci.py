@@ -318,6 +318,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_release_1_1.py', '--mode', 'sdk', '--output', str(output / 'sdk.json')],
         ]
     return [['python3', '-B', 'Scripts/qualify_exact_projections.py', '--output', str(output / 'exact-projection-consumer')],
+            ['python3', '-B', 'Tools/DeveloperKitAcceptance/test_kit.py'],
+            ['python3', '-B', 'Scripts/validate_developer_kit.py'],
             ['python3', '-B', 'Scripts/build_documentation.py']]
 
 def materialized_outcomes(output):
