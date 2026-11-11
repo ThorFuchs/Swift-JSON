@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lane: [native, safety, docs, archive, composition]
+        lane: [native, safety, docs, archive, composition, platform-floor]
         include:
           - lane: native
             timeout_minutes: 90
@@ -28,6 +28,8 @@ jobs:
           - lane: docs
             timeout_minutes: 60
           - lane: composition
+            timeout_minutes: 60
+          - lane: platform-floor
             timeout_minutes: 60
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer

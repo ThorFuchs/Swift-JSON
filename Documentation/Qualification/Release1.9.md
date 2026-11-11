@@ -58,7 +58,8 @@ Evidence is compile-time only, on `49d1c93` with Swift 6.4.2:
 
 No test has run on an actual macOS 15–26 or iOS 18 system or simulator, and this
 record claims no such runtime pass. CI checks the manifest minimums but does not
-build for iOS.
+build for iOS. After the release, the `platform-floor` lane (1.9.1 hygiene) added
+this compile-time evidence to CI; it still runs nothing on an older OS.
 
 ## Performance gate: maintainer exception
 
