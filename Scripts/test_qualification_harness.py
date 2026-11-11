@@ -38,7 +38,7 @@ class HarnessTests(unittest.TestCase):
 
     def test_required_workflow_contexts_wait_for_complete_execution_matrices(self):
         for filename, execution, required, name in [
-            ('native.yml','[native, safety, docs, archive, composition]','[native, safety, docs, archive]','Native / ${{ matrix.lane }}'),
+            ('native.yml','[native, safety, docs, archive, composition, platform-floor]','[native, safety, docs, archive]','Native / ${{ matrix.lane }}'),
             ('linux.yml','[linux, linux-safety, composition]','[linux, linux-safety]','Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}'),
         ]:
             with self.subTest(workflow=filename):
@@ -592,6 +592,9 @@ class HarnessTests(unittest.TestCase):
         first = rendered(self.root)
         (self.root / '.git').mkdir(); (self.root / '.git/HEAD').write_text('unrelated')
         (source / 'CLIBuildIdentity.swift').write_text('previous generated value')
+        self.assertEqual(rendered(self.root), first)
+        catalog = self.root / 'Sources/JSONCLIEngine/Documentation.docc'; catalog.mkdir()
+        (catalog / 'Guide.md').write_text('# Documentation-only change\n')
         self.assertEqual(rendered(self.root), first)
         owned.write_text('let version = "1.5.2"\n')
         self.assertNotEqual(rendered(self.root), first)

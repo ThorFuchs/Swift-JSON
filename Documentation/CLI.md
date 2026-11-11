@@ -70,7 +70,8 @@ swift run swift-json --version --json
 Human output identifies the source version. JSON adds `revisionKind` with value
 `source-sha256`; `revision` is `sha256:` plus a lowercase 64-digit digest. This
 digest hashes the ordered content manifest for `Package.swift` and every file in
-`Sources`, excluding only generated `CLIBuildIdentity.swift`. The manifest uses
+`Sources`, excluding generated `CLIBuildIdentity.swift` and DocC catalogs
+(`*.docc`), which are documentation rather than compiled source. The manifest uses
 UTF-8 relative paths and SHA-256 file digests. It is a source-content identity,
 not a Git commit, binary digest, wall-clock build ID or assertion of publication.
 

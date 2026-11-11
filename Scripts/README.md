@@ -8,6 +8,7 @@ separate from the dependency-free library. Native lanes fail on unsupported host
 | `python3 Scripts/public_check.py` | Public inventory, links, baseline and finite profiles |
 | `python3 Scripts/preflight.py` | Actual native OS/compiler/SDK receipt |
 | `python3 Scripts/ci.py --lane native` | Manifests, builds, Swift Testing, consumers and suites |
+| `python3 Scripts/ci.py --lane platform-floor` | Manifest minimums macOS 15 / iOS 18, every library cross-compiled for iOS 18 device and simulator, and an external consumer at those minimums built for iOS and run on macOS (Debug/Release) |
 | `python3 Scripts/ci.py --lane safety` | Address/Thread Sanitizer and strict memory safety |
 | `python3 Scripts/ci.py --lane navigation` | N1 product exact discovery, Debug/Release, strict-memory and real external SwiftPM consumer/compiler/DocC proof; no release action |
 | `python3 Scripts/ci.py --lane linux` | Actual Linux preflight, all nine products, exact root/cap/corpus/consumer counts |
