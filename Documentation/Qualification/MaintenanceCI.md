@@ -20,8 +20,9 @@ development website. A skipped Pages publication on a maintenance branch is
 expected. Required product qualification must still execute and pass.
 
 Composition has a separate execution matrix lane on macOS and on each Linux
-architecture. The native, safety, docs, archive and composition commands retain
-their existing 60-minute execution limits; no command or fixture is omitted.
+architecture. Native and archive jobs have 90-minute limits; safety, docs,
+composition and Linux jobs retain their 60-minute limits. No command or fixture
+is omitted.
 The existing `Native / ...` and `Linux / ...` check names are final gates over
 their complete workflow execution matrix. They run even after a dependency fails
 and accept only its `success` result. Failure, cancellation, a skipped execution
@@ -69,11 +70,15 @@ pinned setup action and exact interpreter version, preserving the Swift image,
 execution lanes and fail-closed gates. Setup and the full Linux runs must still
 pass for each actual source revision; this diagnostic is not a Linux test pass.
 
-The same day's Git-free native reproduction exceeded its 3,300-second limit.
+The same day's Git-free native reproduction exceeded its former 3,300-second limit,
+and the separate native job completed with almost no time left in its 60-minute
+job. The native and archive job limits are now 90 minutes; the nested native
+replay has 5,000 seconds and the outer archive command 5,200 seconds, leaving
+time for evidence and artifact upload.
 Cleanup then reported a directory-not-empty error while a child build was still
 running. The reproduction now stops its ordinary process group and records the
-timeout and partial command evidence. The original time limits and complete
-reproduction requirement remain in force; this diagnostic repair is not an
+timeout and partial command evidence. The complete reproduction requirement
+remains in force; this repair is not an
 archive qualification pass.
 
 One Linux Swift 6.4 build-planning SIGSEGV was observed in

@@ -72,7 +72,7 @@ class NativeReproductionTimeoutTests(unittest.TestCase):
                 self.assertEqual(reproduction.main(), 1)
             receipt = json.loads((root / 'out/reproduction.json').read_text())
             self.assertEqual(receipt['status'], 'failed')
-            self.assertIn('3300-second limit', receipt['error'])
+            self.assertIn(f'{reproduction.NATIVE_TIMEOUT_SECONDS}-second limit', receipt['error'])
             self.assertEqual(receipt['followup_error'], 'copy failed')
             self.assertTrue(receipt['commands'][0]['timed_out'])
 

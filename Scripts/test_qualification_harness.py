@@ -15,7 +15,8 @@ from unittest.mock import patch
 import documentation_catalog
 from coverage import executable_objects, shared_objects, validate_export, without_schema_objects
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
-from ci import check_result, commands, SHARED_TESTS, SHARED_COUNTS
+from ci import ARCHIVE_COMMAND_TIMEOUT_SECONDS, check_result, commands, SHARED_TESTS, SHARED_COUNTS
+from qualify_native_reproduction import NATIVE_TIMEOUT_SECONDS
 from p2_acceptance import PUBLIC_FUNCTIONS, PUBLIC_SHARED, check_exact_cases, check_exact_receipt
 from p2_acceptance import EXPECTED as P2_FUNCTIONS, SHARED as P2_SHARED, BORROW_CHECKS, check_p2_cases, check_borrow_receipt, check_private_receipt
 from graph_acceptance import EXPECTED as GRAPH_FUNCTIONS, check_graph_cases, check_graph_receipt, check_public_graph_receipt, PUBLIC_CHECKS as GRAPH_PUBLIC_CHECKS
@@ -73,7 +74,12 @@ class HarnessTests(unittest.TestCase):
     def test_composition_scheduling_preserves_timeouts_pins_artifacts_and_pages_guard(self):
         for filename in ['native.yml','linux.yml']:
             text, jobs = self.workflow_jobs(filename)
-            self.assertIn('timeout-minutes: 60', jobs['qualification'])
+            if filename == 'linux.yml':
+                self.assertIn('timeout-minutes: 60', jobs['qualification'])
+            else:
+                self.assertIn('timeout-minutes: ${{ matrix.timeout_minutes }}', jobs['qualification'])
+                for lane, limit in [('native', 90), ('archive', 90), ('safety', 60), ('docs', 60), ('composition', 60)]:
+                    self.assertIn(f'- lane: {lane}\n            timeout_minutes: {limit}', jobs['qualification'])
             self.assertIn('fail-fast: false', jobs['qualification'])
             self.assertIn('persist-credentials: false', jobs['qualification'])
             self.assertIn('retention-days: 30', jobs['qualification'])
@@ -82,6 +88,8 @@ class HarnessTests(unittest.TestCase):
             self.assertIn('actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f', text)
             self.assertIn("branches: [main, 'release/1.6']", text)
         _, native = self.workflow_jobs('native.yml')
+        self.assertLess(NATIVE_TIMEOUT_SECONDS, ARCHIVE_COMMAND_TIMEOUT_SECONDS)
+        self.assertLess(ARCHIVE_COMMAND_TIMEOUT_SECONDS, 90 * 60)
         self.assertIn("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'", native['publish'])
         self.assertIn('needs: [qualification, required]', native['publish'])
         _, linux = self.workflow_jobs('linux.yml')

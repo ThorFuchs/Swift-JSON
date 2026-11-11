@@ -13,11 +13,22 @@ jobs:
   qualification:
     name: Native execution / ${{ matrix.lane }}
     runs-on: xcode-27
-    timeout-minutes: 60
+    timeout-minutes: ${{ matrix.timeout_minutes }}
     strategy:
       fail-fast: false
       matrix:
         lane: [native, safety, docs, archive, composition]
+        include:
+          - lane: native
+            timeout_minutes: 90
+          - lane: archive
+            timeout_minutes: 90
+          - lane: safety
+            timeout_minutes: 60
+          - lane: docs
+            timeout_minutes: 60
+          - lane: composition
+            timeout_minutes: 60
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'

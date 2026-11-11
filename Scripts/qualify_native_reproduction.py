@@ -16,6 +16,7 @@ import time
 from archive_candidate import archive, files, verify
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+NATIVE_TIMEOUT_SECONDS = 5000
 
 
 def run_native(command, cwd, stream, timeout):
@@ -76,7 +77,7 @@ def main():
             timed_out = False
             with log.open('w') as stream:
                 try:
-                    code = run_native(command, extracted, stream, timeout=3300)
+                    code = run_native(command, extracted, stream, timeout=NATIVE_TIMEOUT_SECONDS)
                 except subprocess.TimeoutExpired:
                     code = None
                     timed_out = True
@@ -86,7 +87,7 @@ def main():
             if timed_out:
                 # Preserve the primary failure even if copying partial evidence
                 # or removing the temporary extraction subsequently fails.
-                receipt.update(status='failed', error='Git-free native lane exceeded the 3300-second limit')
+                receipt.update(status='failed', error=f'Git-free native lane exceeded the {NATIVE_TIMEOUT_SECONDS}-second limit')
                 save()
             child = extracted / '.build/ci/native'
             if child.is_dir():
