@@ -83,12 +83,17 @@ def main():
             receipt['commands'].append(dict(command=command, exit_code=code,
                 timed_out=timed_out, seconds=time.monotonic() - start,
                 log=log.name, log_sha256=sha(log)))
+            if timed_out:
+                # Preserve the primary failure even if copying partial evidence
+                # or removing the temporary extraction subsequently fails.
+                receipt.update(status='failed', error='Git-free native lane exceeded the 3300-second limit')
+                save()
             child = extracted / '.build/ci/native'
             if child.is_dir():
                 shutil.copytree(child, output / 'native', dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns('ModuleCache', '*.dylib', '*.o', '*.swiftmodule'))
             if timed_out:
-                raise ValueError('Git-free native lane exceeded the 3300-second limit')
+                raise ValueError(receipt['error'])
             if code:
                 raise ValueError('Git-free native lane failed')
             native = json.loads((output / 'native/receipt.json').read_text())
@@ -108,7 +113,10 @@ def main():
             receipt['native_receipt_sha256'] = sha(output / 'native/receipt.json')
         receipt['status'] = 'passed'
     except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
-        receipt.update(status='failed', error=str(error))
+        if 'error' in receipt and receipt['error'] != str(error):
+            receipt['followup_error'] = str(error)
+        else:
+            receipt.update(status='failed', error=str(error))
     save()
     print(json.dumps(receipt, indent=2))
     return 0 if receipt['status'] == 'passed' else 1
