@@ -4,11 +4,14 @@ on:
     branches: [main, 'release/1.6']
   pull_request:
   workflow_dispatch:
+
 permissions:
   contents: read
+
 concurrency:
   group: linux-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   qualification:
     name: Linux execution / ${{ matrix.architecture }} / ${{ matrix.lane }}
@@ -24,29 +27,33 @@ jobs:
             runner: ubuntu-24.04
           - architecture: arm64
             runner: ubuntu-24.04-arm
-    container:
-      # Official Swift 6.4.0 Ubuntu 24.04 multi-architecture OCI index.
-      image: swift@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca
+
     env:
       PYTHONDONTWRITEBYTECODE: '1'
+
     steps:
-      - name: Install the CI harness interpreter
-        run: |
-          apt-get update
-          apt-get install --yes --no-install-recommends python3
-          python3 --version
-          dpkg-query --show python3 python3-minimal
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Install Swift toolchain
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.4.0'
+
+      - name: Configure Python for CI harness
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Verify the checked-out container workspace
         run: |
-          # The image user differs from the checkout owner. Trust this exact
-          # ephemeral workspace so Git identity and full-history checks run.
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
       - run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
+
       - name: Preserve Linux receipts
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
@@ -57,9 +64,8 @@ jobs:
           path: |
             .build/ci/
             !.build/ci/**/reproduction/extracted/**
+
   required:
-    # Both architectures and all three lanes must succeed. Preserve the four
-    # existing context names without converting an incomplete matrix to green.
     name: Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}
     needs: qualification
     if: ${{ always() }}
