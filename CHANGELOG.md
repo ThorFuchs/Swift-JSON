@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — 1.9.1 hygiene
+
+- Add the `platform-floor` native CI lane. It checks the macOS 15 / iOS 18
+  manifest minimums, cross-compiles all twelve libraries for iOS 18 devices and
+  the iOS simulator, and builds and runs `Tools/PlatformFloorConsumer`, an
+  external consumer declaring the same minimums. Runtime tests on macOS 15-26 or
+  iOS 18 systems remain outside CI.
+- Repository housekeeping: superseded remote branches removed; branches without a
+  PR were first preserved as `archive/<branch>` tags.
+
 ## 1.9.0 — prepared source; publication separate
 
 - Report CLI source version `1.9.0` with a regenerated deterministic source

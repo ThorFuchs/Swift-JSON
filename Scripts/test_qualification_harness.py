@@ -17,6 +17,7 @@ from coverage import executable_objects, shared_objects, validate_export, withou
 from test_discovery import DISCOVERY, ROOT_COUNTS, PARAMETER_INVOCATIONS, check_root, check_restored, RESTORED_FUNCTIONS
 from ci import ARCHIVE_COMMAND_TIMEOUT_SECONDS, check_result, commands, SHARED_TESTS, SHARED_COUNTS
 from qualify_native_reproduction import NATIVE_TIMEOUT_SECONDS
+from qualify_platform_floor import check_receipt as check_floor_receipt, LIBRARIES as FLOOR_LIBRARIES, EXPECTED_PLATFORMS as FLOOR_PLATFORMS
 from p2_acceptance import PUBLIC_FUNCTIONS, PUBLIC_SHARED, check_exact_cases, check_exact_receipt
 from p2_acceptance import EXPECTED as P2_FUNCTIONS, SHARED as P2_SHARED, BORROW_CHECKS, check_p2_cases, check_borrow_receipt, check_private_receipt
 from graph_acceptance import EXPECTED as GRAPH_FUNCTIONS, check_graph_cases, check_graph_receipt, check_public_graph_receipt, PUBLIC_CHECKS as GRAPH_PUBLIC_CHECKS
@@ -31,6 +32,18 @@ def store_markers():
         'STORE_RUNTIME R%02d passed' % n for n in range(1,11)])
 
 class HarnessTests(unittest.TestCase):
+    def test_platform_floor_receipt_rejects_missing_duplicate_and_failed_commands(self):
+        names = ['manifest', 'ios-consumer', 'ios-simulator-consumer',
+                 'macos-consumer-debug', 'macos-consumer-release']
+        names += [prefix + '-' + library for prefix in ('ios', 'ios-simulator') for library in FLOOR_LIBRARIES]
+        receipt = dict(status='passed', libraries=FLOOR_LIBRARIES, platforms=FLOOR_PLATFORMS,
+                       commands=[dict(name=name, exit=0) for name in names])
+        self.assertTrue(check_floor_receipt(receipt))
+        self.assertFalse(check_floor_receipt(dict(receipt, commands=receipt['commands'][:-1])))
+        self.assertFalse(check_floor_receipt(dict(receipt, commands=receipt['commands'][:-1] + receipt['commands'][:1])))
+        self.assertFalse(check_floor_receipt(dict(receipt, commands=[dict(name=name, exit=1 if name == 'ios-JSON' else 0) for name in names])))
+        self.assertFalse(check_floor_receipt(dict(receipt, platforms=[])))
+
     def workflow_jobs(self, filename):
         text = (pathlib.Path(__file__).resolve().parents[1]/'.github/workflows'/filename).read_text()
         # Inspect this repository's authored job blocks, not a general YAML parser.
@@ -39,7 +52,7 @@ class HarnessTests(unittest.TestCase):
 
     def test_required_workflow_contexts_wait_for_complete_execution_matrices(self):
         for filename, execution, required, name in [
-            ('native.yml','[native, safety, docs, archive, composition]','[native, safety, docs, archive]','Native / ${{ matrix.lane }}'),
+            ('native.yml','[native, safety, docs, archive, composition, platform-floor]','[native, safety, docs, archive]','Native / ${{ matrix.lane }}'),
             ('linux.yml','[linux, linux-safety, composition]','[linux, linux-safety]','Linux / ${{ matrix.architecture }} / ${{ matrix.lane }}'),
         ]:
             with self.subTest(workflow=filename):
@@ -78,7 +91,7 @@ class HarnessTests(unittest.TestCase):
                 self.assertIn('timeout-minutes: 60', jobs['qualification'])
             else:
                 self.assertIn('timeout-minutes: ${{ matrix.timeout_minutes }}', jobs['qualification'])
-                for lane, limit in [('native', 90), ('archive', 90), ('safety', 60), ('docs', 60), ('composition', 60)]:
+                for lane, limit in [('native', 90), ('archive', 90), ('safety', 60), ('docs', 60), ('composition', 60), ('platform-floor', 60)]:
                     self.assertIn(f'- lane: {lane}\n            timeout_minutes: {limit}', jobs['qualification'])
             self.assertIn('fail-fast: false', jobs['qualification'])
             self.assertIn('persist-credentials: false', jobs['qualification'])
@@ -536,7 +549,8 @@ class HarnessTests(unittest.TestCase):
         identity['function_names'][0] = 'JSONTests.unrelatedReplacement()'
         self.assertFalse(check_restored(identity))
         harness = ['python3', '-B', 'Scripts/test_qualification_harness.py']
-        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=35')[0])
+        self.assertTrue(check_result(harness, 0, 'HARNESS_TESTS passed cases=36')[0])
+        self.assertFalse(check_result(harness, 0, 'HARNESS_TESTS passed cases=35')[0])
         for stale in ['HARNESS_TESTS passed cases=32', 'HARNESS_TESTS passed cases=31', 'HARNESS_TESTS passed cases=30', 'HARNESS_TESTS passed cases=10', 'HARNESS_TESTS passed cases=11', 'HARNESS_TESTS passed cases=12', 'HARNESS_TESTS passed cases=13', 'HARNESS_TESTS passed cases=14', 'HARNESS_TESTS passed cases=15', 'HARNESS_TESTS passed cases=18', 'HARNESS_TESTS passed cases=19', 'HARNESS_TESTS passed cases=20', 'HARNESS_TESTS passed cases=21', 'HARNESS_TESTS passed cases=25', 'HARNESS_TESTS passed cases=26', 'HARNESS_TESTS passed cases=28', '']:
             self.assertFalse(check_result(harness, 0, stale)[0])
         lifetime = ['python3', '-B', 'Scripts/qualify_schema_example_lifetime.py']
@@ -603,6 +617,11 @@ class HarnessTests(unittest.TestCase):
         first = rendered(self.root)
         (self.root / '.git').mkdir(); (self.root / '.git/HEAD').write_text('unrelated')
         (source / 'CLIBuildIdentity.swift').write_text('previous generated value')
+        self.assertEqual(rendered(self.root), first)
+        catalog = self.root / 'Sources/JSONCLIEngine/Documentation.docc'; catalog.mkdir()
+        (catalog / 'Guide.md').write_text('# Documentation-only change\n')
+        self.assertNotEqual(rendered(self.root), first)
+        (catalog / 'Guide.md').unlink()
         self.assertEqual(rendered(self.root), first)
         owned.write_text('let version = "1.5.2"\n')
         self.assertNotEqual(rendered(self.root), first)
