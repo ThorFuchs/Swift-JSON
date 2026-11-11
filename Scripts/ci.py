@@ -189,6 +189,7 @@ def commands(lane, output):
                 ['python3', '-B', 'Scripts/qualify_navigation.py', '--output', str(output / 'consumer')]]
     if lane == 'archive':
         return [['python3', '-B', 'Scripts/public_check.py'],
+                ['python3', '-B', 'Scripts/test_native_reproduction_timeout.py'],
                 ['python3', '-B', 'Scripts/qualify_native_reproduction.py', '--output', str(output / 'reproduction')]]
     if lane in ('coverage', 'linux-coverage'):
         return [['python3', '-B', 'Scripts/test_qualification_harness.py'],

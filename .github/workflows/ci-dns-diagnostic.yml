@@ -1,0 +1,45 @@
+name: CI DNS diagnostic (temporary)
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  host:
+    name: DNS diagnostic / host / ${{ matrix.architecture }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x86_64
+            runner: ubuntu-24.04
+          - architecture: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: Observe resolver on host
+        run: |
+          for host in archive.ubuntu.com security.ubuntu.com ports.ubuntu.com github.com; do
+            if getent hosts "$host" >/dev/null; then echo "$host resolved"; else echo "$host FAILED"; fi
+          done
+  container:
+    name: DNS diagnostic / Swift container / ${{ matrix.architecture }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - architecture: x86_64
+            runner: ubuntu-24.04
+          - architecture: arm64
+            runner: ubuntu-24.04-arm
+    container:
+      image: swift@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca
+    steps:
+      - name: Observe resolver in pinned container
+        run: |
+          for host in archive.ubuntu.com security.ubuntu.com ports.ubuntu.com github.com; do
+            if getent hosts "$host" >/dev/null; then echo "$host resolved"; else echo "$host FAILED"; fi
+          done
