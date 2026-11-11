@@ -58,6 +58,24 @@ measurements as unavailable rather than assigning inferred values.
 
 ## Retain build incidents
 
+On 2026-11-11 Linux jobs on both hosted architectures failed before source
+checkout because Ubuntu mirror names did not resolve; an unchanged-source retry
+failed the same way. A separate diagnostic observed the same resolution failure
+on the hosted runners and in the pinned Swift container, while github.com
+resolved. The [diagnostic](https://github.com/ThorFuchs/Swift-JSON/actions/runs/43060752165)
+successfully set up CPython 3.12.16 and imported the required standard-library
+modules in that container on each architecture. The Linux workflow uses the
+pinned setup action and exact interpreter version, preserving the Swift image,
+execution lanes and fail-closed gates. Setup and the full Linux runs must still
+pass for each actual source revision; this diagnostic is not a Linux test pass.
+
+The same day's Git-free native reproduction exceeded its 3,300-second limit.
+Cleanup then reported a directory-not-empty error while a child build was still
+running. The reproduction now stops its ordinary process group and records the
+timeout and partial command evidence. The original time limits and complete
+reproduction requirement remain in force; this diagnostic repair is not an
+archive qualification pass.
+
 One Linux Swift 6.4 build-planning SIGSEGV was observed in
 [the original job](https://github.com/ThorFuchs/Swift-JSON/actions/runs/39039959928/job/117417228489).
 The complete unchanged normal and composition scope subsequently passed in

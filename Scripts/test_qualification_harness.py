@@ -87,6 +87,9 @@ class HarnessTests(unittest.TestCase):
         _, linux = self.workflow_jobs('linux.yml')
         self.assertNotIn('publish', linux)
         self.assertIn('swift@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca', linux['qualification'])
+        self.assertIn('actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548', linux['qualification'])
+        self.assertIn("python-version: '3.12.16'", linux['qualification'])
+        self.assertNotIn('apt-get', linux['qualification'])
 
     def test_selection_filter_preserves_exact_identity_and_completion_evidence(self):
         ids = [n for n in DISCOVERY['transform_function_ids'] if '.selection' in n]
