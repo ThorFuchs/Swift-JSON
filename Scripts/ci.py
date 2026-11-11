@@ -14,6 +14,7 @@ from projection_acceptance import check_projection_cases, check_public_projectio
 from test_discovery import DISCOVERY, ROOT_COUNTS, SHARED_COUNTS, PARAMETER_INVOCATIONS, check_restored
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+ARCHIVE_COMMAND_TIMEOUT_SECONDS = 5200
 SHARED_TESTS = 'independentCodecFacadesAndExactValuesCanBeSharedAcrossTasks|concurrentSchemaEvaluationsHaveExclusiveDynamicRegexAndAnnotationState|sharedRegexProgramHasExclusiveConcurrentSearchState|immutableIndexedObjectCanBeSharedAcrossTasks|qaSharedPayloadAndRootHaveIndependentConcurrentReadScopes|sha256InputCapacityAndConcurrentInvocationsRemainIndependent|sharedFormattedHTMLRendererHasIndependentConcurrentInvocations|sharedAnnotatedDocumentRendererHasIndependentConcurrentInvocations|sharedExportPreparationsHaveIndependentConcurrentState|applePDFSimultaneousJobsHaveIndependentStateAndCancellation|sharedFilterPlanHasIndependentConcurrentInvocations|structuredSharedRendererPlansHaveInvocationOwnedState|sharedProviderBridgeHasIndependentConcurrentInvocations|e2SharedBridgeInputsHaveInvocationOwnedState|e2SharedCompiledPlanFacadeHasIndependentInvocationState'
 SHARED_TESTS += '|compositionIndependentScopesCanBeSharedAcrossTasks'
 SHARED_TESTS += '|qaStreaming|qaE2E(SharedPlan|RootImport|NDJSONImport|AwaitedSink|ExactWorkflow)'
@@ -189,6 +190,7 @@ def commands(lane, output):
                 ['python3', '-B', 'Scripts/qualify_navigation.py', '--output', str(output / 'consumer')]]
     if lane == 'archive':
         return [['python3', '-B', 'Scripts/public_check.py'],
+                ['python3', '-B', 'Scripts/test_native_reproduction_timeout.py'],
                 ['python3', '-B', 'Scripts/qualify_native_reproduction.py', '--output', str(output / 'reproduction')]]
     if lane in ('coverage', 'linux-coverage'):
         return [['python3', '-B', 'Scripts/test_qualification_harness.py'],
@@ -579,7 +581,7 @@ def main():
         log_path = output / ('command-%02d.log' % index)
         with log_path.open('w') as stream:
             try:
-                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane in ('wasm', 'wasm-qa') else 3500 if args.lane == 'archive' else 1800)
+                result = subprocess.run(command, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, timeout=21600 if args.lane in ('wasm', 'wasm-qa') else ARCHIVE_COMMAND_TIMEOUT_SECONDS if args.lane == 'archive' else 1800)
                 code = result.returncode
             except (OSError, subprocess.TimeoutExpired) as error:
                 stream.write('\n' + str(error) + '\n')
