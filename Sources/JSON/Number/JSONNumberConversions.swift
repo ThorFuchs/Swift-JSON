@@ -92,7 +92,8 @@ extension JSONNumber {
     /// digits and a nonzero sticky digit preserves which side of every midpoint
     /// the original exact decimal occupies. Binary32's midpoint bound is smaller.
     /// The system converter therefore sees <=822 bytes, independent of input size.
-    package func binaryConversionText(meter: inout JSONWorkMeter) throws -> String {
+    /// Canonical writing passes `chargesOutput: false`: this text is scratch, not output.
+    package func binaryConversionText(meter: inout JSONWorkMeter, chargesOutput: Bool = true) throws -> String {
         let c = components
         let kept = min(800,c.digits.count), shortened = c.digits.count > kept
         let coefficientCount = kept + (shortened ? 1 : 0)
@@ -101,7 +102,7 @@ extension JSONNumber {
         guard !overflow else { throw JSONFailure(.resource,code: .counterOverflow) }
         var output: [UInt8] = []
         func append(_ byte: UInt8,meter: inout JSONWorkMeter) throws {
-            try meter.work(subsystem: .numericWorkUnits); try meter.charge(.outputBytes)
+            try meter.work(subsystem: .numericWorkUnits); if chargesOutput { try meter.charge(.outputBytes) }
             try meter.retain(1); output.append(byte)
         }
         if c.negative { try append(45,meter: &meter) }
@@ -149,8 +150,8 @@ extension JSONNumber {
         var meter = try JSONWorkMeter(limits: limits, domain: .core)
         return try doubleValue(policy: policy, meter: &meter)
     }
-    package func doubleValue(policy: JSONNumberConversionPolicy, meter: inout JSONWorkMeter) throws -> Double {
-        let text = try binaryConversionText(meter: &meter)
+    package func doubleValue(policy: JSONNumberConversionPolicy, meter: inout JSONWorkMeter, chargesOutput: Bool = true) throws -> Double {
+        let text = try binaryConversionText(meter: &meter, chargesOutput: chargesOutput)
         try meter.checkpoint()
         guard let value = Double(text), value.isFinite else { throw JSONFailure(.conversion, code: .inexactConversion) }
         try meter.checkpoint()

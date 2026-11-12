@@ -116,6 +116,8 @@ or shape-inferencing result builders. See [numbers and Unicode](NumbersAndUnicod
 | `JSONWriter.write(_:)` | Owned Data containing complete strict UTF-8 JSON |
 | `JSONWriter.writeString(_:)` | Owned String with its additional retention charged |
 | `JSONWriter.writeWithReport(_:)` | JSONOperationReport&lt;Data&gt; |
+| `JSONCanonicalWriter.write(_:)` | Owned Data containing RFC 8785 canonical UTF-8 JSON |
+| `JSONCanonicalWriter.writeWithReport(_:)` | JSONOperationReport&lt;Data&gt; |
 
 Parsing accepts exactly one root followed by JSON whitespace and EOF. It rejects
 BOM, malformed UTF-8, unpaired surrogate escapes, raw controls, malformed numbers,
@@ -126,6 +128,13 @@ JSONWritingOptions selects compact output or indentation of 0...8 units (spaces 
 or scalar key order, and normalized or preserved number text. Preserved lexemes
 were admitted with their grammar and identity. Sorting makes no cryptographic
 canonicalization claim.
+
+JSONCanonicalWriter writes RFC 8785 JSON Canonicalization Scheme bytes: compact,
+keys ordered by UTF-16 code units, short string escapes and ECMAScript binary64
+numbers. Its default `.preserving` number policy refuses, with an inexact-conversion
+failure, a number whose binary64 spelling would denote a different exact decimal;
+`.rounding` follows RFC 8785 and rounds. It produces bytes only, with no hashing,
+signing or exported cryptography API.
 
 JSONDocument owns optional original bytes and bounded value/member-key spans.
 Spans are half-open zero-based byte ranges; diagnostic line/UTF-8 byte column and

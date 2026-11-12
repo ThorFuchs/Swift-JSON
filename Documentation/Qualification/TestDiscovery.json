@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "root_functions": {
-    "JSONTests": 190,
+    "JSONTests": 198,
     "JSONSchemaTests": 79,
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 36,
@@ -73,7 +73,7 @@
     "JSONSchemaDSL"
   ],
   "portable_root_functions": {
-    "JSONTests": 190,
+    "JSONTests": 198,
     "JSONSchemaTests": 79,
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 36,
@@ -89,7 +89,7 @@
     "JSONDSLTests": 47
   },
   "wasi_root_functions": {
-    "JSONTests": 190,
+    "JSONTests": 198,
     "JSONSchemaTests": 79,
     "JSONRegexRuntimeTests": 16,
     "JSONStreamingTests": 36,
