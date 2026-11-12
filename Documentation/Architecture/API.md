@@ -325,9 +325,10 @@ The [combined-source G8 record](Release1.6/G8Qualification.md) describes qualifi
 review and platform limits. Merge and release approval remain separate.
 The CLI's human version reports the candidate/release source version. JSON metadata
 includes `revisionKind: "source-sha256"` and `revision: "sha256:<hex>"`. This is the
-SHA-256 of the ordered Package.swift plus Sources content manifest, excluding only
-the generated identity file itself. It is not a Git commit, binary digest or claim
-of publication. Generation/checking needs no Git, time, environment or network.
+SHA-256 of the ordered Package.swift plus Sources content manifest, excluding the
+generated identity file and DocC catalogs (`*.docc`). It is not a Git commit, binary
+digest or claim of publication. Generation/checking needs no Git, time, environment
+or network.
 
 JSONNavigation product promotion preserves all 56 N1 public declarations and resource semantics. Full-source admission precedes invalid depth/record-option validation, including oversized sources; N1Promotion.md records this preserved precedence. JSON imports no Navigation symbols implicitly.
 
