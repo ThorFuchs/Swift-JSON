@@ -1,12 +1,35 @@
-# Execution update — 11 November 2026
+# Execution update — 12 November 2026
 
 1.9.0 is published at `f2a0d12da7028edfbcb0cb307f19a921a3a12d03`. It delivered the
 bounded structural wave, including the public read-only store, and lowered the Apple
 deployment minimums to macOS 15 and iOS 18 (see the
 [1.9 qualification record](Qualification/Release1.9.md)). 1.8.0 delivered located
-root-array streaming. The next proposed wave is 1.10.0; it is proposed scope only.
-Persistence and new query grammars are not included in any release so far.
-The proposal and historical inventories below remain source-bound.
+root-array streaming.
+
+On 12 November 2026 the maintainer approved the revised train below, from 1.9.1
+to 2.0.0. It replaces the earlier 1.10 persistence wave:
+
+- **Swift-JSON adds no database or persistent store.** Domain stores (Swift-MCP-Server
+  tasks, Content Collections) live in their own repositories on the shared
+  [Swift-SQLite](https://github.com/ThorFuchs/Swift-SQLite) base. Swift-SQLite does
+  not depend on Swift-JSON; the domain store connects the two. Swift-JSON supplies
+  the exact bytes those stores need: RFC 8785 canonical JSON and a versioned envelope.
+- Each release still needs its own design admission for new public API, finite
+  profiles, fixtures and complete CI on the exact source. Approval of the train is
+  not approval of a particular declaration.
+- The developer kit (Claude Code plugin and skill) is updated in the same PR train
+  as every minor release, so it targets the latest published version.
+
+| Release | Approved direction |
+| --- | --- |
+| **1.9.1 — hygiene** | Already on main: the `platform-floor` CI lane, the CLI source identity without DocC catalogs, branch housekeeping and developer kit 0.2.0. Tag/publication remains a separate decision. |
+| **1.10.0 — exact interchange** | RFC 8785 JSON Canonicalization Scheme (canonical bytes for hashing, signing and content addressing); a versioned envelope built on it; structural diff producing an RFC 6902 patch; RFC 7464 JSON text sequences in JSONStreaming. |
+| **1.11.0 — queries and diagnostics** | RFC 9535 JSONPath with finite budgets, kept separate from Transform semantics; detailed and basic JSON Schema output formats. |
+| **1.12.0 — API consolidation** | Review every public surface before 2.0: naming, error and limit consistency, deprecations with replacements and migration notes. No break in a minor release. |
+| **2.0.0 — compatibility contract** | Unchanged from the gate below: one documented compatibility, resource and platform contract for the accepted family, with migration guidance for every recorded break. |
+
+The historical proposal and inventories below remain source-bound. Where they
+conflict with this update, this update governs the order and scope of 1.10 onward.
 
 # Release roadmap: 1.7 through 2.0
 
@@ -70,11 +93,13 @@ A major version is a deliberate compatibility commitment: record and justify any
 actual break and provide migration guidance; do not manufacture a break to reach
 2.0. Dates follow exit gates, not a promised calendar.
 
-The 1.10 entry and later are **proposed scope**, not API approval or permission to start
-implementation. All planned packages at 2.0 means the explicitly accepted release
-portfolio. Lexical/semantic retrieval, embeddings, persistent indexes, weighted
-graph algorithms, set algebra, matrix arithmetic, JSONPath/another query grammar,
-new backends and text-sequence framing have no automatic place in this promise.
+The 1.10 entry in this historical table is superseded by the execution update above.
+All planned packages at 2.0 means the explicitly accepted release portfolio.
+JSONPath (1.11) and text-sequence framing (1.10) are now admitted as roadmap
+direction, each still subject to its own design admission. Lexical/semantic
+retrieval, embeddings, persistent indexes, weighted graph algorithms, set algebra,
+matrix arithmetic, other query grammars and new backends have no automatic place
+in this promise.
 If a later scope review admits one, give it its own product-boundary decision,
 finite profiles, fixtures and release gate. Do not rename speculative designs
 into committed packages.
