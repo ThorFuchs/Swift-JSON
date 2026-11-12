@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — 1.10.0 exact interchange (in progress)
+
+- Add `JSONCanonicalWriter`, which writes RFC 8785 JSON Canonicalization Scheme
+  (JCS) bytes: compact output, keys ordered by UTF-16 code units, short string
+  escapes and ECMAScript spelling of binary64 numbers. Equal values produce equal
+  bytes for hashing, signing and content addressing. `NumberPolicy.preserving`
+  (the default) refuses a number whose binary64 spelling would denote a different
+  exact decimal; `.rounding` rounds to the nearest binary64 value as RFC 8785 does.
+  Tests cover the RFC's Appendix B number vectors, its sample document and its
+  key-sorting example. The writer does not hash or sign. The existing writer and
+  its scalar key order are unchanged.
+
 ## Unreleased — 1.9.1 hygiene
 
 - Add the `platform-floor` native CI lane. It checks the macOS 15 / iOS 18

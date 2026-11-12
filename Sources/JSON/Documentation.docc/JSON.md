@@ -12,7 +12,10 @@ and uses order-independent equality. A duplicate decoded key is a syntax error.
 JSONStreaming. Parsing requires one complete root, trailing whitespace and EOF.
 The writer supports compact/pretty output, insertion/scalar key order and
 preserved/normalized decimal spelling. Scalar sorting is deterministic JSON
-output, not a cryptographic canonicalization standard.
+output, not a cryptographic canonicalization standard. For that, use
+``JSONCanonicalWriter``, which writes RFC 8785 (JCS) canonical bytes: UTF-16 key
+order, short string escapes and ECMAScript binary64 numbers. By default it refuses
+a number whose binary64 spelling would change its exact value.
 
 ``JSONValueEncoder`` and ``JSONValueDecoder`` implement native value-based
 Codable. Direct JSON/JSONObject round-trips preserve raw scalar keys and numbers.
@@ -71,6 +74,7 @@ belongs exclusively to each invocation.
 - ``JSONParser``
 - ``JSONWriter``
 - ``JSONWritingOptions``
+- ``JSONCanonicalWriter``
 - ``JSONIndentationUnit``
 - ``JSONValueEncoder``
 - ``JSONValueDecoder``

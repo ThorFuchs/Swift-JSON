@@ -78,9 +78,15 @@ package struct JSONWritingCursor {
     }
     private var stack: [Step]
     private let options: JSONWritingOptions
+    /// RFC 8785 mode: UTF-16 key order, short escapes and ECMAScript numbers.
+    private let canonical: JSONCanonicalWriter.NumberPolicy?
     private var initialized = false
     private var beginsValue = false
-    package init(value: JSON, options: JSONWritingOptions) { stack = [.value(value, 0)]; self.options = options }
+    package init(value: JSON, options: JSONWritingOptions) { stack = [.value(value, 0)]; self.options = options; canonical = nil }
+    package init(value: JSON, limits: JSONLimits, canonical policy: JSONCanonicalWriter.NumberPolicy) {
+        stack = [.value(value, 0)]; options = .init(limits: limits); canonical = policy
+    }
+    private var sortsKeys: Bool { canonical != nil || options.keyOrder == .scalar }
     private mutating func push(_ step: Step, meter: inout JSONWorkMeter) throws {
         try meter.retain(JSONLogicalWeights.frame); stack.append(step)
     }
@@ -103,8 +109,21 @@ package struct JSONWritingCursor {
             if x == nil { return false }
         }
     }
+    /// RFC 8785 section 3.2.3 orders keys by their UTF-16 code units.
+    private func utf16Less(_ a: JSONMember, _ b: JSONMember, meter: inout JSONWorkMeter) throws -> Bool {
+        var l = a.key.string.utf16.makeIterator(), r = b.key.string.utf16.makeIterator()
+        while true {
+            try meter.work()
+            let x = l.next(), y = r.next()
+            if x != y { if let x, let y { return x < y }; return x == nil }
+            if x == nil { return false }
+        }
+    }
+    private func less(_ a: JSONMember, _ b: JSONMember, meter: inout JSONWorkMeter) throws -> Bool {
+        canonical == nil ? try scalarLess(a, b, meter: &meter) : try utf16Less(a, b, meter: &meter)
+    }
     private func ordered(_ object: JSONObject, meter: inout JSONWorkMeter) throws -> [JSONMember] {
-        if options.keyOrder == .insertion { return object.members }
+        if !sortsKeys { return object.members }
         var values: [JSONMember] = [], scratch: [JSONMember] = []
         for member in object {
             try meter.work(); try meter.retain(JSONLogicalWeights.member * 2)
@@ -118,7 +137,7 @@ package struct JSONWritingCursor {
                 var left = start, right = middle
                 for target in start..<end {
                     try meter.work()
-                    if try left < middle && (right == end || !scalarLess(values[right], values[left], meter: &meter)) {
+                    if try left < middle && (right == end || !less(values[right], values[left], meter: &meter)) {
                         scratch[target] = values[left]; left += 1
                     } else { scratch[target] = values[right]; right += 1 }
                 }
@@ -157,6 +176,10 @@ package struct JSONWritingCursor {
                     try push(.escaped(iterator, kind), meter: &meter)
                     switch byte {
                     case 34, 92: try push(.byte(byte, kind), meter: &meter); return token(92, kind)
+                    case 8 where canonical != nil, 9 where canonical != nil, 10 where canonical != nil,
+                         12 where canonical != nil, 13 where canonical != nil:
+                        let short: UInt8 = switch byte { case 8: 98; case 9: 116; case 10: 110; case 12: 102; default: 114 }
+                        try push(.byte(short, kind), meter: &meter); return token(92, kind)
                     case 0...31:
                         let hex: [UInt8] = Array("0123456789abcdef".utf8)
                         try push(.byte(hex[Int(byte & 15)], kind), meter: &meter); try push(.byte(hex[Int(byte >> 4)], kind), meter: &meter)
@@ -171,7 +194,10 @@ package struct JSONWritingCursor {
                 case .boolean(let boolean): try push(.text((boolean ? "true" : "false").utf8.makeIterator(), .boolean), meter: &meter)
                 case .string(let text): try quoted(text, meter: &meter)
                 case .number(let number):
-                    if options.numberStyle == .preserved, let lexeme = number.originalLexeme { try push(.text(lexeme.utf8.makeIterator(), .number), meter: &meter) }
+                    if let policy = canonical {
+                        let text = try number.canonicalText(policy: policy, meter: &meter)
+                        try push(.text(text.utf8.makeIterator(), .number), meter: &meter)
+                    } else if options.numberStyle == .preserved, let lexeme = number.originalLexeme { try push(.text(lexeme.utf8.makeIterator(), .number), meter: &meter) }
                     else {
                         let c = number.components
                         if c.exponent != 0 { try push(.text(String(c.exponent).utf8.makeIterator(), .number), meter: &meter); try push(.byte(101, .number), meter: &meter) }
@@ -199,7 +225,7 @@ package struct JSONWritingCursor {
                         if index > 0 { try push(.byte(44), meter: &meter) }
                     }
                     try push(.byte(123), meter: &meter)
-                    if options.keyOrder == .scalar { try meter.release(UInt64(members.count) * JSONLogicalWeights.member) }
+                    if sortsKeys { try meter.release(UInt64(members.count) * JSONLogicalWeights.member) }
                 }
             }
         }
