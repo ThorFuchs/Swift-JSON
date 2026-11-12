@@ -5,7 +5,7 @@ import argparse
 import json
 from pathlib import Path
 import zipfile
-from validate_developer_kit import files, require, safe_name, sha, validate_plugin
+from validate_developer_kit import KIT_VERSION, files, require, safe_name, sha, validate_plugin
 
 
 def archive(path, payload):
@@ -34,8 +34,8 @@ def main():
     args.output.mkdir(parents=True)
     result = []
     for kind, source in [("plugin", root), ("skill", root / "skills/swift-json")]:
-        result.append(archive(args.output / ("swift-json-" + kind + "-0.1.0.zip"), {"swift-json/" + p: b for p, b in files(source).items()}))
-    (args.output / "ASSETS.json").write_text(json.dumps({"kit_version": "0.1.0", "files": result}, sort_keys=True, indent=2) + "\n")
+        result.append(archive(args.output / ("swift-json-" + kind + "-" + KIT_VERSION + ".zip"), {"swift-json/" + p: b for p, b in files(source).items()}))
+    (args.output / "ASSETS.json").write_text(json.dumps({"kit_version": KIT_VERSION, "files": result}, sort_keys=True, indent=2) + "\n")
     print(json.dumps(result, indent=2))
 
 

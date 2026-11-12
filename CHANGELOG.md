@@ -11,6 +11,11 @@
   documentation-only edits no longer require regenerating it.
 - Repository housekeeping: superseded remote branches removed; branches without a
   PR were first preserved as `archive/<branch>` tags.
+- Developer kit 0.2.0: the skill and its compiled recipes now target published
+  1.9.0 (twelve libraries, the CLI, macOS 15 / iOS 18). The repository is a
+  Claude Code plugin marketplace (`/plugin marketplace add ThorFuchs/Swift-JSON`),
+  and the kit validator checks content and runs in the `docs` lane. The kit
+  download release remains a separate maintainer action.
 
 ## 1.9.0 — prepared source; publication separate
 

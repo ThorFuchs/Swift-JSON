@@ -1,16 +1,17 @@
 {
   "schema_version": 1,
-  "kit_version": "0.1.0",
+  "kit_version": "0.2.0",
   "validated_library": {
-    "version": "1.6.1",
-    "commit": "e431f157ececc0cf3d061192420b0e36a9062f83",
-    "tree": "9d4c3969fad53f4734265ff585dc482ebea943d3",
+    "version": "1.9.0",
+    "commit": "f2a0d12da7028edfbcb0cb307f19a921a3a12d03",
+    "tree": "6b5438751352e0e424b133e79d40d32d6f8c8dd7",
     "repository": "https://github.com/ThorFuchs/Swift-JSON.git"
   },
   "baseline": {
     "swift_tools_compiler": "6.4+",
     "swift_language_mode": "6",
-    "apple": "macOS/SDK 27+; iOS/iPadOS 27+",
+    "apple_deployment": "macOS 15+; iOS/iPadOS 18+ (compile-time evidence below 27)",
+    "apple_development": "Xcode 27 / macOS 27 SDK",
     "linux": "separately qualified 64-bit Ubuntu 24.04/glibc",
     "wasi": "separately qualified full-language wasm32-unknown-wasip1 core scope"
   },
@@ -22,14 +23,14 @@
     "JSONPatch",
     "JSONHTML",
     "JSONBridges",
-    "JSONNavigation"
+    "JSONNavigation",
+    "JSONInspection",
+    "JSONTransform",
+    "JSONValueDSL",
+    "JSONSchemaDSL"
   ],
   "cli": "swift-json",
-  "unreleased": {
-    "source_version": "1.7.0-dev",
-    "additional_library": "JSONInspection",
-    "validated_by_this_kit": false
-  },
+  "later_versions_validated_by_this_kit": false,
   "recipes": [
     {
       "id": "exact-presence",
@@ -38,32 +39,32 @@
       "sources": [
         {
           "path": "Sources/JSON/Codec/JSONParser.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Codec/JSONParser.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Codec/JSONParser.swift",
           "sha256": "9cf5f49d6902d4b837249415a8981f1d9da16f9c6f1dc56e8f68821e1788fee9"
         },
         {
           "path": "Sources/JSON/Codec/JSONWriter.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Codec/JSONWriter.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Codec/JSONWriter.swift",
           "sha256": "aab11e0c955428baaa171550d8623d7fe431375c140821faea88d3c45548344d"
         },
         {
           "path": "Sources/JSON/Documentation.docc/QuickEntryPoints.md",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Documentation.docc/QuickEntryPoints.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Documentation.docc/QuickEntryPoints.md",
           "sha256": "a1134f57009a57ff742607a9fc6fcb6647bbffda76be0e29f555a47796ab27aa"
         },
         {
           "path": "Sources/JSON/Value/JSON.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Value/JSON.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Value/JSON.swift",
           "sha256": "25ffc8de088d856c4024000c0f15a26ab83166d0fbd2c76eae6ff3ae7cddf85d"
         },
         {
           "path": "Sources/JSON/Value/JSONObject.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Value/JSONObject.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Value/JSONObject.swift",
           "sha256": "a418915f32a4c17cc1ebec6f21ae2e53c955e294e209cdfa130704dd4c14a9db"
         },
         {
           "path": "Sources/JSON/Reading/JSONReadCursor.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSON/Reading/JSONReadCursor.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Reading/JSONReadCursor.swift",
           "sha256": "3fbb2d769b334f372059d185797b042d8cb331455d7491c1b6f27cb7c0242877"
         }
       ]
@@ -75,17 +76,17 @@
       "sources": [
         {
           "path": "Sources/JSONBridges/DoubleConversions.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONBridges/DoubleConversions.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONBridges/DoubleConversions.swift",
           "sha256": "619da122f2b420873c1f5ead454bbc188bc16769c451ac4af6a014d48deb3ffd"
         },
         {
           "path": "Sources/JSONBridges/IntegerConversions.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONBridges/IntegerConversions.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONBridges/IntegerConversions.swift",
           "sha256": "2023b74d6ba1482795f674bafe881989caaed48fcc6d5db54f8f0e34356dcf2a"
         },
         {
           "path": "Sources/JSONBridges/Documentation.docc/NumericFidelity.md",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONBridges/Documentation.docc/NumericFidelity.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONBridges/Documentation.docc/NumericFidelity.md",
           "sha256": "d86bf5742da61adeeb940f0f6bb5326cf8a50e4637d71d28f514a63aa64595dc"
         }
       ]
@@ -97,27 +98,27 @@
       "sources": [
         {
           "path": "Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchema/Compilation/JSONSchemaCompiler.swift",
           "sha256": "35e778b77a0d19605720aaade9ebcbba50d19820bc71f5d24f977cfd7f4a6271"
         },
         {
           "path": "Sources/JSONSchema/Evaluation/JSONSchemaValidator.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Evaluation/JSONSchemaValidator.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchema/Evaluation/JSONSchemaValidator.swift",
           "sha256": "4501f8a82579e2e83ed47fb4cfbb4c1f71a1cf4404611c6b71b84877eead9868"
         },
         {
           "path": "Sources/JSONSchema/Output/JSONValidationResult.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Output/JSONValidationResult.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchema/Output/JSONValidationResult.swift",
           "sha256": "f0660738bc64492243d9b59b92d8dc31a9305c618ee59db66db8da17ae055a3d"
         },
         {
           "path": "Sources/JSONSchema/Limits/JSONSchemaOptions.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Limits/JSONSchemaOptions.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchema/Limits/JSONSchemaOptions.swift",
           "sha256": "6e85ae15308b9d547b6a876a7a931b17a3775083491453501ffd3c5a6bfe4ec1"
         },
         {
           "path": "Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchema/Document/JSONSchemaRegistry.swift",
           "sha256": "2e2fff0b67e6762c48a64a58ebc880562afbc1c6147ef65521e3a5fea226e8cc"
         }
       ]
@@ -129,17 +130,17 @@
       "sources": [
         {
           "path": "Sources/JSONSchemaExamples/JSONSchemaExampleGenerator.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchemaExamples/JSONSchemaExampleGenerator.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchemaExamples/JSONSchemaExampleGenerator.swift",
           "sha256": "7de03913f53b1fd5604be4c6fa744aa4b8f6ae42a28d9dfd933413baf28e0317"
         },
         {
           "path": "Sources/JSONSchemaExamples/JSONSchemaExampleResult.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchemaExamples/JSONSchemaExampleResult.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchemaExamples/JSONSchemaExampleResult.swift",
           "sha256": "a252e9bde1b59269dfbafe27c4a512cc07fb980372cc9bf04a23eed537eb610e"
         },
         {
           "path": "Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchemaExamples/Documentation.docc/VerifiedCandidates.md",
           "sha256": "91084d313255da246a4caaa3004038c10a42319f5bdcd455be1652da03f83468"
         }
       ]
@@ -151,13 +152,13 @@
       "sources": [
         {
           "path": "Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONStreaming/NDJSON/NDJSONValueSequence.swift",
           "sha256": "4a92da97cf87388701b2047c1b5e04bbc411be3fb735b6201efd285ea7591d36"
         },
         {
           "path": "Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
-          "sha256": "3a17263b55165b2bc351a7461232e28a6d32d42cea979534440baab3117d6abe"
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
+          "sha256": "2a7d1983e199d66d7b7373f3458581e258fa7fc883dafcfea0b1a53fbb8f6b76"
         }
       ]
     },
@@ -168,17 +169,17 @@
       "sources": [
         {
           "path": "Sources/JSONNavigation/JSONTraversal.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONNavigation/JSONTraversal.swift",
-          "sha256": "e7a48a015a437a5d7f5b27ca809e9edfcb62393b609061a198e4fd8f2ab3349c"
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONNavigation/JSONTraversal.swift",
+          "sha256": "1f2e013b488be2ccef7d12ae986e8dfc2b32e269fa063d079e90b2d6a5ff3a76"
         },
         {
           "path": "Sources/JSONNavigation/JSONTraversalTypes.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONNavigation/JSONTraversalTypes.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONNavigation/JSONTraversalTypes.swift",
           "sha256": "4500c2ccdf1d7c55f038fbfa4d1ff261587bb83a473cd9da0b0b43f6d888fcb6"
         },
         {
           "path": "Sources/JSONNavigation/Documentation.docc/Traversal.md",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONNavigation/Documentation.docc/Traversal.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONNavigation/Documentation.docc/Traversal.md",
           "sha256": "266755bf0fa2a1a6336ccb52e435adc7b53911a44ef5255fa7629892bc9790ef"
         }
       ]
@@ -190,17 +191,17 @@
       "sources": [
         {
           "path": "Sources/JSONPatch/JSONPatch.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONPatch/JSONPatch.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONPatch/JSONPatch.swift",
           "sha256": "32fd877d902264be2ea83acd89d1b68f1f2320b66e525e3ca1426a9a2707172e"
         },
         {
           "path": "Sources/JSONPatch/JSONPatchResult.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONPatch/JSONPatchResult.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONPatch/JSONPatchResult.swift",
           "sha256": "3efdac61fa5f1e0954d092e9ea149199a29915944ad4b5f435569c530c3278e2"
         },
         {
           "path": "Sources/JSONPatch/JSONMergePatch.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONPatch/JSONMergePatch.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONPatch/JSONMergePatch.swift",
           "sha256": "e6489707e583c0a98253b9463cf4c9949f03d8be1fd6e4b4922ae3cee3cacbdb"
         }
       ]
@@ -212,13 +213,170 @@
       "sources": [
         {
           "path": "Sources/JSONHTML/JSONHTMLRenderer.swift",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONHTML/JSONHTMLRenderer.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONHTML/JSONHTMLRenderer.swift",
           "sha256": "5ecce38aff754fe90afc2d90463bf60d98b4cf1c0990dc0c8794d06562e934d1"
         },
         {
           "path": "Sources/JSONHTML/Documentation.docc/FormattedRendering.md",
-          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/e431f157ececc0cf3d061192420b0e36a9062f83/Sources/JSONHTML/Documentation.docc/FormattedRendering.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONHTML/Documentation.docc/FormattedRendering.md",
           "sha256": "56cbae8a68471d8138b0de5061236a30abbdca768483cdcf5c2a7b5d382ee172"
+        }
+      ]
+    },
+    {
+      "id": "located-stream",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE located-stream",
+      "sources": [
+        {
+          "path": "Sources/JSONStreaming/JSONLocatedTopLevelArraySequence.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONStreaming/JSONLocatedTopLevelArraySequence.swift",
+          "sha256": "5885b8ece4c3daddd84919694ba68ba7c3d9597d5655525cd9ca7db7e763c5e8"
+        },
+        {
+          "path": "Sources/JSON/Document/JSONSourceMap.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSON/Document/JSONSourceMap.swift",
+          "sha256": "7cd79a933b77edc92856f95c769611fded22ec2ae1ed83a14253acbd309da020"
+        },
+        {
+          "path": "Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONStreaming/Documentation.docc/CompletionAndBackpressure.md",
+          "sha256": "2a7d1983e199d66d7b7373f3458581e258fa7fc883dafcfea0b1a53fbb8f6b76"
+        }
+      ]
+    },
+    {
+      "id": "shape-snapshot",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE shape-snapshot",
+      "sources": [
+        {
+          "path": "Sources/JSONInspection/JSONShapeInspector.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/JSONShapeInspector.swift",
+          "sha256": "809efa4e04aeba0b9537f1ba5fd371613aa3aaaa8c7270ce889db6225ea03f51"
+        },
+        {
+          "path": "Sources/JSONInspection/JSONShapeEvidence.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/JSONShapeEvidence.swift",
+          "sha256": "3e5298a9cba2d1ac933714af9e21ec79514fe4ad2495bcfa95e6d801220cd5bd"
+        },
+        {
+          "path": "Sources/JSONInspection/JSONStructuralSnapshot.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/JSONStructuralSnapshot.swift",
+          "sha256": "075e267898ee73aa61fc16ab705efeab083fec4dcfdecc760016e744302f0076"
+        },
+        {
+          "path": "Sources/JSONInspection/Documentation.docc/StructuralSnapshots.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/Documentation.docc/StructuralSnapshots.md",
+          "sha256": "6bc55b49b4bf5e88b89ebcff36595a01636e295f7240fa52b0d04c6eb961bb36"
+        }
+      ]
+    },
+    {
+      "id": "batch",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE batch",
+      "sources": [
+        {
+          "path": "Sources/JSONInspection/JSONInspectionBatch.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/JSONInspectionBatch.swift",
+          "sha256": "c6973d65bd33bb2bdc2ace15011f8ddc3d330658ccf3c425ec7f35a3402cd888"
+        },
+        {
+          "path": "Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md",
+          "sha256": "ba36ac8c209c497281d41c3f1ba745a610b36dfb73a288fcbf7ed3a7c1fff2fc"
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE store",
+      "sources": [
+        {
+          "path": "Sources/JSONInspection/Store/JSONConfiguredStore.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/Store/JSONConfiguredStore.swift",
+          "sha256": "0d486eb62dc472ee69c4b3a1e99066900bb86030381de93edce7e1a46631fc5b"
+        },
+        {
+          "path": "Sources/JSONInspection/Store/JSONStoreProfile.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/Store/JSONStoreProfile.swift",
+          "sha256": "948baba3245f476e18c5eaa66a824dca79e971cf3f318172f7e692f15499418e"
+        },
+        {
+          "path": "Sources/JSONInspection/Store/JSONStoreQueries.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/Store/JSONStoreQueries.swift",
+          "sha256": "bc02e82cd58234467c2e579c744465a4dc8acb786f3490a97324ea2a696e2b85"
+        },
+        {
+          "path": "Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md",
+          "sha256": "ba36ac8c209c497281d41c3f1ba745a610b36dfb73a288fcbf7ed3a7c1fff2fc"
+        }
+      ]
+    },
+    {
+      "id": "transform",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE transform",
+      "sources": [
+        {
+          "path": "Sources/JSONTransform/JSONTransformProgram.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/JSONTransformProgram.swift",
+          "sha256": "92013fcbbfc56e8e41fa8fce1b9762c3a5c195f26857bc7e7197c004898c3bae"
+        },
+        {
+          "path": "Sources/JSONTransform/JSONTransformExecution.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/JSONTransformExecution.swift",
+          "sha256": "2d8f9c5bd01639c3146d20085a3a3db1a505ef1bdf98beeb05696253be0b1c86"
+        },
+        {
+          "path": "Sources/JSONTransform/JSONTransformLimits.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/JSONTransformLimits.swift",
+          "sha256": "10285680a3c5601c4540b09c84442b505883a0a11e84240ff335c4b108bc867b"
+        },
+        {
+          "path": "Sources/JSONTransform/JSONTransformFailure.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/JSONTransformFailure.swift",
+          "sha256": "50a555863f16cf70d4d19e701b9b668cd337ed5db9fd4d89a97bbdaad238b5f3"
+        },
+        {
+          "path": "Sources/JSONTransform/JSONTransformProgramDefinition.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/JSONTransformProgramDefinition.swift",
+          "sha256": "be3dc184173a5f8754673da8bae8729ed5b480a1da79caadbde9cb628c4e8442"
+        },
+        {
+          "path": "Sources/JSONTransform/JSONTransformSelection.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/JSONTransformSelection.swift",
+          "sha256": "46fedfaabdb8147b0dffde2f0db93bc40fe453faf986bbdf3997b2d53441f674"
+        },
+        {
+          "path": "Sources/JSONTransform/Documentation.docc/IndexedSelection.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONTransform/Documentation.docc/IndexedSelection.md",
+          "sha256": "99d2bb65d2b34d7f1f1bde6356c14ed5176d10b5161bc973e1dcbc021cbbc918"
+        }
+      ]
+    },
+    {
+      "id": "dsl",
+      "executable": "assets/consumer/Sources/Consumer/Consumer.swift",
+      "marker": "// RECIPE dsl",
+      "sources": [
+        {
+          "path": "Sources/JSONValueDSL/JSONValueDSL.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONValueDSL/JSONValueDSL.swift",
+          "sha256": "7977e7a5676ff81f86eedbb91859fae02eea70b6569b44bd1a36ef1d6dbcf89a"
+        },
+        {
+          "path": "Sources/JSONSchemaDSL/JSONSchemaDSL.swift",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchemaDSL/JSONSchemaDSL.swift",
+          "sha256": "4eadcbdcbbce0f808ec0f9d12a5a140f3f4380cf336045a53ab21600979dbc5b"
+        },
+        {
+          "path": "Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md",
+          "url": "https://github.com/ThorFuchs/Swift-JSON/blob/f2a0d12da7028edfbcb0cb307f19a921a3a12d03/Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md",
+          "sha256": "6d3a3b0a4d4ce634878084b62c963af5cfa5cbdacaa13ef2d43f8c396c1ce163"
         }
       ]
     }
@@ -231,43 +389,43 @@
     },
     {
       "path": "SKILL.md",
-      "sha256": "7c7329de79c00297cc87f638c5b0d785c0166f6284f846eb6b91bea0aea294f5",
-      "bytes": 10259
+      "sha256": "7775a5762715e72379a67a65c209ae0fc90404c66400f4b82dd6b514d02753b8",
+      "bytes": 11056
     },
     {
       "path": "assets/consumer/Package.swift",
-      "sha256": "78efacb71d2444fdc7a6a6bb92e17a7e95acaa1f5ec5ac550e931168c3f64303",
-      "bytes": 896
+      "sha256": "252451e03bbb499cddae9554f4390e082e3d864455d311638de9f08bf66686aa",
+      "bytes": 1148
     },
     {
       "path": "assets/consumer/Sources/Consumer/Consumer.swift",
-      "sha256": "86cf9ede263d2151500362eeb7319426b53cfea2ed660055e6b129e5e5c8f27c",
-      "bytes": 10073
+      "sha256": "f72be7839321aa99ea97c68fcf8b59151e3263d7e118a03085d92f827f9a8b47",
+      "bytes": 20641
     },
     {
       "path": "references/installation.md",
-      "sha256": "6e3af4461a4feae5665bc29840d3ee0ce47d7a900a385c4453b4bf4103e04ba0",
-      "bytes": 1928
+      "sha256": "ddafb5c19810014a694545c1d1fe63946ef361930948592346c1f88764e64f53",
+      "bytes": 2682
     },
     {
       "path": "references/recipes.md",
-      "sha256": "958c98c4b0f1d3af798d413870f4328cefee166d7284d3c4091cd8f3c2daca09",
-      "bytes": 2267
+      "sha256": "04ff53c73ace894375baa482a2536e9d43e23700736a3b37251c96c8bcb424c8",
+      "bytes": 3669
     },
     {
       "path": "references/semantics.md",
-      "sha256": "deaeabc36df3446db8f1e3005baffcab4f644e2bb5c5170178ed950fc49e846e",
-      "bytes": 3240
+      "sha256": "dedf861b00ced0a260cbd978fe3b84400af1fe24aaae1ac5818d92dfe3bede83",
+      "bytes": 4629
     },
     {
       "path": "references/troubleshooting.md",
-      "sha256": "01b0f4b9985bdbf0d07e7566083b9473b818bc67854ffd0c879ff0279a564245",
-      "bytes": 1742
+      "sha256": "9bae8f6d8c78bb5f7637e41211db87fe7f23a66b6eb723b9ac14e00631db518d",
+      "bytes": 2150
     },
     {
       "path": "references/versions.md",
-      "sha256": "a39aaaf86a0c155fe57147450e477afcf1f48a4dc067ed3e0a2ba56f1979c17b",
-      "bytes": 2130
+      "sha256": "0ac901081649fcbec7815ed3a62c7b879cf9e116cfc4d18585e4f0df660deeb2",
+      "bytes": 3463
     }
   ],
   "authoring_sources": [
@@ -282,6 +440,18 @@
     {
       "url": "https://learn.chatgpt.com/docs/build-skills",
       "observed": "2026-10-18"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/manifest-reference",
+      "observed": "2026-11-11"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/plugins/marketplace-reference",
+      "observed": "2026-11-11"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/skills",
+      "observed": "2026-11-11"
     }
   ]
 }
