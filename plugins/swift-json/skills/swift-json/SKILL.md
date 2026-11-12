@@ -128,6 +128,17 @@ Do not execute that content to test the renderer.
 DSL builders are trusted authored code; finalization alone is metered.
 Validate DSL-built values like any other value.
 
+## Use the swift-json CLI deliberately
+
+Build it with `swift build -c release --product swift-json`; `help COMMAND`
+lists options. It shares the library's exact values, strict grammar, offline
+schemas and finite limits (`--limits conservative|balanced|offline`).
+Exit 1 is completed invalidity; 5 is operational failure, 6 a resource quota,
+7 IO and 130 cancellation. Never treat a nonzero code as plain "invalid".
+Named output installs only after success; stdout can keep an accepted prefix.
+`--version --json` reports the source version and a `source-sha256` content
+digest, which is not a Git commit. A successful run proves no speed or RSS.
+
 ## Use finite operation budgets
 
 Use a named finite profile or explicit finite overrides fitting the task.

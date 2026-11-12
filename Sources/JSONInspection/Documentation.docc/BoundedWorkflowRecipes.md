@@ -62,6 +62,6 @@ hash verification. Logical counters are not heap allocations, RSS or elapsed tim
 A diagnostic resource refusal remains an incomplete capacity observation. These
 fixtures do not prove the default maxima jointly achievable or a speed improvement.
 
-The existing developer kit stays pinned to its published library version. These
-1.9 recipes are compiled separately; they do not silently change that kit's
-compatibility or distribution claims.
+The developer kit carries its own compiled store, batch and Transform selection
+recipes pinned to library 1.9.0. This example remains a separate path-dependency
+consumer; it does not change the kit's compatibility or distribution claims.
