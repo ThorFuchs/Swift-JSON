@@ -244,6 +244,8 @@ def commands(lane, output):
             ['python3', '-B', 'Scripts/qualify_cli_integration.py', '--binary', '.build/release/swift-json', '--output', str(output / 'integration-subprocess.json')], ['python3', '-B', 'Scripts/qualify_cli_limits.py', '--binary', '.build/release/swift-json', '--output', str(output / 'cli-limits.json')], ['swift', 'build', '-c', 'release', '--package-path', 'Tools/CLIQualification', '--product', 'CLIExactCompare'], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C1', '--output', str(output / 'foundation-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C2', '--output', str(output / 'vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C3', '--output', str(output / 'arithmetic-vectors.json')],
             ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C4', '--output', str(output / 'advanced-vectors.json')], ['python3', '-B', 'Scripts/qualify_cli_cases.py', '--binary', '.build/release/swift-json', '--comparator', 'Tools/CLIQualification/.build/release/CLIExactCompare', '--gate', 'C5', '--output', str(output / 'integration-vectors.json')], ['swift', 'run', '-c', 'release', '--package-path', 'Tools/CLIQualification', 'ProviderConsumer'], ['python3', '-B', 'Scripts/qualify_schema_providers.py', '--binary', '.build/release/swift-json', '--output', str(output / 'providers.json')]]
+    if lane == 'platform-floor':
+        return [['python3', '-B', 'Scripts/qualify_platform_floor.py', '--output', str(output / 'platform-floor')]]
     if lane == 'native':
         return [
             ['python3', '-B', 'Scripts/public_check.py'],
@@ -537,7 +539,11 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:
         passed = passed and 'JSONHTML_BROWSER passed engines=3 cases=76 skips=0' in log.splitlines()
     if 'Scripts/test_qualification_harness.py' in command:
-        passed = passed and 'HARNESS_TESTS passed cases=35' in log.splitlines()
+        passed = passed and 'HARNESS_TESTS passed cases=36' in log.splitlines()
+    if command[:3] == ['python3', '-B', 'Scripts/qualify_platform_floor.py']:
+        from qualify_platform_floor import check_receipt
+        data = json.loads((ROOT / command[command.index('--output') + 1] / 'receipt.json').read_text())
+        passed = passed and check_receipt(data)
     if command[:3] == ['python3', '-B', 'Scripts/qualify_transform_selection.py']:
         data = json.loads(log.strip().splitlines()[-1])
         passed = passed and data['status'] == 'passed' and len(data['commands']) == 20 and all(x['passed'] for x in data['commands']) and data['witnesses_per_configuration'] == 10 and data['negative_fixture_invocations'] == 14 and data['compiled_guide_fences'] == 1
@@ -548,7 +554,7 @@ def check_result(command, code, log, events=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lane', choices=['transform-bindings', 'transform-bindings-safety', 'structural-acceptance', 'structural-acceptance-safety', 'structural-workflows', 'structural-workflows-safety', 'store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive'], required=True)
+    parser.add_argument('--lane', choices=['transform-bindings', 'transform-bindings-safety', 'structural-acceptance', 'structural-acceptance-safety', 'structural-workflows', 'structural-workflows-safety', 'store', 'store-preparation', 'composition', 'navigation', 'inspection', 'native', 'safety', 'docs', 'r0', 'qa', 'linux', 'linux-safety', 'wasm', 'browser', 'export', 'cli', 'schema-examples', 'schema-examples-safety', 'schema-examples-determinism', 'schema-examples-construction', 'schema-examples-advanced', 'schema-examples-qualification', 'coverage', 'linux-coverage', 'linux-qa', 'wasm-qa', 'archive', 'platform-floor'], required=True)
     parser.add_argument('--output')
     parser.add_argument('--skip-host-measurements', action='store_true', help='For WASI runtime qualification only: record optional host timings as NOT RUN.')
     args = parser.parse_args()
