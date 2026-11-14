@@ -15,6 +15,10 @@ downloads and complete printing use native prepared bytes. See <doc:StructuredPr
 These structured previews extend the renderer released in 1.3.0. Select the syntax
 layout explicitly when upgrading an application that needs syntax-first output.
 
+A static difference page shows two exact values as one combined tree with
+added, removed and changed markers, a linked change list and the RFC 6902 patch
+as a download. See <doc:DifferenceRendering>.
+
 Native JSON transfer and immutable prepared JSON/text/Markdown/static HTML,
 opt-in styled RTF and explicit main-actor PDF preparation are available since
 1.3.0. PDF consumes prepared static HTML; typed caller annotations attach to exact
@@ -34,6 +38,7 @@ browser heap, browser instruction quotas, process RSS or printing behavior.
 - <doc:StructuredPreviews>
 - <doc:FormattedRendering>
 - <doc:InteractiveRendering>
+- <doc:DifferenceRendering>
 - <doc:DiagnosticAnnotations>
 - <doc:PreparedExport>
 - <doc:PDFPreparation>
