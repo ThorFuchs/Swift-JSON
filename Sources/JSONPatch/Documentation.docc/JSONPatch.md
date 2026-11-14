@@ -14,6 +14,14 @@ no partially changed document and leaves the caller value unchanged.
 ``JSONPatchResult`` distinguishes a removed root from a document containing
 JSON null. A subsequent root add can recreate a removed document.
 
+``JSONPatch/difference(from:to:options:)`` computes a patch that turns one value
+into another. It is structural and deterministic, not minimal: equal values
+(by exact decimal, scalar and order-independent object equality) produce no
+operation, object members are removed, added or compared by exact key, arrays
+keep their equal prefix and suffix and compare the rest by position, and other
+changes are replaced. It never emits `move`, `copy` or `test`, and applying the
+result to the source always yields a value equal to the target.
+
 ``JSONMergePatch`` implements RFC 7396: null object members remove properties,
 object patches recurse with explicit frames, and other values replace the
 selected value. A root null replaces the document with JSON null. Arrays are
@@ -33,6 +41,8 @@ earlier oversized stage. Reports expose logical accounting, not process RSS.
 ### JSON Patch
 
 - ``JSONPatch``
+- ``JSONPatch/difference(from:to:options:)``
+- ``JSONPatch/differenceWithReport(from:to:options:)``
 - ``JSONPatchOperation``
 - ``JSONPatchResult``
 - ``JSONPatchOptions``
