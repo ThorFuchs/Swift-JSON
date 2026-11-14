@@ -57,7 +57,8 @@ store/follow API on 2026-11-10; later API changes stay additive and human-gated.
 one invocation-owned ledger per operation. Positions remain unforgeable and
 source-instance-local. No persistence or mutable store is exposed. See
 Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md.
-Wider retrieval/persistence and JSON text-sequence framing remain separate work.
+Wider retrieval/persistence remains separate work. RFC 7464 JSON text sequences
+are 1.10 development in JSONStreaming (`JSONTextSequence`, `JSONTextSequenceWriter`).
 
 JSONTransform uses one private compiler/VM and the CLI's accounted adapter.
 Preserve its accepted 42 authored declarations and exact semantics. The original

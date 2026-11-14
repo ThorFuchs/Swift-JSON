@@ -1,6 +1,6 @@
 # ``JSONStreaming``
 
-Pull-driven events and values, strict NDJSON, root-array elements and awaited sinks.
+Pull-driven events and values, strict NDJSON, RFC 7464 text sequences, root-array elements and awaited sinks.
 
 Sources are caller-owned AsyncSequences of owned ``JSONByteChunk`` values.
 Each iterator has exclusive mutable state, performs one pull at a time and
@@ -18,6 +18,12 @@ records require actual separation; adjacent roots are rejected.
 blank/malformed records and accepts a valid final record without a final LF.
 There is no skipped-record recovery. Error locations include absolute byte and
 physical record positions.
+
+``JSONTextSequence`` reads RFC 7464 JSON text sequences (`application/json-seq`):
+each text starts with a record separator byte. Unterminated top-level scalars
+are treated as possibly truncated. Malformed texts fail by default and can be
+skipped explicitly. ``JSONTextSequenceWriter`` writes the same framing. See
+<doc:TextSequences>.
 
 ``JSONTopLevelArraySequence`` emits indexed elements followed by one explicit
 document-completed summary. Earlier elements remain provisional with respect
@@ -43,6 +49,7 @@ publication must stage bytes in its own sink.
 ### Guides
 
 - <doc:CompletionAndBackpressure>
+- <doc:TextSequences>
 
 ### Pull sequences
 - ``JSONByteChunk``
@@ -55,6 +62,8 @@ publication must stage bytes in its own sink.
 ### Record framing and completion
 - ``NDJSONValueSequence``
 - ``NDJSONOptions``
+- ``JSONTextSequence``
+- ``JSONTextSequenceOptions``
 - ``JSONTopLevelArraySequence``
 - ``JSONTopLevelArrayEvent``
 - ``JSONLocatedTopLevelArraySequence``
@@ -62,3 +71,4 @@ publication must stage bytes in its own sink.
 
 ### Awaited output
 - ``JSONAsyncWriter``
+- ``JSONTextSequenceWriter``

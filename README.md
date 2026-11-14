@@ -90,7 +90,7 @@ Choose the products your application needs:
 | **JSON** | Exact values, strict parsing/writing, native Codable, Pointer, presence, checked construction, source documents and diagnostics |
 | **JSONSchema** | Draft 2020-12 compilation/evaluation, offline registries, bounded regex, annotations and raw declaration inspection |
 | **JSONSchemaExamples** | Opt-in deterministic exact candidates, conservative typed construction and native schema certification, introduced in 1.6.0 |
-| **JSONStreaming** | Pull syntax events and values, strict NDJSON, root-array elements and awaited output chunks |
+| **JSONStreaming** | Pull syntax events and values, strict NDJSON, RFC 7464 text sequences, root-array elements and awaited output chunks |
 | **JSONHTML** | Exact HTML and immutable exports; structured forms/cards and bounded previews in 1.6.0 |
 | **swift-json** | Bounded command-line JSON workflows (available since 1.5.0) |
 | **JSONBridges** | Opt-in native integer, Double and Foundation Decimal conversions (available in the 1.4.0 tag and 1.5.0 release) |
@@ -471,6 +471,8 @@ producer queue. Root-array elements and syntax events remain provisional until
 completion. A document completes only after its closing syntax, trailing whitespace
 and EOF. `JSONValueSequence` waits for its framing boundary before yielding a value;
 `NDJSONValueSequence` rejects blank/malformed physical records and never skips them.
+`JSONTextSequence` reads RFC 7464 `application/json-seq` texts; it treats unterminated
+top-level scalars as possibly truncated and skips malformed texts only when asked.
 Since 1.8.0, `JSONLocatedTopLevelArraySequence` drives the same root-array reader and
 also yields each element's `JSONSourceSpan`: zero-based half-open UTF-8 byte offsets
 in the complete stream, excluding whitespace and separators. It retains no original
