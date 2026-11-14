@@ -28,6 +28,13 @@
   complete the page. Its CSP authorizes the two stylesheets by hash and sets
   `script-src 'none'`. The comparison is a package walker in JSON shared with
   `JSONPatch.difference`, so JSONHTML still depends on JSON only.
+- Add RFC 7464 JSON text sequences (`application/json-seq`) to JSONStreaming.
+  `JSONTextSequence` reads texts framed by the record separator byte with the
+  same pull model and budgets as NDJSON. Unterminated top-level scalars are
+  treated as possibly truncated (RFC 7464 section 2.4). Malformed texts fail by
+  default; `JSONTextSequenceOptions.MalformedTexts.skip` skips them and counts
+  them on the iterator, but never skips resource failures. `JSONTextSequenceWriter`
+  writes RS, strict JSON and LF per value, as one sequence or in awaited chunks.
 
 ## Unreleased — 1.9.1 hygiene
 
