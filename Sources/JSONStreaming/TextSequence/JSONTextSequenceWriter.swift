@@ -5,7 +5,7 @@ import JSON
 /// Writes RFC 7464 JSON text sequences (`application/json-seq`).
 ///
 /// Every value becomes one text: the record separator byte (RS, `0x1E`), the strict
-/// JSON bytes of ``JSONWritingOptions``, then one LF. The trailing LF lets readers
+/// JSON bytes of `JSONWritingOptions`, then one LF. The trailing LF lets readers
 /// detect truncated top-level scalars. Indented output is allowed, because the
 /// LF bytes inside a text are JSON whitespace.
 public struct JSONTextSequenceWriter: Sendable {
