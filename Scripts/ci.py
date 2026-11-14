@@ -533,7 +533,7 @@ def check_result(command, code, log, events=None):
     if command[:3] == ['python3', '-B', 'Scripts/qualify_navigation.py']:
         passed = passed and 'NAVIGATION_COMPILER passed configurations=2 consumer_cases=18 negative_probes=8' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/verify_html_assets.py']:
-        passed = passed and 'JSONHTML_ASSETS passed count=2' in log.splitlines()
+        passed = passed and 'JSONHTML_ASSETS passed count=3' in log.splitlines()
     if 'BrowserFixtures' in command:
         passed = passed and 'JSONHTML_BROWSER_FIXTURES passed count=15' in log.splitlines()
     if command[:3] == ['python3', '-B', 'Scripts/qualify_html_browser.py']:

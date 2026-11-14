@@ -60,9 +60,9 @@ private func roundTrip(_ source: JSON, _ target: JSON, sourceLocation: SourceLoc
     let source = try parse(#"{"a/b":1,"m~n":2,"":3,"é":4}"#)
     let target = try parse(#"{"a/b":5,"m~n":2,"":6,"é":4}"#)
     let operations = try roundTrip(source, target)
-    #expect(operations.map(\.path.string) == ["/é", "/a~1b", "/", "/e\u{301}"])
+    #expect(operations.map(\.path.string) == ["/a~1b", "/", "/é", "/e\u{301}"])
     // Decoded scalars are distinct keys, even when canonically equivalent.
-    #expect(operations.first == .remove(path: try JSONPointer(tokens: ["é"])))
+    #expect(operations[2] == .remove(path: try JSONPointer(tokens: ["é"])))
     // Root kind changes replace the root through the empty Pointer.
     #expect(try roundTrip(parse("[1]"), parse(#"{"a":1}"#)) == [.replace(path: try JSONPointer(parsing: ""), value: try parse(#"{"a":1}"#))])
     #expect(try roundTrip(parse("1"), parse("null")) == [.replace(path: try JSONPointer(parsing: ""), value: .null)])

@@ -19,6 +19,15 @@
   applies to the source to give the target, but is not minimal and never uses
   `move`, `copy` or `test`. One cumulative patch ledger covers both inputs and
   the produced operations.
+- Add `JSONHTMLRenderer.renderDifference(from:to:)` and
+  `renderDifferenceWithReport`, a static, script-free page that shows two exact
+  values as one combined tree. Added, removed and changed values carry
+  text markers as well as color; equal values stay visible but collapsed. A
+  summary, a change list linked by JSON Pointer, a CSS-only "Show changes only"
+  toggle and native downloads of the RFC 6902 patch, the source and the target
+  complete the page. Its CSP authorizes the two stylesheets by hash and sets
+  `script-src 'none'`. The comparison is a package walker in JSON shared with
+  `JSONPatch.difference`, so JSONHTML still depends on JSON only.
 
 ## Unreleased — 1.9.1 hygiene
 
