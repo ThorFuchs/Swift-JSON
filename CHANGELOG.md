@@ -11,6 +11,14 @@
   Tests cover the RFC's Appendix B number vectors, its sample document and its
   key-sorting example. The writer does not hash or sign. The existing writer and
   its scalar key order are unchanged.
+- Add `JSONPatch.difference(from:to:options:)` and `differenceWithReport`, which
+  compute RFC 6902 operations that turn one exact value into another. Equal values
+  (exact decimals, scalar keys, order-independent objects) produce no operation;
+  objects diff by key, arrays keep their equal prefix and suffix and compare the
+  rest by position, other changes are replaced. The result is deterministic and
+  applies to the source to give the target, but is not minimal and never uses
+  `move`, `copy` or `test`. One cumulative patch ledger covers both inputs and
+  the produced operations.
 
 ## Unreleased — 1.9.1 hygiene
 

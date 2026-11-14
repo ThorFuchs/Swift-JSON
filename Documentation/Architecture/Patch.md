@@ -24,6 +24,26 @@ Reject negative index construction, invalid escape syntax and configured token/b
 
 Pointer construction is a convenience over strict tokens. It adds no wildcards, JSONPath, jq expressions, automatic parent creation or ambiguous autovivification. Test empty keys, slash/tilde, Unicode scalar identity, numeric object keys, percent fragments and repeated resolution with one immutable Pointer.
 
+## Structural difference
+
+`JSONPatch.difference(from:to:options:)` (1.10) produces RFC 6902 operations that
+turn a source value into a target value, under one cumulative `.patch` ledger
+that admits both inputs, charges every comparison, Pointer and operation, and
+checks cancellation in its loop. The result is deterministic and always applies
+to the source to give a value equal to the target; it is not a minimal edit script.
+
+- Equality is the exact model's: equal decimals (`1.0` and `1`), decoded scalar
+  keys and order-independent objects produce no operation. Canonically
+  equivalent but scalar-distinct keys are different members.
+- Objects: members only in the source are removed (source order), members only in
+  the target are added (target order), and shared members are compared recursively.
+- Arrays: the longest equal prefix and suffix are kept; the remaining elements
+  are compared by position, surplus source elements are removed from the highest
+  index down, and surplus target elements are added in order.
+- Different kinds and unequal scalars are replaced; a root change uses the empty Pointer.
+- No `move`, `copy` or `test` operation is generated. An insertion at the front of
+  a long array therefore produces one operation per shifted element.
+
 ## JSON Merge Patch
 
 JSONMergePatch implements RFC 7396 in the JSONPatch product. This offers an object-shaped partial-update use case beside RFC 6902 operations. The new type uses the exact JSON model and an explicitly bounded staged application.
