@@ -66,6 +66,14 @@ cross-module DocC link; the fix changed a doc comment only and the docs lane the
 passed. Native for #98 ran on the commit before that fix; GitHub CI ran on the
 merged state.
 
+On the preparation commit `deb16f5` (CLI version 1.10.0), `docs` passed 4 of 4
+commands. The first `native` run failed one command:
+`Scripts/qualify_cli_limits.py` hit its 30-second subprocess timeout on a
+`swift-json query` call while the host load average was about 56. Run alone,
+that call took 9 ms and the script passed 33 of 33 observations. A full `native`
+rerun on the same commit (load average falling from about 22) passed 62 of 62
+commands with exit 0. The failure is recorded here rather than omitted.
+
 The `wasm` lane was not run locally for 1.10. The release commit needs its own
 exact CI receipts and a WASI run before tagging.
 
