@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased — 1.10.0 exact interchange (in progress)
+## 1.10.0 — exact interchange; prepared source, publication separate
 
+- Report CLI source version `1.10.0` with a regenerated deterministic source
+  identity. See the [minor release notes](Documentation/ReleaseNotes/1.10.0.md)
+  and the [1.10 qualification record](Documentation/Qualification/Release1.10.md).
 - Add `JSONCanonicalWriter`, which writes RFC 8785 JSON Canonicalization Scheme
   (JCS) bytes: compact output, keys ordered by UTF-16 code units, short string
   escapes and ECMAScript spelling of binary64 numbers. Equal values produce equal
@@ -44,7 +47,7 @@
   have equal digests for content addressing. Tests pin bytes and digests computed
   independently.
 
-## Unreleased — 1.9.1 hygiene
+### Maintenance collected as 1.9.1 hygiene (not published separately)
 
 - Add the `platform-floor` native CI lane. It checks the macOS 15 / iOS 18
   manifest minimums, cross-compiles all twelve libraries for iOS 18 devices and
