@@ -35,6 +35,14 @@
   default; `JSONTextSequenceOptions.MalformedTexts.skip` skips them and counts
   them on the iterator, but never skips resource failures. `JSONTextSequenceWriter`
   writes RS, strict JSON and LF per value, as one sequence or in awaited chunks.
+- Add `JSONEnvelope`, a versioned record of one payload in RFC 8785 canonical
+  bytes. Format version 1 is a canonical object with `digest`, `format`
+  (`swift-json-envelope`), `formatVersion` (1), `payload`, `type` and `version`.
+  The digest is the SHA-256 of the payload's canonical bytes; decoding checks the
+  marker, fields and digest and reports `JSONEnvelopeFailure` for invalid or
+  damaged envelopes. Equal envelopes encode to equal bytes, and equal payloads
+  have equal digests for content addressing. Tests pin bytes and digests computed
+  independently.
 
 ## Unreleased — 1.9.1 hygiene
 

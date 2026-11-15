@@ -15,7 +15,9 @@ preserved/normalized decimal spelling. Scalar sorting is deterministic JSON
 output, not a cryptographic canonicalization standard. For that, use
 ``JSONCanonicalWriter``, which writes RFC 8785 (JCS) canonical bytes: UTF-16 key
 order, short string escapes and ECMAScript binary64 numbers. By default it refuses
-a number whose binary64 spelling would change its exact value.
+a number whose binary64 spelling would change its exact value. ``JSONEnvelope``
+builds on it: a typed, versioned payload in canonical bytes with a SHA-256
+digest that decoding verifies. See <doc:VersionedEnvelopes>.
 
 ``JSONValueEncoder`` and ``JSONValueDecoder`` implement native value-based
 Codable. Direct JSON/JSONObject round-trips preserve raw scalar keys and numbers.
@@ -60,6 +62,7 @@ belongs exclusively to each invocation.
 - <doc:QuickEntryPoints>
 - <doc:CommandLine>
 - <doc:ExactPersistence>
+- <doc:VersionedEnvelopes>
 - <doc:Composition>
 
 ### Exact model
@@ -75,6 +78,10 @@ belongs exclusively to each invocation.
 - ``JSONWriter``
 - ``JSONWritingOptions``
 - ``JSONCanonicalWriter``
+- ``JSONEnvelope``
+- ``JSONEnvelopeOptions``
+- ``JSONEnvelopeEncoding``
+- ``JSONEnvelopeFailure``
 - ``JSONIndentationUnit``
 - ``JSONValueEncoder``
 - ``JSONValueDecoder``
