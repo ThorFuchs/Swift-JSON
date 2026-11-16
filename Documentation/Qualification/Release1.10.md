@@ -77,12 +77,21 @@ commands with exit 0. The failure is recorded here rather than omitted.
 The `wasm` lane was not run locally for 1.10. The release commit needs its own
 exact CI receipts and a WASI run before tagging.
 
-## Performance gate: open
+## Performance gate: maintainer exception
 
-No timing, allocation, RSS or throughput measurement was made for 1.10.0, and
-the release claims no performance improvement or parity. The 1.9.0 exception
-covered 1.9.0 only. Before tagging, the maintainer decides whether to measure the
-controlled-performance gate or record a new explicit exception for 1.10.0.
+On 2026-11-16 the maintainer chose to **record an exception** for the 1.10.0
+controlled-performance gate instead of measuring it. The gate is
+`excepted_explicitly`, not passed.
+
+- No timing, allocation, RSS or throughput comparison against 1.9.0 was measured
+  for 1.10.0. The release claims no performance improvement or parity, including
+  for the canonical writer, the envelope, the difference walker and text
+  sequences.
+- Finite-budget, memory-safety and logical-retention evidence are not performance
+  data and are not presented as such.
+- The 1.9.0 exception, the earlier 1.7.0 P4 allocation waiver and partial
+  profiles stay historical. This exception does not convert them into passes.
+- The exception covers 1.10.0 only. It does not carry over to later releases.
 
 ## Not yet done
 
