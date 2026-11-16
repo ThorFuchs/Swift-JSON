@@ -1,4 +1,7 @@
-# Current source lines — 11 November 2026
+# Current source lines — 15 November 2026
+
+Prepared 1.10.0 on `main` builds on published 1.9.0 and is not published. See
+[its qualification record](Release1.10.md).
 
 Latest published stable is [1.9.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.9.0),
 commit `f2a0d12da7028edfbcb0cb307f19a921a3a12d03`, tree

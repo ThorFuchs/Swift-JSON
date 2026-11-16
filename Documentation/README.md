@@ -1,4 +1,10 @@
-# Current authority — 1.9.0
+# Current authority — 1.10.0 (prepared)
+
+Prepared 1.10.0 keeps the twelve libraries plus CLI and thirteen catalogs of
+published 1.9.0 and adds exact interchange: canonical JSON, versioned envelopes,
+RFC 6902 differences with a visual page and RFC 7464 text sequences. See the
+[1.10 release notes](ReleaseNotes/1.10.0.md) and
+[1.10 qualification record](Qualification/Release1.10.md).
 
 Published 1.9.0 has twelve libraries plus CLI and thirteen catalogs. It adds bounded
 batches and a public immutable store inside JSONInspection to 1.8.0. See the

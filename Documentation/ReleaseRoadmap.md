@@ -23,7 +23,7 @@ to 2.0.0. It replaces the earlier 1.10 persistence wave:
 | Release | Approved direction |
 | --- | --- |
 | **1.9.1 — hygiene** | Already on main: the `platform-floor` CI lane, the CLI source identity without DocC catalogs, branch housekeeping and developer kit 0.2.0. Tag/publication remains a separate decision. |
-| **1.10.0 — exact interchange** | RFC 8785 JSON Canonicalization Scheme (canonical bytes for hashing, signing and content addressing); a versioned envelope built on it; structural diff producing an RFC 6902 patch; RFC 7464 JSON text sequences in JSONStreaming. |
+| **1.10.0 — exact interchange (prepared)** | RFC 8785 JSON Canonicalization Scheme (canonical bytes for hashing, signing and content addressing); a versioned envelope built on it; structural diff producing an RFC 6902 patch, also rendered as a static JSONHTML page; RFC 7464 JSON text sequences in JSONStreaming. Integrated through PRs #95–#99; see the [release notes](ReleaseNotes/1.10.0.md). Tag and publication remain a separate decision. |
 | **1.11.0 — queries and diagnostics** | RFC 9535 JSONPath with finite budgets, kept separate from Transform semantics; detailed and basic JSON Schema output formats. |
 | **1.12.0 — API consolidation** | Review every public surface before 2.0: naming, error and limit consistency, deprecations with replacements and migration notes. No break in a minor release. |
 | **2.0.0 — compatibility contract** | Unchanged from the gate below: one documented compatibility, resource and platform contract for the accepted family, with migration guidance for every recorded break. |
