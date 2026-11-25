@@ -25,7 +25,8 @@ JF4=Path('Tools/FoundationModelsSpike/JF4')
 ALLOWED={str(JF4/n) for n in ('PreparedGeneration.swift','ArgumentBoundaryTests.swift','DeveloperExperienceTests.swift')} | {
     'Tools/FoundationModelsSpike/JF2/ValueBridge.swift',
     'Scripts/qualify_foundation_models_ergonomics.py','Scripts/test_foundation_models_ergonomics.py',
-    'Documentation/Architecture/FoundationModels/JF4.1.md'}
+    'Documentation/Architecture/FoundationModels/JF4.1.md',
+    'Documentation/Architecture/FoundationModels/JF4.1-NativeReview.md'}
 TESTS=('jf4ValidatedExportBeforeForeignCallback','jf4ValidatedImportRejectsInvalidIncompleteMalformed',
        'jf4TypedRoundtripAndValidationOrdering','jf4RejectsChangedTypedValuesEvenIfValid',
        'jf4EncodeValidatesTypedRepresentation','jf4SchemaValidDoesNotWaiveValueFidelity',
@@ -34,12 +35,20 @@ TESTS=('jf4ValidatedExportBeforeForeignCallback','jf4ValidatedImportRejectsInval
        'jf4AppleDSLPreparedGeneration','jf4AppleSchemaValidButUnrepresentableValue')
 TYPED={'absent':'{"query":"Swift","limit":2,"sort":"date","tags":["a","b"]}',
        'present':'{"query":"Swift","limit":2,"sort":"date","tags":["a","b"],"note":"exact"}'}
-KEYWORDS={'null-note':'type','range':'maximum','enum':'enum','count':'minItems',
-          'required':'required','unknown':'additionalProperties'}
-INVALID={(name,route):keyword for name,keyword in KEYWORDS.items()
+def diagnostic(keyword, keyword_location, instance_location):
+    return {'keyword':keyword,'keywordLocation':keyword_location,'instanceLocation':instance_location}
+
+
+DIAGNOSTICS={'null-note':diagnostic('type','/properties/note/type','/note'),
+             'range':diagnostic('maximum','/properties/limit/maximum','/limit'),
+             'enum':diagnostic('enum','/properties/sort/enum','/sort'),
+             'count':diagnostic('minItems','/properties/tags/minItems','/tags'),
+             'required':diagnostic('required','/required',''),
+             'unknown':diagnostic('','/additionalProperties','/extra')}
+INVALID={(name,route):issue for name,issue in DIAGNOSTICS.items()
          for route in ('decodeJSON','decodeContent','export','import')}
-INVALID[('range','encodeTyped')]='maximum'
-INVALID[('nested-required','dslExport')]='required'
+INVALID[('range','encodeTyped')]=DIAGNOSTICS['range']
+INVALID[('nested-required','dslExport')]=diagnostic('required','/properties/child/required','/child')
 
 
 def verify(log,guided,positive,regression):
@@ -62,7 +71,7 @@ def verify(log,guided,positive,regression):
         key=(row['id'],row['route'])
         need(key in INVALID and key not in invalid,'unknown/duplicate invalid receipt')
         issues=row['issues']
-        need(isinstance(issues,list) and all(isinstance(k,str) for k in issues) and INVALID[key] in issues,'missing intended diagnostic')
+        need(same(issues,[INVALID[key]]),'missing or changed intended diagnostic')
         invalid[key]=row
     need(set(invalid)==set(INVALID),'missing invalid receipts')
     dsl=rows['DSL'][0]; nested=regression['reverse']['nested']['raw']
@@ -82,7 +91,7 @@ def stable(a,b):
     for key in a['dsl']: need(same(strict(a['dsl'][key]),strict(b['dsl'][key])),'DSL mode drift')
     need(a['number']==b['number'],'numeric mode drift')
     for x,y in zip(a['invalid'],b['invalid']):
-        need(x['id']==y['id'] and x['route']==y['route'] and sorted(x['issues'])==sorted(y['issues']),'diagnostic mode drift')
+        need(x['id']==y['id'] and x['route']==y['route'] and same(x['issues'],y['issues']),'diagnostic mode drift')
 
 
 def qualify(root,work,out,args):

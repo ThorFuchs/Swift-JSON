@@ -22,18 +22,28 @@ private func emit4<T: Encodable>(_ kind: String, _ receipt: T) throws {
     print("JF4_\(kind) \(try JSONWriter().writeString(JSONValueEncoder().encode(receipt)))")
 }
 private func json4(_ source: String) throws -> JSON { try JSONParser().parse(source) }
+private struct Diagnostic4: Encodable, Equatable {
+    let keyword: String
+    let keywordLocation: String
+    let instanceLocation: String
+}
 private struct Invalid4: Encodable {
     let id: String
     let route: String
-    let issues: [String]
+    let issues: [Diagnostic4]
 }
-private func invalid4(_ id: String, route: String, keyword: String, _ work: () throws -> Void) throws {
+private func invalid4(_ id: String, route: String, expected: Diagnostic4, _ work: () throws -> Void) throws {
     do { try work(); Issue.record("Expected native invalidity: \(id)/\(route)") }
     catch let failure as JSONGenerationArgumentFailure {
         guard case .invalidArguments(let result) = failure else { Issue.record("Wrong argument failure"); return }
         #expect(!result.isValid && result.diagnosticsComplete)
-        let issues = result.issues.map { $0.keyword.string }
-        #expect(issues.contains(keyword), "\(id)/\(route)")
+        let issues = result.issues.map {
+            Diagnostic4(keyword: $0.keyword.string, keywordLocation: $0.keywordLocation.string,
+                        instanceLocation: $0.instanceLocation.string)
+        }
+        // The false subschema has no keyword of its own; its location identifies
+        // additionalProperties, and the instance location identifies the extra key.
+        #expect(issues == [expected], "\(id)/\(route)")
         try emit4("INVALID", Invalid4(id: id, route: route, issues: issues))
     }
 }
@@ -76,25 +86,25 @@ private struct Typed4: Encodable {
 @Test func jf4AppleValidationPrecedesTypedConversion() throws {
     let codec = try JSONGenerableCodec<JF4SearchArguments>.prepare()
     let cases = [
-        ("null-note", #"{"query":"Swift","limit":2,"sort":"date","tags":["a","b"],"note":null}"#, "type"),
-        ("range", #"{"query":"Swift","limit":21,"sort":"date","tags":["a","b"]}"#, "maximum"),
-        ("enum", #"{"query":"Swift","limit":2,"sort":"other","tags":["a","b"]}"#, "enum"),
-        ("count", #"{"query":"Swift","limit":2,"sort":"date","tags":["a"]}"#, "minItems"),
-        ("required", #"{"limit":2,"sort":"date","tags":["a","b"]}"#, "required"),
-        ("unknown", #"{"query":"Swift","limit":2,"sort":"date","tags":["a","b"],"extra":true}"#, "additionalProperties"),
+        ("null-note", #"{"query":"Swift","limit":2,"sort":"date","tags":["a","b"],"note":null}"#, Diagnostic4(keyword: "type", keywordLocation: "/properties/note/type", instanceLocation: "/note")),
+        ("range", #"{"query":"Swift","limit":21,"sort":"date","tags":["a","b"]}"#, Diagnostic4(keyword: "maximum", keywordLocation: "/properties/limit/maximum", instanceLocation: "/limit")),
+        ("enum", #"{"query":"Swift","limit":2,"sort":"other","tags":["a","b"]}"#, Diagnostic4(keyword: "enum", keywordLocation: "/properties/sort/enum", instanceLocation: "/sort")),
+        ("count", #"{"query":"Swift","limit":2,"sort":"date","tags":["a"]}"#, Diagnostic4(keyword: "minItems", keywordLocation: "/properties/tags/minItems", instanceLocation: "/tags")),
+        ("required", #"{"limit":2,"sort":"date","tags":["a","b"]}"#, Diagnostic4(keyword: "required", keywordLocation: "/required", instanceLocation: "")),
+        ("unknown", #"{"query":"Swift","limit":2,"sort":"date","tags":["a","b"],"extra":true}"#, Diagnostic4(keyword: "", keywordLocation: "/additionalProperties", instanceLocation: "/extra")),
     ]
-    for (id, source, keyword) in cases {
+    for (id, source, expected) in cases {
         let raw = try json4(source)
         #expect(try !codec.prepared.validate(raw).isValid)
-        try invalid4(id, route: "decodeJSON", keyword: keyword) { _ = try codec.decode(raw) }
+        try invalid4(id, route: "decodeJSON", expected: expected) { _ = try codec.decode(raw) }
         let content = try GeneratedContent(json: source)
-        try invalid4(id, route: "decodeContent", keyword: keyword) { _ = try codec.decode(content) }
-        try invalid4(id, route: "export", keyword: keyword) { _ = try codec.prepared.generatedContent(from: raw) }
-        try invalid4(id, route: "import", keyword: keyword) { _ = try codec.prepared.json(from: content) }
+        try invalid4(id, route: "decodeContent", expected: expected) { _ = try codec.decode(content) }
+        try invalid4(id, route: "export", expected: expected) { _ = try codec.prepared.generatedContent(from: raw) }
+        try invalid4(id, route: "import", expected: expected) { _ = try codec.prepared.json(from: content) }
     }
     var typed = try codec.decode(json4(#"{"query":"Swift","limit":2,"sort":"date","tags":["a","b"]}"#))
     typed.limit = 21
-    try invalid4("range", route: "encodeTyped", keyword: "maximum") { _ = try codec.encode(typed) }
+    try invalid4("range", route: "encodeTyped", expected: .init(keyword: "maximum", keywordLocation: "/properties/limit/maximum", instanceLocation: "/limit")) { _ = try codec.encode(typed) }
 }
 
 @available(macOS 27.0, iOS 27.0, *)
@@ -133,7 +143,7 @@ private struct Typed4: Encodable {
     let returned = try prepared.jsonWithReport(from: content.result)
     #expect(returned.statistics[.workUnits] > 0)
     #expect(try JSONComparison.equals(source, returned.result))
-    try invalid4("nested-required", route: "dslExport", keyword: "required") {
+    try invalid4("nested-required", route: "dslExport", expected: .init(keyword: "required", keywordLocation: "/properties/child/required", instanceLocation: "/child")) {
         _ = try prepared.generatedContent(from: json4(#"{"child":{}}"#))
     }
     try emit4("DSL", [

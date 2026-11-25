@@ -25,7 +25,7 @@ def fixture():
     rows=[('SCHEMA',json.dumps(schema)),('DSL',dict(canonical=canonical,projected=projected,returned='{"child":{"name":"Swift"}}')),
           ('NUMBER',dict(accepted='9007199254740992',rejected='9007199254740993',issue='changedValue'))]
     rows.extend(('TYPED',dict(id=name,source=text,returned=text)) for name,text in gate.TYPED.items())
-    rows.extend(('INVALID',dict(id=name,route=route,issues=[keyword])) for (name,route),keyword in gate.INVALID.items())
+    rows.extend(('INVALID',dict(id=name,route=route,issues=[copy.deepcopy(issue)])) for (name,route),issue in gate.INVALID.items())
     return rows,regression
 
 
@@ -46,7 +46,22 @@ class Controls(unittest.TestCase):
         for rows in (self.rows[:-1],self.rows+[self.rows[0]],self.rows+[self.rows[-1]]):
             with self.assertRaises(ValueError): gate.verify(log(rows),GUIDED,positive,self.regression)
     def test_wrong_diagnostic(self):
-        self.row('INVALID')['issues']=['wrong']
+        self.row('INVALID')['issues'][0]['keyword']='wrong'
+        with self.assertRaisesRegex(ValueError,'intended diagnostic'): self.verify()
+    def test_keyword_location(self):
+        self.row('INVALID')['issues'][0]['keywordLocation']='/type'
+        with self.assertRaisesRegex(ValueError,'intended diagnostic'): self.verify()
+    def test_instance_location(self):
+        self.row('INVALID')['issues'][0]['instanceLocation']=''
+        with self.assertRaisesRegex(ValueError,'intended diagnostic'): self.verify()
+    def test_false_subschema_diagnostic_not_wildcard(self):
+        row=next(v for k,v in self.rows if k=='INVALID' and v['id']=='unknown')
+        for bad in ([{'keyword':''}], [gate.diagnostic('','/additionalProperties','/other')],
+                    [gate.diagnostic('additionalProperties','/additionalProperties','/extra')]):
+            row['issues']=bad
+            with self.assertRaisesRegex(ValueError,'intended diagnostic'): self.verify()
+    def test_duplicate_diagnostic(self):
+        row=self.row('INVALID'); row['issues']*=2
         with self.assertRaisesRegex(ValueError,'intended diagnostic'): self.verify()
     def test_typed_null_versus_absence(self):
         self.row('TYPED')['returned']=self.row('TYPED')['returned'][:-1]+',"note":null}'
