@@ -53,7 +53,9 @@ enum JF3SchemaProfile {
         return true
     }
 
-    static func check(_ raw: JSON, at location: Path = [], depth: Int = 1, meter: inout JSONWorkMeter) throws {
+    static func check(_ raw: JSON, at location: Path = [], depth: Int = 1,
+                      descend: Bool = true, allowRootDefinitions: Bool = false,
+                      meter: inout JSONWorkMeter) throws {
         try meter.checkpoint()
         guard depth <= 16, let object = raw.objectValue,
               let type = try object.lookup("type", meter: &meter)?.stringValue,
@@ -67,6 +69,8 @@ enum JF3SchemaProfile {
             guard try ascii(key, meter: &meter) else { throw failure(.unsupportedDeclaration, field) }
             switch key {
             case "type": break
+            case "$defs":
+                guard allowRootDefinitions && depth == 1 else { throw failure(.unsupportedDeclaration, field) }
             case "title", "description":
                 guard member.value.stringValue != nil else { throw failure(.unsupportedShape, field) }
             case "properties", "required", "additionalProperties", "x-order":
@@ -95,7 +99,7 @@ enum JF3SchemaProfile {
                 guard !member.key.string.isEmpty, try ascii(member.key.string, meter: &meter) else {
                     throw failure(.unsupportedShape, child)
                 }
-                try check(member.value, at: child, depth: depth + 1, meter: &meter)
+                if descend { try check(member.value, at: child, depth: depth + 1, meter: &meter) }
             }
             try names(required, properties: props, at: path(location, JSONKey("required"), meter: &meter), meter: &meter)
             if let order = try object.lookup("x-order", meter: &meter) {
@@ -106,7 +110,7 @@ enum JF3SchemaProfile {
         } else if type == "array" {
             guard let item = try object.lookup("items", meter: &meter) else { throw failure(.unsupportedShape, location) }
             let child = try path(location, JSONKey("items"), meter: &meter)
-            try check(item, at: child, depth: depth + 1, meter: &meter)
+            if descend { try check(item, at: child, depth: depth + 1, meter: &meter) }
         }
     }
 

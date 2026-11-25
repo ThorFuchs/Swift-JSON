@@ -156,7 +156,8 @@ public struct JSONPreparedGeneration {
 
 /// A prepared codec binds its schema to the actual Generable type. There is no
 /// initializer that associates an arbitrary caller schema with a Swift type.
-/// Scope is the qualified reference-free schema import profile.
+/// The default import profile is reference-free; nested local object definitions
+/// require the explicit JF4.2 import policy.
 @available(macOS 27.0, iOS 27.0, *)
 public struct JSONGenerableCodec<Value: Generable> {
     public let prepared: JSONPreparedGeneration
@@ -168,10 +169,20 @@ public struct JSONGenerableCodec<Value: Generable> {
     }
 
     public static func prepareWithReport(limits: JSONLimits = .balanced) throws -> JSONOperationReport<Self> {
+        try prepareWithReport(importPolicy: .referenceFree, limits: limits)
+    }
+
+    public static func prepare(importPolicy: JSONGenerationSchemaImportPolicy,
+                               limits: JSONLimits = .balanced) throws -> Self {
+        try prepareWithReport(importPolicy: importPolicy, limits: limits).result
+    }
+
+    public static func prepareWithReport(importPolicy: JSONGenerationSchemaImportPolicy,
+                                         limits: JSONLimits = .balanced) throws -> JSONOperationReport<Self> {
         try Task.checkCancellation()
         let schema = Value.generationSchema
         try Task.checkCancellation()
-        let report = try JSONGenerationSchemaBridge(limits: limits).importSchemaWithReport(schema)
+        let report = try JSONGenerationSchemaBridge(limits: limits).importSchemaWithReport(schema, policy: importPolicy)
         let plan = report.result
         let prepared = JSONPreparedGeneration(schema: schema, canonical: plan, roundtripped: plan.document,
                                                additions: [], rewrites: [], limits: limits)
