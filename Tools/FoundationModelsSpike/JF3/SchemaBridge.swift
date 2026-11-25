@@ -4,14 +4,18 @@ import JSONSchema
 
 /// The strict default preserves the complete schema value. The explicit alternative
 /// admits only newly added title and x-order annotations at actual schema nodes.
+/// Structural equivalence additionally proves the narrow local-reference and
+/// required-permutation transformations observed in JF3.2. Explicit opt-in only.
 public enum JSONGenerationSchemaMetadataPolicy: Sendable, Equatable {
     case exact
     case allowGeneratedAnnotations
+    case allowStructuralEquivalence
 }
 
 public enum JSONGenerationSchemaIssue: String, Sendable, Equatable {
     case unsupportedDeclaration, unsupportedShape, changedConstraint
     case changedAnnotation, annotationAdditionDenied
+    case invalidLocalReference, cyclicLocalReference, unusedDefinition
 }
 
 /// First incompatible declaration, using exact decoded keys rather than String paths.
@@ -172,6 +176,7 @@ struct JF3Projection<Schema> {
     let canonical: CompiledJSONSchema
     let roundtripped: JSONSchemaDocument
     let additions: [JSONGenerationSchemaAnnotationAddition]
+    let rewrites: [JSONGenerationSchemaStructuralRewrite]
 }
 
 // The coding state owns the single noncopyable native meter for all stages.
@@ -209,11 +214,24 @@ enum JF3SchemaBoundary {
         try state.check()
         let raw = try JSONValueEncoder.encode(schema, state: state)
         let returned = try JSONSchemaDocument(raw, meter: &state.meter)
-        _ = try compile(returned, state: state)
         var additions: [JSONGenerationSchemaAnnotationAddition] = []
-        try JF3SchemaProfile.compare(document.raw, returned.raw, policy: policy, additions: &additions, meter: &state.meter)
+        var rewrites: [JSONGenerationSchemaStructuralRewrite] = []
+        if policy == .allowStructuralEquivalence {
+            // The original has compiled and passed the unchanged reference-free
+            // profile. Prove the bounded shape before compiling the actual graph;
+            // unsafe references cannot induce an expansion or a recursive compile.
+            let proof = try JF33StructuralProof.verify(document.raw, returned.raw, meter: &state.meter)
+            additions = proof.additions; rewrites = proof.rewrites
+            try state.check(); try state.meter.operationDomain(.schemaCompilation)
+            _ = try JSONSchemaCompiler(options: .init(limits: state.meter.limits)).compile(returned, registry: .empty, meter: &state.meter)
+            try state.meter.operationDomain(.core)
+        } else {
+            // Retain JF3.1's existing policies and error order.
+            _ = try compile(returned, state: state)
+            try JF3SchemaProfile.compare(document.raw, returned.raw, policy: policy, additions: &additions, meter: &state.meter)
+        }
         try state.check()
-        return .init(result: .init(schema: schema, canonical: canonical, roundtripped: returned, additions: additions),
+        return .init(result: .init(schema: schema, canonical: canonical, roundtripped: returned, additions: additions, rewrites: rewrites),
                      statistics: try state.meter.compositionStatistics())
     }
 }
@@ -228,9 +246,11 @@ public struct JSONGenerationSchemaProjection {
     public let canonical: CompiledJSONSchema
     public let roundtripped: JSONSchemaDocument
     public let additions: [JSONGenerationSchemaAnnotationAddition]
+    public let rewrites: [JSONGenerationSchemaStructuralRewrite]
 }
 
-/// Candidate strict bridge for the frozen, reference-free JF3.1 profile.
+/// Candidate bridge with reference-free canonical input; the explicit structural
+/// policy accepts only proved SDK rewrites on the returned representation.
 /// Neither a general schema equivalence solver nor a guarantee of model behavior.
 @available(macOS 27.0, iOS 27.0, *)
 public struct JSONGenerationSchemaBridge: Sendable {
@@ -249,7 +269,7 @@ public struct JSONGenerationSchemaBridge: Sendable {
     public func projectWithReport(_ document: JSONSchemaDocument, metadata: JSONGenerationSchemaMetadataPolicy = .exact) throws -> JSONOperationReport<JSONGenerationSchemaProjection> {
         let report = try JF3SchemaBoundary.project(GenerationSchema.self, document: document, policy: metadata, limits: limits)
         let value = report.result
-        return .init(result: .init(schema: value.schema, canonical: value.canonical, roundtripped: value.roundtripped, additions: value.additions), statistics: report.statistics)
+        return .init(result: .init(schema: value.schema, canonical: value.canonical, roundtripped: value.roundtripped, additions: value.additions, rewrites: value.rewrites), statistics: report.statistics)
     }
 }
 #endif
