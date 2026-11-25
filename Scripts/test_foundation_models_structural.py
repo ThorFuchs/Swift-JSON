@@ -5,6 +5,8 @@ import copy
 import importlib.util
 import json
 from pathlib import Path
+import re
+import subprocess
 import unittest
 
 here=Path(__file__).parent
@@ -51,6 +53,27 @@ class Controls(unittest.TestCase):
     def setUp(self): self.rows,self.regression=fixture()
     def verify(self): return gate.verify(log(self.rows),positive,outside,self.regression)
     def row(self,name): return next(r for k,r in self.rows if r['id']==name)
+    def test_reference_fixture_delimiters(self):
+        # Inspect the actual Swift literals, not a separately authored corpus.
+        path=here.parent/gate.SOURCE/'StructuralProofTests.swift'
+        expected={'hoistedChild','escaped','once','siblings','unused','scoped',
+                  'alias','dynamic','rootRef','cyclic','mutual','aliasBoth','added'}
+        found=set()
+        for line in path.read_text().splitlines():
+            match=re.fullmatch(r'\s*(?:private )?let (\w+) = (#+)"(\{.*\})"\2',line)
+            if not match: continue
+            name, hashes, payload=match.groups()
+            if '"#' not in payload: continue
+            self.assertNotIn(name,found); found.add(name)
+            self.assertNotIn('"'+hashes,payload,name)
+            self.assertIsInstance(gate.strict(payload),dict,name)
+        self.assertEqual(found,expected)
+    def test_swift_fixture_syntax(self):
+        path=here.parent/gate.SOURCE/'StructuralProofTests.swift'
+        # Syntax-only preflight; actual package typechecking and test execution
+        # still require the supported Apple toolchain in the qualification lane.
+        result=subprocess.run(['swiftc','-frontend','-parse',str(path)],capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr)
     def test_complete_receipts(self):
         result=self.verify(); self.assertEqual(len(result['tests']),10); self.assertEqual(len(result['matrix']),19); self.assertEqual(len(result['outside']),12); gate.stable(result,self.verify())
     def test_missing_and_duplicate(self):

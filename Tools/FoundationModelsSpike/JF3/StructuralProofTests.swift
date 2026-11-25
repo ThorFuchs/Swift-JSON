@@ -6,7 +6,7 @@ import Testing
 @testable import JSONFoundationModels
 
 private let inlineChild = #"{"type":"object","properties":{"child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}},"required":["child"],"additionalProperties":false}"#
-private let hoistedChild = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"#
+private let hoistedChild = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"##
 private let childPath = ["properties", "child"]
 private func doc33(_ text: String) throws -> JSONSchemaDocument {
     try JSONSchemaDocument(JSONParser().parse(text))
@@ -87,10 +87,10 @@ private struct Hoisted33: Codable {
 
 @Test func jf33ReferenceGrammarAndEscaping() throws {
     // RFC 6901 tilde escaping and percent decoding exactly once.
-    let escaped = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/A~1B~0C%25"}},"required":["child"],"additionalProperties":false,"$defs":{"A/B~C%":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"#
+    let escaped = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/A~1B~0C%25"}},"required":["child"],"additionalProperties":false,"$defs":{"A/B~C%":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"##
     let proof = try prove33(inlineChild, escaped).result
     #expect(proof.rewrites.first?.definition == "A/B~C%")
-    let once = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/A%252FB"}},"required":["child"],"additionalProperties":false,"$defs":{"A%2FB":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"#
+    let once = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/A%252FB"}},"required":["child"],"additionalProperties":false,"$defs":{"A%2FB":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"##
     #expect(try prove33(inlineChild, once).result.rewrites.first?.definition == "A%2FB")
     for ref in ["https://example.invalid/schema#/$defs/Child", "#/$defs/Missing", "#/properties/child",
                 "#/$defs/Child/type", "#/$defs/Chi~2ld", "#/$defs/Chi%GGld", "#Child", "#"] {
@@ -102,31 +102,31 @@ private struct Hoisted33: Codable {
 }
 
 @Test func jf33RejectsSiblingScopesAndUnusedDefinitions() throws {
-    let siblings = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child","description":"extra"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"#
+    let siblings = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child","description":"extra"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"##
     try reject33(inlineChild, siblings, .invalidLocalReference, childPath + ["$ref"])
-    let unused = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false},"Unused":{"type":"string"}}}"#
+    let unused = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false},"Unused":{"type":"string"}}}"##
     try reject33(inlineChild, unused, .unusedDefinition, ["$defs","Unused"])
-    let scoped = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false,"$id":"https://example.invalid/changed"}}}"#
+    let scoped = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false,"$id":"https://example.invalid/changed"}}}"##
     try reject33(inlineChild, scoped, .unsupportedDeclaration, childPath + ["$id"])
-    let alias = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/A"}},"required":["child"],"additionalProperties":false,"$defs":{"A":{"$ref":"#/$defs/B"},"B":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"#
+    let alias = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/A"}},"required":["child"],"additionalProperties":false,"$defs":{"A":{"$ref":"#/$defs/B"},"B":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false}}}"##
     try reject33(inlineChild, alias, .invalidLocalReference, childPath + ["$ref"])
-    let dynamic = #"{"type":"object","properties":{"child":{"$dynamicRef":"#/$defs/Child"}},"required":["child"],"additionalProperties":false}"#
+    let dynamic = ##"{"type":"object","properties":{"child":{"$dynamicRef":"#/$defs/Child"}},"required":["child"],"additionalProperties":false}"##
     try reject33(inlineChild, dynamic, .changedConstraint, childPath + ["type"])
-    let rootRef = #"{"$ref":"#/$defs/Child","$defs":{"Child":{"type":"object","properties":{},"required":[],"additionalProperties":false}}}"#
+    let rootRef = ##"{"$ref":"#/$defs/Child","$defs":{"Child":{"type":"object","properties":{},"required":[],"additionalProperties":false}}}"##
     try reject33(inlineChild, rootRef, .invalidLocalReference, ["$ref"])
 }
 
 @Test func jf33RejectsCyclesAndProvesEachSharedUse() throws {
     let source = #"{"type":"object","properties":{"child":{"type":"object","properties":{"child":{"type":"object","properties":{},"required":[],"additionalProperties":false}},"required":["child"],"additionalProperties":false}},"required":["child"],"additionalProperties":false}"#
-    let cyclic = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/Loop"}},"required":["child"],"additionalProperties":false,"$defs":{"Loop":{"type":"object","properties":{"child":{"$ref":"#/$defs/Loop"}},"required":["child"],"additionalProperties":false}}}"#
+    let cyclic = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/Loop"}},"required":["child"],"additionalProperties":false,"$defs":{"Loop":{"type":"object","properties":{"child":{"$ref":"#/$defs/Loop"}},"required":["child"],"additionalProperties":false}}}"##
     try reject33(source, cyclic, .cyclicLocalReference, childPath + ["properties","child","$ref"])
-    let mutual = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/A"}},"required":["child"],"additionalProperties":false,"$defs":{"A":{"type":"object","properties":{"child":{"$ref":"#/$defs/B"}},"required":["child"],"additionalProperties":false},"B":{"type":"object","properties":{"child":{"$ref":"#/$defs/A"}},"required":["child"],"additionalProperties":false}}}"#
+    let mutual = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/A"}},"required":["child"],"additionalProperties":false,"$defs":{"A":{"type":"object","properties":{"child":{"$ref":"#/$defs/B"}},"required":["child"],"additionalProperties":false},"B":{"type":"object","properties":{"child":{"$ref":"#/$defs/A"}},"required":["child"],"additionalProperties":false}}}"##
     // The finite source has no corresponding third child: either a shape
     // difference or a cycle must fail; never follow an unpaired branch.
     #expect(throws: JSONGenerationSchemaFailure.self) { try prove33(source, mutual) }
 
     let shared = #"{"type":"object","properties":{"a":{"type":"object","properties":{"n":{"type":"integer"}},"required":["n"],"additionalProperties":false,"title":"Same"},"b":{"type":"object","properties":{"n":{"type":"integer"}},"required":["n"],"additionalProperties":false,"title":"Same"}},"required":["a","b"],"additionalProperties":false}"#
-    let aliasBoth = #"{"type":"object","properties":{"a":{"$ref":"#/$defs/Same"},"b":{"$ref":"#/$defs/Same"}},"required":["a","b"],"additionalProperties":false,"$defs":{"Same":{"type":"object","properties":{"n":{"type":"integer"}},"required":["n"],"additionalProperties":false,"title":"Same"}}}"#
+    let aliasBoth = ##"{"type":"object","properties":{"a":{"$ref":"#/$defs/Same"},"b":{"$ref":"#/$defs/Same"}},"required":["a","b"],"additionalProperties":false,"$defs":{"Same":{"type":"object","properties":{"n":{"type":"integer"}},"required":["n"],"additionalProperties":false,"title":"Same"}}}"##
     #expect(try prove33(shared, aliasBoth).result.rewrites.count == 2)
     let distinct = #"{"type":"object","properties":{"a":{"type":"object","properties":{"n":{"type":"integer"}},"required":["n"],"additionalProperties":false,"title":"Same"},"b":{"type":"object","properties":{"n":{"type":"string"}},"required":["n"],"additionalProperties":false,"title":"Same"}},"required":["a","b"],"additionalProperties":false}"#
     try reject33(distinct, aliasBoth, .changedConstraint, ["properties","b","properties","n","type"])
@@ -151,7 +151,7 @@ private struct Hoisted33: Codable {
 @Test func jf33NeverHidesNumericOrMetadataLoss() throws {
     let rounded = hoistedChild.replacingOccurrences(of: "9007199254740993", with: "9007199254740992")
     try reject33(inlineChild, rounded, .changedConstraint, childPath + ["properties","n","maximum"])
-    let added = #"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false,"title":"Child","x-order":["n"]}},"title":"Root","x-order":["child"]}"#
+    let added = ##"{"type":"object","properties":{"child":{"$ref":"#/$defs/Child"}},"required":["child"],"additionalProperties":false,"$defs":{"Child":{"type":"object","properties":{"n":{"type":"integer","maximum":9007199254740993}},"required":["n"],"additionalProperties":false,"title":"Child","x-order":["n"]}},"title":"Root","x-order":["child"]}"##
     let result = try prove33(inlineChild, added).result
     #expect(result.additions.count == 4)
     #expect(result.additions.contains(childPath + ["title"]))

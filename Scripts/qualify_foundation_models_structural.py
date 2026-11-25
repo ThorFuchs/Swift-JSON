@@ -22,7 +22,8 @@ BASE = 'e9f401e5f428740346ddf6d0c44d69a61aa50073'
 SOURCE = prior.SOURCE
 ALLOWED = {str(SOURCE / n) for n in ('SchemaBridge.swift', 'StructuralProof.swift', 'StructuralProofTests.swift')} | {
     'Scripts/qualify_foundation_models_structural.py', 'Scripts/test_foundation_models_structural.py',
-    'Documentation/Architecture/FoundationModels/JF3.3.md'}
+    'Documentation/Architecture/FoundationModels/JF3.3.md',
+    'Documentation/Architecture/FoundationModels/JF3.3-NativeReview.md'}
 TESTS = ('jf33PairedProofAndCanonicalAuthority', 'jf33ReferenceGrammarAndEscaping',
          'jf33RejectsSiblingScopesAndUnusedDefinitions', 'jf33RejectsCyclesAndProvesEachSharedUse',
          'jf33RequiredIsSetButGuidanceIsOrdered', 'jf33NeverHidesNumericOrMetadataLoss',
