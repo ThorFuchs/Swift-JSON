@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Offline JF3 receipt checks, not native schema tests."""
 import importlib.util
+import re
 from pathlib import Path
 import unittest
 
@@ -49,6 +50,38 @@ class Controls(unittest.TestCase):
     def test_skip_not_pass(self):
         for suffix in ('Test jf3Unknown() skipped.\n', 'Test jf3Unknown() passed with a known issue.\n'):
             with self.assertRaises(ValueError): gate.verify(fixture() + suffix, 'apple', fidelity)
+
+    def test_negative_fixtures_are_complete_schema_json(self):
+        source = (here.parent / 'Tools/FoundationModelsSpike/JF3/SchemaBridgeTests.swift').read_text()
+        section = source.split('// JF3_NEGATIVE_FIXTURES_BEGIN\n')[1].split('// JF3_NEGATIVE_FIXTURES_END')[0]
+        expected = {
+            'all-of': ('unsupportedDeclaration', 'allOf'),
+            'definitions': ('unsupportedDeclaration', '$defs'),
+            'pattern-properties': ('unsupportedDeclaration', 'patternProperties'),
+            'unknown-annotation': ('unsupportedDeclaration', 'x-custom'),
+            'explicit-dialect': ('unsupportedDeclaration', '$schema'),
+            'open-object': ('unsupportedShape', 'additionalProperties'),
+            'nullable-property': ('unsupportedShape', 'properties'),
+            'non-ascii-property': ('unsupportedShape', 'properties'),
+            'invalid-order': ('unsupportedShape', 'x-order'),
+        }
+        seen = set()
+        for line in section.splitlines():
+            if not line.strip():
+                continue
+            match = re.fullmatch(r'\s*\("([^"]+)", #"(.*?)"#, \.(\w+)\),', line)
+            self.assertIsNotNone(match, line)
+            name, raw, reason = match.groups()
+            self.assertNotIn(name, seen)
+            self.assertIn(name, expected)
+            seen.add(name)
+            value = fidelity.strict(raw)
+            self.assertEqual(value['type'], 'object')
+            self.assertEqual(reason, expected[name][0])
+            self.assertIn(expected[name][1], value)
+            if name == 'nullable-property':
+                self.assertEqual(value['properties']['query']['type'], ['string', 'null'])
+        self.assertEqual(seen, set(expected))
 
     def test_raw_numeric_and_scalar_comparison(self):
         self.assertFalse(fidelity.same(fidelity.strict('9007199254740993'), fidelity.strict('9007199254740992')))

@@ -19,7 +19,8 @@ JF22 = 'f081536bfb63b7f35e327812882ffa2cd298b631'
 SOURCE = Path('Tools/FoundationModelsSpike/JF3')
 ALLOWED = {str(SOURCE / 'SchemaBridge.swift'), str(SOURCE / 'SchemaBridgeTests.swift'),
            'Scripts/qualify_foundation_models_schemas.py', 'Scripts/test_foundation_models_schemas.py',
-           'Documentation/Architecture/FoundationModels/JF3.1.md'}
+           'Documentation/Architecture/FoundationModels/JF3.1.md',
+           'Documentation/Architecture/FoundationModels/JF3.1-NativeReview.md'}
 PORTABLE = ('jf3ExactCodableAndCanonicalPlan', 'jf3MetadataRequiresExplicitConsent',
             'jf3RejectsConstraintMutationEvenWithMetadataConsent', 'jf3MetadataIsScopedToSchemaNodes',
             'jf3RejectsUnqualifiedDeclarations', 'jf3NativeInvalidityIsNotCompatibility',

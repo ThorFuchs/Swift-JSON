@@ -80,15 +80,29 @@ private func expectIssue(_ issue: JSONGenerationSchemaIssue, _ work: () throws -
 }
 
 @Test func jf3RejectsUnqualifiedDeclarations() throws {
-    let base = jf3Simple
-    for extra in [#","allOf":[{}]"#, #","$defs":{"X":{"type":"string"}}"#, #","patternProperties":{"x":{"type":"string"}}"#, #","x-custom":true"#, #","$schema":"https://json-schema.org/draft/2020-12/schema""#] {
-        try expectIssue(.unsupportedDeclaration) { _ = try compare(String(base.dropLast()) + extra + "}", base) }
-    }
-    for shape in [base.replacingOccurrences(of: #""additionalProperties":false"#, with: #""additionalProperties":true"#),
-                  base.replacingOccurrences(of: #""type":"string"#, with: #""type":["string","null"]"#),
-                  base.replacingOccurrences(of: #""query""#, with: #""é""#),
-                  jf3Augmented.replacingOccurrences(of: #""x-order":["query"]"#, with: #""x-order":["missing"]"#)] {
-        try expectIssue(.unsupportedShape) { _ = try compare(shape, base) }
+    // Complete source fixtures: avoid accidental syntax errors from substring mutation.
+    let cases: [(String, String, JSONGenerationSchemaIssue)] = [
+        // JF3_NEGATIVE_FIXTURES_BEGIN
+        ("all-of", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":false,"allOf":[{}]}"#, .unsupportedDeclaration),
+        ("definitions", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":false,"$defs":{"X":{"type":"string"}}}"#, .unsupportedDeclaration),
+        ("pattern-properties", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":false,"patternProperties":{"x":{"type":"string"}}}"#, .unsupportedDeclaration),
+        ("unknown-annotation", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":false,"x-custom":true}"#, .unsupportedDeclaration),
+        ("explicit-dialect", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":false,"$schema":"https://json-schema.org/draft/2020-12/schema"}"#, .unsupportedDeclaration),
+        ("open-object", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":true}"#, .unsupportedShape),
+        ("nullable-property", #"{"type":"object","properties":{"query":{"type":["string","null"]}},"required":["query"],"additionalProperties":false}"#, .unsupportedShape),
+        ("non-ascii-property", #"{"type":"object","properties":{"é":{"type":"string"}},"required":["é"],"additionalProperties":false}"#, .unsupportedShape),
+        ("invalid-order", #"{"type":"object","properties":{"query":{"type":"string"}},"required":["query"],"additionalProperties":false,"title":"Object","x-order":["missing"]}"#, .unsupportedShape),
+        // JF3_NEGATIVE_FIXTURES_END
+    ]
+    for (id, source, expected) in cases {
+        // Confirm the fixture enters the schema layer, not the syntax-failure path.
+        _ = try jf3Doc(source)
+        do {
+            _ = try compare(source, jf3Simple)
+            Issue.record("Expected JF3 incompatibility for \(id)")
+        } catch let error as JSONGenerationSchemaFailure {
+            #expect(error.issue == expected, "fixture: \(id)")
+        }
     }
 }
 
