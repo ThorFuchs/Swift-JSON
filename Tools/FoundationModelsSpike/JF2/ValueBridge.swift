@@ -17,37 +17,48 @@ enum JF2ValueBoundary {
         make: (String) throws -> Content, read: (Content) throws -> String
     ) throws -> JSONOperationReport<Content> {
         try JSON.withComposition(limits: limits) { scope in
-            let text = try scope.withMeter(domain: .writing) { meter in
-                let bytes = try JSONWriter().write(value, meter: &meter)
-                // Reserve the adapter-owned String copy before construction.
-                try meter.retain(UInt64(bytes.count))
-                for _ in bytes { try meter.work() }
-                return String(decoding: bytes, as: UTF8.self)
-            }
-            try scope.checkpoint()
-            let candidate = try make(text)
-            try scope.checkpoint()
-            let exported = try read(candidate)
-            try scope.checkpoint()
-            let returned = try parse(exported, scope: scope)
-            // Writer and parser already admitted the two graphs. Comparison
-            // uses the same invocation meter, not ordinary unmetered ==.
-            let equal = try scope.withMeter { meter in
-                try JSONComparison.equals(value, returned, meter: &meter)
-            }
-            guard equal else { throw JSONGeneratedContentBridgeFailure.changedValue }
-            return candidate
+            try export(value, scope: scope, make: make, read: read)
         }
+    }
+
+    // Borrowed by prepared generation: no nested report or fresh ledger.
+    static func export<Content>(_ value: JSON, scope: borrowing JSONCompositionScope,
+        make: (String) throws -> Content, read: (Content) throws -> String
+    ) throws -> Content {
+        let text = try scope.withMeter(domain: .writing) { meter in
+            let bytes = try JSONWriter().write(value, meter: &meter)
+            // Reserve the adapter-owned String copy before construction.
+            try meter.retain(UInt64(bytes.count))
+            for _ in bytes { try meter.work() }
+            return String(decoding: bytes, as: UTF8.self)
+        }
+        try scope.checkpoint()
+        let candidate = try make(text)
+        try scope.checkpoint()
+        let exported = try read(candidate)
+        try scope.checkpoint()
+        let returned = try parse(exported, scope: scope)
+        // Writer and parser already admitted the two graphs. Comparison
+        // uses the same invocation meter, not ordinary unmetered ==.
+        let equal = try scope.withMeter { meter in
+            try JSONComparison.equals(value, returned, meter: &meter)
+        }
+        guard equal else { throw JSONGeneratedContentBridgeFailure.changedValue }
+        return candidate
     }
 
     static func importValue(limits: JSONLimits, read: () throws -> String
     ) throws -> JSONOperationReport<JSON> {
         try JSON.withComposition(limits: limits) { scope in
-            try scope.checkpoint()
-            let exported = try read()
-            try scope.checkpoint()
-            return try parse(exported, scope: scope)
+            try importValue(scope: scope, read: read)
         }
+    }
+
+    static func importValue(scope: borrowing JSONCompositionScope, read: () throws -> String) throws -> JSON {
+        try scope.checkpoint()
+        let exported = try read()
+        try scope.checkpoint()
+        return try parse(exported, scope: scope)
     }
 
     private static func parse(_ text: String, scope: borrowing JSONCompositionScope) throws -> JSON {
@@ -85,14 +96,7 @@ public struct JSONGeneratedContentBridge: Sendable {
     }
 
     public func generatedContentWithReport(from value: JSON) throws -> JSONOperationReport<GeneratedContent> {
-        try JF2ValueBoundary.export(value, limits: limits, make: { text in
-            do { return try GeneratedContent(json: text) }
-            catch is CancellationError { throw CancellationError() }
-            catch {
-                try Task.checkCancellation()
-                throw JSONGeneratedContentBridgeFailure.frameworkRejected
-            }
-        }, read: Self.completedJSON)
+        try JF2ValueBoundary.export(value, limits: limits, make: Self.makeContent, read: Self.completedJSON)
     }
 
     public func json(from content: GeneratedContent) throws -> JSON {
@@ -103,7 +107,16 @@ public struct JSONGeneratedContentBridge: Sendable {
         try JF2ValueBoundary.importValue(limits: limits) { try Self.completedJSON(content) }
     }
 
-    private static func completedJSON(_ content: GeneratedContent) throws -> String {
+    static func makeContent(_ text: String) throws -> GeneratedContent {
+        do { return try GeneratedContent(json: text) }
+        catch is CancellationError { throw CancellationError() }
+        catch {
+            try Task.checkCancellation()
+            throw JSONGeneratedContentBridgeFailure.frameworkRejected
+        }
+    }
+
+    static func completedJSON(_ content: GeneratedContent) throws -> String {
         guard content.isComplete else { throw JSONGeneratedContentBridgeFailure.incompleteContent }
         return content.jsonString
     }
