@@ -1,22 +1,19 @@
-# Current source lines — 15 November 2026
+# Current source lines — 26 November 2026
 
-Prepared 1.10.0 on `main` builds on published 1.9.0 and is not published. See
-[its qualification record](Release1.10.md).
+Latest published stable is [1.10.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.10.0),
+commit `564ca8ce5ea057edc847666c4223da20084fc59c`, tree `3ee5c5f6946a4548116d8b7aa80e83b432e47f83`:
+twelve libraries plus CLI, thirteen catalogs, 1,805 authored declarations.
+See [publication](Release1.10Publication.md) and [preparation qualification](Release1.10.md).
+The 1.9.0 predecessor remains published at `f2a0d12da7028edfbcb0cb307f19a921a3a12d03`.
+1.6.1 stays the separate eight-library maintenance line. The dated preparation
+inventories below are preserved history, not current release status.
 
-Latest published stable is [1.9.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.9.0),
-commit `f2a0d12da7028edfbcb0cb307f19a921a3a12d03`, tree
-`6b5438751352e0e424b133e79d40d32d6f8c8dd7`: twelve libraries plus CLI,
-thirteen catalogs. It adds bounded Inspection batches/store operations to 1.8.0
-and lowers the Apple deployment minimums to macOS 15 and iOS 18. See
-[its qualification record](Release1.9.md). No 1.8.1 was released. 1.6.1 stays the eight-library
-maintenance line. The dated preparation inventories below remain history.
-
-# Stable and development source lines
+# Historical stable and development source lines (1.7 preparation)
 
 | Line | Source identity | Public scope |
 | --- | --- | --- |
 | Published 1.6.0 | `f975ac1c5a18af9b422db0994cbc551fd37eee2f` | Eight libraries plus CLI, eight catalogs, 1,077 authored declarations |
-| Published 1.6.1 (latest stable) | `e431f157ececc0cf3d061192420b0e36a9062f83` | Same eight-library public API and runtime as 1.6.0; no Inspection |
+| Published 1.6.1 (then latest stable) | `e431f157ececc0cf3d061192420b0e36a9062f83` | Same eight-library public API and runtime as 1.6.0; no Inspection |
 | Consolidated development source | Main, retaining N2 admitted at `2b24f47e7405821240cf8dfc66b840c9a7f8efa5` | Twelve libraries plus CLI; thirteen catalogs including shared JSONDSLCore; compiler-derived API inventory required |
 | Prepared combined 1.7.0 source | Final candidate SHA/tree belongs to its qualification receipt; no tag implied | Same twelve libraries plus CLI, thirteen catalogs and expected 1,500 authored declarations; see current preparation checklist |
 

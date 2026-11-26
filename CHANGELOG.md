@@ -1,6 +1,9 @@
 # Changelog
 
-## 1.10.0 — exact interchange; prepared source, publication separate
+## 1.10.0 — exact interchange (2026-11-26)
+
+Published as [Swift-JSON 1.10.0](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.10.0); see the
+[publication record](Documentation/Qualification/Release1.10Publication.md).
 
 - Report CLI source version `1.10.0` with a regenerated deterministic source
   identity. See the [minor release notes](Documentation/ReleaseNotes/1.10.0.md)

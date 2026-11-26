@@ -1,41 +1,18 @@
-# Current authority — 1.10.0 (prepared)
-
-Prepared 1.10.0 keeps the twelve libraries plus CLI and thirteen catalogs of
-published 1.9.0 and adds exact interchange: canonical JSON, versioned envelopes,
-RFC 6902 differences with a visual page and RFC 7464 text sequences. See the
-[1.10 release notes](ReleaseNotes/1.10.0.md) and
-[1.10 qualification record](Qualification/Release1.10.md).
-
-Published 1.9.0 has twelve libraries plus CLI and thirteen catalogs. It adds bounded
-batches and a public immutable store inside JSONInspection to 1.8.0. See the
-[1.9 qualification record](Qualification/Release1.9.md) and
-[1.8 qualification](Qualification/Release1.8.md).
-The dated predecessor inventories below are historical, not 1.9 pass evidence.
-
-# Current documentation authority
-
-Unreleased 1.7.0-dev consolidation has twelve libraries plus CLI and thirteen DocC
-catalogs (including the shared non-product JSONDSLCore reference). Stable 1.6.1
-remains eight libraries. [Combined qualification](Qualification/Consolidation2026.md)
-separates current requirements from all preserved predecessor records below.
-
 # Swift-JSON documentation
 
-The [release-line matrix](Qualification/ReleaseLines.md) separates the eight-library
-1.6 maintenance source from this unreleased twelve-library 1.7.0-dev source.
-See [combined qualification and holds](Qualification/Consolidation2026.md);
-[the frozen JTX10 candidate](Qualification/Release1.7.0.md) is historical. The website tracks
-development main; use matching release assets for a stable compiled reference.
+Latest published stable: [1.10.0 — Exact Interchange](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.10.0).
+Twelve libraries plus CLI, thirteen catalogs, macOS 15 / iOS 18 deployment minima,
+Swift 6.4+. See the [release notes](ReleaseNotes/1.10.0.md),
+[publication record](Qualification/Release1.10Publication.md), and
+[source-line matrix](Qualification/ReleaseLines.md). The site tracks main;
+matching release assets provide the frozen reference.
 
 Start with the [package README](../README.md) for installation, product selection
-and executable examples. This index leads from everyday usage to the exact
-behavioral contracts and native qualification procedure.
+and executable examples. This index links the behavioral contracts and qualification.
 
 ## API references and guided reading
 
-The latest stable [1.6.1 package](https://github.com/ThorFuchs/Swift-JSON/releases/tag/1.6.1) provides eight libraries plus the `swift-json` executable.
-JSONNavigation is included. The eight native DocC catalogs combine inline API
-documentation with focused guides:
+The thirteen native DocC catalogs include twelve product references and the shared non-product JSONDSLCore reference:
 
 | Product | Catalog source | Guide |
 | --- | --- | --- |
@@ -47,6 +24,11 @@ documentation with focused guides:
 | JSONHTML | [JSONHTML](../Sources/JSONHTML/Documentation.docc/JSONHTML.md) | [Formatted rendering](../Sources/JSONHTML/Documentation.docc/FormattedRendering.md) |
 | JSONNavigation | [JSONNavigation](../Sources/JSONNavigation/Documentation.docc/JSONNavigation.md) | [Exact traversal](../Sources/JSONNavigation/Documentation.docc/Traversal.md) |
 | JSONPatch | [JSONPatch](../Sources/JSONPatch/Documentation.docc/JSONPatch.md) | [Choosing and applying patches](../Sources/JSONPatch/Documentation.docc/ApplyingPatches.md) |
+| JSONInspection | [JSONInspection](../Sources/JSONInspection/Documentation.docc/JSONInspection.md) | [Bounded workflows](../Sources/JSONInspection/Documentation.docc/BoundedWorkflows.md) |
+| JSONTransform | [JSONTransform](../Sources/JSONTransform/Documentation.docc/JSONTransform.md) | [Indexed selection](../Sources/JSONTransform/Documentation.docc/IndexedSelection.md) |
+| JSONValueDSL | [JSONValueDSL](../Sources/JSONValueDSL/Documentation.docc/JSONValueDSL.md) | [Authored values](../Sources/JSONValueDSL/Documentation.docc/AuthoredValues.md) |
+| JSONSchemaDSL | [JSONSchemaDSL](../Sources/JSONSchemaDSL/Documentation.docc/JSONSchemaDSL.md) | [Authored schemas](../Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md) |
+| JSONDSLCore (shared) | [Reference](https://thorfuchs.github.io/Swift-JSON/JSONDSLCore/documentation/jsondslcore/) | Shared generic structure; no standalone product |
 
 [Browse the public documentation](https://thorfuchs.github.io/Swift-JSON/) or
 [build and view the DocC catalogs locally](DocumentationTooling.md). The site
@@ -75,8 +57,7 @@ Online references track main; tagged releases include matching compiled catalogu
 - [Eight-library compiled source example](../Examples/Consumer/README.md)
 - [Schema example public API](Architecture/Release1.6/API.md), [resource scope](Architecture/Release1.6/SchemaExamplesLimits.md) and [runnable guide examples](../Examples/SchemaExamplesConsumer/README.md)
 - [Published Navigation and historical N0/N1 source authority](Architecture/StructuralIntelligence/SOURCE-AUTHORITY.md), [original traversal decisions](Architecture/StructuralIntelligence/API-DECISIONS.md) and [N1 promotion history](Architecture/StructuralIntelligence/N1Promotion.md). JSONNavigation is released in 1.6.0; the original N0/N1 stage gates remain dated history.
-- [Unreleased N2 Inspection source](Architecture/StructuralIntelligence/Inspection.md) adds opt-in observed array evidence. This development source has thirteen catalogs including the DSL structure reference; stable 1.6 release tags and assets retain eight.
-- The source authority map distinguishes this unreleased Inspection source from the dated unmerged-candidate record. Snapshots, public projections and set/matrix APIs are admitted development capabilities. Graph, Transform, authored DSLs and private store construction require combined-source qualification. Composition/root and lower deployment proposals retain their held gates.
+- [Inspection history](Architecture/StructuralIntelligence/Inspection.md) records the earlier N2 stage; Inspection, Transform and the authored DSLs shipped in 1.7.0. Historical admission records retain their original scope.
 
 - [Downstream JSON/JSONSchema interface](ConsumerInterface.md) and [runnable public consumer](../Tools/MCPReadiness/README.md)
 - [Independent-suite policies and qualification](Qualification/README.md)
@@ -96,14 +77,11 @@ from the empty library dependency graph.
 
 - [Offline provider schemas and request fragments](Architecture/Release1.4/Providers.md), [frozen profile tables](Architecture/Release1.4/ProviderProfiles.json) and the [DocC guide](../Sources/JSONSchema/Documentation.docc/ProviderSchemas.md).
 
-The candidate also provides [Inspection](../Sources/JSONInspection/Documentation.docc/JSONInspection.md)
-and [Transform](../Sources/JSONTransform/Documentation.docc/JSONTransform.md):
-their guides are joined by the optional DSL catalogs and shared generic reference.
-Derive the complete authored inventory from current compiler graphs. These products are
-absent from stable 1.6.1. Candidate docs do not establish publication or a platform
-runtime pass; source-bound qualification receipts define the tested scope.
+The released Inspection and Transform catalogs link current guides. The earlier
+1.6.1 maintenance line lacks these products; source-bound receipts define each
+release's tested scope.
 
-## Optional authored DSLs (P1.2 development)
+## Optional authored DSLs (historical design and current guides)
 
 - [Integration plan and source boundary](Architecture/DualDSL/Plan.md)
 - [Resource, naming and compiler decisions](Architecture/DualDSL/Decisions.md)
