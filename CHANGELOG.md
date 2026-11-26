@@ -43,7 +43,9 @@
   (`swift-json-envelope`), `formatVersion` (1), `payload`, `type` and `version`.
   The digest is the SHA-256 of the payload's canonical bytes; decoding checks the
   marker, fields and digest and reports `JSONEnvelopeFailure` for invalid or
-  damaged envelopes. Equal envelopes encode to equal bytes, and equal payloads
+  damaged envelopes. The schema-version API uses `Int64` on every platform,
+  with the same wire range 1 through 2^53 − 1.
+  Equal envelopes encode to equal bytes, and equal payloads
   have equal digests for content addressing. Tests pin bytes and digests computed
   independently.
 
