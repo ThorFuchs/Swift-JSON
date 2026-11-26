@@ -29,7 +29,7 @@ python3 -B Tools/DeveloperKitAcceptance/run_recipes.py --output /absolute/new/co
 
 Select Swift 6.4+/language 6 and the macOS 27 SDK in the environment first. The runner
 requires a new directory outside **every** Git checkout; it creates an isolated
-source copy/cache/config/security/scratch and resolves public exact 1.9.0. It
+source copy/cache/config/security/scratch and resolves public exact 1.10.0. It
 checks the actual pin/tree/product graph, CLI identity and Debug/Release recipe
 assertions. Assertions throw on failure even in Release. A path dependency,
 library test run or inherited cache does not substitute for this consumer check.

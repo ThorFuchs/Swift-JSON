@@ -33,7 +33,7 @@ class KitTests(unittest.TestCase):
 
     def test_canonical_manifest_and_links(self):
         result = validate_plugin(self.plugin)
-        self.assertEqual(result["recipes"], 14)
+        self.assertEqual(result["recipes"], 19)
         self.assertEqual(result["skill_files"], 10)
 
     def test_service_component_is_rejected(self):
@@ -47,7 +47,7 @@ class KitTests(unittest.TestCase):
             validate_plugin(self.plugin)
 
     def test_kit_version_drift_is_rejected(self):
-        self.manifest(lambda x: x.update(version="0.3.0"))
+        self.manifest(lambda x: x.update(version="0.2.0"))
         with self.assertRaisesRegex(ValueError, "identity"):
             validate_plugin(self.plugin)
 

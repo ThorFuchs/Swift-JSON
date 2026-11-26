@@ -6,7 +6,8 @@ description: "Integrate ThorFuchs/Swift-JSON into Swift consumers using its JSON
 # Swift-JSON consumer integration
 
 Help the developer implement and test their requested consumer behavior.
-This is kit 0.2.0, with recipes for released library **1.9.0**.
+This is kit 0.3.0, targeting released library **1.10.0**. Consult the kit's
+qualification receipt before claiming any execution passed.
 The kit version is independent of the library version.
 It adds instructions and examples, without changing the JSON engine.
 
@@ -21,7 +22,7 @@ Do not execute a manifest merely to discover the dependency requirement.
 Record the repository URL, declared requirement, resolved version/revision
 and products actually imported by the affected target.
 Match ThorFuchs/Swift-JSON, rather than a similarly named JSON package.
-If the dependency is absent, use the public HTTPS package URL and 1.9.0
+If the dependency is absent, use the public HTTPS package URL and 1.10.0
 for a new integration, unless the user chose a different version.
 Use an exact pin for reproducing the kit's checks.
 A compatible range can be appropriate for the consumer's own policy.
@@ -29,7 +30,7 @@ Preserve an existing requirement unless its change is part of the request.
 
 Load [version and product selection](references/versions.md) for manifest choices.
 The machine-readable [compatibility map](references/compatibility.json) records
-the one qualified library commit, tree and recipe/source hashes.
+the pinned library commit, tree and recipe/source hashes.
 Do not infer that a later release matches from that pin.
 An older resolved version lacks newer APIs: check the per-release table in
 the version reference before you use an API, and never upgrade silently.
@@ -39,7 +40,7 @@ If matching source cannot be inspected, explain the specific API uncertainty.
 
 ## Select the smallest public surface
 
-Released 1.9.0 offers twelve opt-in libraries and a separate CLI:
+Released 1.10.0 offers twelve opt-in libraries and a separate CLI:
 
 | Need | Product |
 | --- | --- |
@@ -127,6 +128,20 @@ Render hostile-looking strings as data through JSONHTML's escaping.
 Do not execute that content to test the renderer.
 DSL builders are trusted authored code; finalization alone is metered.
 Validate DSL-built values like any other value.
+
+## Exact interchange (1.10.0+)
+
+Use the [canonical recipes](references/recipes.md). For older pins do not invent
+these APIs or upgrade implicitly. JSONCanonicalWriter defaults to preserving;
+rounding is an explicit binary64 policy, not a fidelity guarantee. JSONEnvelope
+uses Int64 schema versions from 1 through 2^53−1 and verifies the payload digest,
+not authenticity or the trustworthiness of type/version metadata. Use the same
+number policy when encoding and decoding. JSONPatch.difference is deterministic
+but not minimal; verify application to the target. JSONHTML difference is static
+and inert: verify escaping and download semantics without executing input.
+JSONTextSequence defaults to fail; opt in to skip only malformed texts, count
+skips, and propagate resource, source and cancellation failures. Consume through
+EOF; a scalar without trailing whitespace may be truncated.
 
 ## Use the swift-json CLI deliberately
 

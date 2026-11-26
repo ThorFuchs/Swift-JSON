@@ -69,3 +69,15 @@ JSONPatch stages edits; a later failure exposes no partial document. Distinguish
 `.removed` from `.document(.null)`. JSONMergePatch returns a present JSON value.
 JSONHTML's default formatted output escapes keys and values; data resembling an
 HTML tag is not executable content. Other presentations have explicit policies.
+
+## Exact interchange (1.10.0+)
+
+Canonical bytes use RFC 8785 UTF-16 ordering and ECMAScript binary64 spelling.
+Preserving rejects exact values that would change; rounding is opt-in. Envelopes
+fix formatVersion 1, use Int64 schema versions, and hash canonical payload bytes
+only. Digest integrity is not authentication or signing; type/version need their
+own application trust and validation. Structural diffs are deterministic, not
+minimal. The HTML difference uses the same exact comparison, a static CSP and
+text markers. RFC 7464 framing is RS/JSON/LF; recovery counts malformed texts but
+never suppresses resource/source/cancellation failures. Separate public calls
+have separate budgets.

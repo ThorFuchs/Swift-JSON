@@ -1,7 +1,7 @@
-# Verified public-API recipes
+# Public-API recipes for exact-version qualification
 
 Use the relevant function in the [canonical executable source](../assets/consumer/Sources/Consumer/Consumer.swift).
-Every displayed Swift file in this package is compiled as part of that consumer;
+The Swift asset is the source for the compiled consumer;
 there are no separately maintained Markdown Swift fences. The all-twelve
 [manifest](../assets/consumer/Package.swift) is for acceptance, not minimal use.
 The compatibility map lists declaration/DocC hashes and recipe marker IDs.
@@ -22,12 +22,17 @@ The compatibility map lists declaration/DocC hashes and recipe marker IDs.
 | store / configuredStore | 1.9 | JSON, JSONInspection | Integer IDs by exact value, no kind conversion, scalar-distinct string IDs, complete follow, batch read, follow capacity error, owner-bound positions, dangling link refusal |
 | transform / boundedTransform | 1.7, 1.9 | JSON, JSONTransform | Pull-to-EOF exact output with preserved numbers, terminal result limit, `selectIndices`, `incompleteSelection` |
 | dsl / authoredDSL | 1.7 | JSON, JSONSchema, JSONValueDSL, JSONSchemaDSL | Authored exact value with distinct scalar keys, authored schema valid/invalid, offline missing-reference compile failure |
+| canonical-json / canonicalJSON | 1.10 | JSON | Deterministic UTF-16 key order, preserving rejection, explicit rounding |
+| versioned-envelope / versionedEnvelope | 1.10 | JSON | Pinned payload digest, Int64 boundary roundtrip, invalid version and corrupted payload refusal |
+| structural-difference / structuralDifference | 1.10 | JSON, JSONPatch | Exact equality, deterministic operations and application to target, finite operation refusal |
+| visual-difference / visualDifference | 1.10 | JSON, JSONHTML | Escaping, static CSP, text markers, native patch download |
+| text-sequence / textSequence | 1.10 | JSON, JSONStreaming | RS/LF writer roundtrip, scalar truncation, counted recovery and cumulative quota failure |
 
 Snapshot records report `JSONTraversalKind`, which JSONNavigation declares;
 Inspection does not re-export it. Typed paths (`JSONLocationComponent`) are core.
 
 Copy the asset consumer into a fresh directory outside a library checkout before
-running it. It resolves public HTTPS exact 1.9.0 and writes Package.resolved,
+running it. It resolves public HTTPS exact 1.10.0 and writes Package.resolved,
 cache/config/security/scratch outputs chosen by the caller. Compile and run both
 configurations to verify its assertions. Failed checks throw and exit nonzero,
 including in Release; a printed success string is not the acceptance predicate.

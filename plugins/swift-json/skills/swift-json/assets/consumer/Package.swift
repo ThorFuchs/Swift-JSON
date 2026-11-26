@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftJSONKitRecipes",
     platforms: [.macOS(.v15), .iOS(.v18)],
-    dependencies: [.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", exact: "1.9.0")],
+    dependencies: [.package(url: "https://github.com/ThorFuchs/Swift-JSON.git", exact: "1.10.0")],
     targets: [.executableTarget(name: "Consumer", dependencies: [
         .product(name: "JSON", package: "swift-json"),
         .product(name: "JSONBridges", package: "swift-json"),

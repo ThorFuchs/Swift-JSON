@@ -3,7 +3,7 @@
 """Copy canonical recipes to a NEW outside-checkout directory and run SwiftPM.
 
 Writes: source copy, isolated cache/config/security/scratch, logs, receipt.json.
-Resolves public HTTPS exact 1.9.0 (the kit's pinned library version). No installation or personal settings edits.
+Resolves public HTTPS exact 1.10.0 (the kit's pinned library version). No installation or personal settings edits.
 Use the supported Swift toolchain in PATH/DEVELOPER_DIR before invoking.
 """
 import argparse

@@ -4,10 +4,11 @@
   unrun. Plugin availability in a conversational host does not provide Xcode or Swift.
 - **Unsupported compiler or Apple SDK:** record the actual version and missing
   requirement. Do not lower tools 6.4/language 6 or the macOS 15 / iOS 18 minimums
-  (27 before 1.9.0) to make examples compile. The 1.9.0 development SDK is macOS 27.
+  (27 before 1.9.0) to make examples compile. The 1.10.0 development SDK is macOS 27.
 - **Missing module:** inspect the resolved source's Package.swift and the target's
   explicit product dependencies. Inspection, Transform and the DSLs need 1.7.0+,
-  located streaming 1.8.0+, batches, the store and `selectIndices` 1.9.0+.
+  located streaming 1.8.0+, batches, the store and `selectIndices` 1.9.0+;
+  canonical JSON, envelope, structural/visual differences and RFC 7464 need 1.10.0+.
 - **Unknown signature:** use the immutable source map or matching checkout. Do not
   invent a synonym, unsafe reflection or fallback engine.
 - **Inexact conversion:** retain JSONNumber, choose a wider exact integer when
