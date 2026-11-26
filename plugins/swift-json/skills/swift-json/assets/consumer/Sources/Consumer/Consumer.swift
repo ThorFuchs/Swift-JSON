@@ -381,6 +381,116 @@ func authoredDSL() throws {
     }
 }
 
+// RECIPE canonical-json
+func canonicalJSON() throws {
+    let left = try JSON.parse(#"{"\ufb33":1.0,"\ud83d\ude00":2,"a":0.1}"#)
+    let right = try JSON.parse(#"{"a":0.1,"😀":2,"דּ":1}"#)
+    let writer = JSONCanonicalWriter()
+    let bytes = try writer.write(left)
+    try check("jcs-equal", bytes == writer.write(right))
+    try check("jcs-utf16", String(decoding: bytes, as: UTF8.self) == #"{"a":0.1,"😀":2,"דּ":1}"#)
+    let large = try JSON.parse("9007199254740993")
+    do {
+        _ = try writer.write(large)
+        throw RecipeFailure(id: "jcs-inexact-accepted")
+    } catch let failure as JSONFailure {
+        try check("jcs-preserving", failure.category == .conversion && failure.code == .inexactConversion)
+    }
+    let rounded = try JSONCanonicalWriter(numberPolicy: .rounding).write(large)
+    try check("jcs-rounding", String(decoding: rounded, as: UTF8.self) == "9007199254740992")
+}
+
+// RECIPE versioned-envelope
+func versionedEnvelope() throws {
+    let payload = try JSON.parse(#"{"state":"done","id":7.0}"#)
+    let versions: [Int64] = [1, 2_147_483_647, 2_147_483_648, 4_294_967_295, 4_294_967_296, 9_007_199_254_740_991]
+    for version in versions {
+        let envelope = try JSONEnvelope(type: "mcp.task", version: version, payload: payload)
+        let encoded = try envelope.encode()
+        try check("envelope-pinned-digest-\(version)", encoded.digest == "sha256:87245ae1c062ec8fd5e2ab1ac60fbc44f6822d6176fe850381db1fd6e97c7810")
+        try check("envelope-roundtrip-\(version)", JSONEnvelope.decode(encoded.data) == envelope)
+    }
+    for version in [Int64(0), 9_007_199_254_740_992] {
+        do {
+            _ = try JSONEnvelope(type: "mcp.task", version: version, payload: payload)
+            throw RecipeFailure(id: "envelope-version-accepted")
+        } catch let failure as JSONEnvelopeFailure {
+            try check("envelope-version-\(version)", failure == .invalidVersion)
+        }
+    }
+    let bad = try JSON.parse(#"{"digest":"sha256:87245ae1c062ec8fd5e2ab1ac60fbc44f6822d6176fe850381db1fd6e97c7810","format":"swift-json-envelope","formatVersion":1,"payload":{"id":8,"state":"done"},"type":"mcp.task","version":3}"#)
+    let corrupted = try JSONWriter().write(bad)
+    do {
+        _ = try JSONEnvelope.decode(corrupted)
+        throw RecipeFailure(id: "envelope-corruption-accepted")
+    } catch let failure as JSONEnvelopeFailure {
+        try check("envelope-corruption", failure == .digestMismatch)
+    }
+}
+
+// RECIPE structural-difference
+func structuralDifference() throws {
+    let source = try JSON.parse(#"{"keep":1.0,"drop":2,"items":[1,2,9]}"#)
+    let equal = try JSON.parse(#"{"items":[1,2,9],"drop":2,"keep":1}"#)
+    let target = try JSON.parse(#"{"keep":1,"items":[1,2,3,9],"new":null}"#)
+    try check("diff-exact-equality", JSONPatch.difference(from: source, to: equal).operations.isEmpty)
+    let patch = try JSONPatch.difference(from: source, to: target)
+    try check("diff-application", patch.applying(to: source) == .document(target))
+    try check("diff-deterministic", patch.operations == JSONPatch.difference(from: source, to: target).operations)
+    var limits = JSONLimits.balanced
+    limits[.operations] = 0
+    do {
+        _ = try JSONPatch.difference(from: source, to: target, options: .init(limits: limits))
+        throw RecipeFailure(id: "diff-budget-accepted")
+    } catch let failure as JSONFailure {
+        try check("diff-budget", failure.resource?.metric == .operations)
+    }
+}
+
+// RECIPE visual-difference
+func visualDifference() throws {
+    let source = try JSON.parse(#"{"<script>":"old","remove":1}"#)
+    let target = try JSON.parse(#"{"<script>":"<b>&","add":2}"#)
+    let html = String(decoding: try JSONHTMLRenderer().renderDifference(from: source, to: target), as: UTF8.self)
+    try check("visual-static", html.contains("script-src 'none'") && !html.contains("<script>"))
+    try check("visual-escaped", html.contains("&lt;script&gt;") && html.contains("&lt;b&gt;"))
+    try check("visual-markers", html.contains("diff-row diff-added") && html.contains("diff-row diff-removed") && html.contains("diff-row diff-changed"))
+    try check("visual-download", html.contains("download=\"patch.json\"") && html.contains("application/json-patch+json"))
+}
+
+// RECIPE text-sequence
+func textSequence() async throws {
+    let values: [JSON] = [1, .string("é"), .null]
+    let encoded = try JSONTextSequenceWriter().encode(values)
+    try check("seq-framing", Array(encoded) == Array("\u{1e}1\n\u{1e}\"é\"\n\u{1e}null\n".utf8))
+    var reader = JSONTextSequence(Chunks(bytes: Array(encoded))).makeAsyncIterator()
+    var actual: [JSON] = []
+    while let value = try await reader.next() { actual.append(value) }
+    try check("seq-roundtrip", actual == values)
+    let broken = Array("\u{1e}123\u{1e}true\n".utf8)
+    var strict = JSONTextSequence(Chunks(bytes: broken)).makeAsyncIterator()
+    do {
+        _ = try await strict.next()
+        throw RecipeFailure(id: "seq-truncated-accepted")
+    } catch let failure as JSONFailure {
+        try check("seq-truncated", failure.code == .unexpectedEOF)
+    }
+    var recovering = JSONTextSequence(Chunks(bytes: broken), options: .init(malformedTexts: .skip)).makeAsyncIterator()
+    let recovered = try await recovering.next()
+    let end = try await recovering.next()
+    try check("seq-recovery", recovered == .boolean(true) && end == nil && recovering.skippedTexts == 1)
+    var limits = JSONLimits.balanced
+    limits[.totalRecords] = 1
+    var bounded = JSONTextSequence(Chunks(bytes: Array(encoded)), options: .init(limits: limits, malformedTexts: .skip)).makeAsyncIterator()
+    _ = try await bounded.next()
+    do {
+        _ = try await bounded.next()
+        throw RecipeFailure(id: "seq-budget-accepted")
+    } catch let failure as JSONFailure {
+        try check("seq-budget", failure.resource?.metric == .totalRecords)
+    }
+}
+
 @main struct Consumer {
     static func main() async throws {
         try exactPresence()
@@ -397,6 +507,11 @@ func authoredDSL() throws {
         try configuredStore()
         try boundedTransform()
         try authoredDSL()
-        print("KIT_RECIPES passed recipes=14 libraries=12")
+        try canonicalJSON()
+        try versionedEnvelope()
+        try structuralDifference()
+        try visualDifference()
+        try await textSequence()
+        print("KIT_RECIPES passed recipes=19 libraries=12")
     }
 }

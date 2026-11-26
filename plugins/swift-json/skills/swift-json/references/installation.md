@@ -1,6 +1,6 @@
 # Local use and installation choices
 
-Kit 0.2.0 is a review candidate, not a directory-published plugin. Review its
+Kit 0.3.0 is a review candidate, not a directory-published plugin. Review its
 manifests and files before enabling it. The payload has one instruction-only
 skill: no service, connector, authentication, hook or telemetry. Running
 recipes needs a local executor and the library's supported Swift tools.

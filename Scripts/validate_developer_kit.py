@@ -17,16 +17,16 @@ import stat
 import subprocess
 import zipfile
 
-KIT_VERSION = "0.2.0"
-LIBRARY_VERSION = "1.9.0"
-STABLE = "f2a0d12da7028edfbcb0cb307f19a921a3a12d03"
-TREE = "6b5438751352e0e424b133e79d40d32d6f8c8dd7"
+KIT_VERSION = "0.3.0"
+LIBRARY_VERSION = "1.10.0"
+STABLE = "564ca8ce5ea057edc847666c4223da20084fc59c"
+TREE = "3ee5c5f6946a4548116d8b7aa80e83b432e47f83"
 REPOSITORY = "https://github.com/ThorFuchs/Swift-JSON"
 PRODUCTS = {"JSON", "JSONSchema", "JSONSchemaExamples", "JSONStreaming", "JSONPatch", "JSONHTML", "JSONBridges",
             "JSONNavigation", "JSONInspection", "JSONTransform", "JSONValueDSL", "JSONSchemaDSL"}
 PRODUCT_ORDER = ["JSON", "JSONSchema", "JSONSchemaExamples", "JSONStreaming", "JSONPatch", "JSONHTML", "JSONBridges",
                  "JSONNavigation", "JSONInspection", "JSONTransform", "JSONValueDSL", "JSONSchemaDSL"]
-DESCRIPTION = "Version-aware consumer assistance for ThorFuchs/Swift-JSON, validated against library " + LIBRARY_VERSION + "."
+DESCRIPTION = "Version-aware consumer assistance for ThorFuchs/Swift-JSON, targeting library " + LIBRARY_VERSION + "."
 SKILL_FILES = {"SKILL.md", "LICENSE", "references/versions.md", "references/semantics.md", "references/recipes.md",
                "references/troubleshooting.md", "references/installation.md", "references/compatibility.json",
                "assets/consumer/Package.swift", "assets/consumer/Sources/Consumer/Consumer.swift"}
@@ -74,6 +74,11 @@ RECIPES = {
                   "Sources/JSONTransform/Documentation.docc/IndexedSelection.md"],
     "dsl": ["Sources/JSONValueDSL/JSONValueDSL.swift", "Sources/JSONSchemaDSL/JSONSchemaDSL.swift",
             "Sources/JSONSchemaDSL/Documentation.docc/AuthoredSchemas.md"],
+    "canonical-json": ["Sources/JSON/Codec/JSONCanonicalWriter.swift", "Sources/JSON/Number/JSONNumberCanonical.swift"],
+    "versioned-envelope": ["Sources/JSON/Codec/JSONEnvelope.swift", "Sources/JSON/Documentation.docc/VersionedEnvelopes.md"],
+    "structural-difference": ["Sources/JSONPatch/JSONPatchDifference.swift", "Sources/JSON/Value/JSONStructuralDifference.swift"],
+    "visual-difference": ["Sources/JSONHTML/JSONHTMLDifference.swift", "Sources/JSONHTML/Documentation.docc/DifferenceRendering.md", "Sources/JSON/Value/JSONStructuralDifference.swift"],
+    "text-sequence": ["Sources/JSONStreaming/TextSequence/JSONTextSequence.swift", "Sources/JSONStreaming/TextSequence/JSONTextSequenceOptions.swift", "Sources/JSONStreaming/TextSequence/JSONTextSequenceWriter.swift", "Sources/JSONStreaming/Documentation.docc/TextSequences.md"],
 }
 CONSUMER = "assets/consumer/Sources/Consumer/Consumer.swift"
 AUTHORING_SOURCES = [
