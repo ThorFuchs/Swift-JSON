@@ -26,13 +26,13 @@ public struct JSONEnvelope: Sendable, Equatable {
     public static let formatVersion = 1
     /// The largest accepted ``type`` length in UTF-8 bytes.
     public static let maximumTypeBytes = 256
-    /// The accepted ``version`` range: the positive integers that binary64 represents exactly.
-    public static let versions: ClosedRange<Int> = 1...9_007_199_254_740_991
+    /// The accepted ``version`` range: 1 through 2^53 − 1, independent of platform word size.
+    public static let versions: ClosedRange<Int64> = 1...9_007_199_254_740_991
 
     /// The caller's name for the kind of payload, such as `mcp.task`.
     public let type: String
-    /// The schema version of ``type`` that the payload follows.
-    public let version: Int
+    /// The schema version of ``type`` that the payload follows, stored as a platform-independent integer.
+    public let version: Int64
     /// The enveloped value.
     public let payload: JSON
 
@@ -46,7 +46,7 @@ public struct JSONEnvelope: Sendable, Equatable {
     ///   - type: A non-empty name for the kind of payload, at most 256 UTF-8 bytes.
     ///   - version: The payload's schema version, from 1 through 2^53 − 1.
     ///   - payload: The value to envelope.
-    public init(type: String, version: Int, payload: JSON) throws {
+    public init(type: String, version: Int64, payload: JSON) throws {
         guard !type.isEmpty, type.utf8.count <= Self.maximumTypeBytes else { throw JSONEnvelopeFailure.invalidType }
         guard Self.versions.contains(version) else { throw JSONEnvelopeFailure.invalidVersion }
         self.type = type; self.version = version; self.payload = payload
@@ -134,7 +134,7 @@ public struct JSONEnvelope: Sendable, Equatable {
         }
         guard case .string(format) = try member("format", meter: &meter) else { throw JSONEnvelopeFailure.invalidFormat }
         guard case .number(let formatVersion) = try member("formatVersion", meter: &meter) else { throw JSONEnvelopeFailure.invalidFormat }
-        guard try integer(formatVersion, meter: &meter) == Self.formatVersion else {
+        guard try integer(formatVersion, meter: &meter) == Int64(Self.formatVersion) else {
             throw JSONEnvelopeFailure.unsupportedFormatVersion
         }
         guard case .string(let type) = try member("type", meter: &meter) else { throw JSONEnvelopeFailure.invalidType }
@@ -152,9 +152,9 @@ public struct JSONEnvelope: Sendable, Equatable {
         return .init(result: envelope, statistics: meter.statistics())
     }
 
-    /// The integer value, or nil when the number is not an integer that fits `Int`.
-    private static func integer(_ number: JSONNumber, meter: inout JSONWorkMeter) throws -> Int? {
-        do { return try number.integer(as: Int.self, meter: &meter) }
+    /// The exact integer value, or nil when it does not fit `Int64`.
+    private static func integer(_ number: JSONNumber, meter: inout JSONWorkMeter) throws -> Int64? {
+        do { return try number.integer(as: Int64.self, meter: &meter) }
         catch let failure as JSONFailure where failure.category == .conversion { return nil }
     }
     private static func digest(of bytes: [UInt8], meter: inout JSONWorkMeter) throws -> String {

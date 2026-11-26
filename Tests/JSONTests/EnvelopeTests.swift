@@ -55,10 +55,15 @@ private let taskEnvelope = #"{"digest":"sha256:87245ae1c062ec8fd5e2ab1ac60fbc44f
         ("[1]", .invalidFormat), ("{}", .invalidFormat),
         (replacing(#""formatVersion":1"#, #""formatVersion":2"#), .unsupportedFormatVersion),
         (replacing(#""formatVersion":1"#, #""formatVersion":1.5"#), .unsupportedFormatVersion),
+        (replacing(#""formatVersion":1"#, #""formatVersion":2147483648"#), .unsupportedFormatVersion),
+        (replacing(#""formatVersion":1"#, #""formatVersion":9223372036854775808"#), .unsupportedFormatVersion),
         (replacing(#""formatVersion":1"#, #""formatVersion":"1""#), .invalidFormat),
         (replacing(#""mcp.task""#, #""""#), .invalidType),
         (replacing(#""mcp.task""#, "7"), .invalidType),
         (replacing(#""version":3"#, #""version":0"#), .invalidVersion),
+        (replacing(#""version":3"#, #""version":-9223372036854775808"#), .invalidVersion),
+        (replacing(#""version":3"#, #""version":9223372036854775807"#), .invalidVersion),
+        (replacing(#""version":3"#, #""version":9223372036854775808"#), .invalidVersion),
         (replacing(#""version":3"#, #""version":3.5"#), .invalidVersion),
         (replacing(#""version":3"#, #""version":9007199254740992"#), .invalidVersion),
         (replacing(#""version":3"#, #""version":99999999999999999999"#), .invalidVersion),
@@ -79,8 +84,26 @@ private let taskEnvelope = #"{"digest":"sha256:87245ae1c062ec8fd5e2ab1ac60fbc44f
     #expect(throws: JSONEnvelopeFailure.invalidType) { try JSONEnvelope(type: "", version: 1, payload: .null) }
     #expect(throws: JSONEnvelopeFailure.invalidType) { try JSONEnvelope(type: String(repeating: "é", count: 129), version: 1, payload: .null) }
     _ = try JSONEnvelope(type: String(repeating: "é", count: 128), version: 1, payload: .null)
-    for version in [0, -1, 9_007_199_254_740_992, .max] {
+    let rejectedVersions: [Int64] = [0, -1, .min, 9_007_199_254_740_992, .max]
+    for version in rejectedVersions {
         #expect(throws: JSONEnvelopeFailure.invalidVersion) { try JSONEnvelope(type: "t", version: version, payload: .null) }
+    }
+    // The envelope wire contract is independent of the host's Int width.
+    // Exercise values below, at and beyond the wasm32 signed-integer ceiling.
+    let accepted: [Int64] = [1, 2_147_483_647, 2_147_483_648, 4_294_967_295, 4_294_967_296, 9_007_199_254_740_991]
+    let versions: ClosedRange<Int64> = JSONEnvelope.versions
+    #expect(versions == 1...9_007_199_254_740_991)
+    for version in accepted {
+        let value = try JSONEnvelope(type: "mcp.task", version: version, payload: parse(#"{"id":7,"state":"done"}"#))
+        let pinned = taskEnvelope.replacingOccurrences(of: #""version":3}"#, with: "\"version\":\(version)}")
+        let encoded = try value.encode()
+        #expect(encoded.data == Data(pinned.utf8))
+        #expect(encoded.digest == taskDigest)
+        let decoded = try decode(pinned)
+        let decodedVersion: Int64 = decoded.version
+        #expect(decodedVersion == version)
+        #expect(decoded == value)
+        #expect(try decoded.encode() == encoded)
     }
     // A number binary64 cannot spell exactly is refused unless rounding is chosen on both sides.
     let inexact = try JSONEnvelope(type: "t", version: 1, payload: parse("[0.10000000000000001]"))

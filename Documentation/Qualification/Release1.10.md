@@ -98,3 +98,67 @@ controlled-performance gate instead of measuring it. The gate is
 - Tag, GitHub release and qualification asset (maintainer instruction required).
 - Developer kit update to 1.10.0: the kit pins the exact published commit and
   tree, so it follows the tag.
+
+## 2026-11-26 — WASI release gate: RED, fixed-width version candidate
+
+The full release WASI attempt at `c2e4aea7cf63bdf8236c22cc9ba0c6a3abeb5201`, tree
+`2e483c24b4efb3e7b7f73b2ce2ef76bea712a539`, did not pass.
+The exact source was still the unreleased 1.10.0 preparation commit.
+The source-bound return archive (86,175 bytes) has SHA-256
+`95c6c09f0fcf6ef7c9a233ac70a2353352224d8f23e2bc8ccabbf6377d5820fa`.
+The source-input manifest hash
+`8cce0bbd3ebd2ed9a9f026bd469e1e0ef2f549d35d5bb254a8db88d0f68e7b9e`
+recomputes over all 1,580 entries, and source_inputs_unchanged is true.
+All eight referenced command-log SHA-256 values reconcile. Private
+absolute host paths are not copied to this public record.
+
+Actual ARM64 macOS 27.3; Swift.org 6.4.2, matching full-language WASI
+SDK, WasmKit 0.3.1, Node 26.5.0, Xcode 27.2. Public inventory
+and evaluated root manifest passed. Five of the six WASI subprocesses
+passed; root-build-debug exited 1 while emitting the JSON module:
+`JSONEnvelope.swift:30:56: integer literal '9007199254740991' overflows when stored into 'Int'`.
+No WASI runtime tests or Release build occurred in this attempt.
+The earlier 21 successful GitHub checks remain bound to the original
+commit and do not qualify any corrected successor.
+
+Candidate correction: the unpublished JSONEnvelope schema-version
+API uses Int64 consistently (range, stored property, initializer and
+exact integer decoding). The fixed formatVersion value, accepted wire
+range 1...2^53-1, six members, canonical bytes, payload digest and
+operational-error distinctions remain unchanged. Do not cap the range
+at Int.max, clamp, or round metadata. This is an API adjustment to the
+unpublished 1.10.0 surface, not a change to a previously published API.
+Callers of the preparation branch using typed Int variables will need
+explicit Int64 conversion. The existing generic JSONNumber constructor
+and checked fixed-width integer decoder are reused.
+
+Extend existing EnvelopeTests with six pinned version roundtrips
+(1, 2^31-1, 2^31, 2^32-1, 2^32, 2^53-1), exact canonical bytes and
+unchanged digest; explicit Int64 bounds, negative and overflow
+rejections, and large formatVersion rejection. Existing five
+test functions remain; no discovery exclusions or decreased coverage.
+DocC, release notes and changelog describe the platform-independent type.
+
+Editing-host supplemental probe: Swift 6.2.1 Linux Embedded
+wasm32-unknown-none-wasm, standalone minimal range declaration.
+Old ClosedRange<Int> fails with the observed overflow; corrected
+ClosedRange<Int64> and stored Int64 initializer compile to a WASM
+object. This is not a full-language WASI package build or a runtime
+qualification. Independently verify six accepted values are exactly
+representable in binary64 and the pinned payload SHA-256. Regenerate
+CLI source identity from the ordered 243 input-file SHA-256 values
+in the source-bound failed receipt (original identity
+99a750404f5c4af53abe83fb52194c296a09e9e69387be2d4a3984b09551e327
+reproduces exactly); replace only the changed non-DocC source hash.
+New expected identity:
+7e58faad4a37141b4fabc6bba4d684a9f6d5ea0d574d9cae92ea8d01da98a81d.
+The normal generator --check on the clean corrected checkout remains
+required. Native SDK typecheck and all actual envelope behavior tests
+on the corrected package are pending.
+
+Next: run complete WASI lane on the corrected source, preserve RED
+evidence, require native, Linux, safety, platform-floor, composition,
+docs and archive evidence on the exact final release commit, review
+the applicability of the documented 1.10-only performance exception
+to that final source, verify public API and assets, then tag/publish
+only the qualified commit. No release or product admission performed.

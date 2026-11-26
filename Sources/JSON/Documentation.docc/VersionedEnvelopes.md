@@ -28,7 +28,8 @@ Format version 1 is one RFC 8785 canonical object with exactly six members:
 
 - `format` is always `swift-json-envelope`; `formatVersion` is always `1`.
 - `type` is a non-empty string of at most 256 UTF-8 bytes; `version` is an
-  integer from 1 through 2^53 − 1.
+  integer from 1 through 2^53 − 1. Swift stores `version` as `Int64`, including
+  on wasm32; the accepted range and canonical wire bytes are platform independent.
 - `digest` is `sha256:` followed by the lowercase hexadecimal SHA-256 of the
   payload's canonical bytes.
 
