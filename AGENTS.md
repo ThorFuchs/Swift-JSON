@@ -1,9 +1,9 @@
 # Contributor instructions
 
-Prepared minor release source is 1.10.0; publication is a separate owner action. It
-builds on published 1.9.0 at f2a0d12da7028edfbcb0cb307f19a921a3a12d03. Stable 1.6.1
-remains a separate maintenance line. Preserve every source-bound qualification
-record. No tag/publication follows from passing tests alone.
+Latest published stable is 1.10.0 at 564ca8ce5ea057edc847666c4223da20084fc59c.
+Stable 1.6.1 remains a separate maintenance line. Preserve every source-bound
+qualification record and the immutable release tag/assets. No new tag/publication
+follows from passing tests alone.
 
 Swift-JSON requires Swift tools/compiler 6.4+, Swift language mode 6 and a
 macOS/SDK 27+ development host; deployment minimums are macOS 15 and iOS 18. Read README.md, CONTRIBUTING.md and the relevant contracts in
@@ -57,7 +57,7 @@ store/follow API on 2026-11-10; later API changes stay additive and human-gated.
 one invocation-owned ledger per operation. Positions remain unforgeable and
 source-instance-local. No persistence or mutable store is exposed. See
 Documentation/Architecture/StructuralIntelligence/BoundedWorkflows1.8.md.
-Wider retrieval/persistence remains separate work. Prepared 1.10.0 adds RFC 8785
+Wider retrieval/persistence remains separate work. Published 1.10.0 adds RFC 8785
 canonical JSON and `JSONEnvelope` (format version 1 is fixed) to JSON, RFC 6902
 difference to JSONPatch and its static page to JSONHTML (one shared package walker
 in JSON), and RFC 7464 text sequences to JSONStreaming.
