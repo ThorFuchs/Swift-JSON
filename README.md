@@ -647,10 +647,9 @@ and [1.7.0 qualification receipt](https://github.com/ThorFuchs/Swift-JSON/releas
 ## Contributing, support and licensing
 
 For optional agent assistance in an application using this package, see the
-[developer kit](Documentation/AgentDeveloperKit.md). Kit 0.2.0 in this repository
-is pinned to library 1.9.0 and covers all twelve libraries and the CLI with
-compiled recipes. Kit 0.3.0 for 1.10.0 is planned separately; do not treat 0.2.0 as
-qualified against 1.10.0. In Claude Code, run `/plugin marketplace add ThorFuchs/Swift-JSON`
+[developer kit](Documentation/AgentDeveloperKit.md). Kit 0.3.0 in development targets library 1.10.0 and adds five exact-interchange
+recipes to the previous fourteen. Consult the kit qualification receipt before
+claiming execution; the separate download release remains pending. In Claude Code, run `/plugin marketplace add ThorFuchs/Swift-JSON`
 and then `/plugin install swift-json@swift-json`; Codex can use the same skill
 folder. The earlier [0.1.0 preview downloads](https://github.com/ThorFuchs/Swift-JSON/releases/tag/developer-kit-v0.1.0)
 remain pinned to 1.6.1. Public directory availability retains the limits
@@ -864,8 +863,8 @@ The [cross-product guide](Sources/JSONInspection/Documentation.docc/BoundedWorkf
 and [runnable example](Examples/BoundedWorkflows/README.md) show schema validation,
 read-only store interpretation, transformation and checked rebuilds after Patch.
 Its separate capacity mode records owned-work/retention counters and fixture hashes;
-it makes no timing, RSS or default joint-capacity claim. Developer kit 0.2.0
-includes compiled store, batch and Transform selection recipes for 1.9.0.
+it makes no timing, RSS or default joint-capacity claim. Developer kit recipes include store, batch and Transform selection; consult the
+version and qualification guide.
 
 ## Related projects
 

@@ -1,12 +1,14 @@
 # Swift-JSON developer kit
 
-Kit **0.2.0** is the source candidate in this repository. Its library pin is
-released **Swift-JSON 1.9.0**. Those version numbers are separate. The kit
+Kit **0.3.0** is the source candidate in this repository. Its library pin is
+released **Swift-JSON 1.10.0**. Those version numbers are separate. The kit
 supplies consumer instructions and examples; the library API is unchanged.
+Kit 0.3.0 is not yet qualified or published. Execute the acceptance gates below
+before publication.
 
 The previous **0.1.0 preview**, pinned to library 1.6.1, remains available from its
 [dedicated download release](https://github.com/ThorFuchs/Swift-JSON/releases/tag/developer-kit-v0.1.0).
-A `developer-kit-v0.2.0` download release does not exist yet; publishing it is a
+A `developer-kit-v0.3.0` download release does not exist yet; publishing it is a
 separate maintainer decision.
 
 The kit supplies one focused `swift-json` skill: identify an application's actual
@@ -30,8 +32,8 @@ carries the same name, version and description as the portable manifest. The ski
 is discovered from `skills/swift-json`. Both commands persist user settings, so
 they are the user's action. `claude plugin validate .` and
 `claude plugin validate ./plugins/swift-json` passed with Claude Code 2.1.92
-on 2026-11-11. Installation from GitHub and end-to-end use in a session are not
-recorded yet.
+on 2026-11-11. That is historical 0.2.0 evidence, not a 0.3.0 result. Installation and end-to-end
+use of 0.3.0 are pending.
 
 ## Use with Codex
 
@@ -47,7 +49,7 @@ at `plugins/swift-json` and follow the official
 [repo marketplace example](https://developers.openai.com/plugins/build/plugins#install-a-local-plugin-manually)
 with source.path `./plugins/swift-json`. The portable root `plugin.json` uses fixed
 skills/ discovery and needs no compatibility overlay. Kit 0.1.0's Codex CLI
-0.162.0-alpha.17.2 discovery observation has not been repeated for 0.2.0.
+0.162.0-alpha.17.2 discovery observation has not been repeated for 0.3.0.
 
 ## Contents and compatibility
 
@@ -56,16 +58,16 @@ the portable [plugin manifest](../plugins/swift-json/plugin.json) and the Claude
 Code manifest. The same skill bytes produce a standalone distribution. Supporting
 references are progressively loaded; assessment criteria are excluded from both
 archives. The [compatibility/source map](../plugins/swift-json/skills/swift-json/references/compatibility.json)
-binds the exact 1.9.0 commit `f2a0d12` and tree `6b54387` and 50 immutable
-declaration/DocC hashes to fourteen recipes.
+binds the exact 1.10.0 commit `564ca8c` and tree `3ee5c5f` and 63 immutable
+declaration/DocC hashes to nineteen recipes.
 
-Release 1.9.0 has twelve libraries: JSON, JSONSchema, JSONSchemaExamples,
+Release 1.10.0 has twelve libraries: JSON, JSONSchema, JSONSchemaExamples,
 JSONStreaming, JSONPatch, JSONHTML, JSONBridges, JSONNavigation, JSONInspection,
 JSONTransform, JSONValueDSL and JSONSchemaDSL; swift-json is a separate executable.
 The [version reference](../plugins/swift-json/skills/swift-json/references/versions.md)
-records which release added which API, so the skill does not use a 1.7–1.9 API in
+records which release added which API, so the skill does not use a 1.7–1.10 API in
 a consumer resolved to an older version, upgrade a dependency silently or claim
-that unfamiliar revisions were qualified by testing 1.9.0.
+that unfamiliar revisions were qualified by testing another version.
 
 Compilation requires a local executor, Swift tools/compiler 6.4+ and language
 mode 6. Deployment minimums are macOS 15 and iOS/iPadOS 18; development uses
@@ -89,15 +91,15 @@ python3 -B Scripts/package_developer_kit.py --output /absolute/new/kit-b
 The validator checks the kit's content, not a diff: the exact payload file set,
 both host manifests and their agreement, the repository marketplace entry, skill
 frontmatter and links, the absence of private paths and untested Swift fences,
-the consumer's twelve imports, exact 1.9.0 pin and recipe markers, and every
+the consumer's twelve imports, exact 1.10.0 pin and recipe markers, and every
 local hash. When the pinned commit is present locally (CI checks out full
 history) it regenerates the compatibility map from that commit's bytes and
 requires an exact match; otherwise it reports that comparison as not run.
 After changing a kit file, run `validate_developer_kit.py --write-compatibility`
 to refresh the map, then review the diff.
 
-Each package directory contains `swift-json-plugin-0.2.0.zip`,
-`swift-json-skill-0.2.0.zip` and `ASSETS.json`. ZIP members have stable order,
+Each package directory contains `swift-json-plugin-0.3.0.zip`,
+`swift-json-skill-0.3.0.zip` and `ASSETS.json`. ZIP members have stable order,
 timestamps and modes; compare both builds' bytes. Each ZIP has a self-excluded
 member manifest. The standalone skill payload is byte-identical to the plugin's
 skills/swift-json subtree. Supply `--plugin-zip PATH --skill-zip PATH` to verify
@@ -118,7 +120,9 @@ coverage, staged Patch failure and inert HTML data. The 1.7–1.9 recipes add
 located root-array byte spans, observed shape evidence and snapshots, ordered
 batches with `optionalValues`, the configured store with integer IDs, complete
 follow and owner-bound positions, bounded Transform with `selectIndices`, and
-the value and schema DSLs.
+the value and schema DSLs. Five new 1.10 recipes cover canonicalization, Int64
+envelope boundaries and digest corruption, structural and static visual differences,
+and RFC 7464 framing, recovery and resource refusals.
 
 With the supported native toolchain selected, run:
 
@@ -128,7 +132,7 @@ python3 -B Tools/DeveloperKitAcceptance/run_recipes.py --output /absolute/new/re
 
 This command writes the source copy and isolated SwiftPM cache/config/security/
 scratch plus logs and receipt.json. The new directory must be outside every Git
-checkout. It resolves the public HTTPS dependency with exact 1.9.0, checks the
+checkout. It resolves the public HTTPS dependency with exact 1.10.0, checks the
 effective mirror absence, resolved revision/tree, the twelve-library product
 inventory, empty root dependency graph, source-map hashes and tagged CLI
 identity. It executes behavior assertions in Debug and Release; failure exits

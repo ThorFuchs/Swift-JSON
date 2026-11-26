@@ -216,6 +216,60 @@
         "Do not lower the package's platform requirement or claim support below it.",
         "Let the user decide between raising the deployment target and not adopting the package."
       ]
+    },
+    {
+      "id": "DK-E23",
+      "user_prompt": "Using Swift-JSON 1.10.0, canonicalize exact JSON for hashing without silently rounding 9007199254740993.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONCanonicalWriter with explicit number policy.",
+        "Assert UTF-16 ordering, stable bytes and preserving refusal."
+      ]
+    },
+    {
+      "id": "DK-E24",
+      "user_prompt": "Store a versioned task envelope with schema version above Int32.max and detect changed payload bytes.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONEnvelope with Int64; check boundary and corruption.",
+        "Distinguish integrity from authentication."
+      ]
+    },
+    {
+      "id": "DK-E25",
+      "user_prompt": "Make a deterministic patch from two exact JSON values and verify application.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONPatch.difference and compare target.",
+        "Do not promise minimality."
+      ]
+    },
+    {
+      "id": "DK-E26",
+      "user_prompt": "Render a static difference page for JSON containing hostile-looking HTML.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use JSONHTMLRenderer.renderDifference.",
+        "Check escaping, CSP, markers and patch download."
+      ]
+    },
+    {
+      "id": "DK-E27",
+      "user_prompt": "Read and write RFC 7464 records, recovering from a malformed text without hiding quota exhaustion.",
+      "category": "coding",
+      "assessment_criteria": [
+        "Use reader and writer; consume to EOF.",
+        "Assert truncation, skip count and resource failure."
+      ]
+    },
+    {
+      "id": "DK-E28",
+      "user_prompt": "My package is pinned to Swift-JSON 1.9.0. Use JSONEnvelope without changing my dependency.",
+      "category": "version_boundary",
+      "assessment_criteria": [
+        "Identify API as 1.10.0+.",
+        "Do not silently upgrade or invent a 1.9.0 API."
+      ]
     }
   ]
 }
